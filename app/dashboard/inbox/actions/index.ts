@@ -1,0 +1,284 @@
+"use server";
+
+import { ERROR_CODES } from "@/lib/responses/errors";
+
+interface Query {
+  email?: string[];
+  from?: string[];
+  campaign?: string[];
+  hidden?: boolean;
+}
+
+type Type = "all" | "unread" | "starred";
+
+interface PaginationOptions {
+  page?: number;
+  limit?: number;
+}
+
+export const getAllMessagesAction = async (
+  query: Query = {},
+  type: Type = "all",
+  pagination: PaginationOptions = {},
+  search = "",
+  idToken = ""
+) => {
+  const { email = [], from = [], campaign = [], hidden = false } = query;
+  const { page = 1, limit = 10 } = pagination;
+
+  console.log({ query, type, pagination, search, idToken, email, from, campaign, hidden });
+
+  try {
+    // mock implementation
+    const emails = [
+      {
+        id: 1,
+        subject: "Hello World",
+        body: "This is a test email.",
+        toUser: {
+          email: "john@example.com",
+        },
+        client: {
+          firstName: "John",
+          lastName: "Doe",
+        },
+        campaign: {
+          name: "Test Campaign",
+        },
+      },
+    ];
+    const unread = 1;
+    const total = 1;
+    return {
+      emails,
+      unread,
+      total,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+    };
+  } catch (error) {
+    console.error("Error in getAllMessagesAction:", error);
+    throw new Error("Failed to get all messages.");
+  }
+};
+
+export const getUniqueFiltersAction = async (idToken = "") => {
+  try {
+    const emails = [
+      {
+        id: 1,
+        subject: "Hello World",
+        body: "This is a test email.",
+        toUser: {
+          email: "john@example.com",
+        },
+        client: {
+          firstName: "John",
+          lastName: "Doe",
+          email: "john@example.com",
+        },
+        campaign: {
+          name: "Test Campaign",
+        },
+      },
+    ];
+    const froms = [
+      {
+        id: 1,
+        client: {
+          firstName: "John",
+          lastName: "Doe",
+        },
+      },
+    ];
+    const campaigns = [
+      {
+        id: 1,
+        name: "Test Campaign",
+        campaign: {
+          name: "Test Campaign",
+        }
+      },
+    ];
+
+    const email = emails.map((e) => e.client?.email).filter(Boolean);
+
+    const fromSet = new Set(
+      froms
+        .map((f) => {
+          const first = f.client?.firstName;
+          const last = f.client?.lastName;
+          return first && last ? `${first} ${last}` : null;
+        })
+        .filter(Boolean)
+    );
+
+    const from = Array.from(fromSet);
+
+    const campaign = campaigns.map((c) => c.campaign?.name).filter(Boolean);
+
+    return {
+      email,
+      from,
+      campaign,
+    };
+  } catch (error) {
+    console.error("Error in getUniqueFiltersAction:", error);
+    throw new Error("Failed to get filters.");
+  }
+};
+
+export async function fetchEmailByIdAction(id: string, idToken = "") {
+  try {
+    const email = {
+      id: 1,
+      subject: "Hello World",
+      body: "This is a test email.",
+      toUser: {
+        email: "john@example.com",
+      },
+      client: {
+        firstName: "John",
+        lastName: "Doe",
+      },
+      campaign: {
+        name: "Test Campaign",
+      },
+    };
+
+    if (!email) {
+      return null;
+    }
+    return {
+      ...email,
+      htmlContent: email.body,
+    };
+  } catch (error) {
+    console.error("Error in fetchEmailByIdAction:", error);
+    throw new Error("Failed to fetch by id the email.");
+  }
+}
+
+export async function markEmailAsReadAction(
+  id: number | string | undefined,
+  idToken = ""
+) {
+  try {
+    const email = {
+      id: 1,
+      subject: "Hello World",
+      body: "This is a test email.",
+      toUser: {
+        email: "john@example.com",
+      },
+      client: {
+        firstName: "John",
+        lastName: "Doe",
+      },
+      campaign: {
+        name: "Test Campaign",
+      },
+    };
+
+    return email;
+  } catch (error) {
+    console.error("Error in markEmailAsReadAction:", error);
+    throw new Error("Failed to mark as read the email.");
+  }
+}
+
+export async function markEmailAsStarredAction(
+  id: number | string,
+  starred: boolean,
+  idToken = ""
+) {
+  try {
+    console.log({ id, starred, idToken });
+    const email = {
+      id: 1,
+      subject: "Hello World",
+      body: "This is a test email.",
+      toUser: {
+        email: "john@example.com",
+      },
+      client: {
+        firstName: "John",
+        lastName: "Doe",
+      },
+      campaign: {
+        name: "Test Campaign",
+      },
+    };
+
+    return email;
+  } catch (error) {
+    console.error("Error in markEmailAsStarredAction:", error);
+    throw new Error("Failed to starred the email.");
+  }
+}
+
+/**
+ * Soft delete an email message.
+ * @param emailId - ID of the email to delete.
+ * @param userId - ID of the user performing the deletion.
+ */
+export async function softDeleteEmailAction(
+  emailId: number | string | undefined,
+  idToken = ""
+) {
+  try {
+    const email = {
+      id: 1,
+      subject: "Hello World",
+      body: "This is a test email.",
+      toUser: {
+        email: "john@example.com",
+      },
+      client: {
+        firstName: "John",
+        lastName: "Doe",
+      },
+      campaign: {
+        name: "Test Campaign",
+      },
+    };
+
+    return email;
+  } catch (error) {
+    console.error("Error performing soft delete:", error);
+    throw new Error("Failed to soft delete the email.");
+  }
+}
+
+/**
+ * Hide an email message.
+ * @param emailId - ID of the email to hide.
+ * @param userId - ID of the user performing the hide action.
+ */
+export async function hideEmailAction(
+  emailId: number | string | undefined,
+  idToken = ""
+) {
+  try {
+    const email = {
+      id: 1,
+      subject: "Hello World",
+      body: "This is a test email.",
+      toUser: {
+        email: "john@example.com",
+      },
+      client: {
+        firstName: "John",
+        lastName: "Doe",
+      },
+      campaign: {
+        name: "Test Campaign",
+      },
+    };
+
+    return email;
+  } catch (error) {
+    console.error("Error performing hide action:", error);
+    throw new Error("Failed to hide the email.");
+  }
+}
