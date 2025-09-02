@@ -161,6 +161,8 @@ function ProfileForm() {
     },
   });
 
+  const { refreshUserData } = useAuth();
+
   // Fetch user profile data on component mount
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -215,16 +217,22 @@ function ProfileForm() {
         form.setValue('lastName', updatedFormData.lastName);
         form.setValue('avatarUrl', updatedFormData.avatarUrl);
 
-        // Update AuthContext with fresh data from NileDB
-        updateUser({
-          displayName: updatedFormData.name,
-          photoURL: updatedFormData.avatarUrl,
-          profile: {
-            firstName: updatedFormData.firstName,
-            lastName: updatedFormData.lastName,
-            avatar: updatedFormData.avatarUrl,
-          }
-        });
+        // Refresh AuthContext with fresh data from NileDB server
+        try {
+          await refreshUserData();
+        } catch (refreshError) {
+          console.warn("Failed to refresh user data in AuthContext:", refreshError);
+          // Fallback: update with the response data if refresh fails
+          updateUser({
+            displayName: updatedFormData.name,
+            photoURL: updatedFormData.avatarUrl,
+            profile: {
+              firstName: updatedFormData.firstName,
+              lastName: updatedFormData.lastName,
+              avatar: updatedFormData.avatarUrl,
+            }
+          });
+        }
 
         toast.success("Profile updated successfully", {
           description: "Your profile information has been saved.",

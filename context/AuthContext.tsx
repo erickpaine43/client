@@ -17,6 +17,7 @@ const AuthContext = createContext<AuthContextType>({
   signup: async () => { },
   logout: async () => { },
   updateUser: () => { },
+  refreshUserData: async () => { },
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -185,6 +186,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(updatedUser);
   };
 
+  const refreshUserData = async () => {
+    try {
+      const profileResponse: ProfileActionResponse<NileUser> = await getUserProfile();
+      if (profileResponse.success && profileResponse.data) {
+        const fullUser = mapNileUserToUser(profileResponse.data);
+        setUser(fullUser);
+        setAuthError(null);
+      } else if (profileResponse.error) {
+        console.warn("Failed to refresh user profile:", profileResponse.error.message);
+        throw new Error(profileResponse.error.message);
+      }
+    } catch (error) {
+      console.error("Error refreshing user data:", error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -223,7 +241,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, error: authError, login, signup, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, loading, error: authError, login, signup, logout, updateUser, refreshUserData }}>
       {children}
     </AuthContext.Provider>
   );
