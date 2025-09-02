@@ -14,5 +14,8 @@
       "service": "client"
     }
   ],
+  "limits": {
+    "cpu_ms": 300000
+  },
   "send_metrics": false
 }
