@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/sheet";
 import {
   LogIn,
-  LogOut,
   Settings,
   LayoutDashboard,
   UserPlus,
