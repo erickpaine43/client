@@ -28,7 +28,7 @@ export default function Navbar() {
 
   const Logo = () => (
     <Link
-      href="/"
+      href="https://penguinmails.com"
       className="flex items-center space-x-2"
       aria-label="Penguin Mails Home"
     >
@@ -96,7 +96,7 @@ export default function Navbar() {
         </LinkWrapper>
         <LinkWrapper>
           <Button variant="ghost" size="sm" asChild className={linkClass}>
-            <Link href="/login">
+            <Link href="/">
               <LogIn className="mr-2 h-4 w-4" />
               Login
             </Link>

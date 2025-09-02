@@ -84,7 +84,7 @@ export default function SignUpPage() {
     <div className="flex flex-col items-center space-y-2">
       <p className="text-xs text-muted-foreground">
         {signupContent.footer.haveAccount}{" "}
-        <Link href="/login" className="underline font-medium text-primary">
+        <Link href="/" className="underline font-medium text-primary">
           {signupContent.footer.login}
         </Link>
       </p>

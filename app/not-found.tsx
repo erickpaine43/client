@@ -50,7 +50,7 @@ const NotFound = () => {
             <ul className="mt-2 list-none">
               <li>
                 <Link
-                  href="/login"
+                  href="/"
                   className="text-primary-600 underline hover:no-underline"
                 >
                   Login

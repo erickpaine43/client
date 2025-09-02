@@ -123,7 +123,7 @@ function ProfileForm() {
             description: "Redirecting to login page...",
           });
           setTimeout(() => {
-            router.push("/login");
+            router.push("/");
           }, 2000);
         } else if (result.error.type === "network") {
           // Network error - will be handled in the error component
@@ -379,7 +379,7 @@ function ProfileForm() {
               description: "Redirecting to login page...",
             });
             setTimeout(() => {
-              router.push("/login");
+              router.push("/");
             }, 2000);
           } else if (result.error.type === "network") {
             toast.error("Network error", {

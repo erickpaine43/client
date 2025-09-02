@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
             <p className="text-xs text-muted-foreground">
               {forgotPasswordContent.footer.text}{" "}
               <Link
-                href="/login"
+                href="/"
                 className="underline font-medium text-primary"
               >
                 {forgotPasswordContent.footer.linkText}
