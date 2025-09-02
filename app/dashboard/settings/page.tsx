@@ -1,4 +1,5 @@
 import ProfileForm from "@/components/settings/profile-form";
+import ProfileErrorBoundary from "@/components/settings/ProfileErrorBoundary";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 function page() {
@@ -18,7 +19,9 @@ function page() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ProfileForm />
+          <ProfileErrorBoundary maxRetries={3}>
+            <ProfileForm />
+          </ProfileErrorBoundary>
         </CardContent>
       </Card>
     </div>

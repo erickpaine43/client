@@ -23,11 +23,12 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertTriangle, CheckCircle, Loader2, RefreshCw, AlertCircle } from "lucide-react";
+import { AlertTriangle, Loader2, RefreshCw, AlertCircle } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useAuth } from "@/context/AuthContext";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import {
   getUserProfile,
   updateUserProfile,
@@ -56,17 +57,17 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 function ProfileForm() {
   const router = useRouter();
   const { user: authUser, loading: authLoading, updateUser } = useAuth();
+  const { isOnline, wasOffline } = useOnlineStatus();
   const [profileLoading, setProfileLoading] = useState(true);
   const [profileError, setProfileError] = useState<ProfileError | null>(null);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const [message, setMessage] = useState({ type: "", text: "" });
   const [isRetryingProfile, setIsRetryingProfile] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const [customAvatarUrl, setCustomAvatarUrl] = useState("");
 
   const MAX_RETRIES = 3;
 
-  // Enhanced retry function with exponential backoff
+  // Enhanced retry function with exponential backoff and timeout
   const retryFetchProfile = async () => {
     if (retryCount >= MAX_RETRIES) {
       toast.error("Unable to load profile", {
@@ -76,10 +77,25 @@ function ProfileForm() {
     }
 
     setIsRetryingProfile(true);
+    const currentRetry = retryCount;
     setRetryCount(prev => prev + 1);
 
+    // Add timeout to the request with progressive delays
+    const timeoutDuration = Math.min(5000 + (currentRetry * 1000), 15000); // 5s, 6s, 7s... up to 15s
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutDuration);
+
     try {
-      const result = await getUserProfile();
+      // Create a timeout wrapper for the profile fetch
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout')), timeoutDuration)
+      );
+
+      const profilePromise = getUserProfile();
+      const result = await Promise.race([profilePromise, timeoutPromise]) as Awaited<ReturnType<typeof getUserProfile>>;
+
+      // Clear timeout since request completed
+      clearTimeout(timeoutId);
 
       if (result.success && result.data) {
         const nileFormData = mapNileUserToFormData(result.data);
@@ -93,7 +109,9 @@ function ProfileForm() {
         });
         setProfileError(null);
         setRetryCount(0); // Reset retry count on success
-        toast.success("Profile loaded successfully");
+        toast.success("Profile loaded successfully", {
+          description: "Your profile information has been updated.",
+        });
       } else if (result.error) {
         setProfileError(result.error);
 
@@ -106,21 +124,55 @@ function ProfileForm() {
           }, 2000);
         } else if (result.error.type === 'network') {
           // Network error - will be handled in the error component
+          if (currentRetry >= MAX_RETRIES - 1) {
+            toast.error("Network error", {
+              description: "Unable to connect. Please check your internet connection.",
+              duration: 5000,
+            });
+          }
         } else {
           toast.error("Failed to load profile", {
             description: result.error.message,
           });
         }
       }
-    } catch (error) {
+    } catch (error: unknown) {
+      clearTimeout(timeoutId);
       console.error('Error fetching user profile:', error);
+
+      const errorObj = error as Error;
+      let errorMessage = 'Failed to load profile data. Please try again.';
+      const errorType: ProfileError['type'] = 'network';
+
+      if (errorObj.message?.includes('timeout') || errorObj.name === 'AbortError') {
+        errorMessage = currentRetry === 0
+          ? 'Request timed out. Retrying...'
+          : `Request timed out (${currentRetry}/${MAX_RETRIES} retry attempts). Please check your connection.`;
+      } else if (errorObj.message?.includes('fetch')) {
+        errorMessage = currentRetry === 0
+          ? 'Network connection failed. Retrying...'
+          : `Network connection failed (${currentRetry}/${MAX_RETRIES} retry attempts). Please check your connection.`;
+      } else if (errorObj.message?.includes('aborted')) {
+        errorMessage = 'Request was cancelled. Please try again.';
+      } else if (currentRetry > 0) {
+        errorMessage = `Failed to load profile data (${currentRetry}/${MAX_RETRIES} retry attempts). Please check your connection.`;
+      }
+
       const networkError: ProfileError = {
-        type: 'network',
-        message: retryCount === 0
-          ? 'Failed to load profile data. Please try again.'
-          : `Failed to load profile data (${retryCount}/${MAX_RETRIES} retry attempts). Please check your connection.`,
+        type: errorType,
+        message: errorMessage,
       };
       setProfileError(networkError);
+
+      // Show additional guidance on final retry
+      if (currentRetry >= MAX_RETRIES - 1) {
+        setTimeout(() => {
+          toast.error("Connection Failed", {
+            description: "Please check your internet connection or try refreshing the page.",
+            duration: 6000,
+          });
+        }, 1000);
+      }
     } finally {
       setIsRetryingProfile(false);
       setProfileLoading(false);
@@ -191,14 +243,52 @@ function ProfileForm() {
     if (!authLoading) {
       fetchProfileData();
     }
-  }, [authUser, authLoading, form]);
+  }, [authUser, authLoading, form, retryFetchProfile]);
+
+  // Auto-retry when coming back online
+  useEffect(() => {
+    if (wasOffline && isOnline && profileError?.type === 'network') {
+      toast.success("Connection restored", {
+        description: "Retrying to load your profile...",
+      });
+      // Auto-retry once when coming back online
+      const timer = setTimeout(() => {
+        retryFetchProfile();
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOnline, wasOffline, profileError, retryFetchProfile]);
+
+  // Show offline notification
+  useEffect(() => {
+    if (!isOnline) {
+      toast.error("You're offline", {
+        description: "Some features may not work properly. Please check your connection.",
+        duration: 5000,
+      });
+    }
+  }, [isOnline]);
 
   const onSubmit = async (data: ProfileFormValues) => {
     setSubmitLoading(true);
-    setMessage({ type: "", text: "" });
 
     // Clear any existing form errors
     form.clearErrors();
+
+    // Check for online status before submitting
+    if (!isOnline) {
+      toast.error("You're offline", {
+        description: "Please check your internet connection and try again.",
+      });
+      setSubmitLoading(false);
+      return;
+    }
+
+    // Add timeout to the update request
+    const timeoutDuration = 10000; // 10 seconds for updates
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutDuration);
 
     try {
       // Extract the profile fields for NileDB update
@@ -209,7 +299,13 @@ function ProfileForm() {
         avatarUrl: data.avatarUrl,
       };
 
-      const result = await updateUserProfile(profileData);
+      // Create a timeout wrapper for the profile update
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Update timeout')), timeoutDuration)
+      );
+
+      const updatePromise = updateUserProfile(profileData);
+      const result = await Promise.race([updatePromise, timeoutPromise]) as Awaited<ReturnType<typeof updateUserProfile>>;
 
       if (result.success && result.data) {
         const updatedFormData = mapNileUserToFormData(result.data);
@@ -278,10 +374,46 @@ function ProfileForm() {
           description: "Failed to update profile. Please try again.",
         });
       }
-    } catch (error) {
+    } catch (error: unknown) {
+      clearTimeout(timeoutId);
       console.error("Error updating profile:", error);
-      toast.error("Unexpected error", {
-        description: "An unexpected error occurred while updating your profile. Please try again.",
+
+      const errorObj = error as Error;
+      let errorMessage = "An unexpected error occurred while updating your profile.";
+      let actionOptions: { action: { label: string; onClick: () => void } } | undefined;
+
+      if (errorObj instanceof Error) {
+        if (errorObj.message?.includes('timeout') || errorObj.name === 'AbortError') {
+          errorMessage = "Update timed out. Please check your connection and try again.";
+          actionOptions = {
+            action: {
+              label: "Retry",
+              onClick: () => onSubmit(data),
+            },
+          };
+        } else if (errorObj.message?.includes('fetch') || errorObj.message?.includes('network')) {
+          errorMessage = "Network error. Please check your internet connection.";
+          actionOptions = {
+            action: {
+              label: "Retry",
+              onClick: () => onSubmit(data),
+            },
+          };
+        } else if (errorObj.message?.includes('aborted')) {
+          errorMessage = "Update was cancelled. Please try again.";
+        } else {
+          actionOptions = {
+            action: {
+              label: "Retry",
+              onClick: () => onSubmit(data),
+            },
+          };
+        }
+      }
+
+      toast.error("Update failed", {
+        description: errorMessage,
+        ...actionOptions,
       });
     } finally {
       setSubmitLoading(false);
@@ -290,6 +422,16 @@ function ProfileForm() {
 
   return (
     <div className="space-y-6">
+      {/* Offline/Connectivity Indicator */}
+      {!isOnline && (
+        <Alert className="border-orange-200 bg-orange-50">
+          <AlertTriangle className="h-4 w-4 text-orange-600" />
+          <AlertDescription className="text-orange-800">
+            You're currently offline. Profile data may not be up to date.
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Profile Loading State */}
       {profileLoading && (
         <Alert>
