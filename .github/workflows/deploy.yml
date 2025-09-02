@@ -36,8 +36,8 @@ jobs:
 
       - name: Verify Worker Build
         run: |
-          echo "Checking OpenNext build directory..."
-          ls -la .open-next/
+          echo "📋 Checking OpenNext build output..."
+          ls -la .open-next/ 2>/dev/null || echo "Warning: .open-next directory not found"
           if [ ! -f ".open-next/worker.js" ]; then
             echo "::error::OpenNext worker build failed - .open-next/worker.js not found"
             exit 1
@@ -49,6 +49,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: .
 
       - name: Comment deployment URL
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
