@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -129,13 +130,13 @@ export default function LoginPage() {
                       {loginContent.forgotPassword}
                     </Link>
                   </div>
-                  <Input
-                    id="password"
-                    type="password"
-                    required
+                  <PasswordInput
+                    name="password"
+                    placeholder=""
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onValueChange={setPassword}
                     disabled={isLoading}
+                    required
                   />
                 </div>
 
