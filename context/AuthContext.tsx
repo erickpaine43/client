@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const getUserFromSession = async () => {
           try {
             const session = await auth.getSession();
+            console.log
             if ((session as any)?.user) {
               setUser(mapSessionToUser(session as any));
             }

@@ -32,6 +32,32 @@ export interface ProfileError {
 
 // Validation function for profile update data
 function validateProfileData(data: Partial<ProfileFormData>): ProfileError | null {
+  // Check required fields
+  if (!data.name || data.name.trim().length === 0) {
+    return {
+      type: "validation",
+      message: "Display name is required",
+      field: "name"
+    };
+  }
+
+  if (!data.firstName || data.firstName.trim().length === 0) {
+    return {
+      type: "validation",
+      message: "First name is required",
+      field: "firstName"
+    };
+  }
+
+  if (!data.lastName || data.lastName.trim().length === 0) {
+    return {
+      type: "validation",
+      message: "Last name is required",
+      field: "lastName"
+    };
+  }
+
+  // Check length constraints
   if (data.firstName && data.firstName.length > 50) {
     return {
       type: "validation",
@@ -56,7 +82,8 @@ function validateProfileData(data: Partial<ProfileFormData>): ProfileError | nul
     };
   }
 
-  if (data.avatarUrl && !data.avatarUrl.match(/^https?:\/\/.+/)) {
+  // Check avatar URL format if provided
+  if (data.avatarUrl && data.avatarUrl.trim().length > 0 && !data.avatarUrl.match(/^https?:\/\/.+/)) {
     return {
       type: "validation",
       message: "Avatar URL must be a valid HTTP/HTTPS URL",

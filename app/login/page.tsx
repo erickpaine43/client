@@ -19,6 +19,8 @@ import { LandingLayout } from "@/components/layout/landing";
 import { loginContent } from "./content";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { UserInfo, SignOutButton
+} from "@niledatabase/react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -56,24 +58,10 @@ export default function LoginPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <p>Welcome, {user.displayName}!</p>
-                <p>Email: {user.email}</p>
-              </div>
+              <UserInfo />
             </CardContent>
             <CardFooter className="flex justify-between">
-              <Button
-                variant="outline"
-                onClick={async () => {
-                  try {
-                    await logout();
-                  } catch (err) {
-                    console.error("Logout failed:", err);
-                  }
-                }}
-              >
-                Logout
-              </Button>
+              <SignOutButton className="bg-red-500 hover:bg-red-700 hover:text-white hover:rounded-md hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300 ease-in-out" />
               <Button
                 className="py-5"
                 onClick={() => router.push("/dashboard")}
