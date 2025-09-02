@@ -25,7 +25,7 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
   const isMobile = useIsMobile();
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
 
   const Logo = () => (
     <Link
@@ -74,7 +74,7 @@ export default function Navbar() {
               className={linkClass}
               onClick={async () => {
                 try {
-                  // await signOut(authClient);
+                  await logout();
                 } catch (error) {
                   console.error("Error signing out:", error);
                 }

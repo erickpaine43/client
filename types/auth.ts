@@ -89,7 +89,9 @@ export type User = z.infer<typeof UserSchema>;
 export interface AuthContextType {
   user: User | null;
   loading: boolean;
+  error: Error | null;
   login: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string, firstName?: string, lastName?: string, companyName?: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshToken?: () => Promise<void>;
 }

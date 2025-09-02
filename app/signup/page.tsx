@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { useSignUp, SignedIn, SignedOut, UserInfo, SignOutButton } from "@niledatabase/react";
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -45,6 +45,7 @@ function SignUpForm() {
   const [error, setError] = useState<string | null>(null);
   const [passwordStrength, setPasswordStrength] = useState<PasswordStrength | null>(null);
   const router = useRouter();
+  const { signup, logout, user } = useAuth();
 
   // Initialize react-hook-form
   const {
@@ -59,23 +60,6 @@ function SignUpForm() {
       password: "",
       confirmPassword: "",
     },
-  });
-
-  // Initialize Nile useSignUp hook
-  const signUp = useSignUp({
-    onSuccess: (data) => {
-      const { ok } = data;
-      if (ok) {
-        router.push("/dashboard");
-      } else {
-        setError("Signup failed. Please try again.");
-      }
-    },
-    onError: (err) => {
-      console.error("Sign-up failed:", err);
-      setError(err.message || "Signup failed. Please try again.");
-    },
-    callbackUrl: "/dashboard",
   });
 
   // Add loading state for form
@@ -94,8 +78,9 @@ function SignUpForm() {
 
     try {
       console.log("Form data:", data);
-      // Call Nile signup function with only email and password
-      await signUp({ email: data.email, password: data.password });
+      // Call centralized signup function
+      await signup(data.email, data.password);
+      router.push("/dashboard");
     } catch (err: unknown) {
       console.error("Signup failed:", err);
       if (
@@ -113,9 +98,9 @@ function SignUpForm() {
     }
   };
 
-  return (
-    <Card className="w-full max-w-sm">
-      <SignedIn>
+  if (user) {
+    return (
+      <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <User className="mx-auto h-8 w-8 mb-2 text-primary" />
           <CardTitle className="text-2xl">
@@ -123,10 +108,24 @@ function SignUpForm() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <UserInfo />
+          <div>
+            <p>Welcome, {user.displayName}!</p>
+            <p>Email: {user.email}</p>
+          </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <SignOutButton />
+          <Button
+            variant="outline"
+            onClick={async () => {
+              try {
+                await logout();
+              } catch (err) {
+                console.error("Logout failed:", err);
+              }
+            }}
+          >
+            Logout
+          </Button>
           <Button
             className="py-5"
             onClick={() => router.push("/dashboard")}
@@ -135,110 +134,113 @@ function SignUpForm() {
             Go to Dashboard
           </Button>
         </CardFooter>
-      </SignedIn>
-      <SignedOut>
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">{signupContent.header.title}</CardTitle>
-          <CardDescription>{signupContent.header.description}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Email Field */}
-          <div className="space-y-2">
-            <Label htmlFor="email">{signupContent.form.email.label}</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder={signupContent.form.email.placeholder}
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Please enter a valid email address",
-                },
-              })}
-              disabled={isSignUpLoading}
-            />
-            {errors.email && (
-              <p className="text-sm text-red-600">{errors.email.message}</p>
-            )}
-          </div>
+      </Card>
+    );
+  }
 
-          {/* Password Field */}
-          <div className="space-y-2">
-            <PasswordInput
-              label={signupContent.form.password.label}
-              placeholder={signupContent.form.password.placeholder}
-              showStrengthMeter={true}
-              onStrengthChange={handlePasswordStrengthChange}
-              value={watch("password")}
-              onValueChange={(value) => setValue("password", value)}
-              disabled={isSignUpLoading}
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 8,
-                  message: "Password must be at least 8 characters",
-                },
-                validate: {
-                  strength: () => {
-                    if (passwordStrength && passwordStrength.score < 2) {
-                      return "Password is too weak. Please include at least 2 of: uppercase, lowercase, number, special character";
-                    }
-                    return true;
-                  },
-                },
-              })}
-            />
-            {errors.password && (
-              <p className="text-sm text-red-600">{errors.password.message}</p>
-            )}
-          </div>
-
-          {/* Confirm Password Field */}
-          <div className="space-y-2">
-            <PasswordInput
-              label={signupContent.form.confirmPassword.label}
-              placeholder={signupContent.form.confirmPassword.placeholder}
-              value={watch("confirmPassword")}
-              onValueChange={(value) => setValue("confirmPassword", value)}
-              disabled={isSignUpLoading}
-              {...register("confirmPassword", {
-                required: "Please confirm your password",
-                validate: {
-                  match: (value: string, { password }: FormData) =>
-                    value === password || "Passwords do not match",
-                },
-              })}
-            />
-            {errors.confirmPassword && (
-              <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
-            )}
-          </div>
-
-          {/* Error Message */}
-          {error && (
-            <Alert variant="destructive">
-              <Terminal className="h-4 w-4" />
-              <AlertTitle>{signupContent.alerts.error.title}</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
+  return (
+    <Card className="w-full max-w-sm">
+      <CardHeader className="text-center">
+        <CardTitle className="text-2xl">{signupContent.header.title}</CardTitle>
+        <CardDescription>{signupContent.header.description}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Email Field */}
+        <div className="space-y-2">
+          <Label htmlFor="email">{signupContent.form.email.label}</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder={signupContent.form.email.placeholder}
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Please enter a valid email address",
+              },
+            })}
+            disabled={isSignUpLoading}
+          />
+          {errors.email && (
+            <p className="text-sm text-red-600">{errors.email.message}</p>
           )}
+        </div>
 
-          <Button type="submit" className="w-full" disabled={isSignUpLoading}>
-            {isSignUpLoading ? "Signing up..." : "Create Account"}
-          </Button>
-        </form>
-      </CardContent>
-      <CardFooter className="flex flex-col items-center space-y-2">
-        <p className="text-xs text-muted-foreground">
-          {signupContent.footer.haveAccount} {/* Use Link */}
-          <Link href="/login" className="underline font-medium text-primary">
-            {signupContent.footer.login}
-          </Link>
-        </p>
-      </CardFooter>
-      </SignedOut>
+        {/* Password Field */}
+        <div className="space-y-2">
+          <PasswordInput
+            label={signupContent.form.password.label}
+            placeholder={signupContent.form.password.placeholder}
+            showStrengthMeter={true}
+            onStrengthChange={handlePasswordStrengthChange}
+            value={watch("password")}
+            onValueChange={(value) => setValue("password", value)}
+            disabled={isSignUpLoading}
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters",
+              },
+              validate: {
+                strength: () => {
+                  if (passwordStrength && passwordStrength.score < 2) {
+                    return "Password is too weak. Please include at least 2 of: uppercase, lowercase, number, special character";
+                  }
+                  return true;
+                },
+              },
+            })}
+          />
+          {errors.password && (
+            <p className="text-sm text-red-600">{errors.password.message}</p>
+          )}
+        </div>
+
+        {/* Confirm Password Field */}
+        <div className="space-y-2">
+          <PasswordInput
+            label={signupContent.form.confirmPassword.label}
+            placeholder={signupContent.form.confirmPassword.placeholder}
+            value={watch("confirmPassword")}
+            onValueChange={(value) => setValue("confirmPassword", value)}
+            disabled={isSignUpLoading}
+            {...register("confirmPassword", {
+              required: "Please confirm your password",
+              validate: {
+                match: (value: string, { password }: FormData) =>
+                  value === password || "Passwords do not match",
+              },
+            })}
+          />
+          {errors.confirmPassword && (
+            <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
+          )}
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <Alert variant="destructive">
+            <Terminal className="h-4 w-4" />
+            <AlertTitle>{signupContent.alerts.error.title}</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        <Button type="submit" className="w-full" disabled={isSignUpLoading}>
+          {isSignUpLoading ? "Signing up..." : "Create Account"}
+        </Button>
+      </form>
+    </CardContent>
+    <CardFooter className="flex flex-col items-center space-y-2">
+      <p className="text-xs text-muted-foreground">
+        {signupContent.footer.haveAccount} {/* Use Link */}
+        <Link href="/login" className="underline font-medium text-primary">
+          {signupContent.footer.login}
+        </Link>
+      </p>
+    </CardFooter>
     </Card>
   );
 }
