@@ -32,12 +32,12 @@ import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import {
   getUserProfile,
   updateUserProfile,
-  type ProfileError
+  type ProfileError,
 } from "@/lib/actions/profileActions";
 import {
   mapNileUserToFormData,
   type ProfileFormData,
-  allTimezones
+  allTimezones,
 } from "@/lib/utils";
 import AvatarSelector from "@/components/settings/AvatarSelector";
 
@@ -78,21 +78,24 @@ function ProfileForm() {
 
     setIsRetryingProfile(true);
     const currentRetry = retryCount;
-    setRetryCount(prev => prev + 1);
+    setRetryCount((prev) => prev + 1);
 
     // Add timeout to the request with progressive delays
-    const timeoutDuration = Math.min(5000 + (currentRetry * 1000), 15000); // 5s, 6s, 7s... up to 15s
+    const timeoutDuration = Math.min(5000 + currentRetry * 1000, 15000); // 5s, 6s, 7s... up to 15s
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutDuration);
 
     try {
       // Create a timeout wrapper for the profile fetch
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Request timeout')), timeoutDuration)
+        setTimeout(() => reject(new Error("Request timeout")), timeoutDuration)
       );
 
       const profilePromise = getUserProfile();
-      const result = await Promise.race([profilePromise, timeoutPromise]) as Awaited<ReturnType<typeof getUserProfile>>;
+      const result = (await Promise.race([
+        profilePromise,
+        timeoutPromise,
+      ])) as Awaited<ReturnType<typeof getUserProfile>>;
 
       // Clear timeout since request completed
       clearTimeout(timeoutId);
@@ -115,18 +118,19 @@ function ProfileForm() {
       } else if (result.error) {
         setProfileError(result.error);
 
-        if (result.error.type === 'auth') {
+        if (result.error.type === "auth") {
           toast.error("Authentication required", {
             description: "Redirecting to login page...",
           });
           setTimeout(() => {
-            router.push('/login');
+            router.push("/login");
           }, 2000);
-        } else if (result.error.type === 'network') {
+        } else if (result.error.type === "network") {
           // Network error - will be handled in the error component
           if (currentRetry >= MAX_RETRIES - 1) {
             toast.error("Network error", {
-              description: "Unable to connect. Please check your internet connection.",
+              description:
+                "Unable to connect. Please check your internet connection.",
               duration: 5000,
             });
           }
@@ -138,22 +142,27 @@ function ProfileForm() {
       }
     } catch (error: unknown) {
       clearTimeout(timeoutId);
-      console.error('Error fetching user profile:', error);
+      console.error("Error fetching user profile:", error);
 
       const errorObj = error as Error;
-      let errorMessage = 'Failed to load profile data. Please try again.';
-      const errorType: ProfileError['type'] = 'network';
+      let errorMessage = "Failed to load profile data. Please try again.";
+      const errorType: ProfileError["type"] = "network";
 
-      if (errorObj.message?.includes('timeout') || errorObj.name === 'AbortError') {
-        errorMessage = currentRetry === 0
-          ? 'Request timed out. Retrying...'
-          : `Request timed out (${currentRetry}/${MAX_RETRIES} retry attempts). Please check your connection.`;
-      } else if (errorObj.message?.includes('fetch')) {
-        errorMessage = currentRetry === 0
-          ? 'Network connection failed. Retrying...'
-          : `Network connection failed (${currentRetry}/${MAX_RETRIES} retry attempts). Please check your connection.`;
-      } else if (errorObj.message?.includes('aborted')) {
-        errorMessage = 'Request was cancelled. Please try again.';
+      if (
+        errorObj.message?.includes("timeout") ||
+        errorObj.name === "AbortError"
+      ) {
+        errorMessage =
+          currentRetry === 0
+            ? "Request timed out. Retrying..."
+            : `Request timed out (${currentRetry}/${MAX_RETRIES} retry attempts). Please check your connection.`;
+      } else if (errorObj.message?.includes("fetch")) {
+        errorMessage =
+          currentRetry === 0
+            ? "Network connection failed. Retrying..."
+            : `Network connection failed (${currentRetry}/${MAX_RETRIES} retry attempts). Please check your connection.`;
+      } else if (errorObj.message?.includes("aborted")) {
+        errorMessage = "Request was cancelled. Please try again.";
       } else if (currentRetry > 0) {
         errorMessage = `Failed to load profile data (${currentRetry}/${MAX_RETRIES} retry attempts). Please check your connection.`;
       }
@@ -168,7 +177,8 @@ function ProfileForm() {
       if (currentRetry >= MAX_RETRIES - 1) {
         setTimeout(() => {
           toast.error("Connection Failed", {
-            description: "Please check your internet connection or try refreshing the page.",
+            description:
+              "Please check your internet connection or try refreshing the page.",
             duration: 6000,
           });
         }, 1000);
@@ -182,22 +192,32 @@ function ProfileForm() {
   // Helper function to get error variants
   const getErrorVariant = (type: string) => {
     switch (type) {
-      case 'auth': return 'destructive';
-      case 'validation': return 'default';
-      case 'network': return 'default';
-      case 'server': return 'destructive';
-      default: return 'default';
+      case "auth":
+        return "destructive";
+      case "validation":
+        return "default";
+      case "network":
+        return "default";
+      case "server":
+        return "destructive";
+      default:
+        return "default";
     }
   };
 
   // Helper function to get error icons
   const getErrorIcon = (type: string) => {
     switch (type) {
-      case 'auth': return <AlertTriangle className="h-4 w-4" />;
-      case 'validation': return <AlertCircle className="h-4 w-4" />;
-      case 'network': return <RefreshCw className="h-4 w-4" />;
-      case 'server': return <AlertTriangle className="h-4 w-4" />;
-      default: return <AlertCircle className="h-4 w-4" />;
+      case "auth":
+        return <AlertTriangle className="h-4 w-4" />;
+      case "validation":
+        return <AlertCircle className="h-4 w-4" />;
+      case "network":
+        return <RefreshCw className="h-4 w-4" />;
+      case "server":
+        return <AlertTriangle className="h-4 w-4" />;
+      default:
+        return <AlertCircle className="h-4 w-4" />;
     }
   };
 
@@ -243,11 +263,12 @@ function ProfileForm() {
     if (!authLoading) {
       fetchProfileData();
     }
-  }, [authUser, authLoading, form, retryFetchProfile]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authUser, authLoading, form]);
 
   // Auto-retry when coming back online
   useEffect(() => {
-    if (wasOffline && isOnline && profileError?.type === 'network') {
+    if (wasOffline && isOnline && profileError?.type === "network") {
       toast.success("Connection restored", {
         description: "Retrying to load your profile...",
       });
@@ -264,7 +285,8 @@ function ProfileForm() {
   useEffect(() => {
     if (!isOnline) {
       toast.error("You're offline", {
-        description: "Some features may not work properly. Please check your connection.",
+        description:
+          "Some features may not work properly. Please check your connection.",
         duration: 5000,
       });
     }
@@ -301,24 +323,30 @@ function ProfileForm() {
 
       // Create a timeout wrapper for the profile update
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Update timeout')), timeoutDuration)
+        setTimeout(() => reject(new Error("Update timeout")), timeoutDuration)
       );
 
       const updatePromise = updateUserProfile(profileData);
-      const result = await Promise.race([updatePromise, timeoutPromise]) as Awaited<ReturnType<typeof updateUserProfile>>;
+      const result = (await Promise.race([
+        updatePromise,
+        timeoutPromise,
+      ])) as Awaited<ReturnType<typeof updateUserProfile>>;
 
       if (result.success && result.data) {
         const updatedFormData = mapNileUserToFormData(result.data);
-        form.setValue('name', updatedFormData.name);
-        form.setValue('firstName', updatedFormData.firstName);
-        form.setValue('lastName', updatedFormData.lastName);
-        form.setValue('avatarUrl', updatedFormData.avatarUrl);
+        form.setValue("name", updatedFormData.name);
+        form.setValue("firstName", updatedFormData.firstName);
+        form.setValue("lastName", updatedFormData.lastName);
+        form.setValue("avatarUrl", updatedFormData.avatarUrl);
 
         // Refresh AuthContext with fresh data from NileDB server
         try {
           await refreshUserData();
         } catch (refreshError) {
-          console.warn("Failed to refresh user data in AuthContext:", refreshError);
+          console.warn(
+            "Failed to refresh user data in AuthContext:",
+            refreshError
+          );
           // Fallback: update with the response data if refresh fails
           updateUser({
             displayName: updatedFormData.name,
@@ -327,7 +355,7 @@ function ProfileForm() {
               firstName: updatedFormData.firstName,
               lastName: updatedFormData.lastName,
               avatar: updatedFormData.avatarUrl,
-            }
+            },
           });
         }
 
@@ -342,16 +370,18 @@ function ProfileForm() {
           });
         } else {
           // Handle general errors with toast
-          const errorMessage = result.error.message || "Failed to update profile. Please try again.";
+          const errorMessage =
+            result.error.message ||
+            "Failed to update profile. Please try again.";
 
-          if (result.error.type === 'auth') {
+          if (result.error.type === "auth") {
             toast.error("Authentication expired", {
               description: "Redirecting to login page...",
             });
             setTimeout(() => {
-              router.push('/login');
+              router.push("/login");
             }, 2000);
-          } else if (result.error.type === 'network') {
+          } else if (result.error.type === "network") {
             toast.error("Network error", {
               description: "Please check your connection and try again.",
               action: {
@@ -359,7 +389,7 @@ function ProfileForm() {
                 onClick: () => onSubmit(data),
               },
             });
-          } else if (result.error.type === 'validation') {
+          } else if (result.error.type === "validation") {
             toast.error("Validation error", {
               description: errorMessage,
             });
@@ -379,27 +409,38 @@ function ProfileForm() {
       console.error("Error updating profile:", error);
 
       const errorObj = error as Error;
-      let errorMessage = "An unexpected error occurred while updating your profile.";
-      let actionOptions: { action: { label: string; onClick: () => void } } | undefined;
+      let errorMessage =
+        "An unexpected error occurred while updating your profile.";
+      let actionOptions:
+        | { action: { label: string; onClick: () => void } }
+        | undefined;
 
       if (errorObj instanceof Error) {
-        if (errorObj.message?.includes('timeout') || errorObj.name === 'AbortError') {
-          errorMessage = "Update timed out. Please check your connection and try again.";
+        if (
+          errorObj.message?.includes("timeout") ||
+          errorObj.name === "AbortError"
+        ) {
+          errorMessage =
+            "Update timed out. Please check your connection and try again.";
           actionOptions = {
             action: {
               label: "Retry",
               onClick: () => onSubmit(data),
             },
           };
-        } else if (errorObj.message?.includes('fetch') || errorObj.message?.includes('network')) {
-          errorMessage = "Network error. Please check your internet connection.";
+        } else if (
+          errorObj.message?.includes("fetch") ||
+          errorObj.message?.includes("network")
+        ) {
+          errorMessage =
+            "Network error. Please check your internet connection.";
           actionOptions = {
             action: {
               label: "Retry",
               onClick: () => onSubmit(data),
             },
           };
-        } else if (errorObj.message?.includes('aborted')) {
+        } else if (errorObj.message?.includes("aborted")) {
           errorMessage = "Update was cancelled. Please try again.";
         } else {
           actionOptions = {
@@ -439,8 +480,7 @@ function ProfileForm() {
           <AlertDescription>
             {isRetryingProfile
               ? `Loading your profile... (attempt ${retryCount}/${MAX_RETRIES})`
-              : "Loading your profile..."
-            }
+              : "Loading your profile..."}
           </AlertDescription>
         </Alert>
       )}
@@ -451,7 +491,7 @@ function ProfileForm() {
           {getErrorIcon(profileError.type)}
           <AlertDescription className="flex items-center justify-between">
             <span>{profileError.message}</span>
-            {profileError.type === 'network' && retryCount < MAX_RETRIES && (
+            {profileError.type === "network" && retryCount < MAX_RETRIES && (
               <div className="flex items-center gap-2 ml-4">
                 <Button
                   variant="outline"
@@ -493,11 +533,15 @@ function ProfileForm() {
                 <FormItem>
                   <FormLabel>Display Name *</FormLabel>
                   <FormControl>
-                    <Input {...field} disabled={profileLoading || submitLoading} />
+                    <Input
+                      {...field}
+                      disabled={profileLoading || submitLoading}
+                    />
                   </FormControl>
                   <FormMessage />
                   <p className="text-sm text-muted-foreground">
-                    This name will be shown across the platform and in communications.
+                    This name will be shown across the platform and in
+                    communications.
                   </p>
                 </FormItem>
               )}
@@ -527,7 +571,10 @@ function ProfileForm() {
                     <FormItem>
                       <FormLabel>First Name *</FormLabel>
                       <FormControl>
-                        <Input {...field} disabled={profileLoading || submitLoading} />
+                        <Input
+                          {...field}
+                          disabled={profileLoading || submitLoading}
+                        />
                       </FormControl>
                       <FormMessage />
                       <p className="text-sm text-muted-foreground">
@@ -543,7 +590,10 @@ function ProfileForm() {
                     <FormItem>
                       <FormLabel>Last Name *</FormLabel>
                       <FormControl>
-                        <Input {...field} disabled={profileLoading || submitLoading} />
+                        <Input
+                          {...field}
+                          disabled={profileLoading || submitLoading}
+                        />
                       </FormControl>
                       <FormMessage />
                       <p className="text-sm text-muted-foreground">
@@ -574,7 +624,8 @@ function ProfileForm() {
                   </FormControl>
                   <FormMessage />
                   <p className="text-sm text-muted-foreground">
-                    Your email address cannot be modified and is used for authentication.
+                    Your email address cannot be modified and is used for
+                    authentication.
                   </p>
                 </FormItem>
               )}
@@ -607,8 +658,8 @@ function ProfileForm() {
               </div>
             ) : (
               <AvatarSelector
-                currentAvatarUrl={form.watch('avatarUrl')}
-                onAvatarChange={(url) => form.setValue('avatarUrl', url)}
+                currentAvatarUrl={form.watch("avatarUrl")}
+                onAvatarChange={(url) => form.setValue("avatarUrl", url)}
                 disabled={profileLoading || submitLoading}
                 customUrl={customAvatarUrl}
                 onCustomUrlChange={setCustomAvatarUrl}
@@ -730,7 +781,9 @@ function ProfileForm() {
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
               <div>
                 <h3 className="font-medium">Updating Profile</h3>
-                <p className="text-sm text-muted-foreground">Saving your changes...</p>
+                <p className="text-sm text-muted-foreground">
+                  Saving your changes...
+                </p>
               </div>
             </div>
           </div>
@@ -739,8 +792,7 @@ function ProfileForm() {
     </div>
   );
 }
-            // className="w-full sm:w-auto"
-            // disabled={submitLoading || profileLoading}
-
+// className="w-full sm:w-auto"
+// disabled={submitLoading || profileLoading}
 
 export default ProfileForm;

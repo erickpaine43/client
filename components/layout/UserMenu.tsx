@@ -5,8 +5,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
+  DropdownMenuContent
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthContext";
+import { SignOutButton } from "@niledatabase/react";
 
 function UserMenu() {
   const { user } = useAuth();
@@ -26,6 +28,9 @@ function UserMenu() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <SignOutButton className="w-full h-full bg-red-500 text-white rounded-md flex items-center justify-center hover:bg-red-600 transition-colors duration-200" />
+      </DropdownMenuContent>
     </DropdownMenu>
   );
 }

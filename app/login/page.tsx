@@ -83,12 +83,12 @@ export default function LoginPage() {
                 <Label htmlFor="password">
                   {loginContent.password.label}
                 </Label>
-                <Link
+                {/* <Link
                   href="/forgot-password"
                   className="text-sm font-medium text-primary hover:underline underline-offset-4"
                 >
                   {loginContent.forgotPassword}
-                </Link>
+                </Link> */}
               </div>
               <PasswordInput
                 name="password"

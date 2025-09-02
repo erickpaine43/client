@@ -81,6 +81,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("SignUp error:", error);
       setAuthError(error);
     },
+    createTenant: true,
     callbackUrl: "/dashboard/settings"
   });
 
