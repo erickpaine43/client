@@ -1,3 +1,5 @@
+"use client";
+
 import { ChangePlanTrigger } from "@/components/settings/billing/change-plan-dialog";
 import EditAddressTrigger from "@/components/settings/billing/edit-trigger-dialog";
 import InvoicesTable from "@/components/settings/billing/invocies-table";
@@ -11,9 +13,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { CreditCard, Crown } from "lucide-react";
+import { CreditCard, Crown, Building } from "lucide-react";
+import { useState } from "react";
 
 function BillingTab() {
+  const [companyInfo, setCompanyInfo] = useState({
+    name: "Acme Corporation",
+    industry: "Technology Services",
+    size: "51-200 employees",
+  });
+
   const currentPlan = {
     name: "Growth",
     price: 55,
@@ -91,6 +100,46 @@ function BillingTab() {
               </div>
             </div>
             <UpdateCardDialogTrigger title="Update Card" />
+          </div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <CardTitle>
+            <Building className="w-5 h-5 inline mr-2" />
+            Company Information
+          </CardTitle>
+          <button
+            className="text-sm text-blue-600 hover:text-blue-800 underline"
+            onClick={() => {
+              const newCompanyName = prompt('Enter company name:', companyInfo.name);
+              if (newCompanyName && newCompanyName !== companyInfo.name) {
+                setCompanyInfo(prev => ({ ...prev, name: newCompanyName }));
+                // Here you would save to backend/localStorage
+              }
+            }}
+          >
+            Edit Company
+          </button>
+        </CardHeader>
+        <CardContent>
+          <div className="bg-gray-50 rounded-lg p-4">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-sm font-medium text-gray-700">Company Name</label>
+                  <p className="font-medium text-gray-900">{companyInfo.name}</p>
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-700">Industry</label>
+                <p className="text-gray-600">{companyInfo.industry}</p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-700">Company Size</label>
+                <p className="text-gray-600">{companyInfo.size}</p>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

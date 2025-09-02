@@ -174,7 +174,7 @@ export interface NileUser {
   created: string;
   updated?: string;
   emailVerified?: boolean;
-  tenants: { id: string }[];
+  tenants: string[]; // Fixed: should match library type
 }
 
 export interface ProfileFormData {
@@ -194,12 +194,16 @@ export const mapNileUserToFormData = (user: NileUser): ProfileFormData => ({
   avatarUrl: user.picture || "",
 });
 
-export const mapFormDataToNileUpdate = (formData: ProfileFormData) => ({
-  name: formData.name || undefined,
-  givenName: formData.firstName || undefined,
-  familyName: formData.lastName || undefined,
-  picture: formData.avatarUrl || undefined,
-});
+export const mapFormDataToNileUpdate = (formData: Partial<ProfileFormData>) => {
+  const result: any = {};
+
+  if (formData.name !== undefined) result.name = formData.name.trim() || undefined;
+  if (formData.firstName !== undefined) result.givenName = formData.firstName.trim() || undefined;
+  if (formData.lastName !== undefined) result.familyName = formData.lastName.trim() || undefined;
+  if (formData.avatarUrl !== undefined) result.picture = formData.avatarUrl.trim() || undefined;
+
+  return result;
+};
 
 // Validation function
 export const validateProfileUpdateData = (data: {

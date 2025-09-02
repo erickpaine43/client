@@ -2,28 +2,12 @@
 
 import { nile } from "@/app/api/[...nile]/nile";
 
-// NileDB User interface based on the library types
-export interface NileUser {
-  id: string;
-  email: string;
-  name?: string;
-  familyName?: string;
-  givenName?: string;
-  picture?: string;
-  created: string;
-  updated?: string;
-  emailVerified?: boolean;
-  tenants: string[]; // Fixed: should match library type
-}
-
-// Profile form data interface
-export interface ProfileFormData {
-  firstName: string; // Maps to givenName
-  lastName: string; // Maps to familyName
-  name: string; // Maps to name (display name)
-  email: string; // Read-only from user data
-  avatarUrl: string; // Maps to picture
-}
+import {
+  NileUser,
+  ProfileFormData,
+  mapFormDataToNileUpdate,
+  validateProfileUpdateData
+} from "@/lib/utils";
 
 // Profile update payload for NileDB
 export interface ProfileUpdatePayload {
@@ -81,39 +65,6 @@ function validateProfileData(data: Partial<ProfileFormData>): ProfileError | nul
   }
 
   return null;
-}
-
-// Data mapping functions
-export function mapNileUserToFormData(user: NileUser): ProfileFormData {
-  return {
-    firstName: user.givenName || "",
-    lastName: user.familyName || "",
-    name: user.name || "",
-    email: user.email,
-    avatarUrl: user.picture || "",
-  };
-}
-
-export function mapFormDataToNileUpdate(formData: Partial<ProfileFormData>): ProfileUpdatePayload {
-  const payload: ProfileUpdatePayload = {};
-
-  if (formData.name !== undefined && formData.name.trim()) {
-    payload.name = formData.name.trim();
-  }
-
-  if (formData.firstName !== undefined && formData.firstName.trim()) {
-    payload.givenName = formData.firstName.trim();
-  }
-
-  if (formData.lastName !== undefined && formData.lastName.trim()) {
-    payload.familyName = formData.lastName.trim();
-  }
-
-  if (formData.avatarUrl !== undefined && formData.avatarUrl.trim()) {
-    payload.picture = formData.avatarUrl.trim();
-  }
-
-  return payload;
 }
 
 // Server actions

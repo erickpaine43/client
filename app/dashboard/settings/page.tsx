@@ -1,5 +1,5 @@
 import ProfileForm from "@/components/settings/profile-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 function page() {
   return (
@@ -13,6 +13,9 @@ function page() {
       <Card>
         <CardHeader>
           <CardTitle>Profile Information</CardTitle>
+          <CardDescription>
+            Update your personal details and avatar.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <ProfileForm />
