@@ -39,3 +39,6 @@ npm-debug.log*
 
 # Ignore ALL Mailu env
 **/mailu.env
+
+# Ignore OpenNext build output
+.open-next

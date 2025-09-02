@@ -33,4 +33,58 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
+## Deploy on Cloudflare (Recommended)
+
+This project is configured for deployment on Cloudflare using the OpenNext adapter for optimal performance.
+
+### Prerequisites
+
+1. Create a Cloudflare API Token with "Edit Cloudflare Workers" permissions
+2. Get your Cloudflare Account ID from your dashboard
+3. Add these as repository secrets:
+   - `CLOUDFLARE_API_TOKEN`
+   - `CLOUDFLARE_ACCOUNT_ID`
+
+### Deployment
+
+The application includes CI/CD setup that automatically deploys to Cloudflare:
+- **Push to main**: Deploys to production
+- **Pull Requests**: Deploys preview versions
+- **Manual deployment**: Via GitHub Actions
+
+For more deployment details, see [`.github/workflows/README.md`](./.github/workflows/README.md)
+
+### Local Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Preview Cloudflare deployment locally
+npm run preview
+
+# Build for production
+npm run build
+```
+
+### Deployment Scripts
+
+```bash
+# Build Next.js and OpenNext
+npm run build && npx opennextjs-cloudflare build
+
+# Deploy to Cloudflare
+npm run deploy
+
+# Upload new version (for gradual rollout)
+npm run upload
+```
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
