@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AlertTriangle, CheckCircle, Loader2, RefreshCw, AlertCircle } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -336,76 +337,137 @@ function ProfileForm() {
         {/* Profile Information Section */}
         <div className="space-y-4">
           {/* Display Name */}
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Display Name</FormLabel>
-                <FormControl>
-                  <Input {...field} disabled={profileLoading} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {profileLoading ? (
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-4 w-48" />
+            </div>
+          ) : (
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Display Name *</FormLabel>
+                  <FormControl>
+                    <Input {...field} disabled={profileLoading || submitLoading} />
+                  </FormControl>
+                  <FormMessage />
+                  <p className="text-sm text-muted-foreground">
+                    This name will be shown across the platform and in communications.
+                  </p>
+                </FormItem>
+              )}
+            />
+          )}
 
           <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>First Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={profileLoading} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Last Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={profileLoading} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {profileLoading ? (
+              <>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-18" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+              </>
+            ) : (
+              <>
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>First Name *</FormLabel>
+                      <FormControl>
+                        <Input {...field} disabled={profileLoading || submitLoading} />
+                      </FormControl>
+                      <FormMessage />
+                      <p className="text-sm text-muted-foreground">
+                        Your first name helps personalize your experience.
+                      </p>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name *</FormLabel>
+                      <FormControl>
+                        <Input {...field} disabled={profileLoading || submitLoading} />
+                      </FormControl>
+                      <FormMessage />
+                      <p className="text-sm text-muted-foreground">
+                        Your last name helps personalize your experience.
+                      </p>
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
           </div>
 
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" {...field} disabled />
-                </FormControl>
-                <p className="text-sm text-gray-500">Your email address cannot be changed.</p>
-              </FormItem>
-            )}
-          />
+          {profileLoading ? (
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-12" />
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-4 w-64" />
+            </div>
+          ) : (
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email *</FormLabel>
+                  <FormControl>
+                    <Input type="email" {...field} disabled />
+                  </FormControl>
+                  <FormMessage />
+                  <p className="text-sm text-muted-foreground">
+                    Your email address cannot be modified and is used for authentication.
+                  </p>
+                </FormItem>
+              )}
+            />
+          )}
 
           {/* Avatar Selector */}
           <div className="space-y-2">
             <label className="text-sm font-medium">Avatar</label>
             {profileLoading ? (
-              <div className="flex items-center py-4">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
-                <span className="text-gray-600">Loading avatar selector...</span>
+              <div className="border rounded-lg p-6">
+                <div className="flex items-center space-x-4">
+                  <Skeleton className="h-16 w-16 rounded-full" />
+                  <div className="space-y-2 flex-1">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-6 w-32" />
+                  </div>
+                </div>
+                <div className="mt-4 grid grid-cols-6 gap-2">
+                  <Skeleton className="aspect-square rounded-md" />
+                  <Skeleton className="aspect-square rounded-md" />
+                  <Skeleton className="aspect-square rounded-md" />
+                  <Skeleton className="aspect-square rounded-md" />
+                  <Skeleton className="aspect-square rounded-md" />
+                  <Skeleton className="aspect-square rounded-md" />
+                </div>
+                <div className="mt-4">
+                  <Skeleton className="h-10 w-full" />
+                </div>
               </div>
             ) : (
               <AvatarSelector
                 currentAvatarUrl={form.watch('avatarUrl')}
                 onAvatarChange={(url) => form.setValue('avatarUrl', url)}
-                disabled={profileLoading}
+                disabled={profileLoading || submitLoading}
                 customUrl={customAvatarUrl}
                 onCustomUrlChange={setCustomAvatarUrl}
                 onCustomUrlApply={() => setCustomAvatarUrl("")}
@@ -425,77 +487,91 @@ function ProfileForm() {
             </p>
           </div>
 
-          <FormField
-            control={form.control}
-            name="timezone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Timezone</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  disabled={profileLoading}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select timezone" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {allTimezones.map((tz) => (
-                      <SelectItem key={tz.value} value={tz.value}>
-                        {tz.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {profileLoading ? (
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ) : (
+            <FormField
+              control={form.control}
+              name="timezone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Timezone</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={profileLoading || submitLoading}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select timezone" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {allTimezones.map((tz) => (
+                        <SelectItem key={tz.value} value={tz.value}>
+                          {tz.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
-          <FormField
-            control={form.control}
-            name="sidebarView"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Sidebar View on Click</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  disabled={profileLoading}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select sidebar behavior" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="collapsed">
-                      Collapsed - Keep sidebar minimized
-                    </SelectItem>
-                    <SelectItem value="expanded">
-                      Expanded - Keep sidebar fully visible
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {profileLoading ? (
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-28" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ) : (
+            <FormField
+              control={form.control}
+              name="sidebarView"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Sidebar View on Click</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={profileLoading || submitLoading}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select sidebar behavior" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="collapsed">
+                        Collapsed - Keep sidebar minimized
+                      </SelectItem>
+                      <SelectItem value="expanded">
+                        Expanded - Keep sidebar fully visible
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         </div>
 
         <div className="flex justify-end pt-4">
           <Button
             type="submit"
-            className="w-full sm:w-auto"
-            disabled={submitLoading || profileLoading}
+            disabled={profileLoading || submitLoading || !!profileError}
+            className="w-fit"
             onClick={form.handleSubmit(onSubmit)}
           >
             {submitLoading ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                Saving...
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Updating Profile...
               </>
             ) : (
               "Save Changes"
@@ -503,8 +579,26 @@ function ProfileForm() {
           </Button>
         </div>
       </Form>
+
+      {/* Submit Loading State */}
+      {submitLoading && (
+        <div className="fixed inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-card p-6 rounded-lg shadow-lg border">
+            <div className="flex items-center space-x-4">
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+              <div>
+                <h3 className="font-medium">Updating Profile</h3>
+                <p className="text-sm text-muted-foreground">Saving your changes...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+            // className="w-full sm:w-auto"
+            // disabled={submitLoading || profileLoading}
+
 
 export default ProfileForm;
