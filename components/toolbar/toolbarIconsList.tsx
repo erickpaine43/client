@@ -1,35 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Redo2, Undo2, Bold, Italic, Underline, Link2, AlignLeft, AlignRight, AlignCenter, Quote, List, ListOrdered, Type, Code, Image as ImageIcon } from 'lucide-react';
-import { ComponentType } from "react";
+import { eventTypes, type EventType, type PluginItem } from "@/types/toolbar";
 
-export const eventTypes = {
-  paragraph: "paragraph",
-  h1: "h1",
-  h2: "h2",
-  ul: "ul",
-  ol: "ol",
-  quote: "quote",
-  formatCode: "formatCode",
-  formatUndo: "formatUndo",
-  formatRedo: "formatRedo",
-  formatBold: "formatBold",
-  formatItalic: "formatItalic",
-  formatUnderline: "formatUnderline",
-  formatStrike: "formatStrike",
-  formatInsertLink: "formatInsertLink",
-  formatAlignLeft: "formatAlignLeft",
-  formatAlignCenter: "formatAlignCenter",
-  formatAlignRight: "formatAlignRight",
-  insertImage: "insertImage",
-} as const;
-
-export type EventType = typeof eventTypes[keyof typeof eventTypes];
-
-export interface PluginItem {
-  id: number;
-  Icon: ComponentType<any>;
-  event: EventType;
-}
+export { eventTypes, type EventType, type PluginItem };
 
 const pluginsList: PluginItem[] = [
   {
