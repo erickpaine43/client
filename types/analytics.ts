@@ -324,7 +324,11 @@ export interface DateRangeFilterProps {
     end: string;
   };
   /** Callback when range changes */
-  onRangeChange: (range: DateRangePreset, customStart?: string, customEnd?: string) => void;
+  onRangeChange: (
+    range: DateRangePreset,
+    customStart?: string,
+    customEnd?: string,
+  ) => void;
   /** Available granularity options */
   allowedGranularities: DataGranularity[];
   /** Selected granularity */

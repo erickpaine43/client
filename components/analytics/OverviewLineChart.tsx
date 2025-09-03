@@ -27,13 +27,16 @@ function OverviewLineChart() {
   }
 
   // Create chart config for shadcn charts
-  const chartConfig = metrics.reduce((config, metric) => {
-    config[metric.key] = {
-      label: metric.label,
-      color: metric.color,
-    };
-    return config;
-  }, {} as Record<string, { label: string; color: string }>);
+  const chartConfig = metrics.reduce(
+    (config, metric) => {
+      config[metric.key] = {
+        label: metric.label,
+        color: metric.color,
+      };
+      return config;
+    },
+    {} as Record<string, { label: string; color: string }>,
+  );
 
   const visibleMetricKeys = metrics
     .filter((m) => visibleMetrics[m.key])

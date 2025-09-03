@@ -42,7 +42,9 @@ function NotificationListItem({
           <p className="text-xs text-gray-500 mt-2 flex items-center space-x-1">
             <Clock className="w-3 h-3" />
             <span>
-              {typeof notification.time === 'string' ? notification.time : notification.time.toLocaleString()}
+              {typeof notification.time === "string"
+                ? notification.time
+                : notification.time.toLocaleString()}
             </span>
           </p>
         </div>

@@ -4,12 +4,12 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     // const session = await getServerSession(authOptions);
-    
+
     // if (!session || !session.user) {
     //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     // }
 
-    const companyId = 1//session.user.companyId;
+    const companyId = 1; //session.user.companyId;
     console.log("Company ID:", companyId);
 
     // For now return mock data, but structured for future DB implementation
@@ -47,7 +47,7 @@ export async function GET() {
           reputation: 78,
           dailyLimit: 30,
           daysActive: 6,
-        }
+        },
       ],
       stats: [
         {
@@ -105,17 +105,17 @@ export async function GET() {
           inbox: 44,
           spam: 1,
           reputation: 90,
-        }
-      ]
+        },
+      ],
     };
 
     return NextResponse.json(warmupData);
   } catch (error: unknown) {
     console.error("Warmup Data Error:", error);
-    const errorMessage = error instanceof Error ? error.message : "An internal server error occurred";
-    return NextResponse.json(
-      { error: errorMessage },
-      { status: 500 }
-    );
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "An internal server error occurred";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

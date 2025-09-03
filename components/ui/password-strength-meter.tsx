@@ -47,7 +47,10 @@ export const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = ({
   const progressColor = getProgressColor(strength.color);
 
   return (
-    <div className={cn("mt-2 space-y-1", className)} data-testid={`${testId}-strength-meter`}>
+    <div
+      className={cn("mt-2 space-y-1", className)}
+      data-testid={`${testId}-strength-meter`}
+    >
       <div className="flex items-center justify-between">
         <span className="text-xs text-muted-foreground">Password strength</span>
         <span
@@ -67,7 +70,10 @@ export const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = ({
       </div>
 
       {strength.feedback.length > 0 && (
-        <div className="space-y-0.5" data-testid={`${testId}-strength-feedback`}>
+        <div
+          className="space-y-0.5"
+          data-testid={`${testId}-strength-feedback`}
+        >
           {strength.feedback.map((message, index) => (
             <p
               key={index}

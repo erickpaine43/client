@@ -83,7 +83,7 @@ export function useAddMailboxesContext() {
   const context = useContext(AddMailboxesContext);
   if (!context) {
     throw new Error(
-      "useAddMailboxesContext must be used within AddDomainProvider"
+      "useAddMailboxesContext must be used within AddDomainProvider",
     );
   }
   return context;

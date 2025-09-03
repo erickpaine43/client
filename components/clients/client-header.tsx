@@ -1,14 +1,27 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { removeFromCampaign, deleteClient } from '@/app/dashboard/campaigns/[campaignId]/clients/new/actions';
-import { copyText as t } from '@/components/clients/copy';
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  removeFromCampaign,
+  deleteClient,
+} from "@/app/dashboard/campaigns/[campaignId]/clients/new/actions";
+import { copyText as t } from "@/components/clients/copy";
 
 // Add this new action import or create it in the actions file
 async function maskClientPII(clientId: number) {
-  console.log('Masking PII for client:', clientId);
+  console.log("Masking PII for client:", clientId);
   // Implement the server action to update the client
   // This should update maskPII to true and modify the name fields
 }
@@ -52,13 +65,18 @@ export function ClientHeader({ client, campaignId }: ClientHeaderProps) {
         <div className="flex gap-4">
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="secondary">{t.form.mask.button || 'Mask PII'}</Button>
+              <Button variant="secondary">
+                {t.form.mask.button || "Mask PII"}
+              </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>{t.form.mask.title || 'Mask Personal Information'}</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {t.form.mask.title || "Mask Personal Information"}
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  {t.form.mask.description || 'This will mask personal information in the database. This action cannot be undone.'}
+                  {t.form.mask.description ||
+                    "This will mask personal information in the database. This action cannot be undone."}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

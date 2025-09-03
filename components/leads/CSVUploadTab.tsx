@@ -35,7 +35,7 @@ type CSVRecord = Record<string, string>;
 
 const downloadSampleCSV = () => {
   const csvContent = SAMPLE_CSV_DATA.map((row) =>
-    row.map((cell) => `"${cell}"`).join(",")
+    row.map((cell) => `"${cell}"`).join(","),
   ).join("\n");
 
   const blob = new Blob([csvContent], { type: "text/csv" });
@@ -128,7 +128,7 @@ function FilePreview({
   }) => void;
 }) {
   const [columnMapping, setColumnMapping] = useState<Record<string, string>>(
-    {}
+    {},
   );
   const [listName, setListName] = useState("");
   const [tags, setTags] = useState("");
@@ -143,7 +143,7 @@ function FilePreview({
         const found = headers.find(
           (h) =>
             h.toLowerCase().replace(/[^a-z0-9]/g, "_") ===
-            col.label.toLowerCase().replace(/[^a-z0-9]/g, "_")
+            col.label.toLowerCase().replace(/[^a-z0-9]/g, "_"),
         );
         if (found) mapping[col.key] = found;
       });
@@ -154,7 +154,7 @@ function FilePreview({
 
   const isValid = () => {
     const requiredMapped = CSV_COLUMNS.filter((col) => col.required).every(
-      (col) => columnMapping[col.key]
+      (col) => columnMapping[col.key],
     );
     return requiredMapped && listName.trim();
   };
@@ -305,11 +305,11 @@ export default function CSVUploadTab() {
           if (results.errors.length > 0) {
             const criticalErrors: CSVError[] = results.errors.filter(
               (error: CSVError) =>
-                error.type === "Delimiter" || error.type === "Quotes"
+                error.type === "Delimiter" || error.type === "Quotes",
             );
             if (criticalErrors.length > 0) {
               reject(
-                new Error(`CSV parsing error: ${criticalErrors[0].message}`)
+                new Error(`CSV parsing error: ${criticalErrors[0].message}`),
               );
               return;
             }
@@ -323,8 +323,8 @@ export default function CSVUploadTab() {
           const filteredData: Record<string, string>[] = results.data.filter(
             (row: Record<string, string>) =>
               Object.values(row).some(
-                (val: string) => val && val.toString().trim()
-              )
+                (val: string) => val && val.toString().trim(),
+              ),
           );
 
           resolve(filteredData);
@@ -359,7 +359,7 @@ export default function CSVUploadTab() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to parse CSV file. Please check the format."
+          : "Failed to parse CSV file. Please check the format.",
       );
       setIsUploading(false);
       setCsvFile(null);
@@ -395,7 +395,7 @@ export default function CSVUploadTab() {
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-2">Upload Lead List</h2>
         <p className="text-muted-foreground">
-          Upload a CSV file with your leads. We'll automatically validate and
+          Upload a CSV file with your leads. We&apos;ll automatically validate and
           process them.
         </p>
       </div>
@@ -445,10 +445,10 @@ export default function CSVUploadTab() {
                   • <strong>Email Address</strong> - Valid email
                 </li>
                 <li>
-                  • <strong>First Name</strong> - Contact's first name
+                  • <strong>First Name</strong> - Contact&apos;s first name
                 </li>
                 <li>
-                  • <strong>Last Name</strong> - Contact's last name
+                  • <strong>Last Name</strong> - Contact&apos;s last name
                 </li>
               </ul>
             </div>

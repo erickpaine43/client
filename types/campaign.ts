@@ -1,53 +1,79 @@
-export type CampaignStatus = "DRAFT" | "ACTIVE" | "PAUSED" | "COMPLETED" | "ARCHIVED";
+export type CampaignStatus =
+  | "DRAFT"
+  | "ACTIVE"
+  | "PAUSED"
+  | "COMPLETED"
+  | "ARCHIVED";
+
+export type EmailStepType = {
+  emailSubject?: string;
+  emailBody?: string;
+  delayDays?: number;
+  delayHours?: number;
+  condition?: "always" | "if_not_opened" | "if_not_clicked" | "if_not_replied";
+  type: "email" | "delay";
+};
+
+export type RecipientsSettingsProps = {
+  recipients: string;
+  handleChangeRecipients: (evt: React.ChangeEvent<HTMLTextAreaElement>) => void;
+};
 
 export const CampaignStatus = {
   DRAFT: "DRAFT",
   ACTIVE: "ACTIVE",
   PAUSED: "PAUSED",
   COMPLETED: "COMPLETED",
-  ARCHIVED: "ARCHIVED"
+  ARCHIVED: "ARCHIVED",
 } as const;
-export type EmailEventType = "SENT" | "DELIVERED" | "OPENED" | "CLICKED" | "BOUNCED" | "SPAM_COMPLAINT" | "UNSUBSCRIBED" | "REPLIED"
+export type EmailEventType =
+  | "SENT"
+  | "DELIVERED"
+  | "OPENED"
+  | "CLICKED"
+  | "BOUNCED"
+  | "SPAM_COMPLAINT"
+  | "UNSUBSCRIBED"
+  | "REPLIED";
 
 export type CampaignMetrics = {
-  recipients: { sent: number; total: number }
-  opens: { total: number; rate: number }
-  clicks: { total: number; rate: number }
-  replies: { total: number; rate: number }
-  bounces?: { total: number; rate: number }
-}
+  recipients: { sent: number; total: number };
+  opens: { total: number; rate: number };
+  clicks: { total: number; rate: number };
+  replies: { total: number; rate: number };
+  bounces?: { total: number; rate: number };
+};
 
 export type Campaign = {
-  id: string
-  name: string
-  status: CampaignStatus
-  fromName: string
-  fromEmail: string
-  metrics: CampaignMetrics
-  lastUpdated: string
-}
+  id: string;
+  name: string;
+  status: CampaignStatus;
+  fromName: string;
+  fromEmail: string;
+  metrics: CampaignMetrics;
+  lastUpdated: string;
+};
 
 export type CampaignResponse = {
-  id: number
-  name: string
-  status: CampaignStatus
+  id: number;
+  name: string;
+  status: CampaignStatus;
   clients: {
-    campaignId: number
-    clientId: number
-    statusInCampaign: string
-  }[]
+    campaignId: number;
+    clientId: number;
+    statusInCampaign: string;
+  }[];
   emailEvents: {
-    type: EmailEventType
-    timestamp: Date
-  }[]
-  updatedAt: Date
-}
+    type: EmailEventType;
+    timestamp: Date;
+  }[];
+  updatedAt: Date;
+};
 export enum CampaignStatusEnum {
   active = "active",
   paused = "paused",
   completed = "completed",
 }
-
 
 export interface ChartData {
   date: string;
@@ -66,7 +92,17 @@ export interface MetricToggle {
   visible: boolean;
 }
 
-export type CampaignEventCondition = "ALWAYS" | "IF_NOT_OPENED" | "IF_NOT_CLICKED" | "IF_NOT_REPLIED" | "IF_OPTION_A" | "IF_OPTION_B" | "IF_OPTION_C" | "IF_OPTION_D" | "IF_OPTION_E" | "IF_UNSUBSCRIBED";
+export type CampaignEventCondition =
+  | "ALWAYS"
+  | "IF_NOT_OPENED"
+  | "IF_NOT_CLICKED"
+  | "IF_NOT_REPLIED"
+  | "IF_OPTION_A"
+  | "IF_OPTION_B"
+  | "IF_OPTION_C"
+  | "IF_OPTION_D"
+  | "IF_OPTION_E"
+  | "IF_UNSUBSCRIBED";
 
 export const CampaignEventCondition = {
   ALWAYS: "ALWAYS",
@@ -78,7 +114,7 @@ export const CampaignEventCondition = {
   IF_OPTION_C: "IF_OPTION_C",
   IF_OPTION_D: "IF_OPTION_D",
   IF_OPTION_E: "IF_OPTION_E",
-  IF_UNSUBSCRIBED: "IF_UNSUBSCRIBED"
+  IF_UNSUBSCRIBED: "IF_UNSUBSCRIBED",
 } as const;
 
 // Zod schemas and inferred types
@@ -98,59 +134,58 @@ export const campaignStepSchema = z.object({
   condition: z.nativeEnum(CampaignEventCondition),
 });
 
-export const campaignFormSchema = z
-  .object({
-    id: z.number().optional(),
-    name: z.string().min(1),
-    fromName: z.string().min(1),
-    fromEmail: z.string().email(),
-    status: z.nativeEnum(CampaignStatus).default(CampaignStatus.DRAFT),
-    companyId: z.number().optional(),
-    createdById: z.string().optional(),
-    steps: z.array(campaignStepSchema).min(1),
-    sendDays: z.array(z.number()).optional(),
-    sendTimeStart: z.string().optional(),
-    sendTimeEnd: z.string().optional(),
-    emailsPerDay: z.number().optional(),
-    timezone: z.string().optional().default("UTC"),
-    clients: z.array(z.string().email()),
-    metrics: z
-      .object({
-        recipients: z
-          .object({
-            sent: z.number(),
-            total: z.number(),
-          })
-          .optional(),
-        opens: z
-          .object({
-            total: z.number(),
-            rate: z.number(),
-          })
-          .optional(),
-        clicks: z
-          .object({
-            total: z.number(),
-            rate: z.number(),
-          })
-          .optional(),
-        replies: z
-          .object({
-            total: z.number(),
-            rate: z.number(),
-          })
-          .optional(),
-        bounces: z
-          .object({
-            total: z.number(),
-            rate: z.number(),
-          })
-          .optional(),
-      })
-      .optional(),
-    createdAt: z.date().optional(),
-    updatedAt: z.date().optional(),
-  })
+export const campaignFormSchema = z.object({
+  id: z.number().optional(),
+  name: z.string().min(1),
+  fromName: z.string().min(1),
+  fromEmail: z.string().email(),
+  status: z.nativeEnum(CampaignStatus).default(CampaignStatus.DRAFT),
+  companyId: z.number().optional(),
+  createdById: z.string().optional(),
+  steps: z.array(campaignStepSchema).min(1),
+  sendDays: z.array(z.number()).optional(),
+  sendTimeStart: z.string().optional(),
+  sendTimeEnd: z.string().optional(),
+  emailsPerDay: z.number().optional(),
+  timezone: z.string().optional().default("UTC"),
+  clients: z.array(z.string().email()),
+  metrics: z
+    .object({
+      recipients: z
+        .object({
+          sent: z.number(),
+          total: z.number(),
+        })
+        .optional(),
+      opens: z
+        .object({
+          total: z.number(),
+          rate: z.number(),
+        })
+        .optional(),
+      clicks: z
+        .object({
+          total: z.number(),
+          rate: z.number(),
+        })
+        .optional(),
+      replies: z
+        .object({
+          total: z.number(),
+          rate: z.number(),
+        })
+        .optional(),
+      bounces: z
+        .object({
+          total: z.number(),
+          rate: z.number(),
+        })
+        .optional(),
+    })
+    .optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+});
 
 export type CampaignFormValues = z.infer<typeof campaignFormSchema>;
 
@@ -174,7 +209,7 @@ interface SequenceStepActionsProps {
   onRemoveStep: (index: number) => void;
   onUpdateStep: (
     index: number,
-    updates: Partial<SequenceStepProps["step"]>
+    updates: Partial<SequenceStepProps["step"]>,
   ) => void;
   onInsertTag: (index: number, tag: string) => void;
   onSetCurrentEditingStep: (index: number | null) => void;
@@ -235,4 +270,3 @@ export interface CampaignDisplay {
   assignedMailboxes: string[];
   leadsList: LeadsList;
 }
-

@@ -95,7 +95,7 @@ export function useAddTemplateContext() {
   const context = useContext(AddTemplateContext);
   if (!context) {
     throw new Error(
-      "useAddTemplateContext must be used within AddTemplateProvider"
+      "useAddTemplateContext must be used within AddTemplateProvider",
     );
   }
   return context;

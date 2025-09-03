@@ -47,7 +47,7 @@ export function DataTableToolbar<TData>({
     };
 
     fetchFilters();
-  }, []);
+  }, [user?.token]);
 
   const from = filterOptions.from.map((fromValue) => ({
     label: fromValue,

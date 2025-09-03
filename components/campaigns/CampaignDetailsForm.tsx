@@ -2,7 +2,14 @@
 
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  FormDescription,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -20,7 +27,11 @@ interface CampaignDetailsFormProps {
   sendingAccounts: { value: string; label: string }[];
 }
 
-export function CampaignDetailsForm({ form, readOnly = false, sendingAccounts }: CampaignDetailsFormProps) {
+export function CampaignDetailsForm({
+  form,
+  readOnly = false,
+  sendingAccounts,
+}: CampaignDetailsFormProps) {
   return (
     <div className="space-y-4">
       <FormField
@@ -30,7 +41,11 @@ export function CampaignDetailsForm({ form, readOnly = false, sendingAccounts }:
           <FormItem>
             <FormLabel>{t.campaignDetails.labels.campaignName}</FormLabel>
             <FormControl>
-              <Input placeholder={t.campaignDetails.placeholders.campaignName} {...field} disabled={readOnly} />
+              <Input
+                placeholder={t.campaignDetails.placeholders.campaignName}
+                {...field}
+                disabled={readOnly}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -45,7 +60,7 @@ export function CampaignDetailsForm({ form, readOnly = false, sendingAccounts }:
             <FormItem>
               <FormLabel>{t.campaignDetails.labels.status}</FormLabel>
               <FormControl>
-                <Input {...field} disabled value={field.value || 'DRAFT'} />
+                <Input {...field} disabled value={field.value || "DRAFT"} />
               </FormControl>
             </FormItem>
           )}
@@ -60,7 +75,11 @@ export function CampaignDetailsForm({ form, readOnly = false, sendingAccounts }:
             <FormItem>
               <FormLabel>{t.campaignDetails.labels.fromName}</FormLabel>
               <FormControl>
-                <Input placeholder={t.campaignDetails.placeholders.fromName} {...field} disabled={readOnly} />
+                <Input
+                  placeholder={t.campaignDetails.placeholders.fromName}
+                  {...field}
+                  disabled={readOnly}
+                />
               </FormControl>
               <FormDescription>
                 {t.campaignDetails.descriptions.fromName}
@@ -75,14 +94,20 @@ export function CampaignDetailsForm({ form, readOnly = false, sendingAccounts }:
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t.campaignDetails.labels.fromEmail}</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={readOnly}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                disabled={readOnly}
+              >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder={t.campaignDetails.placeholders.selectAccount} />
+                    <SelectValue
+                      placeholder={t.campaignDetails.placeholders.selectAccount}
+                    />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {sendingAccounts.map(account => (
+                  {sendingAccounts.map((account) => (
                     <SelectItem key={account.value} value={account.value}>
                       {account.label}
                     </SelectItem>
@@ -133,4 +158,3 @@ export function CampaignDetailsForm({ form, readOnly = false, sendingAccounts }:
     </div>
   );
 }
-

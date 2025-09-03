@@ -17,7 +17,13 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Label } from "../ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const profileFormSchema = z.object({
   name: z
@@ -33,7 +39,7 @@ const profileFormSchema = z.object({
   }),
   avatarUrl: z.string().optional(), // Assuming avatar is a URL or identifier
   username: z.string().optional(), // Assuming username is optional
-  role: z.string().optional(), // Assuming 
+  role: z.string().optional(), // Assuming
 });
 
 export type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -80,7 +86,9 @@ export function ProfileSettingsForm({
                     <span className="sr-only">Avatar</span>
                   </Avatar>
                   <div>
-                    <Button variant="outline" size="sm">Change Avatar</Button>
+                    <Button variant="outline" size="sm">
+                      Change Avatar
+                    </Button>
                   </div>
                 </div>
               </FormControl>

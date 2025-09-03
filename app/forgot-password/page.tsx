@@ -39,14 +39,18 @@ export default function ForgotPasswordPage() {
           } else {
             reject(new Error("Invalid email format"));
           }
-        }, 1500)
+        }, 1500),
       );
 
       console.log("Password reset request successful (simulated)");
       setIsSubmitted(true); // Show success message
     } catch (err) {
       console.error("Password reset request failed (simulated):", err);
-      setError(err instanceof Error ? err.message : "Failed to send reset link. Please try again.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to send reset link. Please try again.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -54,9 +58,17 @@ export default function ForgotPasswordPage() {
   };
 
   const icon = user ? User : KeyRound;
-  const title = user ? "You are already signed in." : isSubmitted ? forgotPasswordContent.alerts.success.title : forgotPasswordContent.title;
-  const description = user ? "" : isSubmitted ? "" : forgotPasswordContent.description.initial;
-  const mode = user ? 'loggedIn' : 'form';
+  const title = user
+    ? "You are already signed in."
+    : isSubmitted
+      ? forgotPasswordContent.alerts.success.title
+      : forgotPasswordContent.title;
+  const description = user
+    ? ""
+    : isSubmitted
+      ? ""
+      : forgotPasswordContent.description.initial;
+  const mode = user ? "loggedIn" : "form";
 
   return (
     <LandingLayout>
@@ -65,25 +77,26 @@ export default function ForgotPasswordPage() {
         icon={icon}
         title={title}
         description={description}
-        footer={user ? undefined : (
-          <div className="flex flex-col items-center space-y-2">
-            <p className="text-xs text-muted-foreground">
-              {forgotPasswordContent.footer.text}{" "}
-              <Link
-                href="/"
-                className="underline font-medium text-primary"
-              >
-                {forgotPasswordContent.footer.linkText}
-              </Link>
-            </p>
-          </div>
-        )}
-        error={mode === 'form' && !isSubmitted ? error : undefined}
+        footer={
+          user ? undefined : (
+            <div className="flex flex-col items-center space-y-2">
+              <p className="text-xs text-muted-foreground">
+                {forgotPasswordContent.footer.text}{" "}
+                <Link href="/" className="underline font-medium text-primary">
+                  {forgotPasswordContent.footer.linkText}
+                </Link>
+              </p>
+            </div>
+          )
+        }
+        error={mode === "form" && !isSubmitted ? error : undefined}
       >
         {user ? undefined : isSubmitted ? (
           <Alert>
             <MailCheck className="h-4 w-4" />
-            <AlertTitle>{forgotPasswordContent.alerts.success.title}</AlertTitle>
+            <AlertTitle>
+              {forgotPasswordContent.alerts.success.title}
+            </AlertTitle>
             <AlertDescription>
               {forgotPasswordContent.alerts.success.description(email)}
             </AlertDescription>
@@ -91,7 +104,9 @@ export default function ForgotPasswordPage() {
         ) : (
           <form onSubmit={handlePasswordResetRequest} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">{forgotPasswordContent.form.email.label}</Label>
+              <Label htmlFor="email">
+                {forgotPasswordContent.form.email.label}
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -104,7 +119,9 @@ export default function ForgotPasswordPage() {
             </div>
 
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? forgotPasswordContent.form.button.sending : forgotPasswordContent.form.button.send}
+              {isLoading
+                ? forgotPasswordContent.form.button.sending
+                : forgotPasswordContent.form.button.send}
             </Button>
           </form>
         )}

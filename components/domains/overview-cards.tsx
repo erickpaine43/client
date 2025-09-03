@@ -5,7 +5,7 @@ import StatsCard from "../common/StatsCard";
 
 function OverviewCards() {
   const readyMailboxes = mailboxes.filter(
-    (m) => m.warmupStatus === "WARMED"
+    (m) => m.warmupStatus === "WARMED",
   ).length;
 
   const cards = [

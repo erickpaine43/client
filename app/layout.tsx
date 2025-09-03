@@ -42,7 +42,7 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased flex flex-col",
-          `${geistSans.variable} ${geistMono.variable} antialiased`
+          `${geistSans.variable} ${geistMono.variable} antialiased`,
         )}
       >
         <Providers>

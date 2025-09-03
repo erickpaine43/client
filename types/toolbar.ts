@@ -21,10 +21,14 @@ export const eventTypes = {
   insertImage: "insertImage",
 } as const;
 
-export type EventType = typeof eventTypes[keyof typeof eventTypes];
+export type EventType = (typeof eventTypes)[keyof typeof eventTypes];
+
+export interface IconProps {
+  fontSize?: string;
+}
 
 export interface PluginItem {
   id: number;
-  Icon: ComponentType<any>;
+  Icon: ComponentType<IconProps>;
   event: EventType;
 }

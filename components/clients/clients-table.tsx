@@ -28,7 +28,7 @@ export function ClientsTable({ table, columns }: ClientsTableProps) {
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}
                 </TableHead>
               ))}

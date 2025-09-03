@@ -5,7 +5,7 @@ import { nile } from "@/app/api/[...nile]/nile";
 import {
   NileUser,
   ProfileFormData,
-  mapFormDataToNileUpdate
+  mapFormDataToNileUpdate,
 } from "@/lib/utils";
 
 // Profile update payload for NileDB
@@ -30,13 +30,15 @@ export interface ProfileError {
 }
 
 // Validation function for profile update data
-function validateProfileData(data: Partial<ProfileFormData>): ProfileError | null {
+function validateProfileData(
+  data: Partial<ProfileFormData>,
+): ProfileError | null {
   // Check required fields
   if (!data.name || data.name.trim().length === 0) {
     return {
       type: "validation",
       message: "Display name is required",
-      field: "name"
+      field: "name",
     };
   }
 
@@ -44,7 +46,7 @@ function validateProfileData(data: Partial<ProfileFormData>): ProfileError | nul
     return {
       type: "validation",
       message: "First name is required",
-      field: "firstName"
+      field: "firstName",
     };
   }
 
@@ -52,7 +54,7 @@ function validateProfileData(data: Partial<ProfileFormData>): ProfileError | nul
     return {
       type: "validation",
       message: "Last name is required",
-      field: "lastName"
+      field: "lastName",
     };
   }
 
@@ -61,7 +63,7 @@ function validateProfileData(data: Partial<ProfileFormData>): ProfileError | nul
     return {
       type: "validation",
       message: "First name must be 50 characters or less",
-      field: "firstName"
+      field: "firstName",
     };
   }
 
@@ -69,7 +71,7 @@ function validateProfileData(data: Partial<ProfileFormData>): ProfileError | nul
     return {
       type: "validation",
       message: "Last name must be 50 characters or less",
-      field: "lastName"
+      field: "lastName",
     };
   }
 
@@ -77,16 +79,20 @@ function validateProfileData(data: Partial<ProfileFormData>): ProfileError | nul
     return {
       type: "validation",
       message: "Display name must be 100 characters or less",
-      field: "name"
+      field: "name",
     };
   }
 
   // Check avatar URL format if provided
-  if (data.avatarUrl && data.avatarUrl.trim().length > 0 && !data.avatarUrl.match(/^https?:\/\/.+/)) {
+  if (
+    data.avatarUrl &&
+    data.avatarUrl.trim().length > 0 &&
+    !data.avatarUrl.match(/^https?:\/\/.+/)
+  ) {
     return {
       type: "validation",
       message: "Avatar URL must be a valid HTTP/HTTPS URL",
-      field: "avatarUrl"
+      field: "avatarUrl",
     };
   }
 
@@ -94,7 +100,9 @@ function validateProfileData(data: Partial<ProfileFormData>): ProfileError | nul
 }
 
 // Server actions
-export async function getUserProfile(): Promise<ProfileActionResponse<NileUser>> {
+export async function getUserProfile(): Promise<
+  ProfileActionResponse<NileUser>
+> {
   try {
     // Call NileDB to get the current user profile
     const user = await nile.users.getSelf();
@@ -106,8 +114,8 @@ export async function getUserProfile(): Promise<ProfileActionResponse<NileUser>>
           success: false,
           error: {
             type: "auth",
-            message: "You must be logged in to view your profile"
-          }
+            message: "You must be logged in to view your profile",
+          },
         };
       }
 
@@ -115,8 +123,8 @@ export async function getUserProfile(): Promise<ProfileActionResponse<NileUser>>
         success: false,
         error: {
           type: "server",
-          message: "Failed to retrieve user profile from server"
-        }
+          message: "Failed to retrieve user profile from server",
+        },
       };
     }
 
@@ -125,8 +133,8 @@ export async function getUserProfile(): Promise<ProfileActionResponse<NileUser>>
         success: false,
         error: {
           type: "network",
-          message: "Failed to retrieve user data from NileDB"
-        }
+          message: "Failed to retrieve user data from NileDB",
+        },
       };
     }
 
@@ -136,26 +144,28 @@ export async function getUserProfile(): Promise<ProfileActionResponse<NileUser>>
         success: false,
         error: {
           type: "server",
-          message: "Invalid user data received from NileDB"
-        }
+          message: "Invalid user data received from NileDB",
+        },
       };
     }
 
     return {
       success: true,
-      data: user as NileUser
+      data: user as NileUser,
     };
-
   } catch (error: unknown) {
     // Handle authentication errors
     const errorMessage = error instanceof Error ? error.message : String(error);
-    if (errorMessage?.includes("401") || errorMessage?.includes("unauthorized")) {
+    if (
+      errorMessage?.includes("401") ||
+      errorMessage?.includes("unauthorized")
+    ) {
       return {
         success: false,
         error: {
           type: "auth",
-          message: "You must be logged in to view your profile"
-        }
+          message: "You must be logged in to view your profile",
+        },
       };
     }
 
@@ -165,8 +175,8 @@ export async function getUserProfile(): Promise<ProfileActionResponse<NileUser>>
         success: false,
         error: {
           type: "network",
-          message: "Network error. Please check your connection and try again"
-        }
+          message: "Network error. Please check your connection and try again",
+        },
       };
     }
 
@@ -176,14 +186,14 @@ export async function getUserProfile(): Promise<ProfileActionResponse<NileUser>>
       success: false,
       error: {
         type: "server",
-        message: "An error occurred while retrieving your profile"
-      }
+        message: "An error occurred while retrieving your profile",
+      },
     };
   }
 }
 
 export async function updateUserProfile(
-  profileData: Partial<ProfileFormData>
+  profileData: Partial<ProfileFormData>,
 ): Promise<ProfileActionResponse<NileUser>> {
   try {
     // Validate input data
@@ -191,7 +201,7 @@ export async function updateUserProfile(
     if (validationError) {
       return {
         success: false,
-        error: validationError
+        error: validationError,
       };
     }
 
@@ -204,8 +214,8 @@ export async function updateUserProfile(
         success: false,
         error: {
           type: "validation",
-          message: "No valid changes to update"
-        }
+          message: "No valid changes to update",
+        },
       };
     }
 
@@ -219,8 +229,8 @@ export async function updateUserProfile(
           success: false,
           error: {
             type: "auth",
-            message: "Your session has expired. Please log in again"
-          }
+            message: "Your session has expired. Please log in again",
+          },
         };
       }
 
@@ -228,8 +238,8 @@ export async function updateUserProfile(
         success: false,
         error: {
           type: "server",
-          message: "Failed to update profile. Please try again"
-        }
+          message: "Failed to update profile. Please try again",
+        },
       };
     }
 
@@ -240,14 +250,14 @@ export async function updateUserProfile(
           success: false,
           error: {
             type: "server",
-            message: "Failed to update profile. User data not returned"
-          }
+            message: "Failed to update profile. User data not returned",
+          },
         };
       }
 
       return {
         success: true,
-        data: updatedUser[0] as NileUser
+        data: updatedUser[0] as NileUser,
       };
     }
 
@@ -256,26 +266,28 @@ export async function updateUserProfile(
         success: false,
         error: {
           type: "server",
-          message: "Failed to update profile. Please try again"
-        }
+          message: "Failed to update profile. Please try again",
+        },
       };
     }
 
     return {
       success: true,
-      data: updatedUser as NileUser
+      data: updatedUser as NileUser,
     };
-
   } catch (error: unknown) {
     // Handle authentication errors
     const errorMessage = error instanceof Error ? error.message : String(error);
-    if (errorMessage?.includes("401") || errorMessage?.includes("unauthorized")) {
+    if (
+      errorMessage?.includes("401") ||
+      errorMessage?.includes("unauthorized")
+    ) {
       return {
         success: false,
         error: {
           type: "auth",
-          message: "Your session has expired. Please log in again"
-        }
+          message: "Your session has expired. Please log in again",
+        },
       };
     }
 
@@ -285,20 +297,23 @@ export async function updateUserProfile(
         success: false,
         error: {
           type: "network",
-          message: "Network error. Please check your connection and try again"
-        }
+          message: "Network error. Please check your connection and try again",
+        },
       };
     }
 
     // Handle field-specific errors if available
-    if (errorMessage?.includes("givenName") || errorMessage?.includes("familyName")) {
+    if (
+      errorMessage?.includes("givenName") ||
+      errorMessage?.includes("familyName")
+    ) {
       return {
         success: false,
         error: {
           type: "validation",
           message: "Invalid name format detected",
-          field: errorMessage?.includes("givenName") ? "firstName" : "lastName"
-        }
+          field: errorMessage?.includes("givenName") ? "firstName" : "lastName",
+        },
       };
     }
 
@@ -308,8 +323,9 @@ export async function updateUserProfile(
       success: false,
       error: {
         type: "server",
-        message: errorMessage || "An error occurred while updating your profile"
-      }
+        message:
+          errorMessage || "An error occurred while updating your profile",
+      },
     };
   }
 }

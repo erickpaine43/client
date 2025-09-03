@@ -1,7 +1,10 @@
 // src/lib/actions/campaignActions.ts
 "use server";
 
-import { mockCampaignEditDetail, timezones } from "@/components/campaigns/mock-data";
+import {
+  mockCampaignEditDetail,
+  timezones,
+} from "@/components/campaigns/mock-data";
 import { CampaignFormValues } from "@/types";
 
 // Define the structure for campaign data based on the screenshot
@@ -98,7 +101,9 @@ export async function getCampaignsStatisticsAction(_companyId: number) {
   try {
     // mock data
     const totalCampaigns = mockCampaigns.length;
-    const activeCampaigns = mockCampaigns.filter(c => c.status === "Running").length;
+    const activeCampaigns = mockCampaigns.filter(
+      (c) => c.status === "Running",
+    ).length;
     const emailsSent = mockCampaigns.reduce((acc, c) => acc + c.opens, 0);
     const totalReplies = mockCampaigns.reduce((acc, c) => acc + c.replies, 0);
 
@@ -110,23 +115,31 @@ export async function getCampaignsStatisticsAction(_companyId: number) {
         activeCampaigns,
         emailsSent,
         totalReplies,
-      }
+      },
     };
-
   } catch {
     return {
-      success: false, message: "Error trying to fetch summary.",
+      success: false,
+      message: "Error trying to fetch summary.",
       summary: {
         totalCampaigns: 0,
         activeCampaigns: 0,
         emailsSent: 0,
         totalReplies: 0,
-      }
+      },
     };
   }
 }
 
-export async function getCampaignsDataAction({ _companyId, page = 1, pageSize = 10 }: { _companyId: number, page: number, pageSize: number }) {
+export async function getCampaignsDataAction({
+  _companyId,
+  page = 1,
+  pageSize = 10,
+}: {
+  _companyId: number;
+  page: number;
+  pageSize: number;
+}) {
   const skip = (page - 1) * pageSize;
 
   const campaigns = mockCampaigns.slice(skip, skip + pageSize);
@@ -143,31 +156,32 @@ export async function getCampaignsDataAction({ _companyId, page = 1, pageSize = 
 
 // Mock action for creating a campaign (Phase 4)
 export async function createCampaignAction(_formData: CampaignFormValues) {
-  
   // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   // Simulate success
-  return { success: true, message: "Campaign created successfully (simulation)." };
+  return {
+    success: true,
+    message: "Campaign created successfully (simulation).",
+  };
 }
 
-export async function updateCampaignAction(_id: number, _formData: CampaignFormValues) {
-
+export async function updateCampaignAction(
+  _id: number,
+  _formData: CampaignFormValues,
+) {
   try {
-    
     // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     return { success: true, message: "Campaign updated successfully." };
-
   } catch {
     return { success: false, message: "Error trying update a campaign." };
   }
 }
 
 export async function getCampaignAction(_id: number) {
-  
   // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   // Simulate success
   return mockCampaignEditDetail;
 }
@@ -175,14 +189,14 @@ export async function getCampaignAction(_id: number) {
 export async function getCampaignSendingAccountsAction(_companyId: number) {
   const mappedEmailAccount = {
     value: "example@example.com",
-    label: "Example Email"
+    label: "Example Email",
   };
   return mappedEmailAccount;
 }
 
 export async function getTimezonesMockAction() {
   // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 10000));
+  await new Promise((resolve) => setTimeout(resolve, 10000));
   // Simulate success
   return timezones;
 }

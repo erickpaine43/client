@@ -48,7 +48,7 @@ function InboxFilter() {
   const handleMultiSelectToggle = (
     value: string,
     currentSelection: string[],
-    setSelection: (selection: string[]) => void
+    setSelection: (selection: string[]) => void,
   ) => {
     if (currentSelection.includes(value)) {
       setSelection(currentSelection.filter((item) => item !== value));
@@ -66,7 +66,7 @@ function InboxFilter() {
     items: string[],
     selectedItems: string[],
     setSelectedItems: (items: string[]) => void,
-    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>,
   ) => {
     const Icon = icon;
     return (
@@ -104,7 +104,7 @@ function InboxFilter() {
                     handleMultiSelectToggle(
                       item,
                       selectedItems,
-                      setSelectedItems
+                      setSelectedItems,
                     )
                   }
                   className="h-3 w-3 p-0 ml-1 hover:bg-gray-300"
@@ -143,7 +143,7 @@ function InboxFilter() {
     <>
       <Filter
         className={cn(
-          "bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none"
+          "bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none",
         )}
       >
         <SearchInput />
@@ -162,7 +162,7 @@ function InboxFilter() {
                     "w-full justify-between h-auto py-2.5 px-3",
                     selectedFilter === filter.id
                       ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
-                      : "text-gray-700"
+                      : "text-gray-700",
                   )}
                 >
                   <div className="flex items-center space-x-3">
@@ -171,7 +171,7 @@ function InboxFilter() {
                         "w-4 h-4",
                         selectedFilter === filter.id
                           ? "text-blue-600"
-                          : "text-gray-500"
+                          : "text-gray-500",
                       )}
                     />
                     <span className="text-sm font-medium">{filter.label}</span>
@@ -201,7 +201,7 @@ function InboxFilter() {
               campaignsData.map((c) => c.name),
               campaignFilter,
               setCampaignFilter,
-              TrendingUp
+              TrendingUp,
             )}
 
             {/* Mailboxes Filter */}
@@ -210,7 +210,7 @@ function InboxFilter() {
               mailboxes.map((m) => m.email),
               mailboxFilter,
               setMailboxFilter,
-              AtSign
+              AtSign,
             )}
 
             {/* Tags Filter */}
@@ -219,7 +219,7 @@ function InboxFilter() {
               tags,
               tagFilter,
               setTagFilter,
-              Tag
+              Tag,
             )}
 
             {/* Time Filter (single select) */}

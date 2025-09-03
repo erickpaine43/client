@@ -94,7 +94,7 @@ function NotificationsSettings() {
                       className={cn(
                         "mt-0.5",
                         field.value &&
-                          "data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                          "data-[state=checked]:bg-primary data-[state=checked]:border-primary",
                       )}
                     />
                   </FormControl>
@@ -104,7 +104,7 @@ function NotificationsSettings() {
                         "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
                         field.value
                           ? "text-foreground"
-                          : "text-muted-foreground"
+                          : "text-muted-foreground",
                       )}
                     >
                       {item.label}

@@ -52,7 +52,10 @@ export default async function CampaignsPage({
 
       <Suspense
         fallback={
-          <CampaignTableSkeleton title="Campaigns Table" columns={campaignColumns} />
+          <CampaignTableSkeleton
+            title="Campaigns Table"
+            columns={campaignColumns}
+          />
         }
       >
         <CampaignsTable />

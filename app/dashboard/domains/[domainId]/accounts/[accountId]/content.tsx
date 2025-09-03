@@ -37,7 +37,7 @@ import { Progress } from "@/components/ui/progress";
 interface AccountDetails {
   id: string;
   email: string;
-  status: 'Active' | 'Inactive' | 'Warming';
+  status: "Active" | "Inactive" | "Warming";
   sentToday: number;
   dailyLimit: number;
   inboxRate: number;
@@ -58,7 +58,9 @@ interface AccountWarmupDetailsContentProps {
   accountDetails: AccountDetails;
 }
 
-export default function AccountWarmupDetailsContent({ accountDetails }: AccountWarmupDetailsContentProps) {
+export default function AccountWarmupDetailsContent({
+  accountDetails,
+}: AccountWarmupDetailsContentProps) {
   const {
     id,
     email,
@@ -73,7 +75,7 @@ export default function AccountWarmupDetailsContent({ accountDetails }: AccountW
     stats, // Added stats
   } = accountDetails;
 
-  const isActive = status === 'Active' || status === 'Warming';
+  const isActive = status === "Active" || status === "Warming";
 
   // Text constants, similar to how they might be in a copy.ts file
   const t = {
@@ -98,9 +100,13 @@ export default function AccountWarmupDetailsContent({ accountDetails }: AccountW
           </h1>
           <p className="text-muted-foreground">Domain: {parentDomain}</p>
         </div>
-        <div className="flex space-x-2"> {/* Added a div to group buttons */}
+        <div className="flex space-x-2">
+          {" "}
+          {/* Added a div to group buttons */}
           <Button asChild variant="outline">
-            <Link href={`/dashboard/domains/${parentDomain}/accounts/${id}/settings`}>
+            <Link
+              href={`/dashboard/domains/${parentDomain}/accounts/${id}/settings`}
+            >
               <Settings className="mr-2 h-4 w-4" />
               Account Settings
             </Link>
@@ -118,12 +124,18 @@ export default function AccountWarmupDetailsContent({ accountDetails }: AccountW
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Account Status</CardTitle>
-            <Activity className={`h-4 w-4 ${isActive ? 'text-green-500' : 'text-muted-foreground'}`} />
+            <CardTitle className="text-sm font-medium">
+              Account Status
+            </CardTitle>
+            <Activity
+              className={`h-4 w-4 ${isActive ? "text-green-500" : "text-muted-foreground"}`}
+            />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{status}</div>
-            <p className={`text-xs ${isActive ? 'text-green-500' : 'text-muted-foreground'}`}>
+            <p
+              className={`text-xs ${isActive ? "text-green-500" : "text-muted-foreground"}`}
+            >
               {isActive ? "Currently warming up" : "Paused or inactive"}
             </p>
           </CardContent>
@@ -131,7 +143,9 @@ export default function AccountWarmupDetailsContent({ accountDetails }: AccountW
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Overall Inbox Rate</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Overall Inbox Rate
+            </CardTitle>
             <Mail className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -144,7 +158,9 @@ export default function AccountWarmupDetailsContent({ accountDetails }: AccountW
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Overall Reputation</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Overall Reputation
+            </CardTitle>
             <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -157,11 +173,15 @@ export default function AccountWarmupDetailsContent({ accountDetails }: AccountW
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Emails Sent Today</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Emails Sent Today
+            </CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{sentToday} / {dailyLimit}</div>
+            <div className="text-2xl font-bold">
+              {sentToday} / {dailyLimit}
+            </div>
             <p className="text-xs text-muted-foreground">
               Towards daily warmup limit
             </p>
@@ -273,7 +293,9 @@ export default function AccountWarmupDetailsContent({ accountDetails }: AccountW
                     <TableCell>{day.inbox}</TableCell>
                     <TableCell>{day.spam}</TableCell>
                     <TableCell>
-                      {day.volume > 0 ? ((day.inbox / day.volume) * 100).toFixed(1) + "%" : "N/A"}
+                      {day.volume > 0
+                        ? ((day.inbox / day.volume) * 100).toFixed(1) + "%"
+                        : "N/A"}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">

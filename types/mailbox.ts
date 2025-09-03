@@ -44,14 +44,19 @@ export interface MailboxCreationRequest {
   confirmPassword?: string; // For validation only
 }
 
-export type MailboxStatus = "PENDING" | "ACTIVE" | "ISSUE" | "SUSPENDED" | "DELETED";
+export type MailboxStatus =
+  | "PENDING"
+  | "ACTIVE"
+  | "ISSUE"
+  | "SUSPENDED"
+  | "DELETED";
 
 export const MailboxStatus = {
   PENDING: "PENDING",
   ACTIVE: "ACTIVE",
   ISSUE: "ISSUE",
   SUSPENDED: "SUSPENDED",
-  DELETED: "DELETED"
+  DELETED: "DELETED",
 } as const;
 
 export type WarmupStatus = "NOT_STARTED" | "WARMING" | "WARMED" | "PAUSED";
@@ -60,14 +65,23 @@ export const WarmupStatus = {
   NOT_STARTED: "NOT_STARTED",
   WARMING: "WARMING",
   WARMED: "WARMED",
-  PAUSED: "PAUSED"
+  PAUSED: "PAUSED",
 } as const;
 
 export const AccountCreationType = {
   LINUX_USER: "LINUX_USER",
-  VIRTUAL_USER_DB: "VIRTUAL_USER_DB"
+  VIRTUAL_USER_DB: "VIRTUAL_USER_DB",
 } as const;
 
-export type AccountCreationType = typeof AccountCreationType[keyof typeof AccountCreationType];
+export type AccountCreationType =
+  (typeof AccountCreationType)[keyof typeof AccountCreationType];
 
-export type EmailProvider = "LOCAL_SMTP" | "GMAIL_SMTP" | "OUTLOOK_SMTP" | "CUSTOM_SMTP" | "SENDGRID" | "MAILGUN" | "AMAZON_SES" | "OTHER";
+export type EmailProvider =
+  | "LOCAL_SMTP"
+  | "GMAIL_SMTP"
+  | "OUTLOOK_SMTP"
+  | "CUSTOM_SMTP"
+  | "SENDGRID"
+  | "MAILGUN"
+  | "AMAZON_SES"
+  | "OTHER";

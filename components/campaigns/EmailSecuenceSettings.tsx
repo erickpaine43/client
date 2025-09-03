@@ -7,12 +7,16 @@ import { EmailSecuenceSettingsProps } from "@/types/campaigns";
 import { FileText } from "lucide-react";
 import { SequenceStep } from "./SequenceStep";
 
-export function EmailSecuenceSettings({ steps, templates, emailBodyRef, currentEditingStep, actions, stepErrors }: EmailSecuenceSettingsProps) {
-  const {
-    handleAddEmailStep,
-    ...restStepActions
-  } = actions;
-  console.log({ stepErrors })
+export function EmailSecuenceSettings({
+  steps,
+  templates,
+  emailBodyRef,
+  currentEditingStep,
+  actions,
+  stepErrors,
+}: EmailSecuenceSettingsProps) {
+  const { handleAddEmailStep, ...restStepActions } = actions;
+  console.log({ stepErrors });
 
   return (
     <>

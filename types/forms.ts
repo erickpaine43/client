@@ -3,11 +3,16 @@ import { isValidTimeRange } from "@/lib/utils";
 import { CampaignEventCondition, CampaignStatus } from "@/types/campaign";
 import { TemplateCategory } from "@/types";
 import { VerificationStatus } from "@/types/domain";
-import { EmailProvider, DnsProvider, DkimManagementType } from "@/components/domains/constants";
+import {
+  EmailProvider,
+  DnsProvider,
+  DkimManagementType,
+} from "@/components/domains/constants";
 import { WarmupStatus } from "@/types/mailbox";
 import { RelayType, DomainAccountCreationType } from "@/types/domain";
 
-const DOMAIN_REGEX = /^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}$/;
+const DOMAIN_REGEX =
+  /^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}$/;
 
 // Campaign schemas
 export const campaignStepSchema = z.object({
@@ -83,7 +88,7 @@ export const campaignFormSchema = z
     {
       message: "Start time must be earlier than end time",
       path: ["sendTimeStart"],
-    }
+    },
   )
   .refine(
     (data) => {
@@ -93,7 +98,7 @@ export const campaignFormSchema = z
     {
       message: "End time must be later than start time",
       path: ["sendTimeEnd"],
-    }
+    },
   );
 
 // Template schemas
@@ -112,7 +117,7 @@ export const newFolderFormSchema = z.object({
     .max(50, "Folder name must be less than 50 characters")
     .regex(
       /^[a-zA-Z0-9\s-_]+$/,
-      "Folder name can only contain letters, numbers, spaces, hyphens, and underscores"
+      "Folder name can only contain letters, numbers, spaces, hyphens, and underscores",
     ),
 });
 
@@ -140,7 +145,9 @@ export const profileFormSchema = z.object({
 export const passwordSettingsSchema = z
   .object({
     currentPassword: z.string().min(1, "Current password is required"),
-    newPassword: z.string().min(8, "New password must be at least 8 characters long"),
+    newPassword: z
+      .string()
+      .min(8, "New password must be at least 8 characters long"),
     confirmNewPassword: z.string().min(1, "Confirm new password is required"),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
@@ -150,11 +157,12 @@ export const passwordSettingsSchema = z
 
 // Domain schemas
 export const domainFormSchema = z.object({
-  domain: z.string()
+  domain: z
+    .string()
     .min(1, "Domain is required")
     .regex(DOMAIN_REGEX, "Invalid domain format"),
   provider: z.nativeEnum(DnsProvider, {
-    message: "Please select a valid DNS provider"
+    message: "Please select a valid DNS provider",
   }),
   spfRecordValue: z.string().optional(),
   spfStatus: z.nativeEnum(VerificationStatus).optional(),
@@ -171,16 +179,26 @@ export const domainFormSchema = z.object({
 export const emailAccountFormSchema = z.object({
   email: z.string().email("Invalid email address"),
   provider: z.nativeEnum(EmailProvider),
-  status: z.enum(["PENDING", "ACTIVE", "ISSUE", "SUSPENDED", "DELETED"]).default("PENDING"),
+  status: z
+    .enum(["PENDING", "ACTIVE", "ISSUE", "SUSPENDED", "DELETED"])
+    .default("PENDING"),
   reputation: z.number().min(0).max(100).default(100),
   warmupStatus: z.nativeEnum(WarmupStatus).default(WarmupStatus.NOT_STARTED),
   dayLimit: z.number().min(1).max(2000).default(100),
   sent24h: z.number().default(0),
-  password: z.string().min(8, "Password must be at least 8 characters").optional(),
-  accountType: z.nativeEnum(DomainAccountCreationType).default(DomainAccountCreationType.VIRTUAL_USER_DB),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .optional(),
+  accountType: z
+    .nativeEnum(DomainAccountCreationType)
+    .default(DomainAccountCreationType.VIRTUAL_USER_DB),
 
   // Account-specific SMTP Auth Status
-  accountSmtpAuthStatus: z.nativeEnum(VerificationStatus).default(VerificationStatus.NOT_CONFIGURED).optional(),
+  accountSmtpAuthStatus: z
+    .nativeEnum(VerificationStatus)
+    .default(VerificationStatus.NOT_CONFIGURED)
+    .optional(),
 
   // Relay settings
   relayType: z.nativeEnum(RelayType).default(RelayType.DEFAULT_SERVER_CONFIG),
@@ -244,42 +262,61 @@ export interface ContactFormData {
 // Enhanced validation utilities
 export const validateFormField = async <T = Record<string, unknown>>(
   value: T,
-  validationRules: FieldValidationType<T>
+  validationRules: FieldValidationType<T>,
 ): Promise<FormValidationResult<T>> => {
   const errors: FormFieldError[] = [];
 
   // Required check
-  if (validationRules.required && (value === null || value === undefined || value === '')) {
-    errors.push({ message: 'This field is required', code: 'REQUIRED' });
+  if (
+    validationRules.required &&
+    (value === null || value === undefined || value === "")
+  ) {
+    errors.push({ message: "This field is required", code: "REQUIRED" });
   }
 
   // Length checks
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     if (validationRules.minLength && value.length < validationRules.minLength) {
-      errors.push({ message: `Minimum length is ${validationRules.minLength}`, code: 'MIN_LENGTH' });
+      errors.push({
+        message: `Minimum length is ${validationRules.minLength}`,
+        code: "MIN_LENGTH",
+      });
     }
     if (validationRules.maxLength && value.length > validationRules.maxLength) {
-      errors.push({ message: `Maximum length is ${validationRules.maxLength}`, code: 'MAX_LENGTH' });
+      errors.push({
+        message: `Maximum length is ${validationRules.maxLength}`,
+        code: "MAX_LENGTH",
+      });
     }
   }
 
   // Pattern check
-  if (validationRules.pattern && typeof value === 'string') {
+  if (validationRules.pattern && typeof value === "string") {
     const regex = new RegExp(validationRules.pattern);
     if (!regex.test(value)) {
-      errors.push({ message: 'Invalid format', code: 'PATTERN_MISMATCH' });
+      errors.push({ message: "Invalid format", code: "PATTERN_MISMATCH" });
     }
   }
 
   // Custom validator
-  if (validationRules.customValidator && value !== null && value !== undefined) {
+  if (
+    validationRules.customValidator &&
+    value !== null &&
+    value !== undefined
+  ) {
     try {
       const isValid = await validationRules.customValidator(value);
       if (!isValid) {
-        errors.push({ message: 'Custom validation failed', code: 'CUSTOM_VALIDATION' });
+        errors.push({
+          message: "Custom validation failed",
+          code: "CUSTOM_VALIDATION",
+        });
       }
     } catch {
-      errors.push({ message: 'Validation error occurred', code: 'VALIDATION_ERROR' });
+      errors.push({
+        message: "Validation error occurred",
+        code: "VALIDATION_ERROR",
+      });
     }
   }
 

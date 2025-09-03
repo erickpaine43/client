@@ -17,7 +17,7 @@ import { notFound } from "next/navigation";
 async function page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const currentTemplate = initialTemplates.find(
-    (template) => template.id === parseInt(id)
+    (template) => template.id === parseInt(id),
   );
   if (!currentTemplate) {
     notFound();

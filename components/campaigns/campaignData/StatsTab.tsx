@@ -35,7 +35,10 @@ type ChartTooltipProps = {
   label?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 };
 
-const CustomTooltip = ({ active, payload }: Pick<ChartTooltipProps, 'active' | 'payload'>) => {
+const CustomTooltip = ({
+  active,
+  payload,
+}: Pick<ChartTooltipProps, "active" | "payload">) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     const date = new Date(data.date);
@@ -110,8 +113,8 @@ function StatsTab() {
   const toggleMetric = (key: keyof ChartData) => {
     setMetrics((prev) =>
       prev.map((metric) =>
-        metric.key === key ? { ...metric, visible: !metric.visible } : metric
-      )
+        metric.key === key ? { ...metric, visible: !metric.visible } : metric,
+      ),
     );
   };
 
@@ -124,7 +127,7 @@ function StatsTab() {
       clicked: acc.clicked + day.clicked,
       bounced: acc.bounced + day.bounced,
     }),
-    { sent: 0, opened: 0, replied: 0, clicked: 0, bounced: 0 }
+    { sent: 0, opened: 0, replied: 0, clicked: 0, bounced: 0 },
   );
 
   const openRate =
@@ -230,7 +233,7 @@ function StatsTab() {
                     >
                       {
                         timeRangeOptions.find(
-                          (option) => option.value === timeRange
+                          (option) => option.value === timeRange,
                         )?.label
                       }
                       <ChevronDown size={14} />
@@ -297,7 +300,7 @@ function StatsTab() {
                           fill: "#fff",
                         }}
                       />
-                    )
+                    ),
                 )}
               </LineChart>
             </ResponsiveContainer>

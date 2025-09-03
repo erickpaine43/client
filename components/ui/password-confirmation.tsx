@@ -9,23 +9,34 @@ import { type PasswordInputProps } from "./password-input";
 export interface PasswordConfirmationProps {
   passwordName?: string;
   confirmPasswordName?: string;
-  passwordProps?: Omit<PasswordInputProps, 'name' | 'value' | 'onValueChange'>;
-  confirmPasswordProps?: Omit<PasswordInputProps, 'name' | 'value' | 'onValueChange'>;
+  passwordProps?: Omit<PasswordInputProps, "name" | "value" | "onValueChange">;
+  confirmPasswordProps?: Omit<
+    PasswordInputProps,
+    "name" | "value" | "onValueChange"
+  >;
   className?: string;
 }
 
-export const PasswordConfirmation = React.forwardRef<HTMLDivElement, PasswordConfirmationProps>(
-  ({
-    passwordName = "password",
-    confirmPasswordName = "confirmPassword",
-    passwordProps,
-    confirmPasswordProps,
-    className,
-  }, ref) => {
+export const PasswordConfirmation = React.forwardRef<
+  HTMLDivElement,
+  PasswordConfirmationProps
+>(
+  (
+    {
+      passwordName = "password",
+      confirmPasswordName = "confirmPassword",
+      passwordProps,
+      confirmPasswordProps,
+      className,
+    },
+    ref,
+  ) => {
     const formContext = useFormContext();
 
     if (!formContext) {
-      console.warn("PasswordConfirmation must be used within a react-hook-form FormProvider");
+      console.warn(
+        "PasswordConfirmation must be used within a react-hook-form FormProvider",
+      );
       return null;
     }
 
@@ -49,20 +60,26 @@ export const PasswordConfirmation = React.forwardRef<HTMLDivElement, PasswordCon
           name={confirmPasswordName}
           label={confirmPasswordProps?.label || "Confirm Password"}
           value={confirmPasswordValue}
-          onValueChange={(value) => formContext.setValue(confirmPasswordName, value)}
+          onValueChange={(value) =>
+            formContext.setValue(confirmPasswordName, value)
+          }
           showStrengthMeter={false}
           required
           {...confirmPasswordProps}
         />
       </div>
     );
-  }
+  },
 );
 
 PasswordConfirmation.displayName = "PasswordConfirmation";
 
 // Utility to validate password confirmation
-export const validatePasswordMatch = (value: string, allFormData: Record<string, unknown>, passwordFieldName = "password") => {
+export const validatePasswordMatch = (
+  value: string,
+  allFormData: Record<string, unknown>,
+  passwordFieldName = "password",
+) => {
   const password = allFormData[passwordFieldName];
   if (typeof password !== "string") {
     return "Password is required";

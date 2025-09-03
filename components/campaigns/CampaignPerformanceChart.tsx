@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { 
-  ResponsiveContainer, 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  // Legend 
-} from 'recharts';
+import React from "react";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  // Legend
+} from "recharts";
 
 // Define the expected data structure for props
 interface ChartDataPoint {
@@ -23,11 +23,11 @@ interface CampaignPerformanceChartProps {
 }
 
 // Custom Tooltip component (remains the same)
-const CustomTooltip = ({ 
-  active, 
-  payload, 
-  label 
-}: { 
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: {
   active?: boolean;
   payload?: {
     color: string;
@@ -41,7 +41,11 @@ const CustomTooltip = ({
       <div className="bg-white p-2 shadow rounded border border-gray-200">
         <p className="font-semibold text-sm text-gray-700">{`${label}`}</p>
         {payload.map((entry, index) => (
-          <p key={`item-${index}`} style={{ color: entry.color }} className="text-xs">
+          <p
+            key={`item-${index}`}
+            style={{ color: entry.color }}
+            className="text-xs"
+          >
             {`${entry.name} : ${entry.value}`}
           </p>
         ))}
@@ -52,10 +56,14 @@ const CustomTooltip = ({
 };
 
 // Accept data as props
-const CampaignPerformanceChart: React.FC<CampaignPerformanceChartProps> = ({ data }) => {
+const CampaignPerformanceChart: React.FC<CampaignPerformanceChartProps> = ({
+  data,
+}) => {
   return (
     <div className="bg-white shadow rounded-lg p-4 h-96 flex flex-col">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Campaign Performance</h3>
+      <h3 className="text-lg font-medium text-gray-900 mb-4">
+        Campaign Performance
+      </h3>
       <div className="flex-grow">
         <ResponsiveContainer width="100%" height="100%">
           {/* Use the data prop */}
@@ -69,13 +77,49 @@ const CampaignPerformanceChart: React.FC<CampaignPerformanceChartProps> = ({ dat
             }}
           >
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6B7280' }} />
-            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6B7280' }} />
-            <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#d1d5db', strokeWidth: 1 }} />
+            <XAxis
+              dataKey="name"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: "#6B7280" }}
+            />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: "#6B7280" }}
+            />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ stroke: "#d1d5db", strokeWidth: 1 }}
+            />
             {/* <Legend verticalAlign="top" height={36}/> */}
-            <Line type="monotone" dataKey="opens" stroke="#3B82F6" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} name="Opens" />
-            <Line type="monotone" dataKey="clicks" stroke="#60A5FA" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} name="Clicks" />
-            <Line type="monotone" dataKey="replies" stroke="#93C5FD" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} name="Replies" />
+            <Line
+              type="monotone"
+              dataKey="opens"
+              stroke="#3B82F6"
+              strokeWidth={2}
+              dot={{ r: 4 }}
+              activeDot={{ r: 6 }}
+              name="Opens"
+            />
+            <Line
+              type="monotone"
+              dataKey="clicks"
+              stroke="#60A5FA"
+              strokeWidth={2}
+              dot={{ r: 4 }}
+              activeDot={{ r: 6 }}
+              name="Clicks"
+            />
+            <Line
+              type="monotone"
+              dataKey="replies"
+              stroke="#93C5FD"
+              strokeWidth={2}
+              dot={{ r: 4 }}
+              activeDot={{ r: 6 }}
+              name="Replies"
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>

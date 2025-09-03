@@ -37,7 +37,7 @@ function EnterDomain() {
                 </div>
               )}
               <p className="text-sm text-muted-foreground">
-                Please enter only the root domain. Don't include http:// or www.
+                Please enter only the root domain. Don&apos;t include http:// or www.
               </p>
             </div>
           </div>
@@ -52,7 +52,7 @@ function EnterDomain() {
                   • You can add subdomains later (e.g., mail.mycompany.com)
                 </li>
                 <li>
-                  • Make sure you have access to your domain's DNS settings
+                  • Make sure you have access to your domain&apos;s DNS settings
                 </li>
               </ul>
             </AlertDescription>

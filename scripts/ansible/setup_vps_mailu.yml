@@ -39,13 +39,13 @@
       file:
         path: /etc/apt/keyrings
         state: directory
-        mode: '0755'
+        mode: "0755"
 
     - name: Add Dockers official GPG key
       get_url:
         url: https://download.docker.com/linux/ubuntu/gpg
         dest: /etc/apt/keyrings/docker.asc
-        mode: '0644'
+        mode: "0644"
 
     - name: Add Docker repository
       apt_repository:
@@ -75,7 +75,7 @@
         state: directory
         owner: root
         group: root
-        mode: '0755'
+        mode: "0755"
 
     - name: Ensure Mailu data subdirectories exist
       file:
@@ -83,7 +83,7 @@
         state: directory
         owner: root
         group: root
-        mode: '0755'
+        mode: "0755"
       loop: "{{ mailu_dirs }}"
 
     - name: Copy Mailu docker-compose.yml
@@ -92,7 +92,7 @@
         dest: "{{ mailu_install_dir }}/docker-compose.yml"
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
 
     - name: Copy Mailu environment file
       copy:
@@ -100,7 +100,7 @@
         dest: "{{ mailu_install_dir }}/mailu.env"
         owner: root
         group: root
-        mode: '0600'
+        mode: "0600"
 
     - name: Ensure Mailu stack is up
       community.docker.docker_compose_v2:

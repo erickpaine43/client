@@ -76,7 +76,7 @@ function Folder({
                 <Folder key={child.id} folder={child as TemplateFolder} />
               ) : (
                 showFiles && <File key={child.id} file={child as Template} />
-              )
+              ),
             )}
           </AccordionContent>
         </AccordionItem>

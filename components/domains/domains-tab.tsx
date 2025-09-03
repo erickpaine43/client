@@ -128,7 +128,7 @@ function DomainsTab() {
                         DNS Setup Required
                       </h4>
                       <p className="text-sm text-orange-700 mt-1">
-                        Please add the DNS records above to your domain's DNS
+                        Please add the DNS records above to your domain&apos;s DNS
                         settings. Once added, verification typically takes 5-15
                         minutes.
                       </p>

@@ -68,15 +68,15 @@ export const AddDomainContext = createContext<{
   currentStepData: (typeof steps)[0];
 } | null>(null);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const addDomainFormSchema = z.object({
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const addDomainFormSchema = z.object({
   domain: z
     .string()
     .min(1, "Domain is required")
     .max(255, "Domain is too long")
     .regex(
       /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*$/,
-      "Please enter a valid domain name"
+      "Please enter a valid domain name",
     ),
   dnsRecords: z.array(
     z.object({
@@ -85,7 +85,7 @@ export const AddDomainContext = createContext<{
       value: z.string(),
       status: z.enum(["verified", "pending", "failed"]),
       description: z.string(),
-    })
+    }),
   ),
 });
 
@@ -119,7 +119,7 @@ export function useAddDomainContext() {
   const context = useContext(AddDomainContext);
   if (!context) {
     throw new Error(
-      "useAddDomainContext must be used within AddDomainProvider"
+      "useAddDomainContext must be used within AddDomainProvider",
     );
   }
   return context;

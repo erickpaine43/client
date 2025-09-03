@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 // Placeholder hook for authentication status
 // Replace with your actual authentication logic
@@ -11,11 +11,11 @@ export function useAuth() {
     // Simulate checking auth status on mount
     const checkAuth = async () => {
       // In a real app, you'd check a token, session, etc.
-      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate async check
+      await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate async check
       // Flip this value to test authenticated/unauthenticated states
       const loggedIn = false;
       setIsAuthenticated(loggedIn);
-      setUser(loggedIn ? { name: 'Test User' } : null);
+      setUser(loggedIn ? { name: "Test User" } : null);
       setLoading(false);
     };
     checkAuth();
@@ -24,7 +24,7 @@ export function useAuth() {
   const login = () => {
     // Placeholder login function
     setIsAuthenticated(true);
-    setUser({ name: 'Test User' });
+    setUser({ name: "Test User" });
   };
 
   const logout = () => {

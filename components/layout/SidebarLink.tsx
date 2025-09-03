@@ -24,7 +24,7 @@ function SidebarLink({ link }: { link: NavLinkItem }) {
           "bg-blue-50 text-blue-700 border-r-2 border-blue-600 shadow-sm hover:bg-blue-100":
             isActive && !link.highlight,
           "text-gray-700 hover:bg-gray-200 hover:text-gray-900": !isActive,
-        }
+        },
       )}
     >
       <Icon
@@ -35,7 +35,7 @@ function SidebarLink({ link }: { link: NavLinkItem }) {
             ? link.highlight
               ? "text-white"
               : "text-blue-600"
-            : "text-gray-500"
+            : "text-gray-500",
         )}
       />
       <span>{link.label}</span>

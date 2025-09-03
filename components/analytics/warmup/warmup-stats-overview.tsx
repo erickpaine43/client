@@ -90,7 +90,7 @@ function WarmupStatsOverview({ id }: { id: string }) {
       replies: acc.replies + day.replies,
       bounce: acc.bounce + day.bounce,
     }),
-    { emailsWarmed: 0, delivered: 0, spam: 0, replies: 0, bounce: 0 }
+    { emailsWarmed: 0, delivered: 0, spam: 0, replies: 0, bounce: 0 },
   );
 
   const deliveryRate = (
@@ -108,21 +108,21 @@ function WarmupStatsOverview({ id }: { id: string }) {
       value: `${mailbox?.healthScore || 0}%`,
       icon: Zap,
       color: "bg-green-100 ",
-      textColor: "text-green-600"
+      textColor: "text-green-600",
     },
     {
       label: "Delivery Rate",
       value: `${deliveryRate || 0}%`,
       icon: Mail,
       color: "bg-blue-100 ",
-      textColor: "text-blue-600"
+      textColor: "text-blue-600",
     },
     {
       label: "Reply Rate",
       value: `${replyRate || 0}%`,
       icon: MessageSquare,
       color: "bg-green-100 ",
-      textColor: "text-green-600"
+      textColor: "text-green-600",
     },
     {
       label: "Total Spam",

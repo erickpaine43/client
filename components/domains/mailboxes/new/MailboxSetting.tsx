@@ -49,7 +49,7 @@ function MailboxSetting() {
                       max={50}
                       className={cn(
                         "w-full px-4 py-3 pr-24 text-lg h-12",
-                        form.formState.errors.dailyLimit && "border-red-300"
+                        form.formState.errors.dailyLimit && "border-red-300",
                       )}
                       {...field}
                       onChange={(e) => field.onChange(parseInt(e.target.value))}

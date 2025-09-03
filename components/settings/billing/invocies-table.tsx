@@ -66,7 +66,7 @@ function InvoicesTable() {
                   variant="secondary"
                   className={cn(
                     "bg-green-100 text-green-800 hover:bg-green-100",
-                    "flex items-center w-fit gap-1"
+                    "flex items-center w-fit gap-1",
                   )}
                 >
                   <Check className="h-3 w-3" />

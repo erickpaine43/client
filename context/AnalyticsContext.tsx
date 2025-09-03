@@ -5,12 +5,14 @@ import {
   metrics,
 } from "@/lib/data/analytics.mock";
 import { createContext, useContext, useState, useMemo, useEffect } from "react";
-import { AnalyticsContextState, DataGranularity, DateRangePreset } from "@/types";
+import {
+  AnalyticsContextState,
+  DataGranularity,
+  DateRangePreset,
+} from "@/types";
 
 // Helper function to get allowed granularities based on date range
-const getAllowedGranularities = (
-  days: number
-): DataGranularity[] => {
+const getAllowedGranularities = (days: number): DataGranularity[] => {
   if (days <= 14) {
     // For 14 days or less, allow daily and weekly
     return ["day", "week"];
@@ -24,7 +26,7 @@ const getAllowedGranularities = (
 };
 
 const AnalyticsContext = createContext<AnalyticsContextState | undefined>(
-  undefined
+  undefined,
 );
 
 function AnalyticsProvider({ children }: { children: React.ReactNode }) {
@@ -32,16 +34,14 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
   const [customDateStart, setCustomDateStart] = useState("");
   const [customDateEnd, setCustomDateEnd] = useState("");
   const [showCustomDate, setShowCustomDate] = useState(false);
-  const [granularity, setGranularity] = useState<DataGranularity>(
-    "day"
-  );
+  const [granularity, setGranularity] = useState<DataGranularity>("day");
   const [selectedCampaigns, setSelectedCampaigns] = useState(["all"]);
   const [selectedMailboxes, setSelectedMailboxes] = useState(["all"]);
   const [visibleMetrics, setVisibleMetrics] = useState(
     metrics.reduce(
       (acc, metric) => ({ ...acc, [metric.key]: metric.visible }),
-      {}
-    )
+      {},
+    ),
   );
 
   // Calculate days based on date range
@@ -50,7 +50,7 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
       const start = new Date(customDateStart);
       const end = new Date(customDateEnd);
       return Math.ceil(
-        (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
+        (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24),
       );
     }
     return getDaysFromRange(dateRange);

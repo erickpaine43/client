@@ -43,6 +43,13 @@ interface MetricToggle {
   replies: boolean;
 }
 
+interface TooltipPayloadItem {
+  dataKey: string;
+  value: number;
+  color?: string;
+  payload?: Record<string, unknown>;
+}
+
 function WarmUpLineChart() {
   const [activeMetrics, setActiveMetrics] = useState<MetricToggle>({
     totalWarmups: true,
@@ -68,22 +75,35 @@ function WarmUpLineChart() {
     }));
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Record<string, any>[]; label?: string }) => {
+   
+  const CustomTooltip = ({
+    active,
+    payload,
+    label,
+  }: {
+    active?: boolean;
+    payload?: TooltipPayloadItem[];
+    label?: string;
+  }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
           <p className="font-medium text-gray-900 mb-2">{label}</p>
-          {payload.map((entry: Record<string, any>, index: number) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
-            <p key={index} className="text-sm" style={{ color: entry.color }}>
-              <span className="font-semibold">{entry.value}</span>
-              <span className="ml-2 text-gray-600">
-                {entry.dataKey === "totalWarmups" && "Total Warmups"}
-                {entry.dataKey === "spamFlags" && "Spam Flags"}
-                {entry.dataKey === "replies" && "Replies"}
-              </span>
-            </p>
-          ))}
+          {payload.map(
+            (
+              entry: TooltipPayloadItem,
+              index: number,
+            ) => (
+              <p key={index} className="text-sm" style={{ color: entry.color }}>
+                <span className="font-semibold">{entry.value}</span>
+                <span className="ml-2 text-gray-600">
+                  {entry.dataKey === "totalWarmups" && "Total Warmups"}
+                  {entry.dataKey === "spamFlags" && "Spam Flags"}
+                  {entry.dataKey === "replies" && "Replies"}
+                </span>
+              </p>
+            ),
+          )}
         </div>
       );
     }
@@ -92,26 +112,29 @@ function WarmUpLineChart() {
 
   const footerMetrics = [
     {
-      key: 'totalWarmups',
-      label: 'Total Warmups',
-      color: 'text-blue-600',
-      tooltip: 'Emails we sent from your mailbox as part of the warmup process to improve deliverability.',
-      value: chartData.reduce((sum, d) => sum + d.totalWarmups, 0)
+      key: "totalWarmups",
+      label: "Total Warmups",
+      color: "text-blue-600",
+      tooltip:
+        "Emails we sent from your mailbox as part of the warmup process to improve deliverability.",
+      value: chartData.reduce((sum, d) => sum + d.totalWarmups, 0),
     },
     {
-      key: 'spamFlags',
-      label: 'Spam Flags',
-      color: 'text-red-600',
-      tooltip: 'Emails that landed in the spam folder during warmups. We then moved them to the inbox to help improve the reputation.',
-      value: chartData.reduce((sum, d) => sum + d.spamFlags, 0)
+      key: "spamFlags",
+      label: "Spam Flags",
+      color: "text-red-600",
+      tooltip:
+        "Emails that landed in the spam folder during warmups. We then moved them to the inbox to help improve the reputation.",
+      value: chartData.reduce((sum, d) => sum + d.spamFlags, 0),
     },
     {
-      key: 'replies',
-      label: 'Total Replies',
-      color: 'text-green-600',
-      tooltip: 'Replies we sent to emails received from your mailbox during the warmup process to simulate real conversations.',
-      value: chartData.reduce((sum, d) => sum + d.replies, 0)
-    }
+      key: "replies",
+      label: "Total Replies",
+      color: "text-green-600",
+      tooltip:
+        "Replies we sent to emails received from your mailbox during the warmup process to simulate real conversations.",
+      value: chartData.reduce((sum, d) => sum + d.replies, 0),
+    },
   ];
 
   return (
@@ -231,7 +254,9 @@ function WarmUpLineChart() {
             <div key={metric.key} className="text-center">
               <div className="flex items-center justify-center gap-1 mb-1">
                 <div className={`text-2xl font-bold ${metric.color}`}>
-                  {metric.key === 'totalWarmups' ? metric.value.toLocaleString() : metric.value}
+                  {metric.key === "totalWarmups"
+                    ? metric.value.toLocaleString()
+                    : metric.value}
                 </div>
                 <Tooltip>
                   <TooltipTrigger>
@@ -242,7 +267,9 @@ function WarmUpLineChart() {
                   </TooltipContent>
                 </Tooltip>
               </div>
-              <div className="text-sm text-muted-foreground">{metric.label}</div>
+              <div className="text-sm text-muted-foreground">
+                {metric.label}
+              </div>
             </div>
           ))}
         </CardFooter>

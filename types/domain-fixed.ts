@@ -1,14 +1,34 @@
 import { z } from "zod";
 
 // DNS Record Types
-export type DNSRecordType = "A" | "AAAA" | "CNAME" | "MX" | "TXT" | "SPF" | "DKIM" | "DMARC" | "NS" | "SRV";
+export type DNSRecordType =
+  | "A"
+  | "AAAA"
+  | "CNAME"
+  | "MX"
+  | "TXT"
+  | "SPF"
+  | "DKIM"
+  | "DMARC"
+  | "NS"
+  | "SRV";
 export type DNSRecordStatus = "verified" | "pending" | "failed";
 
 // Domain Statuses
-export type DomainStatus = "PENDING" | "VERIFIED" | "SETUP_REQUIRED" | "FAILED" | "DELETED";
+export type DomainStatus =
+  | "PENDING"
+  | "VERIFIED"
+  | "SETUP_REQUIRED"
+  | "FAILED"
+  | "DELETED";
 
 // Email Account Statuses
-export type EmailAccountStatus = "PENDING" | "ACTIVE" | "ISSUE" | "SUSPENDED" | "DELETED";
+export type EmailAccountStatus =
+  | "PENDING"
+  | "ACTIVE"
+  | "ISSUE"
+  | "SUSPENDED"
+  | "DELETED";
 
 // Verification Status
 export enum VerificationStatus {
@@ -16,20 +36,20 @@ export enum VerificationStatus {
   PENDING = "PENDING",
   ERROR = "ERROR",
   NOT_CONFIGURED = "NOT_CONFIGURED",
-  DISABLED = "DISABLED"
+  DISABLED = "DISABLED",
 }
 
 // Relay Types
 export enum RelayType {
   INTERNAL = "INTERNAL",
   EXTERNAL = "EXTERNAL",
-  DEFAULT_SERVER_CONFIG = "DEFAULT_SERVER_CONFIG"
+  DEFAULT_SERVER_CONFIG = "DEFAULT_SERVER_CONFIG",
 }
 
 // Account Creation Types
 export enum DomainAccountCreationType {
   LINUX_USER = "LINUX_USER",
-  VIRTUAL_USER_DB = "VIRTUAL_USER_DB"
+  VIRTUAL_USER_DB = "VIRTUAL_USER_DB",
 }
 
 // DNS Provider Types
@@ -42,7 +62,7 @@ export enum DNSProvider {
   BLUEHOST = "Bluehost",
   HOSTINGER = "Hostinger",
   HOSTGATOR = "HostGator",
-  OTHER = "Other"
+  OTHER = "Other",
 }
 
 // Warmup Status Types
@@ -54,18 +74,18 @@ export const VerificationStatusConstants = {
   PENDING: "PENDING" as const,
   ERROR: "ERROR" as const,
   NOT_CONFIGURED: "NOT_CONFIGURED" as const,
-  DISABLED: "DISABLED" as const
+  DISABLED: "DISABLED" as const,
 } as const;
 
 export const DomainAccountCreationTypeConstants = {
   LINUX_USER: "LINUX_USER" as const,
-  VIRTUAL_USER_DB: "VIRTUAL_USER_DB" as const
+  VIRTUAL_USER_DB: "VIRTUAL_USER_DB" as const,
 } as const;
 
 export const RelayTypeConstants = {
   INTERNAL: "INTERNAL" as const,
   EXTERNAL: "EXTERNAL" as const,
-  DEFAULT_SERVER_CONFIG: "DEFAULT_SERVER_CONFIG" as const
+  DEFAULT_SERVER_CONFIG: "DEFAULT_SERVER_CONFIG" as const,
 } as const;
 
 // Interfaces
@@ -73,7 +93,7 @@ export interface DNSRecord {
   type: DNSRecordType | string;
   name: string;
   value: string;
-  status: DNSRecordStatus | 'verified' | 'pending' | 'failed';
+  status: DNSRecordStatus | "verified" | "pending" | "failed";
   description: string;
   priority?: number;
 }
@@ -117,15 +137,35 @@ export interface EmailAccount {
 
 // Form validation schemas
 export const addDomainFormSchema = z.object({
-  domain: z.string().min(1).max(255).regex(/^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*$/, "Please enter a valid domain name"),
-  dnsRecords: z.array(z.object({
-    type: z.enum(["SPF", "DKIM", "DMARC", "MX", "CNAME", "TXT", "A", "AAAA", "NS", "SRV"]),
-    name: z.string(),
-    value: z.string(),
-    status: z.enum(["verified", "pending", "failed"]),
-    description: z.string(),
-    priority: z.number().optional(),
-  }))
+  domain: z
+    .string()
+    .min(1)
+    .max(255)
+    .regex(
+      /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*$/,
+      "Please enter a valid domain name",
+    ),
+  dnsRecords: z.array(
+    z.object({
+      type: z.enum([
+        "SPF",
+        "DKIM",
+        "DMARC",
+        "MX",
+        "CNAME",
+        "TXT",
+        "A",
+        "AAAA",
+        "NS",
+        "SRV",
+      ]),
+      name: z.string(),
+      value: z.string(),
+      status: z.enum(["verified", "pending", "failed"]),
+      description: z.string(),
+      priority: z.number().optional(),
+    }),
+  ),
 });
 
 export type AddDomainFormType = z.infer<typeof addDomainFormSchema>;

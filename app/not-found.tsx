@@ -42,7 +42,7 @@ const NotFound = () => {
           />
           <h1 className="text-6xl font-extrabold text-primary-600 mb-4">404</h1>
           <p className="text-2xl text-primary-700 mb-6">
-            Oops! The page you're looking for doesn't exist.
+            Oops! The page you&apos;re looking for doesn&apos;t exist.
           </p>
           <p className="text-lg text-primary-600 mb-8">
             You tried to enter an incorrect route. Please check if there is a

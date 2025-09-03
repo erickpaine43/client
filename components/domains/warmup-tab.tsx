@@ -114,7 +114,7 @@ function WarmupMailboxesTable() {
                       <p className="text-sm text-gray-500 mt-1">
                         Date Created :{" "}
                         {Intl.DateTimeFormat("en-US").format(
-                          new Date(mailbox.createdAt)
+                          new Date(mailbox.createdAt),
                         )}
                       </p>
                       <p className="text-xs text-gray-400 mt-1">
@@ -125,7 +125,7 @@ function WarmupMailboxesTable() {
                   <TableCell className="px-6 py-6">
                     <span
                       className={`inline-flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm font-medium ${getStatusColor(
-                        mailbox.warmupStatus
+                        mailbox.warmupStatus,
                       )}`}
                     >
                       {getStatusIcon(mailbox.warmupStatus)}
@@ -133,12 +133,12 @@ function WarmupMailboxesTable() {
                         {mailbox.warmupStatus === "WARMED"
                           ? "Ready"
                           : mailbox.warmupStatus === "WARMING"
-                          ? "Warming"
-                          : mailbox.warmupStatus === "PAUSED"
-                          ? "Paused"
-                          : mailbox.warmupStatus === "NOT_STARTED"
-                          ? "Not Started"
-                          : mailbox.warmupStatus}
+                            ? "Warming"
+                            : mailbox.warmupStatus === "PAUSED"
+                              ? "Paused"
+                              : mailbox.warmupStatus === "NOT_STARTED"
+                                ? "Not Started"
+                                : mailbox.warmupStatus}
                       </span>
                     </span>
                   </TableCell>
@@ -151,7 +151,7 @@ function WarmupMailboxesTable() {
                           ? "0"
                           : Math.floor(
                               mailbox.dailyLimit *
-                                (mailbox.warmupProgress / 100)
+                                (mailbox.warmupProgress / 100),
                             )}{" "}
                         emails
                       </span>

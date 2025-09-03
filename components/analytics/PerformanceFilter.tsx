@@ -51,7 +51,7 @@ function PerformanceFilter() {
 
   // Filter granularity options based on allowed granularities
   const filteredGranularityOptions = granularityOptions.filter((option) =>
-    allowedGranularities.includes(option.value as DataGranularity)
+    allowedGranularities.includes(option.value as DataGranularity),
   );
 
   const handleDateRangeChange = (value: string) => {
@@ -94,9 +94,7 @@ function PerformanceFilter() {
           options={filteredGranularityOptions}
           placeholder="Granularity"
           value={granularity}
-          onChange={(value: string) =>
-            setGranularity(value as DataGranularity)
-          }
+          onChange={(value: string) => setGranularity(value as DataGranularity)}
         />
 
         {/* Campaign Filter */}

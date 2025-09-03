@@ -59,7 +59,7 @@ function MailboxesTab() {
                       <p className="text-sm text-gray-500 mt-1">
                         Date Created :{" "}
                         {Intl.DateTimeFormat("en-US").format(
-                          new Date(mailbox.createdAt)
+                          new Date(mailbox.createdAt),
                         )}
                       </p>
                       <p className="text-xs text-gray-400 mt-1">
@@ -70,7 +70,7 @@ function MailboxesTab() {
                   <TableCell className="px-6 py-6">
                     <span
                       className={`inline-flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm font-medium ${getStatusColor(
-                        mailbox.status
+                        mailbox.status,
                       )}`}
                     >
                       <span className="capitalize">{mailbox.status}</span>

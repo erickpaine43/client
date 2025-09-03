@@ -11,7 +11,11 @@ import { EmailAccount } from "@/types/domain";
 import { ArrowLeft, PlusCircle } from "lucide-react";
 import Link from "next/link";
 
-export default async function DomainAccountsPage({ params }: { params: Promise<{ domainId: string }> }) {
+export default async function DomainAccountsPage({
+  params,
+}: {
+  params: Promise<{ domainId: string }>;
+}) {
   const { domainId } = await params;
   // TODO: Fetch domain and accounts data based on domainId
   const domain = {

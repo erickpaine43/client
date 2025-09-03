@@ -132,8 +132,8 @@ export default function ClientForm({
               ? t.form.buttons.updating
               : t.form.buttons.submitting
             : isEditMode
-            ? t.form.buttons.update
-            : t.form.buttons.submit}
+              ? t.form.buttons.update
+              : t.form.buttons.submit}
         </Button>
 
         <Button type="button" variant="outline" onClick={() => router.back()}>

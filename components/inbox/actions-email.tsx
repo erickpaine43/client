@@ -33,7 +33,10 @@ export default function EmailActions({ email }: { email: Email }) {
         label="Mark as read"
         icon={<MailOpen className="w-4 h-4" />}
         onClick={() =>
-          handleAction("mark as read", <MailOpen className="w-5 h-5 text-green-500" />)
+          handleAction(
+            "mark as read",
+            <MailOpen className="w-5 h-5 text-green-500" />,
+          )
         }
       />
     </div>

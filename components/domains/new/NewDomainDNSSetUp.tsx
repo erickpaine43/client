@@ -127,7 +127,7 @@ function NewDomainDNSSetUp() {
                 Domain: {domainName}
               </AlertTitle>
               <AlertDescription className="text-orange-700">
-                Add these DNS records to your domain's DNS settings.
+                Add these DNS records to your domain&apos;s DNS settings.
                 Verification typically takes 5-15 minutes after adding all
                 records.
               </AlertDescription>
@@ -181,8 +181,8 @@ function NewDomainDNSSetUp() {
                           record.status === "verified"
                             ? "default"
                             : record.status === "failed"
-                            ? "destructive"
-                            : "secondary"
+                              ? "destructive"
+                              : "secondary"
                         }
                         className={cn(
                           record.status === "verified" &&
@@ -190,14 +190,14 @@ function NewDomainDNSSetUp() {
                           record.status === "failed" &&
                             "bg-red-100 text-red-800 hover:bg-red-100",
                           record.status === "pending" &&
-                            "bg-orange-100 text-orange-800 hover:bg-orange-100"
+                            "bg-orange-100 text-orange-800 hover:bg-orange-100",
                         )}
                       >
                         {record.status === "verified"
                           ? "Verified"
                           : record.status === "failed"
-                          ? "Failed"
-                          : "Pending"}
+                            ? "Failed"
+                            : "Pending"}
                       </Badge>
                     </div>
                   </div>

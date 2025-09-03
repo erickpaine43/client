@@ -1,7 +1,17 @@
 import { z } from "zod";
 
 // DNS Record Types
-export type DNSRecordType = "A" | "AAAA" | "CNAME" | "MX" | "TXT" | "SPF" | "DKIM" | "DMARC" | "NS" | "SRV";
+export type DNSRecordType =
+  | "A"
+  | "AAAA"
+  | "CNAME"
+  | "MX"
+  | "TXT"
+  | "SPF"
+  | "DKIM"
+  | "DMARC"
+  | "NS"
+  | "SRV";
 
 export type DNSRecordStatus = "verified" | "pending" | "failed";
 
@@ -9,7 +19,7 @@ export interface DNSRecord {
   type: DNSRecordType | string; // Allow string for backward compatibility, but prefer enum
   name: string;
   value: string;
-  status: DNSRecordStatus | 'verified' | 'pending' | 'failed'; // Allow union for backward compatibility
+  status: DNSRecordStatus | "verified" | "pending" | "failed"; // Allow union for backward compatibility
   description: string;
   priority?: number; // For MX records
 }
@@ -36,7 +46,7 @@ export enum VerificationStatus {
   PENDING = "PENDING",
   ERROR = "ERROR",
   NOT_CONFIGURED = "NOT_CONFIGURED",
-  DISABLED = "DISABLED"
+  DISABLED = "DISABLED",
 }
 
 // Add const objects for runtime usage where needed
@@ -45,28 +55,24 @@ export const VerificationStatusConstants = {
   PENDING: "PENDING" as const,
   ERROR: "ERROR" as const,
   NOT_CONFIGURED: "NOT_CONFIGURED" as const,
-  DISABLED: "DISABLED" as const
+  DISABLED: "DISABLED" as const,
 } as const;
 
 // Relay Types
 export enum RelayType {
   INTERNAL = "INTERNAL",
   EXTERNAL = "EXTERNAL",
-  DEFAULT_SERVER_CONFIG = "DEFAULT_SERVER_CONFIG"
+  DEFAULT_SERVER_CONFIG = "DEFAULT_SERVER_CONFIG",
 }
 
 // Account Creation Types
 export enum DomainAccountCreationType {
   LINUX_USER = "LINUX_USER",
-  VIRTUAL_USER_DB = "VIRTUAL_USER_DB"
+  VIRTUAL_USER_DB = "VIRTUAL_USER_DB",
 }
 
 // Warmup Status Types
-export type WarmupStatusType =
-  | "NOT_STARTED"
-  | "WARMING"
-  | "WARMED"
-  | "PAUSED";
+export type WarmupStatusType = "NOT_STARTED" | "WARMING" | "WARMED" | "PAUSED";
 
 // DNS Provider Enums
 export enum DNSProvider {
@@ -78,7 +84,7 @@ export enum DNSProvider {
   BLUEHOST = "Bluehost",
   HOSTINGER = "Hostinger",
   HOSTGATOR = "HostGator",
-  OTHER = "Other"
+  OTHER = "Other",
 }
 
 // Domain Interface
@@ -184,17 +190,28 @@ export const addDomainFormSchema = z.object({
     .max(255, "Domain is too long")
     .regex(
       /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*$/,
-      "Please enter a valid domain name"
+      "Please enter a valid domain name",
     ),
   dnsRecords: z.array(
     z.object({
-      type: z.enum(["SPF", "DKIM", "DMARC", "MX", "CNAME", "TXT", "A", "AAAA", "NS", "SRV"]),
+      type: z.enum([
+        "SPF",
+        "DKIM",
+        "DMARC",
+        "MX",
+        "CNAME",
+        "TXT",
+        "A",
+        "AAAA",
+        "NS",
+        "SRV",
+      ]),
       name: z.string(),
       value: z.string(),
       status: z.enum(["verified", "pending", "failed"]),
       description: z.string(),
       priority: z.number().optional(),
-    })
+    }),
   ),
 });
 

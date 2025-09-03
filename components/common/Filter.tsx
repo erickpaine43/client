@@ -22,7 +22,7 @@ function Filter({
     <div
       className={cn(
         "flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-4 lg:space-y-0 lg:space-x-4 p-4 bg-white border rounded-lg shadow-sm",
-        className
+        className,
       )}
     >
       {children}

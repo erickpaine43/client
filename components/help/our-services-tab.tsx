@@ -13,7 +13,7 @@ function OurServicesTab() {
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto">
           Take your cold email campaigns to the next level with our expert
-          services. From lead generation to done-for-you outreach, we've got you
+          services. From lead generation to done-for-you outreach, we&apos;ve got you
           covered.
         </p>
       </div>
@@ -30,7 +30,7 @@ function OurServicesTab() {
                   className={cn(
                     "w-16 h-16 rounded-2xl flex items-center justify-center ",
                     "group-hover:scale-110 transition-transform",
-                    service.color
+                    service.color,
                   )}
                 >
                   <Icon className="w-8 h-8 text-white" />
@@ -52,7 +52,7 @@ function OurServicesTab() {
         <h3 className="text-2xl font-bold ">Need Custom Solutions?</h3>
         <p className="text-blue-100  max-w-2xl mx-auto">
           Our team of experts can create custom solutions tailored to your
-          specific business needs. Let's discuss how we can help you achieve
+          specific business needs. Let&apos;s discuss how we can help you achieve
           your outreach goals.
         </p>
         <Button variant="secondary" size="lg">

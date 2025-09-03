@@ -4,17 +4,17 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'api.dicebear.com',
-        port: '',
-        pathname: '/9.x/**',
+        protocol: "https",
+        hostname: "api.dicebear.com",
+        port: "",
+        pathname: "/9.x/**",
       },
       {
-        protocol: 'https',
-        hostname: 'img.youtube.com',
-        port: '',
-        pathname: '/vi/**',
-      }
+        protocol: "https",
+        hostname: "img.youtube.com",
+        port: "",
+        pathname: "/vi/**",
+      },
     ],
   },
 };

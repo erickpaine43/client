@@ -25,7 +25,7 @@ export default async function CampaignDetail({
 
 async function CampaignContent({ campaignId }: { campaignId: string }) {
   const campaign = campaignsData.find(
-    (campaign) => campaign.id === parseInt(campaignId)
+    (campaign) => campaign.id === parseInt(campaignId),
   );
   if (!campaign) {
     notFound();

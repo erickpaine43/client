@@ -1,13 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { 
-  ResponsiveContainer, 
-  PieChart, 
-  Pie, 
-  Cell, 
-  Tooltip 
-} from 'recharts';
+import React from "react";
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
 
 // Define the expected data structure for props
 interface PieChartDataPoint {
@@ -20,7 +14,7 @@ interface EmailStatusPieChartProps {
 }
 
 // Colors matching the screenshot (approximate)
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#8884d8', '#FF8042'];
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#8884d8", "#FF8042"];
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({
@@ -29,7 +23,7 @@ const renderCustomizedLabel = ({
   midAngle = 0,
   innerRadius,
   outerRadius,
-  percent = 0
+  percent = 0,
 }: {
   cx: number;
   cy: number;
@@ -38,7 +32,12 @@ const renderCustomizedLabel = ({
   outerRadius: number;
   percent?: number;
 }) => {
-  if (midAngle === undefined || innerRadius === undefined || outerRadius === undefined || percent === undefined) {
+  if (
+    midAngle === undefined ||
+    innerRadius === undefined ||
+    outerRadius === undefined ||
+    percent === undefined
+  ) {
     return null;
   }
 
@@ -47,10 +46,17 @@ const renderCustomizedLabel = ({
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
   // Only show label if percent is large enough to avoid clutter
-  if ((percent * 100) < 5) return null;
+  if (percent * 100 < 5) return null;
 
   return (
-    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" fontSize={12}>
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor={x > cx ? "start" : "end"}
+      dominantBaseline="central"
+      fontSize={12}
+    >
       {`${(percent * 100).toFixed(0)}%`}
     </text>
   );
@@ -94,7 +100,10 @@ const EmailStatusPieChart: React.FC<EmailStatusPieChartProps> = ({ data }) => {
               dataKey="value"
             >
               {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
@@ -102,12 +111,17 @@ const EmailStatusPieChart: React.FC<EmailStatusPieChartProps> = ({ data }) => {
           </PieChart>
         </ResponsiveContainer>
       </div>
-       {/* Manual Legend to match screenshot style - Use data prop */}
-       <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1">
+      {/* Manual Legend to match screenshot style - Use data prop */}
+      <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1">
         {data.map((entry, index) => (
           <div key={`legend-${index}`} className="flex items-center text-xs">
-            <span className="w-3 h-3 rounded-full mr-1.5" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-            <span>{entry.name} {entry.value}%</span>
+            <span
+              className="w-3 h-3 rounded-full mr-1.5"
+              style={{ backgroundColor: COLORS[index % COLORS.length] }}
+            />
+            <span>
+              {entry.name} {entry.value}%
+            </span>
           </div>
         ))}
       </div>

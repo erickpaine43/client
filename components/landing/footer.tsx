@@ -1,5 +1,5 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -9,16 +9,25 @@ export default function Footer() {
           &copy; {new Date().getFullYear()} Penguin Mails. All rights reserved.
         </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-           {/* Use Link for internal navigation */}
-           <Link href="/terms" className="text-xs hover:underline underline-offset-4">
-             Terms of Service
-           </Link>
-           <Link href="/privacy" className="text-xs hover:underline underline-offset-4">
-             Privacy Policy
-           </Link>
-           <Link href="/contact" className="text-xs hover:underline underline-offset-4">
-             Contact Us
-           </Link>
+          {/* Use Link for internal navigation */}
+          <Link
+            href="/terms"
+            className="text-xs hover:underline underline-offset-4"
+          >
+            Terms of Service
+          </Link>
+          <Link
+            href="/privacy"
+            className="text-xs hover:underline underline-offset-4"
+          >
+            Privacy Policy
+          </Link>
+          <Link
+            href="/contact"
+            className="text-xs hover:underline underline-offset-4"
+          >
+            Contact Us
+          </Link>
         </nav>
       </div>
     </footer>

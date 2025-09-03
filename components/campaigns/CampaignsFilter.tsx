@@ -34,9 +34,7 @@ function CampaignsFilter() {
   const [mailbox, setMailbox] = useState<string | undefined>(undefined);
 
   return (
-    <div
-      className="flex flex-col lg:flex-row lg:justify-between lg:items-center bg-white p-4 rounded-lg shadow border gap-4"
-    >
+    <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center bg-white p-4 rounded-lg shadow border gap-4">
       <div className="flex items-center space-x-2 border shadow-sm rounded-lg px-2 bg-gray-50 peer-focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 w-full lg:w-auto">
         <Search className="text-gray-400 w-5 h-5" />
         <Input

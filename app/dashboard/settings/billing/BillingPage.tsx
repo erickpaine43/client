@@ -1,11 +1,10 @@
+"use client";
 
-'use client';
-
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function BillingSettingsPage() {
   // Placeholder data - would fetch from API based on Company model
-  const planType = 'FREE'; // Example: 'FREE', 'STARTER', 'PRO'
+  const planType = "FREE"; // Example: 'FREE', 'STARTER', 'PRO'
   // const stripeCustomerId = 'cus_placeholder123'; // Example - commented out as unused
 
   // Placeholder URL for Stripe Customer Portal or Checkout
@@ -15,7 +14,9 @@ export default function BillingSettingsPage() {
   return (
     <div className="bg-white shadow sm:rounded-lg">
       <div className="px-4 py-5 sm:p-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">Billing & Plan</h3>
+        <h3 className="text-lg leading-6 font-medium text-gray-900">
+          Billing & Plan
+        </h3>
         <div className="mt-2 max-w-xl text-sm text-gray-500">
           <p>Manage your subscription and view billing history.</p>
         </div>
@@ -24,14 +25,20 @@ export default function BillingSettingsPage() {
           <div className="rounded-md bg-gray-50 px-6 py-5 sm:flex sm:items-start sm:justify-between">
             <div className="sm:flex sm:items-start">
               <div className="mt-3 sm:mt-0 sm:ml-4">
-                <div className="text-sm font-medium text-gray-900">Current Plan</div>
+                <div className="text-sm font-medium text-gray-900">
+                  Current Plan
+                </div>
                 <div className="mt-1 text-sm text-gray-600">
-                  You are currently on the <span className="font-semibold">{planType.charAt(0) + planType.slice(1).toLowerCase()}</span> plan.
+                  You are currently on the{" "}
+                  <span className="font-semibold">
+                    {planType.charAt(0) + planType.slice(1).toLowerCase()}
+                  </span>{" "}
+                  plan.
                 </div>
               </div>
             </div>
             <div className="mt-4 sm:mt-0 sm:ml-6 sm:flex-shrink-0">
-              {planType === 'FREE' ? (
+              {planType === "FREE" ? (
                 <Link
                   href={stripeCheckoutUrl} // Link to upgrade checkout
                   target="_blank" // Open Stripe in new tab
@@ -54,7 +61,8 @@ export default function BillingSettingsPage() {
 
         <div className="mt-6 border-t border-gray-200 pt-6">
           <p className="text-sm text-gray-500">
-            Billing management is handled by Stripe. Clicking the button above will redirect you to Stripe's secure portal.
+            Billing management is handled by Stripe. Clicking the button above
+            will redirect you to Stripe&apos;s secure portal.
           </p>
           {/* Add billing history section later if needed */}
         </div>
@@ -62,4 +70,3 @@ export default function BillingSettingsPage() {
     </div>
   );
 }
-

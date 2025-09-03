@@ -163,7 +163,10 @@ export interface BillingAndPlanSettings {
     campaigns: number;
     emailsPerMonth: number;
   };
-  billingInfo: Pick<BillingData, "paymentMethod" | "billingHistory" | "renewalDate">;
+  billingInfo: Pick<
+    BillingData,
+    "paymentMethod" | "billingHistory" | "renewalDate"
+  >;
 }
 
 // Form Props Types
@@ -192,7 +195,14 @@ export interface SecurityEvent {
 }
 
 // Settings Page Types
-export type SettingsTab = "profile" | "security" | "billing" | "notifications" | "team" | "appearance" | "tracking";
+export type SettingsTab =
+  | "profile"
+  | "security"
+  | "billing"
+  | "notifications"
+  | "team"
+  | "appearance"
+  | "tracking";
 
 // Settings Validation Types
 export interface SettingsValidationError {

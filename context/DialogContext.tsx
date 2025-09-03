@@ -70,7 +70,7 @@ export function useDialogContext() {
   const context = useContext(DialogContext);
   if (!context) {
     throw new Error(
-      "useDialogContext must be used within a DialogContextProvider"
+      "useDialogContext must be used within a DialogContextProvider",
     );
   }
   return context;

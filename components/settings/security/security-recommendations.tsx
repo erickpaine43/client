@@ -14,7 +14,7 @@ function SecurityRecommendations() {
         className={cn(
           isEnabled
             ? "border-green-200 bg-green-50/50"
-            : "border-orange-200 bg-orange-50/50"
+            : "border-orange-200 bg-orange-50/50",
         )}
       >
         <AlertTitle className="flex items-center justify-between">
@@ -22,7 +22,7 @@ function SecurityRecommendations() {
             <div
               className={cn(
                 "p-1 rounded-full",
-                isEnabled ? "bg-green-100" : "bg-orange-100"
+                isEnabled ? "bg-green-100" : "bg-orange-100",
               )}
             >
               {isEnabled ? (
@@ -38,7 +38,7 @@ function SecurityRecommendations() {
             className={cn(
               isEnabled
                 ? "bg-green-100 text-green-700 border-green-300"
-                : "bg-orange-100 text-orange-700 border-orange-300"
+                : "bg-orange-100 text-orange-700 border-orange-300",
             )}
           >
             {isEnabled ? "Enabled" : "Recommended"}

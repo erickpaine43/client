@@ -135,7 +135,7 @@ function TemplateActions({
       move: handleMove,
       delete: handleDelete,
     }),
-    [handleStar, handleCopy, handleEdit, handleMove, handleDelete]
+    [handleStar, handleCopy, handleEdit, handleMove, handleDelete],
   );
 
   const handleAction = useCallback(
@@ -148,7 +148,7 @@ function TemplateActions({
         actionHandlers[action]();
       }
     },
-    [actionHandlers]
+    [actionHandlers],
   );
 
   const visibleActions = ACTIONS.slice(0, numberOfShowen);

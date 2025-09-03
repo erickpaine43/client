@@ -25,7 +25,7 @@ import { Client } from "@/app/dashboard/inbox/schemas/schemas";
 export const createColumns = (
   maskPII: (text: string) => string,
   onEdit: (client: Client) => void,
-  onRemove: (client: Client) => void
+  onRemove: (client: Client) => void,
 ): ColumnDef<Client>[] => {
   const NOTES_PREVIEW_LIMIT = 100;
 
@@ -111,7 +111,7 @@ export const createColumns = (
               <DropdownMenuItem
                 onClick={() => {
                   navigator.clipboard.writeText(
-                    JSON.stringify(client, null, 2)
+                    JSON.stringify(client, null, 2),
                   );
                   toast.success(t.actions.dataCopied);
                 }}

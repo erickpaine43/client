@@ -118,7 +118,7 @@ function ContactForm() {
                     <div
                       className={cn(
                         "border-2 border-dashed border-muted-foreground/25 rounded-xl p-6 text-center",
-                        "hover:border-primary/40 transition-colors"
+                        "hover:border-primary/40 transition-colors",
                       )}
                     >
                       <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />

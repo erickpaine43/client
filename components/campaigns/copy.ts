@@ -5,7 +5,7 @@ export const copyText = {
     totalCampaigns: "Total Campaigns",
     activeCampaigns: "Active Campaigns",
     emailsSent: "Emails Sent",
-    totalReplies: "Total Replies"
+    totalReplies: "Total Replies",
   },
   table: {
     actions: {
@@ -16,7 +16,7 @@ export const copyText = {
       duplicate: "Duplicate",
       delete: "Delete",
       pause: "Pause",
-      resume: "Resume"
+      resume: "Resume",
     },
     columns: {
       name: "Name",
@@ -28,24 +28,24 @@ export const copyText = {
       bounces: "Bounces",
       spam: "Spam",
       unsubscribed: "Unsubscribed",
-      updatedAt: "Last Activity"
+      updatedAt: "Last Activity",
     },
     empty: {
       title: "No campaigns found",
-      description: "Create a new campaign to get started"
+      description: "Create a new campaign to get started",
     },
     searchPlaceholder: "Search campaigns...",
     totalResults: (count: number) => `${count} campaigns found`,
     pagination: {
       previous: "Previous",
-      next: "Next"
+      next: "Next",
     },
     exportCsv: "Export CSV",
     viewColumns: "View Columns",
     stats: {
       rate: (value: number) => `(${value.toFixed(1)}%)`,
-      progress: (sent: number, total: number) => `${sent}/${total}`
-    }
+      progress: (sent: number, total: number) => `${sent}/${total}`,
+    },
   },
   campaignDetails: {
     labels: {
@@ -74,28 +74,32 @@ export const copyText = {
       always: "Always send after delay",
       notOpened: "Send only if previous email NOT opened",
       notClicked: "Send only if previous email NOT clicked",
-      notReplied: "Send only if previous email NOT replied"
-    }
+      notReplied: "Send only if previous email NOT replied",
+    },
   },
   emailStep: {
     subject: {
       label: "Subject",
-      placeholder: "Enter email subject"
+      placeholder: "Enter email subject",
     },
     body: {
       label: "Body",
-      placeholder: "Write your email content here... Use {{variable}} for personalization."
-    }
+      placeholder:
+        "Write your email content here... Use {{variable}} for personalization.",
+    },
   },
   recipients: {
     title: "Recipients",
-    description: "Add recipients by uploading a CSV file or manually entering email addresses.",
+    description:
+      "Add recipients by uploading a CSV file or manually entering email addresses.",
     uploadCsvButton: "Upload CSV",
     manualInputLabel: "Manually Add Recipients",
-    textareaPlaceholder: "Enter email addresses, one per line...\nExample:\njohn.doe@example.com\njane.smith@example.com",
+    textareaPlaceholder:
+      "Enter email addresses, one per line...\nExample:\njohn.doe@example.com\njane.smith@example.com",
     settingsTitle: "Campaign Recipients",
     settingsDescription: "This campaign was sent to 2,500 recipients.",
-    helpText: "Enter one email address per line. You can also include variables like: email,firstName,lastName\njohn.doe@example.com,John,Doe"
+    helpText:
+      "Enter one email address per line. You can also include variables like: email,firstName,lastName\njohn.doe@example.com,John,Doe",
   },
   schedule: {
     title: "Sending Schedule",
@@ -111,21 +115,21 @@ export const copyText = {
       thu: "Thu",
       fri: "Fri",
       sat: "Sat",
-      sun: "Sun"
+      sun: "Sun",
     },
-    selectTimezone: "Select timezone"
+    selectTimezone: "Select timezone",
   },
   addEmail: "Add Email",
   addDelay: "Add Delay",
   stepLabel: (index: number, type: string) => `Step ${index + 1}: ${type}`,
   stepTypes: {
     email: "Email",
-    delay: "Delay"
+    delay: "Delay",
   },
   conditions: {
     if_not_opened: "if not opened",
     if_not_clicked: "if not clicked",
-    if_not_replied: "if not replied"
+    if_not_replied: "if not replied",
   },
   buttons: {
     moveStepUp: "Move step up",
@@ -147,19 +151,19 @@ export const copyText = {
       {
         name: "Intro Offer",
         subject: "Quick Question about [Company Name]",
-        body: "Hi {{firstName}},\n\nI saw you recently..."
+        body: "Hi {{firstName}},\n\nI saw you recently...",
       },
       {
         name: "Follow Up 1",
         subject: "Re: Quick Question",
-        body: "Hi {{firstName}},\n\nJust wanted to follow up..."
+        body: "Hi {{firstName}},\n\nJust wanted to follow up...",
       },
       {
         name: "Breakup Email",
         subject: "Closing the loop",
-        body: "Hi {{firstName}},\n\nSince I haven't heard back..."
-      }
-    ]
+        body: "Hi {{firstName}},\n\nSince I haven't heard back...",
+      },
+    ],
   },
   pageTitle: "Create Campaign",
   pageTitleEdition: "Edit Campaign",
@@ -243,7 +247,7 @@ export const copyText = {
     id: "Campaign ID:",
     status: {
       running: "Running",
-    }
+    },
   },
   format: {
     upTo: "Up to",
@@ -255,7 +259,7 @@ export const copyText = {
     DRAFT: "draft",
     PAUSED: "paused",
     COMPLETED: "completed",
-    ARCHIVED: "archived"
+    ARCHIVED: "archived",
   },
   metadata: {
     id: "ID",

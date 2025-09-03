@@ -75,10 +75,7 @@ function AppSideBar() {
         <SidebarHeader className=" flex items-center justify-between ">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton
-                className="flex items-center gap-2"
-                size="lg"
-              >
+              <SidebarMenuButton className="flex items-center gap-2" size="lg">
                 <Logo />
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -88,13 +85,13 @@ function AppSideBar() {
           <SidebarMenu>
             {navigationGroups.map((group) => (
               <SidebarGroup key={group.title}>
-                <SidebarGroupLabel className="select-none">{group.title}</SidebarGroupLabel>
+                <SidebarGroupLabel className="select-none">
+                  {group.title}
+                </SidebarGroupLabel>
                 <SidebarGroupContent>
                   {group.items.map((item) => (
                     <SidebarMenuItem key={item.to}>
-                      
-                        <SidebarLink link={item} />
-                      
+                      <SidebarLink link={item} />
                     </SidebarMenuItem>
                   ))}
                 </SidebarGroupContent>

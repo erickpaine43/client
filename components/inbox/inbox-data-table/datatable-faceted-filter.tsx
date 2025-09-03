@@ -47,7 +47,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   setFilterValue,
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const colId = column?.id;
-  const selectedValues = colId ? filterValue[colId] ?? [] : [];
+  const selectedValues = colId ? (filterValue[colId] ?? []) : [];
 
   const facets = column?.getFacetedUniqueValues();
 
@@ -117,7 +117,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     }}
                     className={cn(
                       "cursor-pointer",
-                      isSelected && "bg-accent text-accent-foreground"
+                      isSelected && "bg-accent text-accent-foreground",
                     )}
                   >
                     {option.icon && (

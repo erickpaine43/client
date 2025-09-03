@@ -56,7 +56,7 @@ function AddMailboxDetails() {
                       placeholder="john"
                       className={cn(
                         "flex-1 px-4 py-3 text-lg h-12",
-                        form.formState.errors.name && "border-red-300"
+                        form.formState.errors.name && "border-red-300",
                       )}
                       {...field}
                     />
@@ -73,7 +73,7 @@ function AddMailboxDetails() {
                         <SelectTrigger
                           className={cn(
                             "px-4 py-3 text-lg h-12 min-w-[160px]",
-                            form.formState.errors.domain && "border-red-300"
+                            form.formState.errors.domain && "border-red-300",
                           )}
                         >
                           <SelectValue placeholder="Select Domain" />
@@ -115,7 +115,7 @@ function AddMailboxDetails() {
                       placeholder="Enter a secure password"
                       className={cn(
                         "px-4 py-3 pr-12 text-lg h-12",
-                        form.formState.errors.password && "border-red-300"
+                        form.formState.errors.password && "border-red-300",
                       )}
                       {...field}
                     />
@@ -159,7 +159,7 @@ function AddMailboxDetails() {
                       className={cn(
                         "px-4 py-3 pr-12 text-lg h-12",
                         form.formState.errors.confirmPassword &&
-                          "border-red-300"
+                          "border-red-300",
                       )}
                       {...field}
                     />

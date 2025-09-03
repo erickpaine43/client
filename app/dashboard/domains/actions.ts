@@ -1,7 +1,7 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { DnsProvider } from '@/components/domains/constants';
+import { revalidatePath } from "next/cache";
+import { DnsProvider } from "@/components/domains/constants";
 
 interface CreateDomainData {
   domain: string;
@@ -11,18 +11,18 @@ interface CreateDomainData {
 export async function createDomain(data: CreateDomainData) {
   try {
     const response = await fetch(`${process.env.APP_URL}/api/domains`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
 
     if (!response.ok) {
-      let errorMessage = 'Failed to create domain';
+      let errorMessage = "Failed to create domain";
       try {
-        const error = await response.json() as { message?: string };
-        if (error.message && typeof error.message === 'string') {
+        const error = (await response.json()) as { message?: string };
+        if (error.message && typeof error.message === "string") {
           errorMessage = error.message;
         }
       } catch {
@@ -32,10 +32,10 @@ export async function createDomain(data: CreateDomainData) {
     }
 
     const domain = await response.json();
-    revalidatePath('/dashboard/domains');
+    revalidatePath("/dashboard/domains");
     return domain;
   } catch (error) {
-    console.error('Error creating domain:', error);
+    console.error("Error creating domain:", error);
     throw error;
   }
 }
@@ -44,15 +44,15 @@ export async function getDomains() {
   try {
     const response = await fetch(`${process.env.APP_URL}/api/domains`, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
     if (!response.ok) {
-      let errorMessage = 'Failed to fetch domains';
+      let errorMessage = "Failed to fetch domains";
       try {
-        const error = await response.json() as { message?: string };
-        if (error.message && typeof error.message === 'string') {
+        const error = (await response.json()) as { message?: string };
+        if (error.message && typeof error.message === "string") {
           errorMessage = error.message;
         }
       } catch {
@@ -63,7 +63,7 @@ export async function getDomains() {
 
     return response.json();
   } catch (error) {
-    console.error('Error fetching domains:', error);
+    console.error("Error fetching domains:", error);
     throw error;
   }
 }

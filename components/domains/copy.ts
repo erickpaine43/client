@@ -1,4 +1,4 @@
-import { EmailProvider } from "./constants"
+import { EmailProvider } from "./constants";
 
 export const copyText = {
   title: "Domains",
@@ -38,8 +38,8 @@ export const copyText = {
       accounts: {
         title: "Email Accounts",
         subtitle: "Across all domains",
-      }
-    }
+      },
+    },
   },
   tables: {
     domains: {
@@ -60,8 +60,8 @@ export const copyText = {
         dnsRecords: "DNS Records",
         verify: "Verify Now",
         settings: "Settings",
-        delete: "Delete"
-      }
+        delete: "Delete",
+      },
     },
     emailAccounts: {
       title: "Email Accounts",
@@ -78,7 +78,7 @@ export const copyText = {
         sync: "Sync",
         edit: "Edit",
         delete: "Delete",
-      }
+      },
     },
   },
   status: {
@@ -124,7 +124,8 @@ export const copyText = {
       spfRecordValue: "e.g., v=spf1 include:_spf.penguinmails.com ~all",
       dkimManagementType: "Select DKIM management type",
       dkimSelector: "e.g., pm or default",
-      dkimPublicKey: "e.g., v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQ...",
+      dkimPublicKey:
+        "e.g., v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQ...",
       dmarcRecordValue: "e.g., v=DMARC1; p=none; rua=mailto:dmarc@example.com",
     },
     hints: {
@@ -133,49 +134,58 @@ export const copyText = {
       auth: "Configure these records in your domain's DNS settings. Statuses will update after verification.",
       spfRecordValue: "Enter the full TXT value for your SPF record.",
       dkimCname: "Point this CNAME record to our DKIM service.",
-      dkimSelector: "Enter the selector for your DKIM TXT record (e.g., 'default', 'pm').",
-      dkimPublicKey: "Enter the public key part (p=...) of your DKIM TXT record.",
+      dkimSelector:
+        "Enter the selector for your DKIM TXT record (e.g., 'default', 'pm').",
+      dkimPublicKey:
+        "Enter the public key part (p=...) of your DKIM TXT record.",
       dmarcRecordValue: "Enter the full TXT value for your DMARC record.",
     },
     alerts: {
       setup: {
         title: "Configure Domain Authentication",
-        description: "Add your domain and configure DNS records to ensure reliable email delivery. You'll need access to your domain's DNS settings."
-      }
+        description:
+          "Add your domain and configure DNS records to ensure reliable email delivery. You'll need access to your domain's DNS settings.",
+      },
     },
     sections: {
       domain: {
         title: "Domain Information",
-        description: "Enter your domain details and select your DNS provider to get started."
+        description:
+          "Enter your domain details and select your DNS provider to get started.",
       },
       serverConfig: {
         title: "Server Configuration Notes (Informational)",
-        mainCf: "Ensure your Postfix server's main.cf includes SASL authentication for your domain:",
-        restartPostfix: "Remember to restart Postfix after changes to main.cf."
+        mainCf:
+          "Ensure your Postfix server's main.cf includes SASL authentication for your domain:",
+        restartPostfix: "Remember to restart Postfix after changes to main.cf.",
       },
       reputationMonitoring: {
         title: "Domain Reputation Monitoring (Recommended)",
-        description: "Register your domain with these services to monitor its sending reputation:"
-      }
+        description:
+          "Register your domain with these services to monitor its sending reputation:",
+      },
     },
     validation: {
       domain: {
         required: "Domain name is required",
-        invalid: "Please enter a valid domain name"
+        invalid: "Please enter a valid domain name",
       },
       provider: {
-        required: "DNS provider is required"
-      }
+        required: "DNS provider is required",
+      },
     },
     auth: {
       title: "DNS Authentication Records", // Added title for the card
-      description: "Configure DNS records to improve email deliverability and verify domain ownership.",
+      description:
+        "Configure DNS records to improve email deliverability and verify domain ownership.",
       hint: "You'll need to add these DNS records in your domain provider's settings. Statuses will update after verification.",
       spf: "Sender Policy Framework (SPF) specifies which mail servers are authorized to send email for your domain.",
       dkim: "DomainKeys Identified Mail (DKIM) adds a digital signature to emails, verifying they haven't been tampered with.",
-      dmarc: "Domain-based Message Authentication (DMARC) tells receiving servers how to handle emails that fail authentication.",
+      dmarc:
+        "Domain-based Message Authentication (DMARC) tells receiving servers how to handle emails that fail authentication.",
     },
-    enums: { // Added enums translations
+    enums: {
+      // Added enums translations
       verificationStatus: {
         VERIFIED: "Verified",
         PENDING: "Pending Verification",
@@ -186,7 +196,7 @@ export const copyText = {
       dkimManagementType: {
         USER_MANAGED_TXT: "User Managed (TXT Record)",
         SERVICE_MANAGED_CNAME: "Service Managed (CNAME Record - Recommended)",
-      }
+      },
     },
     buttons: {
       addDomain: "Add Domain",
@@ -195,17 +205,17 @@ export const copyText = {
       verifyAll: "Verify All Records",
       googlePostmaster: "Go to Google Postmaster Tools",
       microsoftSNDS: "Go to Microsoft SNDS",
-    }
+    },
   },
   notifications: {
     success: {
       title: "Domain added successfully",
-      description: "You can now configure the DNS records"
+      description: "You can now configure the DNS records",
     },
     error: {
       title: "Failed to add domain",
-      description: "Please try again"
-    }
+      description: "Please try again",
+    },
   },
   setup: {
     title: "Domain Setup",
@@ -229,7 +239,7 @@ export const copyText = {
     minutesAgo: "minutes ago",
     hoursAgo: "hours ago",
     daysAgo: "days ago",
-  }
+  },
 };
 
 export const emailAccountCopy = {
@@ -273,7 +283,8 @@ export const emailAccountCopy = {
       spfRecordValue: "e.g., v=spf1 ip4:your_ip -all",
       dkimSelector: "e.g., default",
       dkimRecordValue: "e.g., v=DKIM1; k=rsa; p=your_public_key",
-      dmarcRecordValue: "e.g., v=DMARC1; p=none; rua=mailto:reports@example.com",
+      dmarcRecordValue:
+        "e.g., v=DMARC1; p=none; rua=mailto:reports@example.com",
       relayHost: "e.g., smtp.externalprovider.com",
       mailboxPath: "e.g., /var/mail/example.com/user",
       mailboxQuotaMB: "e.g., 1024",
@@ -289,10 +300,13 @@ export const emailAccountCopy = {
       },
       cancel: "Cancel",
     },
-    providers: Object.values(EmailProvider).reduce((acc, provider) => ({
-      ...acc,
-      [provider.toLowerCase()]: provider
-    }), {} as Record<string, string>),
+    providers: Object.values(EmailProvider).reduce(
+      (acc, provider) => ({
+        ...acc,
+        [provider.toLowerCase()]: provider,
+      }),
+      {} as Record<string, string>,
+    ),
     notifications: {
       success: {
         created: {
@@ -326,7 +340,8 @@ export const emailAccountCopy = {
       description: "Connect a new email account to your workspace",
       auth: {
         title: "DNS Authentication Records",
-        description: "DNS authentication records help improve deliverability. Configure these records in your domain provider's DNS settings. Status will update after verification.",
+        description:
+          "DNS authentication records help improve deliverability. Configure these records in your domain provider's DNS settings. Status will update after verification.",
         hint: "Configure these records in your domain's DNS settings",
       },
       relaySetup: {
@@ -335,23 +350,28 @@ export const emailAccountCopy = {
       },
       mailboxSetup: {
         title: "Mailbox Configuration",
-        description: "Define storage path and quota if using virtual mailboxes (optional).",
+        description:
+          "Define storage path and quota if using virtual mailboxes (optional).",
       },
       sendingConfig: {
         title: "Sending Configuration",
-        description: "Manage daily limits and warmup settings for this account."
+        description:
+          "Manage daily limits and warmup settings for this account.",
       },
       accountCreation: {
         title: "Account Creation & Authentication",
-        description: "Configure how this account is set up and authenticates."
+        description: "Configure how this account is set up and authenticates.",
       },
       domainAuthOverview: {
         title: "Domain Authentication Overview",
-        description: "Status of the parent domain's authentication records (read-only)."
+        description:
+          "Status of the parent domain's authentication records (read-only).",
       },
-      warmupStrategy: { // New section for more detailed warmup settings
+      warmupStrategy: {
+        // New section for more detailed warmup settings
         title: "Warmup Strategy",
-        description: "Define how this account's sending volume will gradually increase."
+        description:
+          "Define how this account's sending volume will gradually increase.",
       },
       warmup: {
         description: "Gradually increase sending limits to improve reputation",
@@ -388,7 +408,7 @@ export const emailAccountCopy = {
       accountCreationType: {
         LINUX_USER: "Linux System User",
         VIRTUAL_USER_DB: "Virtual User (Database)",
-      }
-    }
-  }
-}
+      },
+    },
+  },
+};

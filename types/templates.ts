@@ -12,7 +12,7 @@ export interface Template {
   replyRate?: string;
   lastUsed?: string;
   isStarred?: boolean;
-  type?: 'quick-reply' | 'template';
+  type?: "quick-reply" | "template";
   companyId: number;
   description: string;
   createdById: string | null;
@@ -23,7 +23,7 @@ export interface Template {
 export interface TemplateFolder {
   id: number;
   name: string;
-  type: 'quick-reply' | 'template';
+  type: "quick-reply" | "template";
   templateCount: number;
   isExpanded: boolean;
   children: (Template | TemplateFolder)[];
@@ -31,7 +31,20 @@ export interface TemplateFolder {
   order?: number;
 }
 
-export type TemplateCategoryType = "OUTREACH" | "INTRODUCTION" | "FOLLOW_UP" | "MEETING" | "VALUE" | "SAAS" | "AGENCY" | "CONSULTING" | "ECOMMERCE" | "REAL_ESTATE" | "HR" | "FINANCE" | "HEALTHCARE";
+export type TemplateCategoryType =
+  | "OUTREACH"
+  | "INTRODUCTION"
+  | "FOLLOW_UP"
+  | "MEETING"
+  | "VALUE"
+  | "SAAS"
+  | "AGENCY"
+  | "CONSULTING"
+  | "ECOMMERCE"
+  | "REAL_ESTATE"
+  | "HR"
+  | "FINANCE"
+  | "HEALTHCARE";
 
 export const TemplateCategory = {
   OUTREACH: "OUTREACH",
@@ -46,10 +59,10 @@ export const TemplateCategory = {
   REAL_ESTATE: "REAL_ESTATE",
   HR: "HR",
   FINANCE: "FINANCE",
-  HEALTHCARE: "HEALTHCARE"
+  HEALTHCARE: "HEALTHCARE",
 } as const;
 
-export type TemplateUsageLevel = 'low' | 'medium' | 'high';
+export type TemplateUsageLevel = "low" | "medium" | "high";
 
 // Personalization tag types
 export interface PersonalizationTag {
@@ -83,9 +96,9 @@ export type TemplateFormValues = {
   category: TemplateCategoryType;
   subject: string;
   body: string;
-}
+};
 
 // Folder form validation types
 export type FolderFormValues = {
   folderName: string;
-}
+};

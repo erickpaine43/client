@@ -88,7 +88,7 @@ function TeamMembersTable() {
                       "font-medium",
                       member.role === "Admin"
                         ? "bg-blue-100 text-blue-700 border-blue-300"
-                        : "bg-gray-100 text-gray-700 border-gray-300"
+                        : "bg-gray-100 text-gray-700 border-gray-300",
                     )}
                   >
                     {member.role}
@@ -101,7 +101,7 @@ function TeamMembersTable() {
                       "font-medium",
                       member.status === "active"
                         ? "bg-green-100 text-green-700 border-green-300"
-                        : "bg-gray-100 text-gray-700 border-gray-300"
+                        : "bg-gray-100 text-gray-700 border-gray-300",
                     )}
                   >
                     {member.status.charAt(0).toUpperCase() +

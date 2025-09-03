@@ -22,11 +22,13 @@ export function StepHeader({
   onRemove,
   isFirst,
   isLast,
-  canRemove
+  canRemove,
 }: StepHeaderProps) {
-
-  const handleAction = (evt: MouseEvent<HTMLButtonElement>, handleAction: () => void) => {
-    evt.preventDefault()
+  const handleAction = (
+    evt: MouseEvent<HTMLButtonElement>,
+    handleAction: () => void,
+  ) => {
+    evt.preventDefault();
     handleAction();
   };
 
@@ -72,4 +74,3 @@ export function StepHeader({
     </div>
   );
 }
-

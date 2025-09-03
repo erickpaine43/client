@@ -1,19 +1,60 @@
-'use client';
+"use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
+import Image from "next/image";
 
 // Default avatar options
 const defaultAvatars = [
-  { id: 'aidan', src: 'https://api.dicebear.com/9.x/fun-emoji/svg?seed=Aiden', alt: 'Aiden' },
-  { id: 'adrian', src: 'https://api.dicebear.com/9.x/fun-emoji/svg?seed=Adrian', alt: 'Adrian' },
-  { id: 'george', src: 'https://api.dicebear.com/9.x/fun-emoji/svg?seed=George', alt: 'George' },
-  { id: 'destiny', src: 'https://api.dicebear.com/9.x/fun-emoji/svg?seed=Destiny', alt: 'Destiny' },
-  { id: 'christian', src: 'https://api.dicebear.com/9.x/fun-emoji/svg?seed=Christian', alt: 'Christian' },
-  { id: 'caleb', src: 'https://api.dicebear.com/9.x/fun-emoji/svg?seed=Caleb', alt: 'Caleb' },
-  { id: 'easton', src: 'https://api.dicebear.com/9.x/fun-emoji/svg?seed=Easton', alt: 'Easton' },
-  { id: 'brian', src: 'https://api.dicebear.com/9.x/fun-emoji/svg?seed=Brian', alt: 'Brian' },
-  { id: 'alexander', src: 'https://api.dicebear.com/9.x/fun-emoji/svg?seed=Alexander', alt: 'Alexander' },
-  { id: 'jack', src: 'https://api.dicebear.com/9.x/fun-emoji/svg?seed=Jack', alt: 'Jack' },
+  {
+    id: "aidan",
+    src: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Aiden",
+    alt: "Aiden",
+  },
+  {
+    id: "adrian",
+    src: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Adrian",
+    alt: "Adrian",
+  },
+  {
+    id: "george",
+    src: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=George",
+    alt: "George",
+  },
+  {
+    id: "destiny",
+    src: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Destiny",
+    alt: "Destiny",
+  },
+  {
+    id: "christian",
+    src: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Christian",
+    alt: "Christian",
+  },
+  {
+    id: "caleb",
+    src: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Caleb",
+    alt: "Caleb",
+  },
+  {
+    id: "easton",
+    src: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Easton",
+    alt: "Easton",
+  },
+  {
+    id: "brian",
+    src: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Brian",
+    alt: "Brian",
+  },
+  {
+    id: "alexander",
+    src: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Alexander",
+    alt: "Alexander",
+  },
+  {
+    id: "jack",
+    src: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Jack",
+    alt: "Jack",
+  },
 ];
 
 const isValidUrl = (url: string) => {
@@ -38,16 +79,19 @@ export default function AvatarSelector({
   currentAvatarUrl,
   onAvatarChange,
   disabled = false,
-  customUrl = '',
+  customUrl = "",
   onCustomUrlChange,
-  onCustomUrlApply
+  onCustomUrlApply,
 }: AvatarSelectorProps) {
   const [showCustomInput, setShowCustomInput] = useState(false);
 
-  const handleDefaultAvatarClick = useCallback((src: string) => {
-    onAvatarChange(src);
-    setShowCustomInput(false);
-  }, [onAvatarChange]);
+  const handleDefaultAvatarClick = useCallback(
+    (src: string) => {
+      onAvatarChange(src);
+      setShowCustomInput(false);
+    },
+    [onAvatarChange],
+  );
 
   const handleCustomUrlApply = useCallback(() => {
     if (customUrl.trim() && isValidUrl(customUrl)) {
@@ -64,17 +108,24 @@ export default function AvatarSelector({
           <button
             key={avatar.id}
             type="button"
-            className={`relative rounded-full overflow-hidden border-2 ${currentAvatarUrl === avatar.src ? 'border-blue-500' : 'border-transparent'
-              } hover:border-blue-300 transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`relative rounded-full overflow-hidden border-2 ${
+              currentAvatarUrl === avatar.src
+                ? "border-blue-500"
+                : "border-transparent"
+            } hover:border-blue-300 transition-all ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={() => !disabled && handleDefaultAvatarClick(avatar.src)}
             disabled={disabled}
           >
             <div className="h-16 rounded-full relative  overflow-hidden">
-              <img
+              <Image
                 src={avatar.src}
                 alt={avatar.alt}
-                className="object-cover w-full h-full"
-                onError={(e) => ((e.target as HTMLImageElement).src = 'https://via.placeholder.com/64x64?text=No+Image')}
+                fill
+                objectFit="cover"
+                onError={(e) =>
+                  ((e.target as HTMLImageElement).src =
+                    "https://via.placeholder.com/64x64?text=No+Image")
+                }
               />
             </div>
           </button>
@@ -84,10 +135,10 @@ export default function AvatarSelector({
       <button
         type="button"
         onClick={() => !disabled && setShowCustomInput(!showCustomInput)}
-        className={`text-sm ${disabled ? 'text-gray-400 cursor-not-allowed' : 'text-blue-600 hover:text-blue-800'}`}
+        className={`text-sm ${disabled ? "text-gray-400 cursor-not-allowed" : "text-blue-600 hover:text-blue-800"}`}
         disabled={disabled}
       >
-        {showCustomInput ? 'Hide custom URL option' : 'Use custom avatar URL'}
+        {showCustomInput ? "Hide custom URL option" : "Use custom avatar URL"}
       </button>
 
       {showCustomInput && (
@@ -117,11 +168,15 @@ export default function AvatarSelector({
         <div className="flex items-center gap-4">
           <p className="text-sm text-gray-500">Current avatar:</p>
           <div className="w-16 h-16 relative rounded-full overflow-hidden border border-gray-200">
-            <img
+            <Image
               src={currentAvatarUrl}
               alt="Current avatar"
-              className="object-cover w-full h-full"
-              onError={(e) => ((e.target as HTMLImageElement).src = 'https://via.placeholder.com/64x64?text=No+Image')}
+              fill
+              objectFit="cover"
+              onError={(e) =>
+                ((e.target as HTMLImageElement).src =
+                  "https://via.placeholder.com/64x64?text=No+Image")
+              }
             />
           </div>
         </div>

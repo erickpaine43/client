@@ -170,10 +170,10 @@ const columns: ColumnDef<CampaignResponse>[] = [
             status === "ACTIVE"
               ? "default"
               : status === "PAUSED"
-              ? "destructive"
-              : status === "DRAFT"
-              ? "outline"
-              : "secondary"
+                ? "destructive"
+                : status === "DRAFT"
+                  ? "outline"
+                  : "secondary"
           }
         >
           {t.status[status]}
@@ -186,7 +186,7 @@ const columns: ColumnDef<CampaignResponse>[] = [
     header: t.table.columns.progress,
     cell: ({ row }) => {
       const sent = row.original.emailEvents.filter(
-        (e) => e.type === "SENT"
+        (e) => e.type === "SENT",
       ).length;
       const total = row.original.clients.length;
       const progress = total > 0 ? (sent / total) * 100 : 0;
@@ -205,10 +205,10 @@ const columns: ColumnDef<CampaignResponse>[] = [
     header: t.table.columns.opens,
     cell: ({ row }) => {
       const sent = row.original.emailEvents.filter(
-        (e) => e.type === "SENT"
+        (e) => e.type === "SENT",
       ).length;
       const opens = row.original.emailEvents.filter(
-        (e) => e.type === "OPENED"
+        (e) => e.type === "OPENED",
       ).length;
       const rate = sent > 0 ? (opens / sent) * 100 : 0;
       return (
@@ -226,10 +226,10 @@ const columns: ColumnDef<CampaignResponse>[] = [
     header: t.table.columns.clicks,
     cell: ({ row }) => {
       const sent = row.original.emailEvents.filter(
-        (e) => e.type === "SENT"
+        (e) => e.type === "SENT",
       ).length;
       const clicks = row.original.emailEvents.filter(
-        (e) => e.type === "CLICKED"
+        (e) => e.type === "CLICKED",
       ).length;
       const rate = sent > 0 ? (clicks / sent) * 100 : 0;
       return (
@@ -247,10 +247,10 @@ const columns: ColumnDef<CampaignResponse>[] = [
     header: t.table.columns.replies,
     cell: ({ row }) => {
       const sent = row.original.emailEvents.filter(
-        (e) => e.type === "SENT"
+        (e) => e.type === "SENT",
       ).length;
       const replies = row.original.emailEvents.filter(
-        (e) => e.type === "REPLIED"
+        (e) => e.type === "REPLIED",
       ).length;
       const rate = sent > 0 ? (replies / sent) * 100 : 0;
       return (
@@ -268,10 +268,10 @@ const columns: ColumnDef<CampaignResponse>[] = [
     header: t.table.columns.bounces,
     cell: ({ row }) => {
       const sent = row.original.emailEvents.filter(
-        (e) => e.type === "SENT"
+        (e) => e.type === "SENT",
       ).length;
       const bounces = row.original.emailEvents.filter(
-        (e) => e.type === "BOUNCED"
+        (e) => e.type === "BOUNCED",
       ).length;
       const rate = sent > 0 ? (bounces / sent) * 100 : 0;
       return (
@@ -289,10 +289,10 @@ const columns: ColumnDef<CampaignResponse>[] = [
     header: t.table.columns.spam,
     cell: ({ row }) => {
       const sent = row.original.emailEvents.filter(
-        (e) => e.type === "SENT"
+        (e) => e.type === "SENT",
       ).length;
       const spam = row.original.emailEvents.filter(
-        (e) => e.type === "SPAM_COMPLAINT"
+        (e) => e.type === "SPAM_COMPLAINT",
       ).length;
       const rate = sent > 0 ? (spam / sent) * 100 : 0;
       return (
@@ -310,10 +310,10 @@ const columns: ColumnDef<CampaignResponse>[] = [
     header: t.table.columns.unsubscribed,
     cell: ({ row }) => {
       const sent = row.original.emailEvents.filter(
-        (e) => e.type === "SENT"
+        (e) => e.type === "SENT",
       ).length;
       const unsubs = row.original.emailEvents.filter(
-        (e) => e.type === "UNSUBSCRIBED"
+        (e) => e.type === "UNSUBSCRIBED",
       ).length;
       const rate = sent > 0 ? (unsubs / sent) * 100 : 0;
       return (
@@ -331,7 +331,7 @@ const columns: ColumnDef<CampaignResponse>[] = [
     header: t.table.columns.updatedAt,
     cell: ({ row }) => {
       const lastEvent = row.original.emailEvents.sort(
-        (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
+        (a, b) => b.timestamp.getTime() - a.timestamp.getTime(),
       )[0];
       const lastActivity = lastEvent?.timestamp || row.original.updatedAt;
       return formatRelativeTime(lastActivity);
@@ -355,7 +355,7 @@ const columns: ColumnDef<CampaignResponse>[] = [
                   className={`w-full justify-start font-normal hover:underline ${buttonVariants(
                     {
                       variant: "ghost",
-                    }
+                    },
                   )} text-left`}
                   href={`/dashboard/campaigns/${row.original.id}`}
                 >
@@ -368,7 +368,7 @@ const columns: ColumnDef<CampaignResponse>[] = [
                   className={`w-full justify-start font-normal hover:underline ${buttonVariants(
                     {
                       variant: "ghost",
-                    }
+                    },
                   )}`}
                   href={`/dashboard/campaigns/${row.original.id}/edit`}
                 >
@@ -453,7 +453,7 @@ export function CampaignsDataTable({
   const searchParams = useSearchParams();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const [pagination, setPagination] = React.useState({
     pageIndex: page - 1,
@@ -567,7 +567,7 @@ export function CampaignsDataTable({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -582,7 +582,7 @@ export function CampaignsDataTable({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

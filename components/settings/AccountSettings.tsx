@@ -1,21 +1,24 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
-import PasswordSettingsForm from './PasswordSettingsForm';
-import { ProfileFormValues, ProfileSettingsForm } from './ProfileSettingsForm';
+import PasswordSettingsForm from "./PasswordSettingsForm";
+import { ProfileFormValues, ProfileSettingsForm } from "./ProfileSettingsForm";
 
 interface AccountSettingsProps extends React.HTMLAttributes<HTMLDivElement> {
-  userProfile: ProfileFormValues & { role: string, avatarUrl?: string };
+  userProfile: ProfileFormValues & { role: string; avatarUrl?: string };
 }
 
-export default function AccountSettings({ userProfile, ...props }: AccountSettingsProps) {
+export default function AccountSettings({
+  userProfile,
+  ...props
+}: AccountSettingsProps) {
   return (
     <div className="grid gap-6" {...props}>
       <Card>

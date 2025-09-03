@@ -54,7 +54,7 @@ export enum NotificationVariant {
 }
 
 // Alert Notification Types
-export interface AlertNotification extends Omit<Notification, 'id'> {
+export interface AlertNotification extends Omit<Notification, "id"> {
   id: string | number;
   alertType: AlertType;
   severity: AlertSeverity;
@@ -79,7 +79,7 @@ export enum AlertSeverity {
 }
 
 // Toast Notification Types
-export interface ToastNotification extends Omit<Notification, 'id'> {
+export interface ToastNotification extends Omit<Notification, "id"> {
   id: string | number;
   toastType: ToastType;
   duration: number; // in milliseconds
@@ -224,5 +224,9 @@ export interface LegacyNotification {
 // Utility Types
 export type NotificationFilter = Partial<NotificationContext["filters"]>;
 export type NotificationSort = NotificationContext["sorting"];
-export type AlertNotificationWithSeverity = AlertNotification & { severity: AlertSeverity };
-export type ToastNotificationWithPosition = ToastNotification & { position: ToastPosition };
+export type AlertNotificationWithSeverity = AlertNotification & {
+  severity: AlertSeverity;
+};
+export type ToastNotificationWithPosition = ToastNotification & {
+  position: ToastPosition;
+};

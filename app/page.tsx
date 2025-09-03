@@ -44,10 +44,7 @@ export default function LoginPage() {
     <div className="flex flex-col items-center space-y-2">
       <p className="text-xs text-muted-foreground">
         {loginContent.signup.text}{" "}
-        <Link
-          href="/signup"
-          className="underline font-medium text-primary"
-        >
+        <Link href="/signup" className="underline font-medium text-primary">
           {loginContent.signup.link}
         </Link>
       </p>
@@ -62,7 +59,7 @@ export default function LoginPage() {
         title={title}
         description={description}
         footer={footer}
-        error={mode === 'form' ? error : undefined}
+        error={mode === "form" ? error : undefined}
       >
         {user ? undefined : (
           <form onSubmit={handleLogin} className="space-y-4">
@@ -80,9 +77,7 @@ export default function LoginPage() {
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">
-                  {loginContent.password.label}
-                </Label>
+                <Label htmlFor="password">{loginContent.password.label}</Label>
                 {/* <Link
                   href="/forgot-password"
                   className="text-sm font-medium text-primary hover:underline underline-offset-4"

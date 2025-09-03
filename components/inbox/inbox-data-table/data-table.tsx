@@ -53,7 +53,7 @@ function highlightMatch(text: string, query: string) {
       </span>
     ) : (
       part
-    )
+    ),
   );
 }
 
@@ -64,7 +64,7 @@ export function InboxDataTable<TData>({
   setFilterValue,
   fetchAllMessages,
   setSearch,
-  isLoading
+  isLoading,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filtering, setFiltering] = useState("");
@@ -98,7 +98,7 @@ export function InboxDataTable<TData>({
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}
                 </TableHead>
               ))}
@@ -127,7 +127,7 @@ export function InboxDataTable<TData>({
                         ? highlightMatch(value, query)
                         : flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                     </TableCell>
                   );
@@ -157,7 +157,9 @@ export function InboxDataTable<TData>({
           setSearch={setSearch}
         />
       </div>
-      <div className="w-full">{isLoading ? (<EmailTableSkeleton />): renderTable()}</div>
+      <div className="w-full">
+        {isLoading ? <EmailTableSkeleton /> : renderTable()}
+      </div>
     </div>
   );
 }

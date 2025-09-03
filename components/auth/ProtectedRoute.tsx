@@ -13,7 +13,7 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     if (!loading && !user) {
       router.push("/");
     }
-  }, [loading, user]);
+  }, [loading, user, router]);
 
   if (loading || !user) {
     return <div className="p-4">Loading...</div>;

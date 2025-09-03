@@ -1,5 +1,4 @@
 services:
-
   # External dependencies
   redis:
     image: redis:7.2.5-alpine

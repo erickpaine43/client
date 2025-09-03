@@ -52,7 +52,10 @@ export function DomainsTable({ domains }: DomainsTableProps) {
           <TableBody>
             {domains.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center text-muted-foreground">
+                <TableCell
+                  colSpan={8}
+                  className="text-center text-muted-foreground"
+                >
                   {t.tables.domains.empty}
                 </TableCell>
               </TableRow>
@@ -100,7 +103,10 @@ export function DomainsTable({ domains }: DomainsTableProps) {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-2">
-                      <Progress value={domain.reputation} className="h-2 w-16" />
+                      <Progress
+                        value={domain.reputation}
+                        className="h-2 w-16"
+                      />
                       <span className="text-sm">{domain.reputation}%</span>
                     </div>
                   </TableCell>
@@ -154,7 +160,9 @@ export function DomainsTable({ domains }: DomainsTableProps) {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href={`/dashboard/domains/${domain.id}/settings`}>
+                          <Link
+                            href={`/dashboard/domains/${domain.id}/settings`}
+                          >
                             <Cog className="mr-2 h-4 w-4" />
                             {t.tables.domains.actions.settings}
                           </Link>

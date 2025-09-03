@@ -29,7 +29,8 @@ function TemplateBasicsStep() {
   // Filter folders based on selected type
   const availableFolders = initialFolders.filter(
     (folder) =>
-      folder.type === (watchType === "quick-reply" ? "quick-reply" : "template")
+      folder.type ===
+      (watchType === "quick-reply" ? "quick-reply" : "template"),
   );
 
   const handleAddTag = () => {
@@ -42,7 +43,7 @@ function TemplateBasicsStep() {
   const handleRemoveTag = (tagToRemove: string) => {
     form.setValue(
       "tags",
-      watchTags.filter((tag) => tag !== tagToRemove)
+      watchTags.filter((tag) => tag !== tagToRemove),
     );
   };
 

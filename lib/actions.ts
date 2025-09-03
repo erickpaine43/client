@@ -95,13 +95,15 @@ const mockCampaigns: CampaignData[] = [
 export async function getCampaignsDataAction(companyId: string) {
   // Simulate fetching data based on companyId (though not used in mock)
   console.log(`Fetching campaign data for company: ${companyId}`);
-  
+
   // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 500)); 
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   // Calculate summary data from mock campaigns
   const totalCampaigns = mockCampaigns.length;
-  const activeCampaigns = mockCampaigns.filter(c => c.status === "Running").length;
+  const activeCampaigns = mockCampaigns.filter(
+    (c) => c.status === "Running",
+  ).length;
   const emailsSent = mockCampaigns.reduce((sum, c) => sum + c.progressTotal, 0);
   const totalReplies = mockCampaigns.reduce((sum, c) => sum + c.replies, 0);
 
@@ -115,4 +117,3 @@ export async function getCampaignsDataAction(companyId: string) {
     campaigns: mockCampaigns,
   };
 }
-

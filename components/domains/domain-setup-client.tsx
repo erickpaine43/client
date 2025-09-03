@@ -23,7 +23,10 @@ interface DomainData {
 }
 
 // Server action for DNS verification
-async function verifyDnsRecord(domainId: number, recordType: "spf" | "dkim" | "dmarc") {
+async function verifyDnsRecord(
+  domainId: number,
+  recordType: "spf" | "dkim" | "dmarc",
+) {
   try {
     const response = await fetch(`/api/domains/${domainId}/verify`, {
       method: "POST",
@@ -33,7 +36,7 @@ async function verifyDnsRecord(domainId: number, recordType: "spf" | "dkim" | "d
 
     if (!response.ok) throw new Error("Verification failed");
 
-    const data = await response.json() as { verified?: boolean };
+    const data = (await response.json()) as { verified?: boolean };
     return data.verified || false;
   } catch {
     console.error("DNS verification error");
@@ -51,7 +54,9 @@ interface DomainSetupClientProps {
   domainId: string;
 }
 
-export default function DomainSetupClient({ domainId }: DomainSetupClientProps) {
+export default function DomainSetupClient({
+  domainId,
+}: DomainSetupClientProps) {
   const [domain, setDomain] = useState<DomainData>({
     id: parseInt(domainId),
     name: "",
@@ -73,7 +78,7 @@ export default function DomainSetupClient({ domainId }: DomainSetupClientProps) 
       try {
         const response = await fetch(`/api/domains/${domainId}`);
         if (!response.ok) throw new Error("Failed to fetch domain data");
-        const data = await response.json() as DomainData;
+        const data = (await response.json()) as DomainData;
         setDomain(data);
       } catch {
         toast.error("Failed to load domain data");
@@ -96,10 +101,14 @@ export default function DomainSetupClient({ domainId }: DomainSetupClientProps) 
     try {
       const verified = await verifyDnsRecord(domain.id, recordType);
       if (verified) {
-        setDomain(prev => ({ ...prev, [recordType]: true }));
-        toast.success(`${recordType.toUpperCase()} record verified successfully`);
+        setDomain((prev) => ({ ...prev, [recordType]: true }));
+        toast.success(
+          `${recordType.toUpperCase()} record verified successfully`,
+        );
       } else {
-        toast.error(`${recordType.toUpperCase()} record verification failed. Please check your DNS settings.`);
+        toast.error(
+          `${recordType.toUpperCase()} record verification failed. Please check your DNS settings.`,
+        );
       }
     } catch {
       toast.error(`Failed to verify ${recordType.toUpperCase()} record`);
@@ -130,7 +139,9 @@ export default function DomainSetupClient({ domainId }: DomainSetupClientProps) 
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium">{copyText.setup.steps.spf.title}</h3>
+              <h3 className="text-lg font-medium">
+                {copyText.setup.steps.spf.title}
+              </h3>
               {domain.spf ? (
                 <Shield className="h-5 w-5 text-green-500" />
               ) : (
@@ -140,7 +151,9 @@ export default function DomainSetupClient({ domainId }: DomainSetupClientProps) 
                   onClick={() => handleVerify("spf")}
                   disabled={isVerifying === "spf"}
                 >
-                  <RefreshCw className={`mr-2 h-4 w-4 ${isVerifying === "spf" ? "animate-spin" : ""}`} />
+                  <RefreshCw
+                    className={`mr-2 h-4 w-4 ${isVerifying === "spf" ? "animate-spin" : ""}`}
+                  />
                   Verify
                 </Button>
               )}
@@ -149,7 +162,9 @@ export default function DomainSetupClient({ domainId }: DomainSetupClientProps) 
               {copyText.setup.steps.spf.description}
             </p>
             <div className="relative bg-muted p-4 rounded-lg">
-              <pre className="text-sm font-mono overflow-x-auto">{domain.records.spf}</pre>
+              <pre className="text-sm font-mono overflow-x-auto">
+                {domain.records.spf}
+              </pre>
               <Button
                 variant="ghost"
                 size="icon"
@@ -165,7 +180,9 @@ export default function DomainSetupClient({ domainId }: DomainSetupClientProps) 
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium">{copyText.setup.steps.dkim.title}</h3>
+              <h3 className="text-lg font-medium">
+                {copyText.setup.steps.dkim.title}
+              </h3>
               {domain.dkim ? (
                 <Shield className="h-5 w-5 text-green-500" />
               ) : (
@@ -175,7 +192,9 @@ export default function DomainSetupClient({ domainId }: DomainSetupClientProps) 
                   onClick={() => handleVerify("dkim")}
                   disabled={isVerifying === "dkim"}
                 >
-                  <RefreshCw className={`mr-2 h-4 w-4 ${isVerifying === "dkim" ? "animate-spin" : ""}`} />
+                  <RefreshCw
+                    className={`mr-2 h-4 w-4 ${isVerifying === "dkim" ? "animate-spin" : ""}`}
+                  />
                   Verify
                 </Button>
               )}
@@ -184,7 +203,9 @@ export default function DomainSetupClient({ domainId }: DomainSetupClientProps) 
               {copyText.setup.steps.dkim.description}
             </p>
             <div className="relative bg-muted p-4 rounded-lg">
-              <pre className="text-sm font-mono overflow-x-auto">{domain.records.dkim}</pre>
+              <pre className="text-sm font-mono overflow-x-auto">
+                {domain.records.dkim}
+              </pre>
               <Button
                 variant="ghost"
                 size="icon"
@@ -200,7 +221,9 @@ export default function DomainSetupClient({ domainId }: DomainSetupClientProps) 
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium">{copyText.setup.steps.dmarc.title}</h3>
+              <h3 className="text-lg font-medium">
+                {copyText.setup.steps.dmarc.title}
+              </h3>
               {domain.dmarc ? (
                 <Shield className="h-5 w-5 text-green-500" />
               ) : (
@@ -210,7 +233,9 @@ export default function DomainSetupClient({ domainId }: DomainSetupClientProps) 
                   onClick={() => handleVerify("dmarc")}
                   disabled={isVerifying === "dmarc"}
                 >
-                  <RefreshCw className={`mr-2 h-4 w-4 ${isVerifying === "dmarc" ? "animate-spin" : ""}`} />
+                  <RefreshCw
+                    className={`mr-2 h-4 w-4 ${isVerifying === "dmarc" ? "animate-spin" : ""}`}
+                  />
                   Verify
                 </Button>
               )}
@@ -219,7 +244,9 @@ export default function DomainSetupClient({ domainId }: DomainSetupClientProps) 
               {copyText.setup.steps.dmarc.description}
             </p>
             <div className="relative bg-muted p-4 rounded-lg">
-              <pre className="text-sm font-mono overflow-x-auto">{domain.records.dmarc}</pre>
+              <pre className="text-sm font-mono overflow-x-auto">
+                {domain.records.dmarc}
+              </pre>
               <Button
                 variant="ghost"
                 size="icon"

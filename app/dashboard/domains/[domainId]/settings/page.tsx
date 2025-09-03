@@ -28,7 +28,11 @@ import { ArrowLeft, Shield } from "lucide-react";
 import Link from "next/link";
 import { Textarea } from "@/components/ui/textarea";
 
-export default async function DomainSettingsPage({ params }: { params: Promise<{ domainId: string }> }) {
+export default async function DomainSettingsPage({
+  params,
+}: {
+  params: Promise<{ domainId: string }>;
+}) {
   // TODO: Fetch domain data based on domainId
   const { domainId } = await params;
   const domain = {
@@ -97,9 +101,12 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
                   <div className="flex items-center space-x-3">
                     <Shield className="h-5 w-5" />
                     <div>
-                      <div className="font-semibold">SPF (Sender Policy Framework)</div>
+                      <div className="font-semibold">
+                        SPF (Sender Policy Framework)
+                      </div>
                       <div className="text-sm text-muted-foreground">
-                        Control which mail servers can send emails from your domain
+                        Control which mail servers can send emails from your
+                        domain
                       </div>
                     </div>
                   </div>
@@ -118,7 +125,9 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <Label>Enable SPF</Label>
-                      <Switch defaultChecked={domain.authentication.spf.enabled} />
+                      <Switch
+                        defaultChecked={domain.authentication.spf.enabled}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label>SPF Record</Label>
@@ -127,7 +136,8 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
                         className="font-mono text-sm"
                       />
                       <p className="text-sm text-muted-foreground">
-                        DNS TXT record that specifies which mail servers are authorized to send email
+                        DNS TXT record that specifies which mail servers are
+                        authorized to send email
                       </p>
                     </div>
                     <div className="space-y-2">
@@ -139,7 +149,9 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
                         <SelectContent>
                           <SelectItem value="strict">Strict (-all)</SelectItem>
                           <SelectItem value="soft">Soft (~all)</SelectItem>
-                          <SelectItem value="neutral">Neutral (?all)</SelectItem>
+                          <SelectItem value="neutral">
+                            Neutral (?all)
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -152,7 +164,9 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
                   <div className="flex items-center space-x-3">
                     <Shield className="h-5 w-5" />
                     <div>
-                      <div className="font-semibold">DKIM (DomainKeys Identified Mail)</div>
+                      <div className="font-semibold">
+                        DKIM (DomainKeys Identified Mail)
+                      </div>
                       <div className="text-sm text-muted-foreground">
                         Add digital signatures to outgoing emails
                       </div>
@@ -166,14 +180,18 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
                         : "bg-red-50 text-red-700"
                     }
                   >
-                    {domain.authentication.dkim.enabled ? "Enabled" : "Disabled"}
+                    {domain.authentication.dkim.enabled
+                      ? "Enabled"
+                      : "Disabled"}
                   </Badge>
                 </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <Label>Enable DKIM</Label>
-                      <Switch defaultChecked={domain.authentication.dkim.enabled} />
+                      <Switch
+                        defaultChecked={domain.authentication.dkim.enabled}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label>Selector</Label>
@@ -206,7 +224,9 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
                   <div className="flex items-center space-x-3">
                     <Shield className="h-5 w-5" />
                     <div>
-                      <div className="font-semibold">DMARC (Domain-based Message Authentication)</div>
+                      <div className="font-semibold">
+                        DMARC (Domain-based Message Authentication)
+                      </div>
                       <div className="text-sm text-muted-foreground">
                         Set policies for handling authentication failures
                       </div>
@@ -220,14 +240,18 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
                         : "bg-red-50 text-red-700"
                     }
                   >
-                    {domain.authentication.dmarc.enabled ? "Enabled" : "Disabled"}
+                    {domain.authentication.dmarc.enabled
+                      ? "Enabled"
+                      : "Disabled"}
                   </Badge>
                 </AccordionTrigger>
                 <AccordionContent className="pt-4 pb-2">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <Label>Enable DMARC</Label>
-                      <Switch defaultChecked={domain.authentication.dmarc.enabled} />
+                      <Switch
+                        defaultChecked={domain.authentication.dmarc.enabled}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label>Policy</Label>
@@ -236,7 +260,9 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
                           <SelectValue placeholder="Select policy" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="none">None (Monitor Only)</SelectItem>
+                          <SelectItem value="none">
+                            None (Monitor Only)
+                          </SelectItem>
                           <SelectItem value="quarantine">Quarantine</SelectItem>
                           <SelectItem value="reject">Reject</SelectItem>
                         </SelectContent>
@@ -282,7 +308,8 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
           <CardHeader>
             <CardTitle>Warmup Configuration</CardTitle>
             <CardDescription>
-              Configure how your domain gradually increases email sending capacity
+              Configure how your domain gradually increases email sending
+              capacity
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -303,7 +330,9 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
               <div className="grid gap-4 sm:grid-cols-2 pt-2">
                 {/* Initial Daily Volume - NEW */}
                 <div className="grid gap-2">
-                  <Label htmlFor="initial-daily-volume">Initial Daily Volume</Label>
+                  <Label htmlFor="initial-daily-volume">
+                    Initial Daily Volume
+                  </Label>
                   <Input
                     id="initial-daily-volume"
                     type="number"
@@ -366,7 +395,8 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
             <div className="space-y-2">
               <h3 className="text-md font-medium">Seed Network Settings</h3>
               <p className="text-sm text-muted-foreground">
-                Configure how your emails interact with our network of seed accounts.
+                Configure how your emails interact with our network of seed
+                accounts.
               </p>
               <div className="grid gap-4 sm:grid-cols-2 pt-2">
                 {/* Reply Rate - NEW */}
@@ -414,10 +444,13 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
                     id="auto-adjust-warmup"
                     defaultChecked={domain.autoAdjustWarmup}
                   />
-                  <Label htmlFor="auto-adjust-warmup">Auto-adjust warmup based on performance</Label>
+                  <Label htmlFor="auto-adjust-warmup">
+                    Auto-adjust warmup based on performance
+                  </Label>
                 </div>
                 <p className="pl-7 text-xs text-muted-foreground mt-1">
-                  Automatically adjust warmup parameters based on email performance
+                  Automatically adjust warmup parameters based on email
+                  performance
                 </p>
               </div>
             </div>
@@ -435,7 +468,9 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="bounce-weight">Bounce Rate Weight</Label>
-                <Select defaultValue={domain.reputationFactors.bounceRate.toString()}>
+                <Select
+                  defaultValue={domain.reputationFactors.bounceRate.toString()}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select weight" />
                   </SelectTrigger>
@@ -450,7 +485,9 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
 
               <div className="grid gap-2">
                 <Label htmlFor="spam-weight">Spam Complaints Weight</Label>
-                <Select defaultValue={domain.reputationFactors.spamComplaints.toString()}>
+                <Select
+                  defaultValue={domain.reputationFactors.spamComplaints.toString()}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select weight" />
                   </SelectTrigger>
@@ -465,7 +502,9 @@ export default async function DomainSettingsPage({ params }: { params: Promise<{
 
               <div className="grid gap-2">
                 <Label htmlFor="engagement-weight">Engagement Weight</Label>
-                <Select defaultValue={domain.reputationFactors.engagement.toString()}>
+                <Select
+                  defaultValue={domain.reputationFactors.engagement.toString()}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select weight" />
                   </SelectTrigger>

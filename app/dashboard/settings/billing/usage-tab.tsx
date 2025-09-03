@@ -47,7 +47,7 @@ function UsageTab() {
               key={card.title}
               className={cn(
                 "relative transition-all duration-200 hover:shadow-md",
-                colors.border
+                colors.border,
               )}
             >
               <CardHeader>
@@ -85,7 +85,7 @@ function UsageTab() {
                       value={card.percentage}
                       className={cn(
                         "h-2",
-                        card.warning && "[&>div]:bg-destructive"
+                        card.warning && "[&>div]:bg-destructive",
                       )}
                     />
                     <p className="text-xs text-muted-foreground">

@@ -17,7 +17,6 @@ interface FileProps {
 }
 
 function File({ file, onRename: _, onDelete: __ }: FileProps) {
-
   return (
     <ContextMenu>
       <ContextMenuTrigger>

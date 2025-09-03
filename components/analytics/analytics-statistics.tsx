@@ -30,7 +30,7 @@ function AnalyticsStatistics({
     {
       id: "reply-rate",
       title: "Reply Rate",
-      value:  `${replyRate}%`,
+      value: `${replyRate}%`,
       icon: Reply,
       color: "bg-green-100 text-green-600",
     },

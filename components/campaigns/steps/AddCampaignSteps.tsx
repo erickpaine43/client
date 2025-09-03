@@ -26,9 +26,9 @@ function AddCampaignSteps() {
                     isActive
                       ? "bg-white shadow-lg scale-105"
                       : isCompleted
-                      ? "bg-white shadow-sm hover:shadow-md"
-                      : "bg-gray-100 opacity-50 cursor-not-allowed",
-                    ""
+                        ? "bg-white shadow-sm hover:shadow-md"
+                        : "bg-gray-100 opacity-50 cursor-not-allowed",
+                    "",
                   )}
                 >
                   <div
@@ -37,8 +37,8 @@ function AddCampaignSteps() {
                       isActive
                         ? step.color
                         : isCompleted
-                        ? "bg-green-500"
-                        : "bg-gray-300"
+                          ? "bg-green-500"
+                          : "bg-gray-300",
                     )}
                   >
                     {isCompleted ? (
@@ -54,8 +54,8 @@ function AddCampaignSteps() {
                         isActive
                           ? "text-gray-900"
                           : isCompleted
-                          ? "text-gray-700"
-                          : "text-gray-400"
+                            ? "text-gray-700"
+                            : "text-gray-400",
                       )}
                     >
                       {step.title}
@@ -63,7 +63,7 @@ function AddCampaignSteps() {
                     <p
                       className={cn(
                         "text-xs",
-                        isActive ? "text-gray-600" : "text-gray-400"
+                        isActive ? "text-gray-600" : "text-gray-400",
                       )}
                     >
                       {step.subtitle}
@@ -74,7 +74,7 @@ function AddCampaignSteps() {
                   <div
                     className={cn(
                       "w-16 h-1 mx-4 rounded-full",
-                      isCompleted ? "bg-green-500" : "bg-gray-200"
+                      isCompleted ? "bg-green-500" : "bg-gray-200",
                     )}
                   />
                 )}

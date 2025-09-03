@@ -20,20 +20,20 @@ export const DNS_RECORD_TYPES = {
     type: "TXT",
     name: "@",
     ttl: DNS_RECORD_TTL,
-    template: "v=spf1 include:_spf.penguinmails.com ~all"
+    template: "v=spf1 include:_spf.penguinmails.com ~all",
   },
   DKIM: {
     type: "CNAME",
     name: "pm._domainkey",
     ttl: DNS_RECORD_TTL,
-    template: "{domain}.dkim.penguinmails.com"
+    template: "{domain}.dkim.penguinmails.com",
   },
   DMARC: {
     type: "TXT",
     name: "_dmarc",
     ttl: DNS_RECORD_TTL,
-    template: "v=DMARC1; p=none; rua=mailto:dmarc@penguinmails.com"
-  }
+    template: "v=DMARC1; p=none; rua=mailto:dmarc@penguinmails.com",
+  },
 };
 
 export enum EmailProvider {
@@ -71,4 +71,4 @@ export const providerDetails = {
     icon: "smtp",
   },
   // Add other providers as needed
-}
+};

@@ -1,6 +1,5 @@
 "use server";
 
-
 interface Query {
   email?: string[];
   from?: string[];
@@ -20,12 +19,22 @@ export const getAllMessagesAction = async (
   type: Type = "all",
   pagination: PaginationOptions = {},
   search = "",
-  idToken = ""
+  idToken = "",
 ) => {
   const { email = [], from = [], campaign = [], hidden = false } = query;
   const { page = 1, limit = 10 } = pagination;
 
-  console.log({ query, type, pagination, search, idToken, email, from, campaign, hidden });
+  console.log({
+    query,
+    type,
+    pagination,
+    search,
+    idToken,
+    email,
+    from,
+    campaign,
+    hidden,
+  });
 
   try {
     // mock implementation
@@ -96,11 +105,13 @@ export const getUniqueFiltersAction = async (_idToken = "") => {
         name: "Test Campaign",
         campaign: {
           name: "Test Campaign",
-        }
+        },
       },
     ];
 
-    const email = emails.map((e) => e.client?.email).filter(Boolean) as string[];
+    const email = emails
+      .map((e) => e.client?.email)
+      .filter(Boolean) as string[];
 
     const fromSet = new Set(
       froms
@@ -109,12 +120,14 @@ export const getUniqueFiltersAction = async (_idToken = "") => {
           const last = f.client?.lastName;
           return first && last ? `${first} ${last}` : null;
         })
-        .filter(Boolean) as string[]
+        .filter(Boolean) as string[],
     );
 
     const from = Array.from(fromSet);
 
-    const campaign = campaigns.map((c) => c.campaign?.name).filter(Boolean) as string[];
+    const campaign = campaigns
+      .map((c) => c.campaign?.name)
+      .filter(Boolean) as string[];
 
     return {
       email,
@@ -160,7 +173,7 @@ export async function fetchEmailByIdAction(id: string, _idToken = "") {
 
 export async function markEmailAsReadAction(
   id: number | string | undefined,
-  _idToken = ""
+  _idToken = "",
 ) {
   try {
     const email = {
@@ -189,7 +202,7 @@ export async function markEmailAsReadAction(
 export async function markEmailAsStarredAction(
   id: number | string,
   starred: boolean,
-  idToken = ""
+  idToken = "",
 ) {
   try {
     console.log({ id, starred, idToken });
@@ -223,7 +236,7 @@ export async function markEmailAsStarredAction(
  */
 export async function softDeleteEmailAction(
   emailId: number | string | undefined,
-  _idToken = ""
+  _idToken = "",
 ) {
   try {
     const email = {
@@ -256,7 +269,7 @@ export async function softDeleteEmailAction(
  */
 export async function hideEmailAction(
   emailId: number | string | undefined,
-  _idToken = ""
+  _idToken = "",
 ) {
   try {
     const email = {

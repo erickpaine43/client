@@ -48,19 +48,37 @@ export interface DashboardMockData {
 }
 
 // Server action to fetch mock dashboard data
-export async function getDashboardMockDataAction(companyId: string): Promise<DashboardMockData> {
+export async function getDashboardMockDataAction(
+  companyId: string,
+): Promise<DashboardMockData> {
   console.log(`Fetching MOCK dashboard data for company: ${companyId}`);
 
   // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 300));
+  await new Promise((resolve) => setTimeout(resolve, 300));
 
   // Combine all mock data previously found in components
   const mockData: DashboardMockData = {
     kpi: {
-      openRate: { value: "65.4%", change: "12% from last week", changeType: "increase" },
-      clickRate: { value: "24.3%", change: "3% from last week", changeType: "increase" },
-      replyRate: { value: "12.9%", change: "7% from last week", changeType: "increase" },
-      bounceRate: { value: "2.4%", change: "0.5% from last week", changeType: "decrease" },
+      openRate: {
+        value: "65.4%",
+        change: "12% from last week",
+        changeType: "increase",
+      },
+      clickRate: {
+        value: "24.3%",
+        change: "3% from last week",
+        changeType: "increase",
+      },
+      replyRate: {
+        value: "12.9%",
+        change: "7% from last week",
+        changeType: "increase",
+      },
+      bounceRate: {
+        value: "2.4%",
+        change: "0.5% from last week",
+        changeType: "decrease",
+      },
     },
     campaignPerformance: [
       { name: "Mon", opens: 40, clicks: 24, replies: 10 },

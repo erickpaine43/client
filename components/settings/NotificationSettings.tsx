@@ -1,22 +1,31 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 
 interface NotificationSettingsProps {
-    email: {
-      campaignCompletions: boolean;
-      newReplies: boolean;
-      weeklyReports: boolean;
-      systemAnnouncements: boolean;
-    };
-    inApp: {
-      realTimeCampaignAlerts: boolean;
-      emailAccountAlerts: boolean;
-    };
+  email: {
+    campaignCompletions: boolean;
+    newReplies: boolean;
+    weeklyReports: boolean;
+    systemAnnouncements: boolean;
+  };
+  inApp: {
+    realTimeCampaignAlerts: boolean;
+    emailAccountAlerts: boolean;
+  };
 }
 
-const NotificationSettings: React.FC<NotificationSettingsProps> = ({ email, inApp }) => {
+const NotificationSettings: React.FC<NotificationSettingsProps> = ({
+  email,
+  inApp,
+}) => {
   // In a real application, you would handle state and updates here or with a form library
 
   return (

@@ -13,7 +13,7 @@ import { redirect } from "next/navigation";
 const markEmailAsStarredMutarion = async (
   id: number,
   starred: boolean,
-  user: User | null
+  user: User | null,
 ) => {
   try {
     const response = await markEmailAsStarredAction(id, starred, user?.token);
@@ -32,7 +32,7 @@ const markEmailAsStarredMutarion = async (
   } catch (error) {
     toast.warning(
       "Error marking email as starred: " +
-        (error instanceof Error ? error.message : "Unknown error")
+        (error instanceof Error ? error.message : "Unknown error"),
     );
     throw error;
   }
@@ -40,7 +40,7 @@ const markEmailAsStarredMutarion = async (
 
 export const inboxColumns = (
   refetch: () => void,
-  user: User | null
+  user: User | null,
 ): ColumnDef<Email>[] => [
   {
     accessorKey: "starred",

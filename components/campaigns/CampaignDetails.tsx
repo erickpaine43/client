@@ -9,8 +9,10 @@ interface CampaignDetailsProps {
   initialData: CampaignFormValues | undefined;
 }
 
-export function CampaignDetails({ readOnly, initialData }: CampaignDetailsProps) {
-
+export function CampaignDetails({
+  readOnly,
+  initialData,
+}: CampaignDetailsProps) {
   if (!readOnly || !initialData?.id) {
     return;
   }
@@ -35,4 +37,3 @@ export function CampaignDetails({ readOnly, initialData }: CampaignDetailsProps)
     </div>
   );
 }
-

@@ -16,6 +16,6 @@ export const getMockClientsPage = (page: number, itemsPerPage: number = 10) => {
   const end = start + itemsPerPage;
   return {
     clients: mockClients.slice(start, end),
-    pages: Math.ceil(mockClients.length / itemsPerPage)
+    pages: Math.ceil(mockClients.length / itemsPerPage),
   };
 };

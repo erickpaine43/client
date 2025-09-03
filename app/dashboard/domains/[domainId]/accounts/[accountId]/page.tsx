@@ -1,5 +1,5 @@
-import { notFound } from 'next/navigation';
-import AccountWarmupDetailsContent from './content';
+import { notFound } from "next/navigation";
+import AccountWarmupDetailsContent from "./content";
 
 type AccountPageParams = Promise<{
   domainId: string;
@@ -9,7 +9,7 @@ type AccountPageParams = Promise<{
 interface AccountDetails {
   id: string;
   email: string;
-  status: 'Active' | 'Inactive' | 'Warming';
+  status: "Active" | "Inactive" | "Warming";
   sentToday: number;
   dailyLimit: number;
   inboxRate: number;
@@ -26,16 +26,19 @@ interface AccountDetails {
   }[];
 }
 
-async function getAccountDetails(domainId: string, accountId: string): Promise<AccountDetails | null> {
+async function getAccountDetails(
+  domainId: string,
+  accountId: string,
+): Promise<AccountDetails | null> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_APP_URL}/api/domains/${domainId}/accounts/${accountId}`,
     {
-      method: 'GET',
-      cache: 'no-store', // Ensure fresh data
+      method: "GET",
+      cache: "no-store", // Ensure fresh data
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-    }
+    },
   );
 
   if (!res.ok) {
@@ -43,15 +46,23 @@ async function getAccountDetails(domainId: string, accountId: string): Promise<A
       return null; // Account not found
     }
     // Log the error for server-side inspection
-    console.error('Failed to fetch account details:', res.status, await res.text());
+    console.error(
+      "Failed to fetch account details:",
+      res.status,
+      await res.text(),
+    );
     // For other errors, you might want to throw or handle differently
-    throw new Error('Failed to fetch account details');
+    throw new Error("Failed to fetch account details");
   }
 
   return res.json();
 }
 
-export default async function AccountDetailsPage({ params }: { params: AccountPageParams }) {
+export default async function AccountDetailsPage({
+  params,
+}: {
+  params: AccountPageParams;
+}) {
   const { domainId, accountId } = await params;
   const accountDetails = await getAccountDetails(domainId, accountId);
 

@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader } from "../ui/card";
 import { Separator } from "../ui/separator";
 import CampaignsTableRow from "./CampaignsTableRow";
 
-
 export const campaignColumns = [
   { name: "Campaign Name", key: "name" },
   { name: "Status", key: "status" },

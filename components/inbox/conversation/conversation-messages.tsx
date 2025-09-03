@@ -12,13 +12,13 @@ function ConversationMessages() {
           key={message.id}
           className={cn(
             "flex",
-            message.type === "outgoing" ? "justify-end" : "justify-start"
+            message.type === "outgoing" ? "justify-end" : "justify-start",
           )}
         >
           <div
             className={cn(
               "flex items-start space-x-3 max-w-2xl",
-              message.type === "outgoing" && "flex-row-reverse space-x-reverse"
+              message.type === "outgoing" && "flex-row-reverse space-x-reverse",
             )}
           >
             <Avatar className="h-8 w-8">
@@ -40,7 +40,7 @@ function ConversationMessages() {
                   "p-4",
                   message.type === "outgoing"
                     ? "bg-primary text-primary-foreground"
-                    : "bg-card"
+                    : "bg-card",
                 )}
               >
                 <div className="whitespace-pre-wrap text-sm leading-relaxed">

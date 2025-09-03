@@ -3,209 +3,210 @@ import { Globe, Mail, Zap } from "lucide-react";
 export const domains = [
   {
     id: 1,
-    domain: 'mycompany.com',
-    status: 'verified',
+    domain: "mycompany.com",
+    status: "verified",
     mailboxes: 5,
     records: {
-      spf: 'verified',
-      dkim: 'verified',
-      dmarc: 'verified',
-      mx: 'verified'
+      spf: "verified",
+      dkim: "verified",
+      dmarc: "verified",
+      mx: "verified",
     },
-    addedDate: '2 weeks ago'
+    addedDate: "2 weeks ago",
   },
   {
     id: 2,
-    domain: 'outreach.mycompany.com',
-    status: 'pending',
+    domain: "outreach.mycompany.com",
+    status: "pending",
     mailboxes: 0,
     records: {
-      spf: 'verified',
-      dkim: 'pending',
-      dmarc: 'pending',
-      mx: 'verified'
+      spf: "verified",
+      dkim: "pending",
+      dmarc: "pending",
+      mx: "verified",
     },
-    addedDate: '1 day ago'
-  }
-]
+    addedDate: "1 day ago",
+  },
+];
 import { Mailbox } from "@/types/mailbox";
 
-export const mailboxes : Mailbox[] = [
+export const mailboxes: Mailbox[] = [
   {
     id: 1,
-    email: 'john@mycompany.com',
-    domain: 'mycompany.com',
-    status: 'ACTIVE',
-    campaign: 'Q1 SaaS Outreach',
-    provider: 'Gmail',
-    warmupStatus: 'WARMED',
+    email: "john@mycompany.com",
+    domain: "mycompany.com",
+    status: "ACTIVE",
+    campaign: "Q1 SaaS Outreach",
+    provider: "Gmail",
+    warmupStatus: "WARMED",
     reputation: 9.2,
     dailyLimit: 50,
     sent: 847,
     sent24h: 89,
-    lastActivity: '2 hours ago',
-    lastSync: '2023-10-15T10:30:00Z',
+    lastActivity: "2 hours ago",
+    lastSync: "2023-10-15T10:30:00Z",
     warmupProgress: 100,
     warmupDays: 28,
     totalSent: 456,
     replies: 189,
-    engagement: '41.4%',
+    engagement: "41.4%",
     spf: true,
     dkim: true,
     dmarc: true,
     enableWarmup: false,
     enableWarmupLimits: true,
-    createdAt: '2023-10-01T12:00:00Z',
-    updatedAt: '2023-10-15T10:30:00Z',
+    createdAt: "2023-10-01T12:00:00Z",
+    updatedAt: "2023-10-15T10:30:00Z",
     companyId: 1,
-    createdById: 'user1',
-    accountType: 'LINUX_USER',
+    createdById: "user1",
+    accountType: "LINUX_USER",
   },
   {
     id: 2,
-    email: 'sarah@mycompany.com',
-    domain: 'mycompany.com',
-    status: 'ACTIVE',
-    campaign: 'Enterprise Prospects',
-    provider: 'Outlook',
-    warmupStatus: 'WARMING',
+    email: "sarah@mycompany.com",
+    domain: "mycompany.com",
+    status: "ACTIVE",
+    campaign: "Enterprise Prospects",
+    provider: "Outlook",
+    warmupStatus: "WARMING",
     reputation: 8.8,
     dailyLimit: 30,
     sent: 432,
     sent24h: 45,
-    lastActivity: '4 hours ago',
-    lastSync: '2023-10-15T09:15:00Z',
+    lastActivity: "4 hours ago",
+    lastSync: "2023-10-15T09:15:00Z",
     warmupProgress: 60,
     warmupDays: 12,
     totalSent: 234,
     replies: 87,
-    engagement: '37.2%',
+    engagement: "37.2%",
     spf: true,
     dkim: true,
     dmarc: true,
     enableWarmup: true,
     enableWarmupLimits: true,
-    createdAt: '2023-10-01T12:00:00Z',
-    updatedAt: '2023-10-15T09:15:00Z',
+    createdAt: "2023-10-01T12:00:00Z",
+    updatedAt: "2023-10-15T09:15:00Z",
     companyId: 1,
-    createdById: 'user2',
-    accountType: 'VIRTUAL_USER_DB',
+    createdById: "user2",
+    accountType: "VIRTUAL_USER_DB",
   },
   {
     id: 3,
-    email: 'mike@mycompany.com',
-    domain: 'mycompany.com',
-    status: 'SUSPENDED',
+    email: "mike@mycompany.com",
+    domain: "mycompany.com",
+    status: "SUSPENDED",
     campaign: null,
-    provider: 'Gmail',
-    warmupStatus: 'PAUSED',
+    provider: "Gmail",
+    warmupStatus: "PAUSED",
     reputation: 6.5,
     dailyLimit: 25,
     sent: 298,
     sent24h: 12,
-    lastActivity: '1 day ago',
-    lastSync: '2023-10-14T16:45:00Z',
+    lastActivity: "1 day ago",
+    lastSync: "2023-10-14T16:45:00Z",
     warmupProgress: 25,
     warmupDays: 5,
     totalSent: 89,
     replies: 31,
-    engagement: '34.8%',
+    engagement: "34.8%",
     spf: false,
     dkim: true,
     dmarc: false,
     enableWarmup: true,
     enableWarmupLimits: false,
-    createdAt: '2023-10-01T12:00:00Z',
-    updatedAt: '2023-10-14T16:45:00Z',
+    createdAt: "2023-10-01T12:00:00Z",
+    updatedAt: "2023-10-14T16:45:00Z",
     companyId: 1,
-    createdById: 'user3',
-    accountType: 'LINUX_USER',
+    createdById: "user3",
+    accountType: "LINUX_USER",
   },
   {
     id: 4,
-    email: 'lisa@mycompany.com',
-    domain: 'mycompany.com',
-    status: 'ACTIVE',
-    campaign: 'Product Launch',
-    provider: 'Custom SMTP',
-    warmupStatus: 'WARMING',
+    email: "lisa@mycompany.com",
+    domain: "mycompany.com",
+    status: "ACTIVE",
+    campaign: "Product Launch",
+    provider: "Custom SMTP",
+    warmupStatus: "WARMING",
     reputation: 8.2,
     dailyLimit: 35,
     sent: 523,
     sent24h: 67,
-    lastActivity: '6 hours ago',
-    lastSync: '2023-10-15T08:30:00Z',
+    lastActivity: "6 hours ago",
+    lastSync: "2023-10-15T08:30:00Z",
     warmupProgress: 40,
     warmupDays: 8,
     totalSent: 167,
     replies: 62,
-    engagement: '37.1%',
+    engagement: "37.1%",
     spf: true,
     dkim: true,
     dmarc: true,
     enableWarmup: true,
     enableWarmupLimits: true,
-    createdAt: '2023-10-01T12:00:00Z',
-    updatedAt: '2023-10-15T08:30:00Z',
+    createdAt: "2023-10-01T12:00:00Z",
+    updatedAt: "2023-10-15T08:30:00Z",
     companyId: 1,
-    createdById: 'user4',
-    accountType: 'VIRTUAL_USER_DB',
+    createdById: "user4",
+    accountType: "VIRTUAL_USER_DB",
   },
   {
     id: 5,
-    email: 'david@mycompany.com',
-    domain: 'mycompany.com',
-    status: 'ACTIVE',
-    campaign: 'Partnership Outreach',
-    provider: 'SendGrid',
-    warmupStatus: 'WARMED',
+    email: "david@mycompany.com",
+    domain: "mycompany.com",
+    status: "ACTIVE",
+    campaign: "Partnership Outreach",
+    provider: "SendGrid",
+    warmupStatus: "WARMED",
     reputation: 9.8,
     dailyLimit: 40,
     sent: 689,
     sent24h: 95,
-    lastActivity: '1 hour ago',
-    lastSync: '2023-10-15T11:00:00Z',
+    lastActivity: "1 hour ago",
+    lastSync: "2023-10-15T11:00:00Z",
     warmupProgress: 100,
     warmupDays: 35,
     totalSent: 623,
     replies: 267,
-    engagement: '42.9%',
+    engagement: "42.9%",
     spf: true,
     dkim: true,
     dmarc: true,
     enableWarmup: false,
     enableWarmupLimits: true,
-    createdAt: '2023-10-01T12:00:00Z',
-    updatedAt: '2023-10-15T11:00:00Z',
+    createdAt: "2023-10-01T12:00:00Z",
+    updatedAt: "2023-10-15T11:00:00Z",
     companyId: 1,
-    createdById: 'user5',
-    accountType: 'LINUX_USER',
-  }
+    createdById: "user5",
+    accountType: "LINUX_USER",
+  },
 ];
 export const tabs = [
-    { id: '', label: 'Domains', count: domains.length, icon: Globe },
-    { id: 'mailboxes', label: 'Mailboxes', count: mailboxes.length, icon: Mail  },
-    { id: 'warmup', label: 'Warmup Hub', count: mailboxes.filter(m => m.warmupStatus !== 'WARMED').length, icon: Zap},
-  ];
-
+  { id: "", label: "Domains", count: domains.length, icon: Globe },
+  { id: "mailboxes", label: "Mailboxes", count: mailboxes.length, icon: Mail },
+  {
+    id: "warmup",
+    label: "Warmup Hub",
+    count: mailboxes.filter((m) => m.warmupStatus !== "WARMED").length,
+    icon: Zap,
+  },
+];
 
 export const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'verified':
-      case 'active':
-      case 'WARMED':
-        return 'bg-green-100 text-green-800';
-      case 'pending':
-      case 'WARMING':
-        return 'bg-orange-100 text-orange-800';
-      case 'NOT_STARTED':
-      case 'failed':
-      case 'PAUSED':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-
-
+  switch (status) {
+    case "verified":
+    case "active":
+    case "WARMED":
+      return "bg-green-100 text-green-800";
+    case "pending":
+    case "WARMING":
+      return "bg-orange-100 text-orange-800";
+    case "NOT_STARTED":
+    case "failed":
+    case "PAUSED":
+      return "bg-red-100 text-red-800";
+    default:
+      return "bg-gray-100 text-gray-800";
+  }
+};

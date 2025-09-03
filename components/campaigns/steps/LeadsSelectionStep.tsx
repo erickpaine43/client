@@ -56,7 +56,7 @@ function LeadsSelectionStep() {
                     "border-purple-500 bg-purple-50":
                       selectedLeadsList?.id === list.id,
                     "bg-gray-200  cursor-not-allowed": editingMode,
-                  }
+                  },
                 )}
               >
                 <RadioGroupItem

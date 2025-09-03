@@ -18,12 +18,12 @@ export const campaignsData = [
       "sarah@mycompany.com",
       "mike@mycompany.com",
     ],
-    leadsList :{
+    leadsList: {
       id: 1,
       name: "Q1 SaaS Leads",
       description: "Leads collected from Q1 SaaS events and webinars",
       contacts: 1200,
-    }
+    },
   },
   {
     id: 2,
@@ -43,12 +43,12 @@ export const campaignsData = [
       "lisa@mycompany.com",
       "david@mycompany.com",
     ],
-    leadsList :{
+    leadsList: {
       id: 2,
       name: "Enterprise Leads",
       description: "High-value enterprise leads from industry reports",
       contacts: 2000,
-    }
+    },
   },
   {
     id: 3,
@@ -62,12 +62,12 @@ export const campaignsData = [
     lastSent: "4 hours ago",
     createdDate: "2024-01-10",
     assignedMailboxes: ["lisa@mycompany.com", "david@mycompany.com"],
-    leadsList :{
+    leadsList: {
       id: 3,
       name: "SMB Leads",
       description: "Leads from small and medium businesses in Q1",
       contacts: 800,
-    }
+    },
   },
   {
     id: 4,
@@ -86,12 +86,12 @@ export const campaignsData = [
       "mike@mycompany.com",
       "lisa@mycompany.com",
     ],
-    leadsList :{
+    leadsList: {
       id: 2,
       name: "Enterprise Leads",
       description: "High-value enterprise leads from industry reports",
       contacts: 2000,
-    }
+    },
   },
   {
     id: 5,
@@ -105,20 +105,19 @@ export const campaignsData = [
     lastSent: "6 hours ago",
     createdDate: "2024-01-12",
     assignedMailboxes: ["sarah@mycompany.com", "david@mycompany.com"],
-    leadsList :{
+    leadsList: {
       id: 1,
       name: "Q1 SaaS Leads",
       description: "Leads collected from Q1 SaaS events and webinars",
       contacts: 1200,
-    }
+    },
   },
 ];
-
 
 export type CampaignDisplay = {
   id: number;
   name: string;
-  status: CampaignStatusEnum; 
+  status: CampaignStatusEnum;
   mailboxes: number;
   leadsSent: number;
   replies: number;
@@ -128,8 +127,6 @@ export type CampaignDisplay = {
   createdDate: string;
   assignedMailboxes: string[];
 };
-
-
 
 export const sequenceSteps = [
   {
@@ -218,7 +215,6 @@ export const activityLog = [
   },
 ];
 
-
 export const availableMailboxes = [
   "john@mycompany.com",
   "sarah@mycompany.com",
@@ -226,7 +222,6 @@ export const availableMailboxes = [
   "lisa@mycompany.com",
   "david@mycompany.com",
 ];
-
 
 export const statsCards = [
   { title: "Active Campaigns", value: "12", icon: Send, color: "bg-blue-500" },
@@ -250,7 +245,7 @@ export const recentReplies = [
     email: "sarah@techcorp.com",
     company: "TechCorp",
     message:
-        "Thanks for reaching out! I'd love to schedule a call to discuss this further.",
+      "Thanks for reaching out! I'd love to schedule a call to discuss this further.",
     time: "2 hours ago",
     type: "positive",
   },
@@ -259,7 +254,7 @@ export const recentReplies = [
     email: "mike@startup.io",
     company: "Startup.io",
     message:
-        "Not interested at this time, but please keep us in mind for the future.",
+      "Not interested at this time, but please keep us in mind for the future.",
     time: "4 hours ago",
     type: "neutral",
   },
@@ -268,7 +263,7 @@ export const recentReplies = [
     email: "lisa@enterprise.com",
     company: "Enterprise Inc",
     message:
-        "This looks interesting. Can you send me more information about pricing?",
+      "This looks interesting. Can you send me more information about pricing?",
     time: "6 hours ago",
     type: "positive",
   },

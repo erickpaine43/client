@@ -2,20 +2,44 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 // import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const complianceFormSchema = z.object({
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const complianceFormSchema = z.object({
   autoAddUnsubscribeLink: z.boolean().default(true),
-  unsubscribeText: z.string().min(1, { message: "Unsubscribe text is required." }),
-  unsubscribeLandingPage: z.string().url({ message: "Please enter a valid URL." }),
+  unsubscribeText: z
+    .string()
+    .min(1, { message: "Unsubscribe text is required." }),
+  unsubscribeLandingPage: z
+    .string()
+    .url({ message: "Please enter a valid URL." }),
   companyName: z.string().min(1, { message: "Company name is required." }),
   addressLine1: z.string().min(1, { message: "Address line 1 is required." }),
   addressLine2: z.string().optional(),
@@ -28,10 +52,12 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 type ComplianceFormValues = z.infer<typeof complianceFormSchema>;
 
 interface ComplianceSettingsProps {
- complianceData: ComplianceFormValues; // Assuming this data is fetched and passed down
+  complianceData: ComplianceFormValues; // Assuming this data is fetched and passed down
 }
 
-export function ComplianceSettings({ complianceData }: ComplianceSettingsProps) {
+export function ComplianceSettings({
+  complianceData,
+}: ComplianceSettingsProps) {
   const form = useForm<ComplianceFormValues>({
     // resolver: zodResolver(complianceFormSchema),
     defaultValues: complianceData,
@@ -54,7 +80,7 @@ export function ComplianceSettings({ complianceData }: ComplianceSettingsProps) 
       <CardContent className="space-y-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
- <div className="space-y-4">
+            <div className="space-y-4">
               <h3 className="text-lg font-medium">Unsubscribe Settings</h3>
 
               <FormField
@@ -63,7 +89,9 @@ export function ComplianceSettings({ complianceData }: ComplianceSettingsProps) 
                 render={({ field }) => (
                   <FormItem className="flex items-center justify-between space-x-2">
                     <div className="space-y-0.5">
-                      <FormLabel className="text-base">Auto-add Unsubscribe Link</FormLabel>
+                      <FormLabel className="text-base">
+                        Auto-add Unsubscribe Link
+                      </FormLabel>
                       <FormDescription>
                         Automatically add unsubscribe link to all emails
                       </FormDescription>
@@ -78,7 +106,7 @@ export function ComplianceSettings({ complianceData }: ComplianceSettingsProps) 
                 )}
               />
 
- <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-4">
                 <FormField
                   control={form.control}
                   name="unsubscribeText"
@@ -86,7 +114,10 @@ export function ComplianceSettings({ complianceData }: ComplianceSettingsProps) 
                     <FormItem>
                       <FormLabel>Unsubscribe Text</FormLabel>
                       <FormControl>
-                        <Input placeholder="Click here to unsubscribe..." {...field} />
+                        <Input
+                          placeholder="Click here to unsubscribe..."
+                          {...field}
+                        />
                       </FormControl>
                       <FormDescription>
                         Custom text for the unsubscribe link
@@ -102,7 +133,10 @@ export function ComplianceSettings({ complianceData }: ComplianceSettingsProps) 
                     <FormItem>
                       <FormLabel>Unsubscribe Landing Page</FormLabel>
                       <FormControl>
-                        <Input placeholder="https://example.com/unsubscribe" {...field} />
+                        <Input
+                          placeholder="https://example.com/unsubscribe"
+                          {...field}
+                        />
                       </FormControl>
                       <FormDescription>
                         Where users will land after unsubscribing
@@ -113,15 +147,16 @@ export function ComplianceSettings({ complianceData }: ComplianceSettingsProps) 
                 />
               </div>
             </div>
- 
+
             <div className="space-y-4 border-t pt-6">
               <h3 className="text-lg font-medium">Physical Address</h3>
               <p className="text-sm text-muted-foreground">
-                Required by CAN-SPAM regulations. This address will appear in your emails.
+                Required by CAN-SPAM regulations. This address will appear in
+                your emails.
               </p>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
- <FormField
+                <FormField
                   control={form.control}
                   name="companyName"
                   render={({ field }) => (
@@ -134,7 +169,7 @@ export function ComplianceSettings({ complianceData }: ComplianceSettingsProps) 
                     </FormItem>
                   )}
                 />
- <FormField
+                <FormField
                   control={form.control}
                   name="addressLine1"
                   render={({ field }) => (
@@ -147,7 +182,7 @@ export function ComplianceSettings({ complianceData }: ComplianceSettingsProps) 
                     </FormItem>
                   )}
                 />
- <FormField
+                <FormField
                   control={form.control}
                   name="addressLine2"
                   render={({ field }) => (
@@ -160,7 +195,7 @@ export function ComplianceSettings({ complianceData }: ComplianceSettingsProps) 
                     </FormItem>
                   )}
                 />
- <FormField
+                <FormField
                   control={form.control}
                   name="city"
                   render={({ field }) => (
@@ -173,7 +208,7 @@ export function ComplianceSettings({ complianceData }: ComplianceSettingsProps) 
                     </FormItem>
                   )}
                 />
- <FormField
+                <FormField
                   control={form.control}
                   name="state"
                   render={({ field }) => (
@@ -186,7 +221,7 @@ export function ComplianceSettings({ complianceData }: ComplianceSettingsProps) 
                     </FormItem>
                   )}
                 />
- <FormField
+                <FormField
                   control={form.control}
                   name="zip"
                   render={({ field }) => (
@@ -199,13 +234,16 @@ export function ComplianceSettings({ complianceData }: ComplianceSettingsProps) 
                     </FormItem>
                   )}
                 />
- <FormField
+                <FormField
                   control={form.control}
                   name="country"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Country</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select country" />
@@ -225,7 +263,7 @@ export function ComplianceSettings({ complianceData }: ComplianceSettingsProps) 
                 />
               </div>
             </div>
- 
+
             <div className="flex justify-end">
               <Button type="submit">Save Compliance Settings</Button>
             </div>

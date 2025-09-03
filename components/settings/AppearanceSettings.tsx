@@ -23,7 +23,7 @@ interface AppearanceSettingsProps {
 const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({
   theme,
   density,
-  showCampaignPreviews
+  showCampaignPreviews,
 }) => {
   // You would typically use state and handlers to manage the settings
   // For now, we are just displaying the initial props

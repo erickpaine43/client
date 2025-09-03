@@ -24,7 +24,7 @@ import { useState } from "react";
 function AddStorageTrigger({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState(
-    storageOptions[0]?.gb || 1
+    storageOptions[0]?.gb || 1,
   );
 
   const handleSubmit = () => {
@@ -33,14 +33,12 @@ function AddStorageTrigger({ children }: { children: React.ReactNode }) {
   };
 
   const selectedOption = storageOptions.find(
-    (option) => option.gb === selectedAmount
+    (option) => option.gb === selectedAmount,
   );
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Add Storage</DialogTitle>
@@ -75,7 +73,7 @@ function AddStorageTrigger({ children }: { children: React.ReactNode }) {
                     "h-auto p-4 flex-col space-y-1 transition-all",
                     selectedAmount === option.gb
                       ? "border-primary bg-primary/5 text-primary"
-                      : "hover:border-muted-foreground/50"
+                      : "hover:border-muted-foreground/50",
                   )}
                 >
                   <div className="text-lg font-semibold">{option.gb} GB</div>

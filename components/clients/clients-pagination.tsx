@@ -17,7 +17,9 @@ export function ClientsPagination({
   return (
     <div className="flex items-center justify-between space-x-2 py-4">
       <div className="text-sm text-muted-foreground">
-        {t.table.pagination.replace("{0}", currentPage.toString()).replace("{1}", totalPages.toString())}
+        {t.table.pagination
+          .replace("{0}", currentPage.toString())
+          .replace("{1}", totalPages.toString())}
       </div>
       <div className="space-x-2">
         <Button

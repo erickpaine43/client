@@ -7,7 +7,6 @@ import { useAddCampaignContext } from "@/context/AddCampaignContext";
 import { Mail, Info } from "lucide-react";
 import { mailboxes } from "@/lib/data/mailboxes";
 
-
 function MailboxAssignmentStep() {
   const { form, editingMode, campaign } = useAddCampaignContext();
 
@@ -20,7 +19,7 @@ function MailboxAssignmentStep() {
 
   const handleMailboxToggle = (
     mailbox: (typeof mailboxes)[0],
-    checked: boolean
+    checked: boolean,
   ) => {
     if (editingMode && initiallySelectedEmails.includes(mailbox.email)) {
       return;
@@ -31,7 +30,7 @@ function MailboxAssignmentStep() {
     } else {
       setValue(
         "selectedMailboxes",
-        selectedMailboxes.filter((m) => m.email !== mailbox.email)
+        selectedMailboxes.filter((m) => m.email !== mailbox.email),
       );
     }
   };
@@ -122,10 +121,10 @@ function MailboxAssignmentStep() {
                         mailbox.reputation === "excellent"
                           ? "bg-green-500"
                           : mailbox.reputation === "good"
-                          ? "bg-yellow-500"
-                          : "bg-orange-500"
+                            ? "bg-yellow-500"
+                            : "bg-orange-500"
                       }`}
-                     />
+                    />
                   </div>
                 </div>
               </Label>

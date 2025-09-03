@@ -1,5 +1,5 @@
 // Email Types
-import { ComponentType, SVGProps } from 'react';
+import { ComponentType, SVGProps } from "react";
 export interface Email {
   id: number;
   subject: string;
@@ -26,11 +26,22 @@ export interface Message {
 }
 
 // Enums
-export type MessageType = 'outgoing' | 'incoming';
+export type MessageType = "outgoing" | "incoming";
 
-export type ConversationStatus = 'unread' | 'read' | 'archived' | 'muted' | 'important';
+export type ConversationStatus =
+  | "unread"
+  | "read"
+  | "archived"
+  | "muted"
+  | "important";
 
-export type TagType = 'interested' | 'not-interested' | 'maybe-later' | 'hot-lead' | 'follow-up' | 'replied';
+export type TagType =
+  | "interested"
+  | "not-interested"
+  | "maybe-later"
+  | "hot-lead"
+  | "follow-up"
+  | "replied";
 
 // Inbox Filter Types
 export interface InboxFilter {
@@ -40,7 +51,13 @@ export interface InboxFilter {
   icon?: ComponentType<SVGProps<SVGSVGElement>> | string;
 }
 
-export type InboxFilterType = 'all' | 'unread' | 'starred' | 'archived' | 'muted' | 'important';
+export type InboxFilterType =
+  | "all"
+  | "unread"
+  | "starred"
+  | "archived"
+  | "muted"
+  | "important";
 
 // Conversation Interface (Enhanced)
 export interface Conversation {
@@ -106,32 +123,32 @@ export interface InboxState {
 
 // Add constants for runtime usage
 export const MessageTypeConstants = {
-  OUTGOING: 'outgoing' as const,
-  INCOMING: 'incoming' as const
+  OUTGOING: "outgoing" as const,
+  INCOMING: "incoming" as const,
 } as const;
 
 export const ConversationStatusConstants = {
-  UNREAD: 'unread' as const,
-  READ: 'read' as const,
-  ARCHIVED: 'archived' as const,
-  MUTED: 'muted' as const,
-  IMPORTANT: 'important' as const
+  UNREAD: "unread" as const,
+  READ: "read" as const,
+  ARCHIVED: "archived" as const,
+  MUTED: "muted" as const,
+  IMPORTANT: "important" as const,
 } as const;
 
 export const TagTypeConstants = {
-  INTERESTED: 'interested' as const,
-  NOT_INTERESTED: 'not-interested' as const,
-  MAYBE_LATER: 'maybe-later' as const,
-  HOT_LEAD: 'hot-lead' as const,
-  FOLLOW_UP: 'follow-up' as const,
-  REPLIED: 'replied' as const
+  INTERESTED: "interested" as const,
+  NOT_INTERESTED: "not-interested" as const,
+  MAYBE_LATER: "maybe-later" as const,
+  HOT_LEAD: "hot-lead" as const,
+  FOLLOW_UP: "follow-up" as const,
+  REPLIED: "replied" as const,
 } as const;
 
 export const InboxFilterTypeConstants = {
-  ALL: 'all' as const,
-  UNREAD: 'unread' as const,
-  STARRED: 'starred' as const,
-  ARCHIVED: 'archived' as const,
-  MUTED: 'muted' as const,
-  IMPORTANT: 'important' as const
+  ALL: "all" as const,
+  UNREAD: "unread" as const,
+  STARRED: "starred" as const,
+  ARCHIVED: "archived" as const,
+  MUTED: "muted" as const,
+  IMPORTANT: "important" as const,
 } as const;

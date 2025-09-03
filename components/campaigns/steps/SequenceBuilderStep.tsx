@@ -53,7 +53,7 @@ function SequenceBuilderStep() {
 
   const updateStep = (index: number, updates: Partial<EmailStep>) => {
     const updatedSequence = sequence.map((step, i) =>
-      i === index ? { ...step, ...updates } : step
+      i === index ? { ...step, ...updates } : step,
     );
     setValue("sequence", updatedSequence);
   };
@@ -69,9 +69,7 @@ function SequenceBuilderStep() {
     const stepToUpdate = sequence[focusedTextareaIndex.current];
     if (stepToUpdate && stepToUpdate.type === "email") {
       const currentContent = stepToUpdate.content || "";
-      const updatedContent = currentContent
-        ? `${currentContent} ${tag}`
-        : tag;
+      const updatedContent = currentContent ? `${currentContent} ${tag}` : tag;
       updateStep(focusedTextareaIndex.current, { content: updatedContent });
     }
   }
@@ -275,4 +273,3 @@ function SequenceBuilderStep() {
   );
 }
 export default SequenceBuilderStep;
-

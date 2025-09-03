@@ -14,10 +14,17 @@ export function SequenceStep({
   totalSteps,
   currentEditingStep,
   emailBodyRef,
-  actions
+  actions,
 }: SequenceStepProps) {
-  const selectedTemplate = templates?.find(t => t.id === step.templateId);
-  const { onMoveStepUp, onMoveStepDown, onRemoveStep, onUpdateStep, onInsertTag, onSelectTemplate } = actions;
+  const selectedTemplate = templates?.find((t) => t.id === step.templateId);
+  const {
+    onMoveStepUp,
+    onMoveStepDown,
+    onRemoveStep,
+    onUpdateStep,
+    onInsertTag,
+    onSelectTemplate,
+  } = actions;
 
   return (
     <div className="relative group">
@@ -52,8 +59,12 @@ export function SequenceStep({
               index={index}
               template={selectedTemplate}
               step={step}
-              onSubjectChange={(value) => onUpdateStep(index, { emailSubject: value })}
-              onBodyChange={(value) => onUpdateStep(index, { emailBody: value })}
+              onSubjectChange={(value) =>
+                onUpdateStep(index, { emailSubject: value })
+              }
+              onBodyChange={(value) =>
+                onUpdateStep(index, { emailBody: value })
+              }
               onSelectTemplate={(subject, body) => {
                 onUpdateStep(index, { emailSubject: subject, emailBody: body });
                 onSelectTemplate(index, selectedTemplate?.id || 0);
@@ -75,4 +86,3 @@ export function SequenceStep({
     </div>
   );
 }
-

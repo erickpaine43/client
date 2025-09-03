@@ -3,14 +3,18 @@
 import * as React from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { calculatePasswordStrength, debounce, type PasswordStrength } from "@/lib/utils";
+import {
+  calculatePasswordStrength,
+  debounce,
+  type PasswordStrength,
+} from "@/lib/utils";
 import { Input } from "./input";
 import { Button } from "./button";
 import { Label } from "./label";
 import { PasswordStrengthMeter } from "./password-strength-meter";
 
 interface PasswordInputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
   label?: string;
   name: string;
   value?: string;
@@ -30,28 +34,34 @@ interface PasswordInputProps
 }
 
 const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
-  ({
-    className,
-    inputClassName,
-    labelClassName,
-    containerClassName,
-    label,
-    name,
-    value,
-    defaultValue,
-    onValueChange,
-    placeholder,
-    required,
-    disabled,
-    autoComplete = "current-password",
-    dataTestId,
-    showStrengthMeter = false,
-    onStrengthChange,
-    ...props
-  }, ref) => {
+  (
+    {
+      className,
+      inputClassName,
+      labelClassName,
+      containerClassName,
+      label,
+      name,
+      value,
+      defaultValue,
+      onValueChange,
+      placeholder,
+      required,
+      disabled,
+      autoComplete = "current-password",
+      dataTestId,
+      showStrengthMeter = false,
+      onStrengthChange,
+      ...props
+    },
+    ref,
+  ) => {
     const [showPassword, setShowPassword] = React.useState(false);
-    const [passwordStrength, setPasswordStrength] = React.useState<PasswordStrength | null>(null);
-    const [inputValue, setInputValue] = React.useState(value || defaultValue || "");
+    const [passwordStrength, setPasswordStrength] =
+      React.useState<PasswordStrength | null>(null);
+    const [inputValue, setInputValue] = React.useState(
+      value || defaultValue || "",
+    );
 
     const testId = dataTestId ?? `password-input-${name}`;
 
@@ -66,7 +76,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
           togglePasswordVisibility();
         }
       },
-      [togglePasswordVisibility]
+      [togglePasswordVisibility],
     );
 
     // Debounced password strength calculation
@@ -79,7 +89,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
             onStrengthChange?.(strength);
           }
         }, 300),
-      [showStrengthMeter, onStrengthChange]
+      [showStrengthMeter, onStrengthChange],
     );
 
     // Calculate strength when password changes
@@ -91,7 +101,13 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
         setPasswordStrength(null);
         onStrengthChange?.(null);
       }
-    }, [value, inputValue, showStrengthMeter, debouncedCalculateStrength, onStrengthChange]);
+    }, [
+      value,
+      inputValue,
+      showStrengthMeter,
+      debouncedCalculateStrength,
+      onStrengthChange,
+    ]);
 
     const handleChange = React.useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,7 +115,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
         setInputValue(newValue);
         onValueChange?.(newValue);
       },
-      [onValueChange]
+      [onValueChange],
     );
 
     const inputProps = {
@@ -126,10 +142,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
     return (
       <div className={cn("space-y-2", containerClassName)}>
         {label && (
-          <Label
-            htmlFor={name}
-            className={cn(labelClassName)}
-          >
+          <Label htmlFor={name} className={cn(labelClassName)}>
             {label}
             {required && <span className="text-destructive ml-1">*</span>}
           </Label>
@@ -138,10 +151,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
         <div className="relative">
           <Input
             ref={ref}
-            className={cn(
-              "pr-10",
-              inputClassName
-            )}
+            className={cn("pr-10", inputClassName)}
             {...inputProps}
           />
 
@@ -174,7 +184,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 PasswordInput.displayName = "PasswordInput";

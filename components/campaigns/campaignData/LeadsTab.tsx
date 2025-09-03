@@ -60,7 +60,7 @@ function LeadsTab() {
                   <td className="px-6 py-4">
                     <span
                       className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
-                        lead.status
+                        lead.status,
                       )}`}
                     >
                       {lead.status}

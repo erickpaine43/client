@@ -1,7 +1,10 @@
 import { z } from "zod";
 import { MouseEvent, RefObject } from "react";
 import { Control, UseFormRegister, FieldErrors } from "react-hook-form";
-import { campaignFormSchema, campaignStepSchema } from "@/components/campaigns/schemaValidations";
+import {
+  campaignFormSchema,
+  campaignStepSchema,
+} from "@/components/campaigns/schemaValidations";
 import { CampaignEventCondition } from "@/types/campaign";
 import { Template } from "@/types";
 
@@ -27,7 +30,7 @@ export interface SequenceStepActionsProps {
   onRemoveStep: (index: number) => void;
   onUpdateStep: (
     index: number,
-    updates: Partial<SequenceStepProps["step"]>
+    updates: Partial<SequenceStepProps["step"]>,
   ) => void;
   onInsertTag: (index: number, tag: string) => void;
   onSetCurrentEditingStep: (index: number | null) => void;

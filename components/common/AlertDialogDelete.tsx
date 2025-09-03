@@ -42,7 +42,7 @@ function AlertDialogDelete({
         loading: "Deleting...",
         success: "Deleted successfully",
         error: "Failed to delete",
-      }
+      },
     );
   };
   return (

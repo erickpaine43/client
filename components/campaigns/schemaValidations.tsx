@@ -77,7 +77,7 @@ export const campaignFormSchema = z
     {
       message: t.validation.startTimeLower,
       path: ["sendTimeStart"],
-    }
+    },
   )
   .refine(
     (data) => {
@@ -87,5 +87,5 @@ export const campaignFormSchema = z
     {
       message: t.validation.endTimeGreater,
       path: ["sendTimeEnd"],
-    }
+    },
   );

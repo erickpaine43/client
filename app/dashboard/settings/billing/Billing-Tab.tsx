@@ -44,7 +44,7 @@ function BillingTab() {
           <div className="grid gap-6 md:grid-cols-3">
             <Card
               className={cn(
-                "border-primary/70 bg-gradient-to-br from-primary/20 to-indigo-50"
+                "border-primary/70 bg-gradient-to-br from-primary/20 to-indigo-50",
               )}
             >
               <CardContent>
@@ -112,9 +112,12 @@ function BillingTab() {
           <button
             className="text-sm text-blue-600 hover:text-blue-800 underline"
             onClick={() => {
-              const newCompanyName = prompt('Enter company name:', companyInfo.name);
+              const newCompanyName = prompt(
+                "Enter company name:",
+                companyInfo.name,
+              );
               if (newCompanyName && newCompanyName !== companyInfo.name) {
-                setCompanyInfo(prev => ({ ...prev, name: newCompanyName }));
+                setCompanyInfo((prev) => ({ ...prev, name: newCompanyName }));
                 // Here you would save to backend/localStorage
               }
             }}
@@ -127,16 +130,24 @@ function BillingTab() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-sm font-medium text-gray-700">Company Name</label>
-                  <p className="font-medium text-gray-900">{companyInfo.name}</p>
+                  <label className="text-sm font-medium text-gray-700">
+                    Company Name
+                  </label>
+                  <p className="font-medium text-gray-900">
+                    {companyInfo.name}
+                  </p>
                 </div>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Industry</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Industry
+                </label>
                 <p className="text-gray-600">{companyInfo.industry}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Company Size</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Company Size
+                </label>
                 <p className="text-gray-600">{companyInfo.size}</p>
               </div>
             </div>

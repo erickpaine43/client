@@ -23,7 +23,8 @@ interface FormData {
 
 export default function SignUpPage() {
   const [error, setError] = useState<string | null>(null);
-  const [passwordStrength, setPasswordStrength] = useState<PasswordStrength | null>(null);
+  const [passwordStrength, setPasswordStrength] =
+    useState<PasswordStrength | null>(null);
   const router = useRouter();
   const { signup, user } = useAuth();
 
@@ -77,7 +78,9 @@ export default function SignUpPage() {
   };
 
   const icon = User;
-  const title = user ? "You are already signed in." : signupContent.header.title;
+  const title = user
+    ? "You are already signed in."
+    : signupContent.header.title;
   const description = user ? "" : signupContent.header.description;
   const mode = user ? "loggedIn" : "form";
   const footer = user ? undefined : (
@@ -151,7 +154,9 @@ export default function SignUpPage() {
                 })}
               />
               {errors.password && (
-                <p className="text-sm text-red-600">{errors.password.message}</p>
+                <p className="text-sm text-red-600">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 
@@ -172,7 +177,9 @@ export default function SignUpPage() {
                 })}
               />
               {errors.confirmPassword && (
-                <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
+                <p className="text-sm text-red-600">
+                  {errors.confirmPassword.message}
+                </p>
               )}
             </div>
 

@@ -1,6 +1,6 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath } from "next/cache";
 
 interface CreateClientData {
   email: string;
@@ -19,7 +19,6 @@ interface ClientData {
 }
 
 export async function createClient(data: CreateClientData) {
-  
   // Mock implementation
   const client = {
     id: Date.now(),
@@ -30,20 +29,20 @@ export async function createClient(data: CreateClientData) {
     campaignId: data.campaignId,
   };
 
-  revalidatePath('/dashboard/clients');
+  revalidatePath("/dashboard/clients");
   return client;
 }
 
 export async function updateClient(_id: number, _data: ClientData) {
   // Mock implementation
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   return { success: true };
 }
 
 export async function removeFromCampaign(clientId: number, campaignId: number) {
   console.log({ clientId, campaignId });
-  
-  revalidatePath('/dashboard/clients');
+
+  revalidatePath("/dashboard/clients");
 }
 
 export async function deleteClient(clientId: number) {
@@ -51,7 +50,7 @@ export async function deleteClient(clientId: number) {
 }
 
 export async function maskClientPII(clientId: number) {
-const client = {
+  const client = {
     id: clientId,
     firstName: "John",
     lastName: "Doe",
@@ -59,9 +58,9 @@ const client = {
 
   const maskName = (name?: string | null) => {
     if (!name) return name;
-    return name.slice(0, 3) + '*'.repeat(name.length - 3);
+    return name.slice(0, 3) + "*".repeat(name.length - 3);
   };
-// mock implementation
+  // mock implementation
   return {
     id: clientId,
     firstName: maskName(client.firstName),

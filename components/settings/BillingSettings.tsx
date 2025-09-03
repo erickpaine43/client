@@ -2,20 +2,26 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface BillingData {
   renewalDate: string;
   emailAccountsUsed: number;
   campaignsUsed: number;
   emailsPerMonthUsed: number;
-  planDetails: { 
-    id: string; 
-    name: string; 
+  planDetails: {
+    id: string;
+    name: string;
     isMonthly: boolean;
     price: number;
     description: string;
-    maxEmailAccounts: number;  // 0 for "Unlimited" or a number
+    maxEmailAccounts: number; // 0 for "Unlimited" or a number
     maxCampaigns: number;
     maxEmailsPerMonth: number;
   };
@@ -49,9 +55,12 @@ const BillingSettings: React.FC<BillingSettingsProps> = ({ billing }) => {
         <div className="rounded-md border p-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-medium">{billing.planDetails.name}</h3>
+              <h3 className="text-lg font-medium">
+                {billing.planDetails.name}
+              </h3>
               <p className="text-sm text-muted-foreground">
-                {billing.planDetails.price} / month • Renews on {billing.renewalDate}{" "}
+                {billing.planDetails.price} / month • Renews on{" "}
+                {billing.renewalDate}{" "}
               </p>
             </div>
             <Button variant="outline">Change Plan</Button>
@@ -61,7 +70,8 @@ const BillingSettings: React.FC<BillingSettingsProps> = ({ billing }) => {
             <div className="flex justify-between text-sm">
               <span>Email accounts</span>
               <span>
-                {billing.emailAccountsUsed} / {billing.planDetails.maxEmailAccounts}
+                {billing.emailAccountsUsed} /{" "}
+                {billing.planDetails.maxEmailAccounts}
               </span>
             </div>
             <div className="flex justify-between text-sm">
@@ -114,7 +124,10 @@ const BillingSettings: React.FC<BillingSettingsProps> = ({ billing }) => {
           <h3 className="text-lg font-medium">Billing History</h3>
           <div className="rounded-md border">
             {billing.billingHistory.map((item, index) => (
-              <div key={index} className={`p-4 flex items-center justify-between text-sm ${index > 0 ? 'border-t' : ''}`}>
+              <div
+                key={index}
+                className={`p-4 flex items-center justify-between text-sm ${index > 0 ? "border-t" : ""}`}
+              >
                 <div
                   key={index}
                   className={`p-4 flex items-center justify-between text-sm ${
@@ -122,7 +135,9 @@ const BillingSettings: React.FC<BillingSettingsProps> = ({ billing }) => {
                   }`}
                 >
                   <p className="font-medium">{item.date}</p>
-                  <p className="text-xs text-muted-foreground">{item.description}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {item.description}
+                  </p>
                 </div>
                 <div className="text-right">
                   <p className="font-medium">{item.amount}</p>

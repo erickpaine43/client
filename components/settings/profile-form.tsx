@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -68,7 +68,7 @@ function ProfileForm() {
   const MAX_RETRIES = 3;
 
   // Enhanced retry function with exponential backoff and timeout
-  const retryFetchProfile = async () => {
+  const retryFetchProfile = useCallback(async () => {
     if (retryCount >= MAX_RETRIES) {
       toast.error("Unable to load profile", {
         description: "Please check your connection and refresh the page.",
@@ -187,7 +187,8 @@ function ProfileForm() {
       setIsRetryingProfile(false);
       setProfileLoading(false);
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [retryCount, MAX_RETRIES]);
 
   // Helper function to get error variants
   const getErrorVariant = (type: string) => {
@@ -263,7 +264,8 @@ function ProfileForm() {
     if (!authLoading) {
       fetchProfileData();
     }
-  }, [authUser, authLoading, form]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authUser, authLoading, retryFetchProfile]);
 
   // Auto-retry when coming back online
   useEffect(() => {
@@ -467,7 +469,7 @@ function ProfileForm() {
         <Alert className="border-orange-200 bg-orange-50">
           <AlertTriangle className="h-4 w-4 text-orange-600" />
           <AlertDescription className="text-orange-800">
-            You're currently offline. Profile data may not be up to date.
+            You&apos;re currently offline. Profile data may not be up to date.
           </AlertDescription>
         </Alert>
       )}

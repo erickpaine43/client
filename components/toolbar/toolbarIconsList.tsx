@@ -1,5 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Redo2, Undo2, Bold, Italic, Underline, Link2, AlignLeft, AlignRight, AlignCenter, Quote, List, ListOrdered, Type, Code, Image as ImageIcon } from 'lucide-react';
+import {
+  Redo2,
+  Undo2,
+  Bold,
+  Italic,
+  Underline,
+  Link2,
+  AlignLeft,
+  AlignRight,
+  AlignCenter,
+  Quote,
+  List,
+  ListOrdered,
+  Type,
+  Code,
+  Image as ImageIcon,
+} from "lucide-react";
 import { eventTypes, type EventType, type PluginItem } from "@/types/toolbar";
 
 export { eventTypes, type EventType, type PluginItem };
@@ -12,12 +27,14 @@ const pluginsList: PluginItem[] = [
   },
   {
     id: 2,
-    Icon: () => <span style={{ fontWeight: 'bold' }}>H1</span>,
+    Icon: () => <span style={{ fontWeight: "bold" }}>H1</span>,
     event: eventTypes.h1,
   },
   {
     id: 3,
-    Icon: () => <span style={{ fontWeight: 'bold', fontSize: '0.9em' }}>H2</span>,
+    Icon: () => (
+      <span style={{ fontWeight: "bold", fontSize: "0.9em" }}>H2</span>
+    ),
     event: eventTypes.h2,
   },
   {

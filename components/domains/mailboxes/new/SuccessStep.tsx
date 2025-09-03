@@ -37,7 +37,7 @@ function SuccessStep() {
 
         <Card className="bg-green-50 border-green-200">
           <CardContent className="p-6">
-            <h4 className="font-medium text-green-900 mb-3">🎉 What's Next?</h4>
+            <h4 className="font-medium text-green-900 mb-3">🎉 What&apos;s Next?</h4>
             <ul className="text-sm text-green-700 space-y-2 text-left">
               <li>
                 •{" "}
@@ -55,7 +55,7 @@ function SuccessStep() {
         <Button
           onClick={handleComplete}
           className={cn(
-            "bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2 mx-auto h-auto"
+            "bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2 mx-auto h-auto",
           )}
         >
           <Mail className="w-5 h-5" />

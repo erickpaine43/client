@@ -51,12 +51,12 @@ export default function ClientsContent({
     maskPII,
     (client) =>
       router.push(
-        `/dashboard/campaigns/${campaignId}/clients/${client?.id}/edit`
+        `/dashboard/campaigns/${campaignId}/clients/${client?.id}/edit`,
       ),
     (client) => {
       setSelectedClient(client);
       setIsModalOpen(true);
-    }
+    },
   );
 
   const table = useReactTable({

@@ -27,7 +27,7 @@ function StepHeader({ step }: StepHeaderProps) {
         <div
           className={cn(
             "flex h-16 w-16 items-center justify-center rounded-2xl",
-            step.completed ? "bg-green-500" : step.color
+            step.completed ? "bg-green-500" : step.color,
           )}
         >
           {step.completed ? (

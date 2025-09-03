@@ -7,7 +7,7 @@ on:
     branches:
       - dev
       - main
-      - '**'
+      - "**"
 
 jobs:
   update-contributors:
@@ -31,9 +31,9 @@ jobs:
           else
             pr_author="${{ github.actor }}"
           fi
-        
+
           echo "PR_AUTHOR=$pr_author" >> $GITHUB_ENV
-        
+
       - name: Sync remote dev branch
         if: github.ref == 'refs/heads/dev'
         run: |

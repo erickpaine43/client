@@ -10,7 +10,6 @@ import {
 import NewFolderForm from "./new-folder-form";
 
 function CreateNewFolderButton() {
-  
   return (
     <Dialog>
       <DialogTrigger asChild>

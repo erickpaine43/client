@@ -1,12 +1,26 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { createClient, removeFromCampaign, deleteClient } from '@/app/dashboard/campaigns/[campaignId]/clients/new/actions';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  createClient,
+  removeFromCampaign,
+  deleteClient,
+} from "@/app/dashboard/campaigns/[campaignId]/clients/new/actions";
 
 interface ClientFormProps {
   campaignId: string;
@@ -20,7 +34,11 @@ interface ClientFormProps {
   isEditMode?: boolean;
 }
 
-export default function ClientForm({ campaignId, client, isEditMode = false }: ClientFormProps) {
+export default function ClientForm({
+  campaignId,
+  client,
+  isEditMode = false,
+}: ClientFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -31,10 +49,10 @@ export default function ClientForm({ campaignId, client, isEditMode = false }: C
     const formData = new FormData(event.currentTarget);
     try {
       await createClient({
-        email: formData.get('email') as string,
-        firstName: formData.get('firstName') as string,
-        lastName: formData.get('lastName') as string,
-        notes: formData.get('notes') as string,
+        email: formData.get("email") as string,
+        firstName: formData.get("firstName") as string,
+        lastName: formData.get("lastName") as string,
+        notes: formData.get("notes") as string,
         campaignId,
       });
       router.push(`/dashboard/clients?campaignId=${campaignId}`);
@@ -74,7 +92,7 @@ export default function ClientForm({ campaignId, client, isEditMode = false }: C
           placeholder="client@example.com"
         />
       </div>
-      
+
       {!isEditMode && (
         <>
           <div className="grid grid-cols-2 gap-4">
@@ -85,11 +103,11 @@ export default function ClientForm({ campaignId, client, isEditMode = false }: C
               <Input
                 id="firstName"
                 name="firstName"
-                defaultValue={client?.firstName || ''}
+                defaultValue={client?.firstName || ""}
                 placeholder="John"
               />
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="lastName" className="text-sm font-medium">
                 Last Name
@@ -97,7 +115,7 @@ export default function ClientForm({ campaignId, client, isEditMode = false }: C
               <Input
                 id="lastName"
                 name="lastName"
-                defaultValue={client?.lastName || ''}
+                defaultValue={client?.lastName || ""}
                 placeholder="Doe"
               />
             </div>
@@ -110,7 +128,7 @@ export default function ClientForm({ campaignId, client, isEditMode = false }: C
             <Textarea
               id="notes"
               name="notes"
-              defaultValue={client?.notes || ''}
+              defaultValue={client?.notes || ""}
               placeholder="Additional notes about the client..."
             />
           </div>
@@ -120,7 +138,7 @@ export default function ClientForm({ campaignId, client, isEditMode = false }: C
       <div className="flex gap-4">
         {!isEditMode && (
           <Button type="submit" disabled={loading}>
-            {loading ? 'Adding...' : 'Add Client'}
+            {loading ? "Adding..." : "Add Client"}
           </Button>
         )}
 
@@ -134,7 +152,8 @@ export default function ClientForm({ campaignId, client, isEditMode = false }: C
                 <AlertDialogHeader>
                   <AlertDialogTitle>Remove from Campaign</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This will remove the client from this campaign only. The client data will remain in your database.
+                    This will remove the client from this campaign only. The
+                    client data will remain in your database.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -154,7 +173,8 @@ export default function ClientForm({ campaignId, client, isEditMode = false }: C
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete Client</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This will permanently delete the client and remove them from all campaigns. This action cannot be undone.
+                    This will permanently delete the client and remove them from
+                    all campaigns. This action cannot be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -168,11 +188,7 @@ export default function ClientForm({ campaignId, client, isEditMode = false }: C
           </>
         )}
 
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.back()}
-        >
+        <Button type="button" variant="outline" onClick={() => router.back()}>
           Cancel
         </Button>
       </div>

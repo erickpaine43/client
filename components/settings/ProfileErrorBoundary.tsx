@@ -1,10 +1,10 @@
 "use client";
 
-import React, { Component, ReactNode } from 'react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { Component, ReactNode } from "react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { AlertTriangle, RefreshCw, Home, Bug } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ProfileErrorBoundaryState {
   hasError: boolean;
@@ -20,7 +20,10 @@ interface ProfileErrorBoundaryProps {
   maxRetries?: number;
 }
 
-class ProfileErrorBoundary extends Component<ProfileErrorBoundaryProps, ProfileErrorBoundaryState> {
+class ProfileErrorBoundary extends Component<
+  ProfileErrorBoundaryProps,
+  ProfileErrorBoundaryState
+> {
   private resetTimeout: NodeJS.Timeout | null = null;
 
   constructor(props: ProfileErrorBoundaryProps) {
@@ -33,7 +36,9 @@ class ProfileErrorBoundary extends Component<ProfileErrorBoundaryProps, ProfileE
     };
   }
 
-  static getDerivedStateFromError(error: Error): Partial<ProfileErrorBoundaryState> {
+  static getDerivedStateFromError(
+    error: Error,
+  ): Partial<ProfileErrorBoundaryState> {
     return {
       hasError: true,
       error,
@@ -52,7 +57,7 @@ class ProfileErrorBoundary extends Component<ProfileErrorBoundaryProps, ProfileE
     }
 
     // Log error for debugging
-    console.error('Profile Error Boundary caught an error:', error, errorInfo);
+    console.error("Profile Error Boundary caught an error:", error, errorInfo);
   }
 
   componentDidUpdate(prevProps: ProfileErrorBoundaryProps) {
@@ -101,7 +106,7 @@ class ProfileErrorBoundary extends Component<ProfileErrorBoundaryProps, ProfileE
   };
 
   handleGoHome = () => {
-    window.location.href = '/dashboard';
+    window.location.href = "/dashboard";
   };
 
   render() {
@@ -128,7 +133,8 @@ class ProfileErrorBoundary extends Component<ProfileErrorBoundaryProps, ProfileE
               <Alert variant="destructive">
                 <AlertTriangle className="h-4 w-4" />
                 <AlertDescription>
-                  Something went wrong while loading your profile. This could be due to:
+                  Something went wrong while loading your profile. This could be
+                  due to:
                   <ul className="list-disc list-inside mt-2 space-y-1">
                     <li>Network connectivity issues</li>
                     <li>Temporary server problems</li>
@@ -148,7 +154,7 @@ class ProfileErrorBoundary extends Component<ProfileErrorBoundaryProps, ProfileE
               )}
 
               {/* Error details in development */}
-              {process.env.NODE_ENV === 'development' && (
+              {process.env.NODE_ENV === "development" && (
                 <details className="mt-4">
                   <summary className="cursor-pointer text-sm font-medium flex items-center gap-2">
                     <Bug className="h-4 w-4" />
@@ -163,7 +169,9 @@ class ProfileErrorBoundary extends Component<ProfileErrorBoundaryProps, ProfileE
                     {this.state.errorInfo && (
                       <>
                         <br />
-                        <div className="font-bold mb-2 mt-4">Component Stack:</div>
+                        <div className="font-bold mb-2 mt-4">
+                          Component Stack:
+                        </div>
                         {this.state.errorInfo.componentStack}
                       </>
                     )}
@@ -179,7 +187,8 @@ class ProfileErrorBoundary extends Component<ProfileErrorBoundaryProps, ProfileE
                     className="flex-1"
                   >
                     <RefreshCw className="h-4 w-4 mr-2" />
-                    Try Again {retryCount > 0 && `(${retryCount}/${maxRetries})`}
+                    Try Again{" "}
+                    {retryCount > 0 && `(${retryCount}/${maxRetries})`}
                   </Button>
                 )}
 

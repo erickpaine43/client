@@ -1,4 +1,4 @@
-export type DomainStatus = 
+export type DomainStatus =
   | "PENDING"
   | "VERIFIED"
   | "SETUP_REQUIRED"
@@ -12,11 +12,7 @@ export type EmailAccountStatus =
   | "SUSPENDED"
   | "DELETED";
 
-export type WarmupStatusType =
-  | "NOT_STARTED"
-  | "WARMING"
-  | "WARMED"
-  | "PAUSED";
+export type WarmupStatusType = "NOT_STARTED" | "WARMING" | "WARMED" | "PAUSED";
 
 export type EmailAccount = {
   id: number;
@@ -60,13 +56,13 @@ export enum VerificationStatus {
   PENDING = "PENDING",
   ERROR = "ERROR",
   NOT_CONFIGURED = "NOT_CONFIGURED",
-  DISABLED = "DISABLED"
+  DISABLED = "DISABLED",
 }
 
 export enum RelayType {
   INTERNAL = "INTERNAL",
   EXTERNAL = "EXTERNAL",
-  DEFAULT_SERVER_CONFIG = "DEFAULT_SERVER_CONFIG"
+  DEFAULT_SERVER_CONFIG = "DEFAULT_SERVER_CONFIG",
 }
 
 export enum AccountCreationType {

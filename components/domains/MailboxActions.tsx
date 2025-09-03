@@ -76,7 +76,7 @@ const updateMailboxSchema = z
     {
       message: "Passwords don't match",
       path: ["confirmPassword"],
-    }
+    },
   );
 
 type updateMailboxValuesType = z.infer<typeof updateMailboxSchema>;

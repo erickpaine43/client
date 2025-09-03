@@ -9,7 +9,18 @@ interface ScheduleSettingsProps {
   sendTimeEnd?: string;
   emailsPerDay?: number;
   timezone: string;
-  onUpdate: (updates: Partial<Pick<ScheduleSettingsProps, 'sendDays' | 'sendTimeStart' | 'sendTimeEnd' | 'emailsPerDay' | 'timezone'>>) => void;
+  onUpdate: (
+    updates: Partial<
+      Pick<
+        ScheduleSettingsProps,
+        | "sendDays"
+        | "sendTimeStart"
+        | "sendTimeEnd"
+        | "emailsPerDay"
+        | "timezone"
+      >
+    >,
+  ) => void;
 }
 
 export function ScheduleSettings(props: ScheduleSettingsProps) {
@@ -25,11 +36,17 @@ export function ScheduleSettings(props: ScheduleSettingsProps) {
               onPressedChange={(pressed) => {
                 const newDays = pressed
                   ? [...props.sendDays, day]
-                  : props.sendDays.filter(d => d !== day);
+                  : props.sendDays.filter((d) => d !== day);
                 props.onUpdate({ sendDays: newDays });
               }}
             >
-              {t.schedule.days[(['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const)[day] as keyof typeof t.schedule.days]}
+              {
+                t.schedule.days[
+                  (["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const)[
+                    day
+                  ] as keyof typeof t.schedule.days
+                ]
+              }
             </Toggle>
           ))}
         </div>
@@ -60,7 +77,9 @@ export function ScheduleSettings(props: ScheduleSettingsProps) {
           type="number"
           min={1}
           value={props.emailsPerDay}
-          onChange={(e) => props.onUpdate({ emailsPerDay: parseInt(e.target.value) })}
+          onChange={(e) =>
+            props.onUpdate({ emailsPerDay: parseInt(e.target.value) })
+          }
         />
       </div>
     </div>

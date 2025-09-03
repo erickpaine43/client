@@ -1,8 +1,8 @@
-'use client'; 
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { ArrowUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
+"use client";
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { ArrowUp } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function GoToTopButton() {
   const [isVisible, setIsVisible] = useState(false);
@@ -19,11 +19,11 @@ export default function GoToTopButton() {
 
   // Set up scroll event listener
   useEffect(() => {
-    window.addEventListener('scroll', toggleVisibility);
+    window.addEventListener("scroll", toggleVisibility);
 
     // Clean up the event listener
     return () => {
-      window.removeEventListener('scroll', toggleVisibility);
+      window.removeEventListener("scroll", toggleVisibility);
     };
   }, []);
 
@@ -31,7 +31,7 @@ export default function GoToTopButton() {
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   };
 
@@ -41,8 +41,8 @@ export default function GoToTopButton() {
       size="icon"
       onClick={scrollToTop}
       className={cn(
-        'fixed bottom-4 right-4 rounded-full h-10 w-10 z-50 transition-opacity duration-300 ease-in-out',
-        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none' // Hide and disable when not visible
+        "fixed bottom-4 right-4 rounded-full h-10 w-10 z-50 transition-opacity duration-300 ease-in-out",
+        isVisible ? "opacity-100" : "opacity-0 pointer-events-none", // Hide and disable when not visible
       )}
       aria-label="Go to top"
     >
@@ -50,4 +50,3 @@ export default function GoToTopButton() {
     </Button>
   );
 }
-

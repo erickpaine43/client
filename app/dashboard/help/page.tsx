@@ -39,7 +39,7 @@ function HelpPage() {
       <div>
         <h1 className="text-3xl font-bold">Help & Support</h1>
         <p className="text-gray-600">
-          Need assistance? You're in the right place.
+          Need assistance? You&apos;re in the right place.
         </p>
       </div>
       <Tabs defaultValue={tabs[0].id} className="w-full space-y-5">

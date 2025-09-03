@@ -1,10 +1,14 @@
 "use client";
+import { use } from "react";
 import { Button } from "@/components/ui/button";
-import EmailAccountForm, { type EmailAccountFormValues } from "@/components/domains/email-account-form";
+import EmailAccountForm, {
+  type EmailAccountFormValues,
+} from "@/components/domains/email-account-form";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-function NewAccountClient({ domainId }: { domainId: string }) {
+function NewAccountClient({ params }: { params: Promise<{ domainId: string }> }) {
+  const { domainId } = use(params);
   const domain = {
     id: parseInt(domainId),
     name: "example.com",
@@ -42,11 +46,10 @@ function NewAccountClient({ domainId }: { domainId: string }) {
 }
 
 // Server component
-export default async function NewDomainAccountPage({
+export default function NewDomainAccountPage({
   params,
 }: {
   params: Promise<{ domainId: string }>;
 }) {
-  const { domainId } = await params;
-  return <NewAccountClient domainId={domainId} />;
+  return <NewAccountClient params={params} />;
 }

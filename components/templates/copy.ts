@@ -29,7 +29,7 @@ export const copyText = {
       REAL_ESTATE: "Real Estate",
       HR: "HR & Recruitment",
       FINANCE: "Financial Services",
-      HEALTHCARE: "Healthcare"
+      HEALTHCARE: "Healthcare",
     } as Record<TemplateCategoryType, string>,
   },
   templateCard: {
@@ -49,90 +49,92 @@ export const copyText = {
   notifications: {
     tagInserted: {
       title: "Tag Inserted",
-      description: (tag: string) => `${tag} has been inserted into your template.`
+      description: (tag: string) =>
+        `${tag} has been inserted into your template.`,
     },
     templateSaved: {
       title: "Template Saved",
       description: "Your template has been saved successfully.",
       error: "Failed to save template",
-      errorDescription: "There was an error saving your template. Please try again."
+      errorDescription:
+        "There was an error saving your template. Please try again.",
     },
     templateUpdateError: {
       title: "Failed to update template",
-      description: "An unknown error occurred"
+      description: "An unknown error occurred",
     },
     error: {
       createFailed: {
         title: "Failed to create template",
-        description: "An unknown error occurred"
-      }
-    }
+        description: "An unknown error occurred",
+      },
+    },
   },
   newTemplate: {
     title: "Create New Template",
     form: {
       name: {
         label: "Template Name",
-        placeholder: "Enter template name"
+        placeholder: "Enter template name",
       },
       category: {
         label: "Category",
-        placeholder: "Select category"
+        placeholder: "Select category",
       },
       subject: {
         label: "Subject Line",
         placeholder: "Enter subject line",
-        tooltip: "Include personalization tags in your subject line."
+        tooltip: "Include personalization tags in your subject line.",
       },
       content: {
         label: "Email Body",
         placeholder: "Write your email content here...",
-        tooltip: "Use personalization tags to make your emails more personal."
+        tooltip: "Use personalization tags to make your emails more personal.",
       },
       description: {
         label: "Description",
-        placeholder: "Enter a brief description of the template"
-      }
+        placeholder: "Enter a brief description of the template",
+      },
     },
     actions: {
       create: "Create Template",
       creating: "Creating Template...",
       save: "Save Changes",
       saving: "Saving...",
-      cancel: "Cancel"
-    }
+      cancel: "Cancel",
+    },
   },
   viewTemplate: {
     labels: {
       category: "Category",
       subject: "Subject Line",
       body: "Email Body",
-      created: "Created"
+      created: "Created",
     },
     actions: {
       edit: "Edit Template",
-      duplicate: "Duplicate"
-    }
+      duplicate: "Duplicate",
+    },
   },
   errors: {
     templateNotFound: {
       message: "The template you're looking for doesn't exist.",
-      action: "Return to Templates"
-    }
+      action: "Return to Templates",
+    },
   },
   category: {
-    label: "Category"
+    label: "Category",
   },
   subjectLine: {
-    label: "Subject Line"
+    label: "Subject Line",
   },
   emailBody: {
-    label: "Email Body"
+    label: "Email Body",
   },
   created: {
-    label: "Created"
+    label: "Created",
   },
   description: {
     label: "Description",
-  }
+  },
 } as const;

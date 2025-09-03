@@ -197,8 +197,8 @@ function WarmUpTable() {
                         stat.healthScore >= 90
                           ? "text-green-600"
                           : stat.healthScore >= 70
-                          ? "text-yellow-600"
-                          : "text-red-600"
+                            ? "text-yellow-600"
+                            : "text-red-600"
                       }
                     >
                       {stat.healthScore}%

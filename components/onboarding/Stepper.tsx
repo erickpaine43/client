@@ -35,7 +35,7 @@ function StepIndicator({
         "h-12 w-12 rounded-xl transition-all",
         step.completed && "bg-green-500 hover:bg-green-600 text-white",
         isActive && !step.completed && cn(step.color, "text-white"),
-        !isAccessible && "opacity-50 cursor-not-allowed"
+        !isAccessible && "opacity-50 cursor-not-allowed",
       )}
       aria-label={`Step ${step.id}: ${step.title}`}
     >
@@ -80,7 +80,7 @@ export function Stepper() {
                   orientation="horizontal"
                   className={cn(
                     "flex-1 mx-2 h-1 rounded-full transition-all",
-                    step.completed ? "bg-green-500" : "bg-muted"
+                    step.completed ? "bg-green-500" : "bg-muted",
                   )}
                 />
               )}

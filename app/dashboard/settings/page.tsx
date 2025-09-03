@@ -1,6 +1,12 @@
 import ProfileForm from "@/components/settings/profile-form";
 import ProfileErrorBoundary from "@/components/settings/ProfileErrorBoundary";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 function page() {
   return (

@@ -5,7 +5,7 @@ import { FolderIcon } from "lucide-react";
 
 function TemplateFolders() {
   const folders = initialFolders.filter(
-    (folder) => folder.type === "quick-reply"
+    (folder) => folder.type === "quick-reply",
   ) as TemplateFolder[];
   const files = folders.flatMap((folder) => folder.children);
   if (files.length === 0 && folders.length === 0) {

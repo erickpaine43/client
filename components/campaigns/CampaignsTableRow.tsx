@@ -51,7 +51,7 @@ function CampaignsTableRow({ campaign }: { campaign: Campaign }) {
       <td className="px-6 py-6">
         <span
           className={`inline-flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm font-medium ${getStatusColor(
-            campaign.status
+            campaign.status,
           )}`}
         >
           {getStatusIcon(campaign.status)}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export function useOnlineStatus() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -17,18 +17,18 @@ export function useOnlineStatus() {
       setWasOffline(true);
     };
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     // Also check connection status periodically
     const checkConnection = async () => {
       try {
         // Simple fetch to check connectivity
-        const response = await fetch('/api/health', {
-          method: 'HEAD',
-          cache: 'no-cache'
+        const response = await fetch("/api/health", {
+          method: "HEAD",
+          cache: "no-cache",
         });
-        if (!response.ok) throw new Error('Connection check failed');
+        if (!response.ok) throw new Error("Connection check failed");
       } catch {
         // If we were online and now can't connect, mark as offline
         if (isOnline) {
@@ -42,8 +42,8 @@ export function useOnlineStatus() {
     const intervalId = setInterval(checkConnection, 30000);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
       clearInterval(intervalId);
     };
   }, [isOnline]);

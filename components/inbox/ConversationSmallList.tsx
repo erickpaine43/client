@@ -72,7 +72,7 @@ function ConversationSmallList() {
                           variant="outline"
                           className={cn(
                             "text-xs font-medium",
-                            getTagColor(conversation.tag)
+                            getTagColor(conversation.tag),
                           )}
                         >
                           {conversation.tag.replace("-", " ")}

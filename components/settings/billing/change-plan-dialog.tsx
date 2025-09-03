@@ -120,7 +120,7 @@ function ConfirmDialog() {
             Confirm Plan Upgrade
           </AlertDialogTitle>
           <AlertDialogDescription className="text-center">
-            You're about to switch from Growth to Pro. You will be charged the
+            You&apos;re about to switch from Growth to Pro. You will be charged the
             prorated difference immediately.
           </AlertDialogDescription>
         </AlertDialogHeader>

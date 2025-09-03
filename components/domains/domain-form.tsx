@@ -21,7 +21,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardDescription, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardDescription,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { InfoIcon } from "lucide-react";
@@ -29,14 +35,16 @@ import { DnsProvider, DNS_RECORD_TYPES, DkimManagementType } from "./constants";
 import { VerificationStatus } from "@/types/domain-fixed";
 import { copyText as t } from "./copy";
 
-const DOMAIN_REGEX = /^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}$/;
+const DOMAIN_REGEX =
+  /^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}$/;
 
 const formSchema = z.object({
-  domain: z.string()
+  domain: z
+    .string()
     .min(1, t.form.validation.domain.required)
     .regex(DOMAIN_REGEX, t.form.validation.domain.invalid),
   provider: z.nativeEnum(DnsProvider, {
-    message: "Please select a valid DNS provider"
+    message: "Please select a valid DNS provider",
   }),
   spfRecordValue: z.string().optional(),
   spfStatus: z.nativeEnum(VerificationStatus).optional(),
@@ -57,7 +65,10 @@ interface DomainFormProps {
   isLoading?: boolean;
 }
 
-export default function DomainForm({ onSubmit, isLoading = false }: DomainFormProps) {
+export default function DomainForm({
+  onSubmit,
+  isLoading = false,
+}: DomainFormProps) {
   const form = useForm<DomainFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -79,26 +90,36 @@ export default function DomainForm({ onSubmit, isLoading = false }: DomainFormPr
   const watchDkimManagementType = form.watch("dkimManagementType");
   const domain = form.watch("domain"); // Keep this for CNAME target generation
 
-  const getDnsValue = (template: string) => { // Keep for CNAME or default suggestions
+  const getDnsValue = (template: string) => {
+    // Keep for CNAME or default suggestions
     return template.replace("{domain}", domain || "example.com");
   };
 
   // Helper to display verification status text
-  const getVerificationStatusText = (statusKey: VerificationStatus | undefined) => {
+  const getVerificationStatusText = (
+    statusKey: VerificationStatus | undefined,
+  ) => {
     const verificationStatusMap = t.form.enums?.verificationStatus; // Use optional chaining for safety
-    if (verificationStatusMap && statusKey && verificationStatusMap[statusKey]) {
+    if (
+      verificationStatusMap &&
+      statusKey &&
+      verificationStatusMap[statusKey]
+    ) {
       return verificationStatusMap[statusKey];
     }
     const notConfiguredKey = VerificationStatus.NOT_CONFIGURED;
     if (verificationStatusMap && verificationStatusMap[notConfiguredKey]) {
-       return verificationStatusMap[notConfiguredKey];
+      return verificationStatusMap[notConfiguredKey];
     }
     return "Status Unknown";
   };
-  
+
   const getDkimCnameTarget = () => {
-    return DNS_RECORD_TYPES.DKIM.template.replace("{domain}", domain || "yourdomain.com");
-  }
+    return DNS_RECORD_TYPES.DKIM.template.replace(
+      "{domain}",
+      domain || "yourdomain.com",
+    );
+  };
 
   return (
     <Form {...form}>
@@ -111,7 +132,11 @@ export default function DomainForm({ onSubmit, isLoading = false }: DomainFormPr
               <FormItem>
                 <FormLabel>{t.form.labels.domain}</FormLabel>
                 <FormControl>
-                  <Input placeholder={t.form.placeholders.domain} {...field} disabled={isLoading} />
+                  <Input
+                    placeholder={t.form.placeholders.domain}
+                    {...field}
+                    disabled={isLoading}
+                  />
                 </FormControl>
                 <FormDescription>{t.form.hints.domain}</FormDescription>
                 <FormMessage />
@@ -162,11 +187,19 @@ export default function DomainForm({ onSubmit, isLoading = false }: DomainFormPr
               <div className="space-y-3 p-3 border rounded-md">
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium">{t.auth.SPF}</h4>
-                  <Badge variant={form.watch("spfStatus") === VerificationStatus.VERIFIED ? "default" : "outline"}>
+                  <Badge
+                    variant={
+                      form.watch("spfStatus") === VerificationStatus.VERIFIED
+                        ? "default"
+                        : "outline"
+                    }
+                  >
                     {getVerificationStatusText(form.watch("spfStatus"))}
                   </Badge>
                 </div>
-                <p className="text-sm text-muted-foreground">{t.form.auth.spf}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t.form.auth.spf}
+                </p>
                 <FormField
                   control={form.control}
                   name="spfRecordValue"
@@ -174,9 +207,17 @@ export default function DomainForm({ onSubmit, isLoading = false }: DomainFormPr
                     <FormItem>
                       <FormLabel>{t.form.labels.spfRecordValue}</FormLabel>
                       <FormControl>
-                        <Input placeholder={getDnsValue(DNS_RECORD_TYPES.SPF.template)} {...field} disabled={isLoading} />
+                        <Input
+                          placeholder={getDnsValue(
+                            DNS_RECORD_TYPES.SPF.template,
+                          )}
+                          {...field}
+                          disabled={isLoading}
+                        />
                       </FormControl>
-                      <FormDescription>{t.form.hints.spfRecordValue}</FormDescription>
+                      <FormDescription>
+                        {t.form.hints.spfRecordValue}
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -187,21 +228,37 @@ export default function DomainForm({ onSubmit, isLoading = false }: DomainFormPr
               <div className="space-y-3 p-3 border rounded-md">
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium">{t.auth.DKIM}</h4>
-                   <Badge variant={form.watch("dkimStatus") === VerificationStatus.VERIFIED ? "default" : "outline"}>
+                  <Badge
+                    variant={
+                      form.watch("dkimStatus") === VerificationStatus.VERIFIED
+                        ? "default"
+                        : "outline"
+                    }
+                  >
                     {getVerificationStatusText(form.watch("dkimStatus"))}
                   </Badge>
                 </div>
-                 <p className="text-sm text-muted-foreground">{t.form.auth.dkim}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t.form.auth.dkim}
+                </p>
                 <FormField
                   control={form.control}
                   name="dkimManagementType"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t.form.labels.dkimManagementType}</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        disabled={isLoading}
+                      >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder={t.form.placeholders.dkimManagementType} />
+                            <SelectValue
+                              placeholder={
+                                t.form.placeholders.dkimManagementType
+                              }
+                            />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -216,17 +273,23 @@ export default function DomainForm({ onSubmit, isLoading = false }: DomainFormPr
                     </FormItem>
                   )}
                 />
-                {watchDkimManagementType === DkimManagementType.SERVICE_MANAGED_CNAME && (
+                {watchDkimManagementType ===
+                  DkimManagementType.SERVICE_MANAGED_CNAME && (
                   <div className="mt-2 space-y-1">
-                    <p className="text-sm text-muted-foreground">{t.form.hints.dkimCname}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {t.form.hints.dkimCname}
+                    </p>
                     <code className="block text-xs bg-muted p-2 rounded">
-                      Type: {DNS_RECORD_TYPES.DKIM.type}<br />
-                      Name: {DNS_RECORD_TYPES.DKIM.name}<br />
+                      Type: {DNS_RECORD_TYPES.DKIM.type}
+                      <br />
+                      Name: {DNS_RECORD_TYPES.DKIM.name}
+                      <br />
                       Value: {getDkimCnameTarget()}
                     </code>
                   </div>
                 )}
-                {watchDkimManagementType === DkimManagementType.USER_MANAGED_TXT && (
+                {watchDkimManagementType ===
+                  DkimManagementType.USER_MANAGED_TXT && (
                   <div className="mt-2 space-y-3">
                     <FormField
                       control={form.control}
@@ -235,9 +298,15 @@ export default function DomainForm({ onSubmit, isLoading = false }: DomainFormPr
                         <FormItem>
                           <FormLabel>{t.form.labels.dkimSelector}</FormLabel>
                           <FormControl>
-                            <Input placeholder={t.form.placeholders.dkimSelector} {...field} disabled={isLoading} />
+                            <Input
+                              placeholder={t.form.placeholders.dkimSelector}
+                              {...field}
+                              disabled={isLoading}
+                            />
                           </FormControl>
-                           <FormDescription>{t.form.hints.dkimSelector}</FormDescription>
+                          <FormDescription>
+                            {t.form.hints.dkimSelector}
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -249,9 +318,15 @@ export default function DomainForm({ onSubmit, isLoading = false }: DomainFormPr
                         <FormItem>
                           <FormLabel>{t.form.labels.dkimPublicKey}</FormLabel>
                           <FormControl>
-                            <Input placeholder={t.form.placeholders.dkimPublicKey} {...field} disabled={isLoading} />
+                            <Input
+                              placeholder={t.form.placeholders.dkimPublicKey}
+                              {...field}
+                              disabled={isLoading}
+                            />
                           </FormControl>
-                          <FormDescription>{t.form.hints.dkimPublicKey}</FormDescription>
+                          <FormDescription>
+                            {t.form.hints.dkimPublicKey}
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -264,11 +339,19 @@ export default function DomainForm({ onSubmit, isLoading = false }: DomainFormPr
               <div className="space-y-3 p-3 border rounded-md">
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium">{t.auth.DMARC}</h4>
-                  <Badge variant={form.watch("dmarcStatus") === VerificationStatus.VERIFIED ? "default" : "outline"}>
+                  <Badge
+                    variant={
+                      form.watch("dmarcStatus") === VerificationStatus.VERIFIED
+                        ? "default"
+                        : "outline"
+                    }
+                  >
                     {getVerificationStatusText(form.watch("dmarcStatus"))}
                   </Badge>
                 </div>
-                <p className="text-sm text-muted-foreground">{t.form.auth.dmarc}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t.form.auth.dmarc}
+                </p>
                 <FormField
                   control={form.control}
                   name="dmarcRecordValue"
@@ -276,21 +359,31 @@ export default function DomainForm({ onSubmit, isLoading = false }: DomainFormPr
                     <FormItem>
                       <FormLabel>{t.form.labels.dmarcRecordValue}</FormLabel>
                       <FormControl>
-                        <Input placeholder={getDnsValue(DNS_RECORD_TYPES.DMARC.template)} {...field} disabled={isLoading} />
+                        <Input
+                          placeholder={getDnsValue(
+                            DNS_RECORD_TYPES.DMARC.template,
+                          )}
+                          {...field}
+                          disabled={isLoading}
+                        />
                       </FormControl>
-                      <FormDescription>{t.form.hints.dmarcRecordValue}</FormDescription>
+                      <FormDescription>
+                        {t.form.hints.dmarcRecordValue}
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-              
+
               {/* Overall Auth Status Display */}
               {form.watch("overallAuthStatus") && (
                 <div className="p-3 border rounded-md bg-secondary/50 mt-4">
                   <FormItem>
                     <FormLabel>{t.form.labels.overallAuthStatus}</FormLabel>
-                    <p className="text-sm pt-1 font-semibold">{form.watch("overallAuthStatus")}</p>
+                    <p className="text-sm pt-1 font-semibold">
+                      {form.watch("overallAuthStatus")}
+                    </p>
                   </FormItem>
                 </div>
               )}
@@ -310,10 +403,13 @@ export default function DomainForm({ onSubmit, isLoading = false }: DomainFormPr
                 <AlertDescription>
                   <p>{t.form.sections.serverConfig.mainCf}</p>
                   <code className="block text-xs bg-muted p-2 rounded mt-2 whitespace-pre-wrap">
-                    smtpd_sasl_auth_enable = yes<br />
+                    smtpd_sasl_auth_enable = yes
+                    <br />
                     smtpd_sasl_local_domain = $mydomain
                   </code>
-                  <p className="mt-2">{t.form.sections.serverConfig.restartPostfix}</p>
+                  <p className="mt-2">
+                    {t.form.sections.serverConfig.restartPostfix}
+                  </p>
                 </AlertDescription>
               </Alert>
             </CardContent>
@@ -324,18 +420,30 @@ export default function DomainForm({ onSubmit, isLoading = false }: DomainFormPr
         {watchProvider && (
           <Card>
             <CardHeader>
-              <CardTitle>{t.form.sections.reputationMonitoring.title}</CardTitle>
+              <CardTitle>
+                {t.form.sections.reputationMonitoring.title}
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-               <p className="text-sm text-muted-foreground">{t.form.sections.reputationMonitoring.description}</p>
+              <p className="text-sm text-muted-foreground">
+                {t.form.sections.reputationMonitoring.description}
+              </p>
               <Button variant="link" asChild className="p-0 h-auto">
-                <a href="https://postmaster.google.com/" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://postmaster.google.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {t.form.buttons.googlePostmaster}
                 </a>
               </Button>
               <br />
               <Button variant="link" asChild className="p-0 h-auto">
-                <a href="https://sendersupport.olc.protection.outlook.com/snds/" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://sendersupport.olc.protection.outlook.com/snds/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {t.form.buttons.microsoftSNDS}
                 </a>
               </Button>

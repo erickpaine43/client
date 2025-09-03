@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Tag } from "lucide-react";
@@ -25,28 +24,28 @@ interface PersonalizationTagsProps {
   className?: string;
 }
 
-export default function PersonalizationTags({ 
-  onInsertTag, 
-  label = "Personalization Tags", 
-  className = ""
+export default function PersonalizationTags({
+  onInsertTag,
+  label = "Personalization Tags",
+  className = "",
 }: PersonalizationTagsProps) {
   const handleTagClick = (tag: string, event?: React.BaseSyntheticEvent) => {
     event?.preventDefault();
     onInsertTag(tag);
-    toast.message('Tag inserted', {
+    toast.message("Tag inserted", {
       description: `${tag} has been inserted into your template.`,
     });
   };
-  
+
   return (
     <div className={className}>
       {label && <Label>{label}</Label>}
       <div className="flex flex-wrap gap-2 mt-2">
-        {personalizationTags.map(tag => (
-          <Button 
+        {personalizationTags.map((tag) => (
+          <Button
             key={tag.id}
-            variant="outline" 
-            size="sm" 
+            variant="outline"
+            size="sm"
             onClick={(event) => handleTagClick(tag.tag, event)}
             className="text-xs"
           >

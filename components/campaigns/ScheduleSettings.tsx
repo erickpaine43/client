@@ -14,7 +14,13 @@ import {
 import { Button } from "../ui/button";
 import { copyText as t } from "./copy";
 import { ScheduleSettingsProps } from "@/types/campaigns";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 
 const daysOfWeek = [
   { id: 0, label: t.schedule.days.mon },
@@ -40,7 +46,9 @@ export function ScheduleSettings(props: ScheduleSettingsProps) {
             {daysOfWeek.map((day) => (
               <Button
                 key={day.id}
-                variant={selectedSendDays.includes(day.id) ? "default" : "outline"}
+                variant={
+                  selectedSendDays.includes(day.id) ? "default" : "outline"
+                }
                 size="sm"
                 onClick={(evt) => handleDayChange(day.id, evt)}
                 className="w-12"
@@ -91,7 +99,10 @@ export function ScheduleSettings(props: ScheduleSettingsProps) {
             render={({ field }) => (
               <FormItem>
                 <Label htmlFor="timezone">{t.schedule.timezone}</Label>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger id="timezone">
                       <SelectValue placeholder={t.schedule.selectTimezone} />
@@ -116,4 +127,3 @@ export function ScheduleSettings(props: ScheduleSettingsProps) {
     </Card>
   );
 }
-

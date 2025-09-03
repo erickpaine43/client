@@ -42,7 +42,6 @@ function OverviewBarChat() {
           </BarChart>
         </ResponsiveContainer>
       </div>
-    
     </>
   );
 }

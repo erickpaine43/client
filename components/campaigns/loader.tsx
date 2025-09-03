@@ -6,7 +6,9 @@ export default function Loader() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle><Skeleton className="h-8 w-48" /></CardTitle>
+          <CardTitle>
+            <Skeleton className="h-8 w-48" />
+          </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
           <Skeleton className="h-4 w-1/2" />

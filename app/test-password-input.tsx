@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
-import { PasswordInput } from '@/components/ui/password-input';
-import { PasswordStrength } from '@/lib/utils';
+import React, { useState } from "react";
+import { PasswordInput } from "@/components/ui/password-input";
+import { PasswordStrength } from "@/lib/utils";
 
 export default function TestPasswordInput() {
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [strength, setStrength] = useState<PasswordStrength | null>(null);
 
   const handleStrengthChange = (newStrength: PasswordStrength | null) => {
@@ -51,25 +51,25 @@ export default function TestPasswordInput() {
       <div className="mt-4 space-y-2">
         <h2 className="text-lg font-semibold">Test Cases:</h2>
         <button
-          onClick={() => setPassword('')}
+          onClick={() => setPassword("")}
           className="px-3 py-1 bg-gray-200 rounded mr-2"
         >
           Empty
         </button>
         <button
-          onClick={() => setPassword('abc')}
+          onClick={() => setPassword("abc")}
           className="px-3 py-1 bg-gray-200 rounded mr-2"
         >
           Weak
         </button>
         <button
-          onClick={() => setPassword('Password123')}
+          onClick={() => setPassword("Password123")}
           className="px-3 py-1 bg-gray-200 rounded mr-2"
         >
           Fair
         </button>
         <button
-          onClick={() => setPassword('Password123@#')}
+          onClick={() => setPassword("Password123@#")}
           className="px-3 py-1 bg-gray-200 rounded mr-2"
         >
           Good

@@ -13,8 +13,6 @@ function LeadsFilter() {
   return (
     <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-4 lg:space-y-0 lg:space-x-4 p-4 bg-white border rounded-lg shadow-sm">
       <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full lg:w-auto">
-     
-
         <Select>
           <SelectTrigger className="w-full sm:w-auto">
             <SelectValue placeholder="Filter by Status" />

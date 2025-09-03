@@ -43,7 +43,7 @@ interface OnboardingContextType {
 }
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(
-  undefined
+  undefined,
 );
 
 function OnboardingProvider({ children }: { children: ReactNode }) {
@@ -54,14 +54,14 @@ function OnboardingProvider({ children }: { children: ReactNode }) {
 
   const currentStepData = useMemo(
     () => steps.find((step) => step.id === currentStep) || null,
-    [steps, currentStep]
+    [steps, currentStep],
   );
 
   const markStepCompleted = useCallback((stepId: number) => {
     setSteps((prevSteps) =>
       prevSteps.map((step) =>
-        step.id === stepId ? { ...step, completed: true } : step
-      )
+        step.id === stepId ? { ...step, completed: true } : step,
+      ),
     );
   }, []);
 
@@ -87,7 +87,7 @@ function OnboardingProvider({ children }: { children: ReactNode }) {
         false
       );
     },
-    [currentStep, steps, totalSteps]
+    [currentStep, steps, totalSteps],
   );
 
   const contextValue = useMemo(
@@ -112,7 +112,7 @@ function OnboardingProvider({ children }: { children: ReactNode }) {
       goToPreviousStep,
       markStepCompleted,
       isStepAccessible,
-    ]
+    ],
   );
 
   return (

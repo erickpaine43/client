@@ -1,10 +1,17 @@
 "use client";
-import { useState, useEffect } from "react";
+
+import { use, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import EmailAccountForm, { EmailAccountFormValues } from "@/components/domains/email-account-form";
-import { DomainAccountCreationType, RelayType, VerificationStatus } from "@/types/domain";
+import EmailAccountForm, {
+  EmailAccountFormValues,
+} from "@/components/domains/email-account-form";
+import {
+  DomainAccountCreationType,
+  RelayType,
+  VerificationStatus,
+} from "@/types/domain";
 import { EmailProvider } from "@/components/domains/constants";
 import { WarmupStatus } from "@/types/mailbox";
 import { MailboxStatus } from "@/types/mailbox";
@@ -18,13 +25,19 @@ type EmailAccountFormInitialData = Partial<EmailAccountFormValues> & {
   };
 };
 
-
-function AccountSettingsClient({ domainId, accountId }: { domainId: string; accountId: string }) {
+function AccountSettingsClient({
+  params,
+}: {
+  params: Promise<{ domainId: string; accountId: string }>;
+}) {
+  const { domainId, accountId } = use(params);
   // The fetchAccountDetails function remains outside as helper
-  const fetchAccountDetails = async (accountId: string): Promise<EmailAccountFormInitialData> => {
+  const fetchAccountDetails = async (
+    accountId: string,
+  ): Promise<EmailAccountFormInitialData> => {
     console.log("Fetching account details for:", accountId);
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
     // Return mock data - replace with actual API call
     return {
       email: "sales@example.com",
@@ -46,17 +59,19 @@ function AccountSettingsClient({ domainId, accountId }: { domainId: string; acco
       warmupTargetDailyVolume: 500, // This was maxDailyEmails
       accountSetupStatus: "Configuration Complete",
       accountDeliverabilityStatus: "Checks Passed",
-      domainAuthStatus: { // Mocked domain auth status
+      domainAuthStatus: {
+        // Mocked domain auth status
         spfVerified: true,
         dkimVerified: true,
         dmarcVerified: true,
-      }
+      },
       // The 'metrics' object from the old mock is not part of EmailAccountFormValues
       // and would be handled by the separate "Performance Metrics" card if kept.
     };
   };
 
-  const [initialData, setInitialData] = useState<EmailAccountFormInitialData | null>(null);
+  const [initialData, setInitialData] =
+    useState<EmailAccountFormInitialData | null>(null);
   const [isLoading, setIsLoading] = useState(true); // For form submission
   const [isFetchingData, setIsFetchingData] = useState(true); // For initial data load
 
@@ -80,7 +95,7 @@ function AccountSettingsClient({ domainId, accountId }: { domainId: string; acco
     setIsLoading(true);
     console.log("Submitting account settings:", data);
     // TODO: Implement actual API call to update account settings
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API delay
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
     // On success:
     // toast.success("Account settings updated!");
     // On error:
@@ -89,11 +104,17 @@ function AccountSettingsClient({ domainId, accountId }: { domainId: string; acco
   };
 
   if (isFetchingData) {
-    return <div className="container mx-auto py-6">Loading account settings...</div>; // Or a proper skeleton loader
+    return (
+      <div className="container mx-auto py-6">Loading account settings...</div>
+    ); // Or a proper skeleton loader
   }
 
   if (!initialData) {
-    return <div className="container mx-auto py-6">Failed to load account settings. Please try again.</div>;
+    return (
+      <div className="container mx-auto py-6">
+        Failed to load account settings. Please try again.
+      </div>
+    );
   }
 
   return (
@@ -107,7 +128,9 @@ function AccountSettingsClient({ domainId, accountId }: { domainId: string; acco
         </Button>
         <div>
           <h1 className="text-3xl font-bold">Account Settings</h1>
-          <p className="text-muted-foreground">{initialData.email || `Account ID: ${accountId}`}</p>
+          <p className="text-muted-foreground">
+            {initialData.email || `Account ID: ${accountId}`}
+          </p>
         </div>
       </div>
 
@@ -125,11 +148,10 @@ function AccountSettingsClient({ domainId, accountId }: { domainId: string; acco
 }
 
 // Server component that fetches params and renders client component
-export default async function AccountSettingsPage({
+export default function AccountSettingsPage({
   params,
 }: {
   params: Promise<{ domainId: string; accountId: string }>;
 }) {
-  const { domainId, accountId } = await params;
-  return <AccountSettingsClient domainId={domainId} accountId={accountId} />;
+  return <AccountSettingsClient params={params} />;
 }

@@ -93,14 +93,14 @@ export function DashboardSidebar() {
                 pathname === item.href ||
                   (item.href !== "/dashboard" && pathname.startsWith(item.href))
                   ? "bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-medium"
-                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
+                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100",
               )}
               onClick={() => isMobile && setMobileOpen(false)}
             >
               <item.icon
                 className={cn(
                   "transition-all",
-                  collapsed ? "w-6 h-6 p-1" : "h-4 w-4"
+                  collapsed ? "w-6 h-6 p-1" : "h-4 w-4",
                 )}
               />
               {!collapsed && <span>{item.title}</span>}
@@ -109,11 +109,11 @@ export function DashboardSidebar() {
                   className={cn(
                     "ml-auto flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-medium",
                     item.badge.variant === "default" &&
-                    "bg-primary text-primary-foreground",
+                      "bg-primary text-primary-foreground",
                     item.badge.variant === "success" &&
-                    "bg-green-500 text-white",
+                      "bg-green-500 text-white",
                     item.badge.variant === "destructive" &&
-                    "bg-destructive text-destructive-foreground"
+                      "bg-destructive text-destructive-foreground",
                   )}
                 >
                   {item.badge.text}
@@ -127,8 +127,9 @@ export function DashboardSidebar() {
       {/* User Info */}
       <div className="mt-auto p-4 border-t border-gray-200 dark:border-gray-800">
         <div
-          className={`flex items-start md:items-center justify-between rounded-md p-2 ${collapsed ? "flex-col" : "flex-row"
-            }`}
+          className={`flex items-start md:items-center justify-between rounded-md p-2 ${
+            collapsed ? "flex-col" : "flex-row"
+          }`}
         >
           <div className="flex items-center">
             <div className="h-8 w-8 rounded-full overflow-hidden relative">
@@ -209,7 +210,7 @@ export function DashboardSidebar() {
       <div
         className={cn(
           "hidden md:flex h-full bg-gray-100 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex-col transition-all duration-300",
-          collapsed ? "w-20" : "w-64"
+          collapsed ? "w-20" : "w-64",
         )}
       >
         {content}

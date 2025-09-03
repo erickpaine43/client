@@ -2,25 +2,25 @@
 
 import React from "react";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { copyText as t } from "./copy";
-
-type EmailStepType = {
-  emailSubject?: string;
-  emailBody?: string;
-  delayDays?: number;
-  delayHours?: number;
-  condition?: "always" | "if_not_opened" | "if_not_clicked" | "if_not_replied";
-  type: "email" | "delay";
-};
+import type { EmailStepType } from "@/types/campaign";
 
 interface DelayStepProps {
   index: number;
   step: EmailStepType;
   onDaysChange: (value: number) => void;
   onHoursChange: (value: number) => void;
-  onConditionChange: (value: "always" | "if_not_opened" | "if_not_clicked" | "if_not_replied") => void;
+  onConditionChange: (
+    value: "always" | "if_not_opened" | "if_not_clicked" | "if_not_replied",
+  ) => void;
 }
 
 const conditionOptions = [
@@ -35,7 +35,7 @@ export function DelayStep({
   step,
   onDaysChange,
   onHoursChange,
-  onConditionChange
+  onConditionChange,
 }: DelayStepProps) {
   return (
     <div className="space-y-4 mt-4">
@@ -66,12 +66,15 @@ export function DelayStep({
         </div>
         <div className="space-y-2">
           <Label htmlFor={`condition-${index}`}>{t.delay.condition}</Label>
-          <Select onValueChange={onConditionChange} defaultValue={step.condition}>
+          <Select
+            onValueChange={onConditionChange}
+            defaultValue={step.condition}
+          >
             <SelectTrigger id={`condition-${index}`}>
               <SelectValue placeholder={t.delay.selectCondition} />
             </SelectTrigger>
             <SelectContent>
-              {conditionOptions.map(option => (
+              {conditionOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
@@ -83,4 +86,3 @@ export function DelayStep({
     </div>
   );
 }
-

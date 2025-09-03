@@ -49,7 +49,7 @@ export function TemplateForm({
   submitLoadingLabel = t.newTemplate.actions.creating,
 }: TemplateFormProps) {
   const lexicalEditorRef = useRef<LexicalEditorRef>(null);
-  
+
   const form = useForm<TemplateFormValues>({
     resolver: zodResolver(templateFormSchema),
     defaultValues: initialData || {
@@ -64,7 +64,7 @@ export function TemplateForm({
 
   const handleSubmit = async (
     data: TemplateFormValues,
-    event?: React.BaseSyntheticEvent
+    event?: React.BaseSyntheticEvent,
   ) => {
     event?.preventDefault();
     console.log("Body value to save:", data.body);
@@ -156,7 +156,7 @@ export function TemplateForm({
             )}
           />
         </div>
-        
+
         <FormField
           control={form.control}
           name="subject"

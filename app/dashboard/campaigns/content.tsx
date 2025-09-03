@@ -19,7 +19,9 @@ type CampaignsContentProps = {
   };
 };
 
-export default function CampaignsContent({ campaignsData }: CampaignsContentProps) {
+export default function CampaignsContent({
+  campaignsData,
+}: CampaignsContentProps) {
   const { summary, campaigns, page, pageSize, totalCampaigns } = campaignsData;
 
   return (
@@ -27,14 +29,31 @@ export default function CampaignsContent({ campaignsData }: CampaignsContentProp
       <CampaignsHeader />
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-        <SummaryCard title={t.summary.totalCampaigns} value={summary.totalCampaigns} />
-        <SummaryCard title={t.summary.activeCampaigns} value={summary.activeCampaigns} />
-        <SummaryCard title={t.summary.emailsSent} value={summary.emailsSent.toLocaleString()} />
-        <SummaryCard title={t.summary.totalReplies} value={summary.totalReplies} />
+        <SummaryCard
+          title={t.summary.totalCampaigns}
+          value={summary.totalCampaigns}
+        />
+        <SummaryCard
+          title={t.summary.activeCampaigns}
+          value={summary.activeCampaigns}
+        />
+        <SummaryCard
+          title={t.summary.emailsSent}
+          value={summary.emailsSent.toLocaleString()}
+        />
+        <SummaryCard
+          title={t.summary.totalReplies}
+          value={summary.totalReplies}
+        />
       </div>
 
       <div className="rounded-md border bg-white">
-        <CampaignsDataTable data={campaigns} page={page} pageSize={pageSize} totalCount={totalCampaigns} />
+        <CampaignsDataTable
+          data={campaigns}
+          page={page}
+          pageSize={pageSize}
+          totalCount={totalCampaigns}
+        />
       </div>
     </div>
   );

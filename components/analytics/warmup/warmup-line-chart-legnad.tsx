@@ -1,8 +1,4 @@
 function WarmUpLineChartLegend() {
-  return (
-    <div>
-      WarmUpLineChartLegend
-    </div>
-  );
+  return <div>WarmUpLineChartLegend</div>;
 }
 export default WarmUpLineChartLegend;

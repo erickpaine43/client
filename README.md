@@ -48,6 +48,7 @@ This project is configured for deployment on Cloudflare using the OpenNext adapt
 ### Deployment
 
 The application includes CI/CD setup that automatically deploys to Cloudflare:
+
 - **Push to main**: Deploys to production
 - **Pull Requests**: Deploys preview versions
 - **Manual deployment**: Via GitHub Actions
@@ -93,12 +94,15 @@ npm run upload
 ```
 
 ### Cloudflare Setup
+
 For complete Cloudflare configuration instructions:
+
 - 📖 **Cloudflare Setup Guide**: [`CLOUDFLARE-SETUP.md`](./CLOUDFLARE-SETUP.md)
 - 🔐 **GitHub Secrets Setup**: [`.github/SETUP-SECRETS.md`](./.github/SETUP-SECRETS.md)
 - 📋 **Workflow Documentation**: [`.github/workflows/README.md`](./.github/workflows/README.md)
 
 ## Current Deployment
+
 ✅ **Status**: Deployed and running
 🔗 **URL**: https://penguin-mails.mailspenguin.workers.dev
 

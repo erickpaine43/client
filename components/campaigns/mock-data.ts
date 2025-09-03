@@ -9,15 +9,27 @@ export const mockCampaigns: CampaignResponse[] = [
     clients: Array.from({ length: 2500 }, (_, i) => ({
       campaignId: 1,
       clientId: i + 1,
-      statusInCampaign: "ACTIVE"
+      statusInCampaign: "ACTIVE",
     })),
     emailEvents: [
-      ...Array.from({ length: 1285 }, () => ({ type: "SENT" as EmailEventType, timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000) })),
-      ...Array.from({ length: 840 }, () => ({ type: "OPENED" as EmailEventType, timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000) })),
-      ...Array.from({ length: 210 }, () => ({ type: "CLICKED" as EmailEventType, timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000) })),
-      ...Array.from({ length: 84 }, () => ({ type: "REPLIED" as EmailEventType, timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000) })),
+      ...Array.from({ length: 1285 }, () => ({
+        type: "SENT" as EmailEventType,
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      })),
+      ...Array.from({ length: 840 }, () => ({
+        type: "OPENED" as EmailEventType,
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      })),
+      ...Array.from({ length: 210 }, () => ({
+        type: "CLICKED" as EmailEventType,
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      })),
+      ...Array.from({ length: 84 }, () => ({
+        type: "REPLIED" as EmailEventType,
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      })),
     ],
-    updatedAt: new Date(Date.now() - (2 * 60 * 60 * 1000))
+    updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
   },
   {
     id: 2,
@@ -26,15 +38,27 @@ export const mockCampaigns: CampaignResponse[] = [
     clients: Array.from({ length: 1800 }, (_, i) => ({
       campaignId: 2,
       clientId: i + 1,
-      statusInCampaign: "ACTIVE"
+      statusInCampaign: "ACTIVE",
     })),
     emailEvents: [
-      ...Array.from({ length: 1800 }, () => ({ type: "SENT" as EmailEventType, timestamp: new Date() })),
-      ...Array.from({ length: 1170 }, () => ({ type: "OPENED" as EmailEventType, timestamp: new Date() })),
-      ...Array.from({ length: 432 }, () => ({ type: "CLICKED" as EmailEventType, timestamp: new Date() })),
-      ...Array.from({ length: 216 }, () => ({ type: "REPLIED" as EmailEventType, timestamp: new Date() })),
+      ...Array.from({ length: 1800 }, () => ({
+        type: "SENT" as EmailEventType,
+        timestamp: new Date(),
+      })),
+      ...Array.from({ length: 1170 }, () => ({
+        type: "OPENED" as EmailEventType,
+        timestamp: new Date(),
+      })),
+      ...Array.from({ length: 432 }, () => ({
+        type: "CLICKED" as EmailEventType,
+        timestamp: new Date(),
+      })),
+      ...Array.from({ length: 216 }, () => ({
+        type: "REPLIED" as EmailEventType,
+        timestamp: new Date(),
+      })),
     ],
-    updatedAt: new Date(Date.now() - (24 * 60 * 60 * 1000))
+    updatedAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
   },
   {
     id: 3,
@@ -43,10 +67,10 @@ export const mockCampaigns: CampaignResponse[] = [
     clients: Array.from({ length: 1200 }, (_, i) => ({
       campaignId: 3,
       clientId: i + 1,
-      statusInCampaign: "ACTIVE"
+      statusInCampaign: "ACTIVE",
     })),
     emailEvents: [],
-    updatedAt: new Date(Date.now() - (3 * 24 * 60 * 60 * 1000))
+    updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
   },
   {
     id: 4,
@@ -55,15 +79,27 @@ export const mockCampaigns: CampaignResponse[] = [
     clients: Array.from({ length: 1500 }, (_, i) => ({
       campaignId: 4,
       clientId: i + 1,
-      statusInCampaign: "ACTIVE"
+      statusInCampaign: "ACTIVE",
     })),
     emailEvents: [
-      ...Array.from({ length: 450 }, () => ({ type: "SENT" as EmailEventType, timestamp: new Date() })),
-      ...Array.from({ length: 280 }, () => ({ type: "OPENED" as EmailEventType, timestamp: new Date() })),
-      ...Array.from({ length: 85 }, () => ({ type: "CLICKED" as EmailEventType, timestamp: new Date() })),
-      ...Array.from({ length: 42 }, () => ({ type: "REPLIED" as EmailEventType, timestamp: new Date() })),
+      ...Array.from({ length: 450 }, () => ({
+        type: "SENT" as EmailEventType,
+        timestamp: new Date(),
+      })),
+      ...Array.from({ length: 280 }, () => ({
+        type: "OPENED" as EmailEventType,
+        timestamp: new Date(),
+      })),
+      ...Array.from({ length: 85 }, () => ({
+        type: "CLICKED" as EmailEventType,
+        timestamp: new Date(),
+      })),
+      ...Array.from({ length: 42 }, () => ({
+        type: "REPLIED" as EmailEventType,
+        timestamp: new Date(),
+      })),
     ],
-    updatedAt: new Date(Date.now() - (5 * 60 * 1000))
+    updatedAt: new Date(Date.now() - 5 * 60 * 1000),
   },
   {
     id: 5,
@@ -72,15 +108,27 @@ export const mockCampaigns: CampaignResponse[] = [
     clients: Array.from({ length: 2000 }, (_, i) => ({
       campaignId: 5,
       clientId: i + 1,
-      statusInCampaign: "ACTIVE"
+      statusInCampaign: "ACTIVE",
     })),
     emailEvents: [
-      ...Array.from({ length: 2000 }, () => ({ type: "SENT" as EmailEventType, timestamp: new Date() })),
-      ...Array.from({ length: 1400 }, () => ({ type: "OPENED" as EmailEventType, timestamp: new Date() })),
-      ...Array.from({ length: 600 }, () => ({ type: "CLICKED" as EmailEventType, timestamp: new Date() })),
-      ...Array.from({ length: 320 }, () => ({ type: "REPLIED" as EmailEventType, timestamp: new Date() })),
+      ...Array.from({ length: 2000 }, () => ({
+        type: "SENT" as EmailEventType,
+        timestamp: new Date(),
+      })),
+      ...Array.from({ length: 1400 }, () => ({
+        type: "OPENED" as EmailEventType,
+        timestamp: new Date(),
+      })),
+      ...Array.from({ length: 600 }, () => ({
+        type: "CLICKED" as EmailEventType,
+        timestamp: new Date(),
+      })),
+      ...Array.from({ length: 320 }, () => ({
+        type: "REPLIED" as EmailEventType,
+        timestamp: new Date(),
+      })),
     ],
-    updatedAt: new Date(Date.now() - (7 * 24 * 60 * 60 * 1000))
+    updatedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
   },
 ];
 
@@ -120,24 +168,25 @@ export const mockCampaignDetail = {
   replyRate: 6.5,
 };
 
-const editMockCampaign: Omit<CampaignResponse, 'event' | 'clients'> = mockCampaigns[0];
+const editMockCampaign: Omit<CampaignResponse, "event" | "clients"> =
+  mockCampaigns[0];
 
 export const mockCampaignEditDetail: CampaignFormValues = {
   ...editMockCampaign,
-  fromEmail: 'juan@gm.com',
-  fromName: 'juan',
-  timezone: '(GMT-01:00) Azores',
-  clients: ['julio@mail.com', 'pedro@gmail.com'],
+  fromEmail: "juan@gm.com",
+  fromName: "juan",
+  timezone: "(GMT-01:00) Azores",
+  clients: ["julio@mail.com", "pedro@gmail.com"],
   sendDays: [0, 2, 4, 6],
-  sendTimeStart: '07:30',
-  sendTimeEnd: '15:25',
+  sendTimeStart: "07:30",
+  sendTimeEnd: "15:25",
   steps: [
     {
       id: 1,
       campaignId: 1,
       emailSubject: "Initial Outreach",
       emailBody: "Quick question about your software",
-      condition: 'IF_NOT_OPENED',
+      condition: "IF_NOT_OPENED",
       delayDays: 1,
       delayHours: 2,
       sequenceOrder: 0,
@@ -148,7 +197,7 @@ export const mockCampaignEditDetail: CampaignFormValues = {
       campaignId: 1,
       emailSubject: "Follow-up 1",
       emailBody: "Re: Quick question about your software",
-      condition: 'IF_NOT_REPLIED',
+      condition: "IF_NOT_REPLIED",
       delayDays: 1,
       delayHours: 1,
       sequenceOrder: 1,
@@ -162,11 +211,11 @@ export const mockCampaignEditDetail: CampaignFormValues = {
       delayDays: 1,
       delayHours: 4,
       sequenceOrder: 2,
-      condition: 'IF_NOT_CLICKED',
-      templateId: 0
+      condition: "IF_NOT_CLICKED",
+      templateId: 0,
     },
   ],
-  createdAt: new Date(Date.now() - (3 * 60 * 60 * 1000))
+  createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000),
 };
 
 export const mockStatsComparison = {
@@ -238,5 +287,5 @@ export const timezones = [
   "(GMT+10:00) Brisbane, Canberra, Melbourne, Sydney",
   "(GMT+11:00) Magadan, Solomon Is., New Caledonia",
   "(GMT+12:00) Auckland, Wellington",
-  "(GMT+13:00) Nuku'alofa"
+  "(GMT+13:00) Nuku'alofa",
 ];

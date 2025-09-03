@@ -42,11 +42,11 @@ export default function InboxMessages({ emails }: Props) {
           <div className="flex-1 min-w-0">
             <div className="flex justify-between items-baseline mb-1">
               <h3
-                className={`font-medium ${
-                  !email.read ? "font-semibold" : ""
-                }`}
+                className={`font-medium ${!email.read ? "font-semibold" : ""}`}
               >
-                {email.client?.firstName && email.client?.lastName && `${email.client.firstName} ${email.client.lastName}`}
+                {email.client?.firstName &&
+                  email.client?.lastName &&
+                  `${email.client.firstName} ${email.client.lastName}`}
               </h3>
               <div className="flex items-center space-x-2 justify-content-center">
                 <EmailActions email={email} />
@@ -55,10 +55,10 @@ export default function InboxMessages({ emails }: Props) {
                 </span>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground mb-1">{email.client?.email || "Unknown Email"}</p>
-            <h4
-              className={`text-sm mb-1 ${!email.read ? "font-medium" : ""}`}
-            >
+            <p className="text-sm text-muted-foreground mb-1">
+              {email.client?.email || "Unknown Email"}
+            </p>
+            <h4 className={`text-sm mb-1 ${!email.read ? "font-medium" : ""}`}>
               {email.subject}
             </h4>
             <p className="text-sm text-muted-foreground line-clamp-1">

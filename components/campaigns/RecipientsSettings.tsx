@@ -7,13 +7,12 @@ import { Upload } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { copyText as t } from "./copy";
+import type { RecipientsSettingsProps } from "@/types/campaign";
 
-type RecipientsSettingsProps = {
-  recipients: string;
-  handleChangeRecipients: (evt: React.ChangeEvent<HTMLTextAreaElement>) => void;
-};
-
-export function RecipientsSettings({ recipients, handleChangeRecipients }: RecipientsSettingsProps) {
+export function RecipientsSettings({
+  recipients,
+  handleChangeRecipients,
+}: RecipientsSettingsProps) {
   // TODO: Implement actual file upload/CSV parsing/manual entry logic
 
   return (
@@ -33,7 +32,9 @@ export function RecipientsSettings({ recipients, handleChangeRecipients }: Recip
           {/* Add functionality to switch to manual input */}
         </div>
         <div className="space-y-2">
-          <Label htmlFor="manual-recipients">{t.recipients.manualInputLabel}</Label>
+          <Label htmlFor="manual-recipients">
+            {t.recipients.manualInputLabel}
+          </Label>
           <Textarea
             id="manual-recipients"
             placeholder={t.recipients.textareaPlaceholder}
@@ -50,4 +51,3 @@ export function RecipientsSettings({ recipients, handleChangeRecipients }: Recip
     </Card>
   );
 }
-

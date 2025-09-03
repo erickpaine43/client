@@ -37,8 +37,6 @@ function NewFolderForm({ onSubmit, onCancel, className }: NewFolderFormProps) {
 
   return (
     <div className={cn("space-y-4", className)}>
-
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <FormField

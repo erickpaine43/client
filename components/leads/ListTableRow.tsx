@@ -85,7 +85,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
       <TableCell>
         <span
           className={`inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
-            list.status
+            list.status,
           )}`}
         >
           {getStatusIcon(list.status)}

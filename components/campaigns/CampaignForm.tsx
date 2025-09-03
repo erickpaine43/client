@@ -41,7 +41,7 @@ export function CampaignForm({
   readOnly = false,
 }: CampaignFormProps) {
   const [steps, setSteps] = useState<CampaignSteps>(
-    initialData?.steps || defaultSteps
+    initialData?.steps || defaultSteps,
   );
   const [sendingAccounts, setSendingAccounts] = useState<
     { value: string; label: string }[]
@@ -49,10 +49,10 @@ export function CampaignForm({
   const [timezones, setTimezones] = useState<string[]>([]);
   const [loadingAccounts, setLoadingAccounts] = useState<boolean>(true);
   const [currentEditingStep, setCurrentEditingStep] = useState<number | null>(
-    null
+    null,
   );
   const [recipients, setRecipients] = useState<string>(
-    initialData?.clients.join("\n") ?? ""
+    initialData?.clients.join("\n") ?? "",
   );
   const emailBodyRef = useRef<HTMLTextAreaElement>(null!);
 
@@ -89,7 +89,7 @@ export function CampaignForm({
 
   // Handle form submission
   const handleSubmit: SubmitHandler<CampaignFormValues> = async (
-    data: CampaignFormValues
+    data: CampaignFormValues,
   ) => {
     await onSubmit(data);
   };
@@ -137,7 +137,6 @@ export function CampaignForm({
     }
   };
 
-
   const handleInsertTag = (index: number, tag: string) => {
     const textarea = emailBodyRef.current;
     if (!textarea || !steps[index]?.templateId) return;
@@ -154,7 +153,7 @@ export function CampaignForm({
 
   const handleDayChange = (
     dayId: number,
-    evt: MouseEvent<HTMLButtonElement>
+    evt: MouseEvent<HTMLButtonElement>,
   ) => {
     evt.preventDefault();
     const newSendDays = sendDays.includes(dayId)
@@ -163,7 +162,7 @@ export function CampaignForm({
     form.setValue(
       "sendDays",
       newSendDays.sort((a: number, b: number) => a - b),
-      { shouldValidate: true }
+      { shouldValidate: true },
     );
   };
 
@@ -187,7 +186,7 @@ export function CampaignForm({
     form.setValue(
       "metrics.recipients",
       { sent: clientsData.length, total: clientsData.length },
-      { shouldValidate: true }
+      { shouldValidate: true },
     );
   };
 
@@ -244,7 +243,9 @@ export function CampaignForm({
                   steps={steps}
                   currentEditingStep={currentEditingStep}
                   emailBodyRef={emailBodyRef}
-                  stepErrors={form.formState.errors.steps as FieldErrors<CampaignSteps>}
+                  stepErrors={
+                    form.formState.errors.steps as FieldErrors<CampaignSteps>
+                  }
                   templates={[]}
                   actions={{
                     onMoveStepUp: moveStepUp,

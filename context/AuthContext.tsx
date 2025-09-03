@@ -2,11 +2,12 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { User, AuthContextType, UserRole } from "@/types";
-import { useSignIn, useSignUp } from '@niledatabase/react';
+import { useSignIn, useSignUp } from "@niledatabase/react";
+import { auth } from "@niledatabase/client";
 import {
-  auth
-} from '@niledatabase/client';
-import { getUserProfile, ProfileActionResponse } from "@/lib/actions/profileActions";
+  getUserProfile,
+  ProfileActionResponse,
+} from "@/lib/actions/profileActions";
 import { NileUser, mapNileUserToFormData } from "@/lib/utils";
 
 // NileDB Session interface
@@ -25,11 +26,11 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   error: null,
-  login: async () => { },
-  signup: async () => { },
-  logout: async () => { },
-  updateUser: () => { },
-  refreshUserData: async () => { },
+  login: async () => {},
+  signup: async () => {},
+  logout: async () => {},
+  updateUser: () => {},
+  refreshUserData: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -45,7 +46,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             const session = await auth.getSession();
             const typedSession = session as SessionData;
             if (typedSession?.user) {
-              console.log("[AuthContext] Session retrieved after login:", typedSession?.user?.id);
+              console.log(
+                "[AuthContext] Session retrieved after login:",
+                typedSession?.user?.id,
+              );
               // Set basic user data from session first (fast)
               const basicUser = mapSessionToUser(typedSession);
               setUser(basicUser);
@@ -53,12 +57,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
               // Fetch full user profile in background without blocking UI
               try {
-                const profileResponse: ProfileActionResponse<NileUser> = await getUserProfile();
+                const profileResponse: ProfileActionResponse<NileUser> =
+                  await getUserProfile();
                 if (profileResponse.success && profileResponse.data) {
                   const fullUser = mapNileUserToUser(profileResponse.data);
                   setUser(fullUser);
                 } else if (profileResponse.error) {
-                  console.warn("Failed to fetch full profile after login:", profileResponse.error.message);
+                  console.warn(
+                    "Failed to fetch full profile after login:",
+                    profileResponse.error.message,
+                  );
                 }
               } catch (profileError) {
                 console.warn("Profile fetch error after login:", profileError);
@@ -76,7 +84,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("SignIn error:", error);
       setAuthError(error);
     },
-    callbackUrl: "/dashboard"
+    callbackUrl: "/dashboard",
   });
 
   const signUpHook = useSignUp({
@@ -95,16 +103,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setAuthError(error);
     },
     createTenant: true,
-    callbackUrl: "/dashboard/settings"
+    callbackUrl: "/dashboard/settings",
   });
 
   const mapSessionToUser = (session: SessionData): User => {
     if (!session.user) {
-      throw new Error('Session user data is missing');
+      throw new Error("Session user data is missing");
     }
     const userData = session.user;
     // Map NileDB fields: name, givenName, familyName, picture
-    const displayName = userData.name || userData.email.split('@')[0];
+    const displayName = userData.name || userData.email.split("@")[0];
     const givenName = userData.givenName;
     const familyName = userData.familyName;
 
@@ -127,7 +135,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         avatar: userData.picture,
         timezone: "UTC",
         language: "en",
-      }
+      },
     };
   };
 
@@ -137,11 +145,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return {
       uid: nileUser.id,
       email: nileUser.email,
-      displayName: formData.name || nileUser.email.split('@')[0],
+      displayName: formData.name || nileUser.email.split("@")[0],
       photoURL: formData.avatarUrl,
       token: nileUser.id,
       claims: {
-        name: formData.name || nileUser.email.split('@')[0],
+        name: formData.name || nileUser.email.split("@")[0],
         role: UserRole.USER,
         companyId: "default-company",
         companyName: "Default Company",
@@ -153,7 +161,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         avatar: formData.avatarUrl,
         timezone: "UTC",
         language: "en",
-      }
+      },
     };
   };
 
@@ -168,7 +176,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const signup = async (email: string, password: string, _firstName?: string, _lastName?: string, _companyName?: string): Promise<void> => {
+  const signup = async (
+    email: string,
+    password: string,
+    _firstName?: string,
+    _lastName?: string,
+    _companyName?: string,
+  ): Promise<void> => {
     setAuthError(null);
     try {
       await signUpHook({ email, password });
@@ -196,8 +210,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       ...userUpdate,
       profile: {
         ...user.profile,
-        ...userUpdate.profile
-      }
+        ...userUpdate.profile,
+      },
     };
 
     setUser(updatedUser);
@@ -205,13 +219,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const refreshUserData = async () => {
     try {
-      const profileResponse: ProfileActionResponse<NileUser> = await getUserProfile();
+      const profileResponse: ProfileActionResponse<NileUser> =
+        await getUserProfile();
       if (profileResponse.success && profileResponse.data) {
         const fullUser = mapNileUserToUser(profileResponse.data);
         setUser(fullUser);
         setAuthError(null);
       } else if (profileResponse.error) {
-        console.warn("Failed to refresh user profile:", profileResponse.error.message);
+        console.warn(
+          "Failed to refresh user profile:",
+          profileResponse.error.message,
+        );
         throw new Error(profileResponse.error.message);
       }
     } catch (error) {
@@ -225,7 +243,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const session = await auth.getSession();
         const typedSession = session as SessionData;
-            if (typedSession?.user) {
+        if (typedSession?.user) {
           // Set basic user data from session first (fast)
           const basicUser = mapSessionToUser(typedSession);
           setUser(basicUser);
@@ -233,17 +251,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
           // Fetch full user profile in background without blocking UI
           try {
-            const profileResponse: ProfileActionResponse<NileUser> = await getUserProfile();
+            const profileResponse: ProfileActionResponse<NileUser> =
+              await getUserProfile();
             if (profileResponse.success && profileResponse.data) {
               const fullUser = mapNileUserToUser(profileResponse.data);
               setUser(fullUser);
               setAuthError(null);
             } else if (profileResponse.error) {
-              console.warn("Failed to fetch full profile:", profileResponse.error.message);
+              console.warn(
+                "Failed to fetch full profile:",
+                profileResponse.error.message,
+              );
               // Keep basic user data, don't show error to user as they can proceed
             }
           } catch (profileError) {
-            console.warn("Profile fetch error (continuing with basic data):", profileError);
+            console.warn(
+              "Profile fetch error (continuing with basic data):",
+              profileError,
+            );
             // Keep basic user data, don't affect loading state
           }
         } else {
@@ -259,7 +284,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, error: authError, login, signup, logout, updateUser, refreshUserData }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        error: authError,
+        login,
+        signup,
+        logout,
+        updateUser,
+        refreshUserData,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

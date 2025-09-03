@@ -35,7 +35,6 @@ import { LinkNode, AutoLinkNode } from "@lexical/link";
 import lexicalEditorTheme from "../theme/lexicalEditorTheme";
 import LinkClickHandler from "../toolbar/LinkClickHandler";
 
-
 export const INSERT_IMAGE_COMMAND = createCommand("INSERT_IMAGE_COMMAND");
 export const INDENT_CONTENT_COMMAND = createCommand("INDENT_CONTENT_COMMAND");
 export const OUTDENT_CONTENT_COMMAND = createCommand("OUTDENT_CONTENT_COMMAND");
@@ -89,7 +88,7 @@ function CommandHandler() {
         }
         return true;
       },
-      1
+      1,
     );
 
     const unregisterInsertImage = editor.registerCommand(
@@ -97,12 +96,14 @@ function CommandHandler() {
       (payload: { src: string; alt?: string }) => {
         const selection = $getSelection();
         if (selection) {
-          const textNode = $createTextNode(`[Image: ${payload.alt || payload.src}]`);
+          const textNode = $createTextNode(
+            `[Image: ${payload.alt || payload.src}]`,
+          );
           $insertNodes([textNode]);
         }
         return true;
       },
-      1
+      1,
     );
 
     return () => {
@@ -145,7 +146,7 @@ const LexicalEditor = forwardRef<LexicalEditorRef, LexicalEditorProps>(
   ({ value, onChange, placeholder }, ref) => {
     const editorRef = useRef<LexicalEditorType | null>(null);
 
- const initialConfig = {
+    const initialConfig = {
       namespace: "TemplateEditor",
       theme: {
         ...lexicalEditorTheme,
@@ -195,47 +196,47 @@ const LexicalEditor = forwardRef<LexicalEditorRef, LexicalEditorProps>(
     return (
       <LexicalComposer initialConfig={initialConfig}>
         <LinkClickHandler>
-        <div
-          ref={(el) => {
-            if (el) {
-              const composer = el.querySelector("[data-lexical-editor]");
-              if (composer && (composer as any).__lexicalEditor) {
-                editorRef.current = (composer as any).__lexicalEditor;
+          <div
+            ref={(el) => {
+              if (el) {
+                const composer = el.querySelector("[data-lexical-editor]");
+                if (composer && (composer as any).__lexicalEditor) {
+                  editorRef.current = (composer as any).__lexicalEditor;
+                }
               }
-            }
-          }}
-        >
-          <LexicalSync value={value} />
-          <CommandHandler />
-          <Toolbar />
-          <RichTextPlugin
-            contentEditable={
-              <ContentEditable
-                className="min-h-[150px] border rounded p-2"
-                data-lexical-editor="true"
-              />
-            }
-            placeholder={
-              <div className="text-muted-foreground">{placeholder}</div>
-            }
-            ErrorBoundary={LexicalErrorBoundary}
-          />
-          <HistoryPlugin />
-          <ListPlugin />
-          <LinkPlugin />
-          <OnChangePlugin
-            onChange={(editorState: EditorState, editor) => {
-              editorState.read(() => {
-                const html = $generateHtmlFromNodes(editor, null);
-                onChange(html);
-              });
             }}
-          />
-        </div>
+          >
+            <LexicalSync value={value} />
+            <CommandHandler />
+            <Toolbar />
+            <RichTextPlugin
+              contentEditable={
+                <ContentEditable
+                  className="min-h-[150px] border rounded p-2"
+                  data-lexical-editor="true"
+                />
+              }
+              placeholder={
+                <div className="text-muted-foreground">{placeholder}</div>
+              }
+              ErrorBoundary={LexicalErrorBoundary}
+            />
+            <HistoryPlugin />
+            <ListPlugin />
+            <LinkPlugin />
+            <OnChangePlugin
+              onChange={(editorState: EditorState, editor) => {
+                editorState.read(() => {
+                  const html = $generateHtmlFromNodes(editor, null);
+                  onChange(html);
+                });
+              }}
+            />
+          </div>
         </LinkClickHandler>
       </LexicalComposer>
     );
-  }
+  },
 );
 
 LexicalEditor.displayName = "LexicalEditor";

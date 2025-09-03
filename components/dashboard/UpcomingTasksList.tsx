@@ -1,11 +1,11 @@
-import React from 'react';
-import { Calendar, Mail, FileText, Globe } from 'lucide-react';
+import React from "react";
+import { Calendar, Mail, FileText, Globe } from "lucide-react";
 
 // Define the expected data structure for props
 interface Task {
   id: number;
   title: string;
-  type: 'campaign' | 'email' | 'template' | 'domain';
+  type: "campaign" | "email" | "template" | "domain";
   dueDate: string;
 }
 
@@ -16,13 +16,13 @@ interface UpcomingTasksListProps {
 // Helper function to get the appropriate icon for each task type (remains the same)
 const getTaskIcon = (type: string) => {
   switch (type) {
-    case 'campaign':
+    case "campaign":
       return <Calendar size={16} className="text-blue-500" />;
-    case 'email':
+    case "email":
       return <Mail size={16} className="text-green-500" />;
-    case 'template':
+    case "template":
       return <FileText size={16} className="text-purple-500" />;
-    case 'domain':
+    case "domain":
       return <Globe size={16} className="text-orange-500" />;
     default:
       return <Calendar size={16} className="text-gray-500" />;
@@ -43,16 +43,21 @@ const UpcomingTasksList: React.FC<UpcomingTasksListProps> = ({ tasks }) => {
                 {getTaskIcon(task.type)}
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-800">{task.title}</p>
+                <p className="text-sm font-medium text-gray-800">
+                  {task.title}
+                </p>
                 <p className="text-xs text-gray-500">
-                  {task.type.charAt(0).toUpperCase() + task.type.slice(1)} · {task.dueDate}
+                  {task.type.charAt(0).toUpperCase() + task.type.slice(1)} ·{" "}
+                  {task.dueDate}
                 </p>
               </div>
             </li>
           ))}
-          {/* Add a message if no tasks */} 
+          {/* Add a message if no tasks */}
           {tasks.length === 0 && (
-            <li className="py-3 text-sm text-gray-500 text-center">No upcoming tasks found.</li>
+            <li className="py-3 text-sm text-gray-500 text-center">
+              No upcoming tasks found.
+            </li>
           )}
         </ul>
       </div>
@@ -61,4 +66,3 @@ const UpcomingTasksList: React.FC<UpcomingTasksListProps> = ({ tasks }) => {
 };
 
 export default UpcomingTasksList;
-

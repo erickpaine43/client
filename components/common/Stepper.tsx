@@ -34,7 +34,7 @@ function Stepper<T>({ context }: StepperProps<T>) {
 
   if (!setCurrentStep || !steps || typeof currentStep !== "number") {
     throw new Error(
-      "setCurrentStep, steps, and currentStep must be properly defined in the context"
+      "setCurrentStep, steps, and currentStep must be properly defined in the context",
     );
   }
 
@@ -62,7 +62,7 @@ function Stepper<T>({ context }: StepperProps<T>) {
                         isCompleted && !isActive,
                       "bg-muted/50 opacity-50 cursor-not-allowed hover:bg-muted/50":
                         !isAccessible,
-                    }
+                    },
                   )}
                 >
                   <div
@@ -72,7 +72,7 @@ function Stepper<T>({ context }: StepperProps<T>) {
                         [step.color]: isActive,
                         "bg-green-500": isCompleted && !isActive,
                         "bg-muted-foreground/30": !isAccessible,
-                      }
+                      },
                     )}
                   >
                     {isCompleted ? (

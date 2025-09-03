@@ -31,20 +31,23 @@ const eslintConfig = defineConfig([
     "jsconfig.json",
     "*.lock",
     "package.json",
-    "*.yml"
+    "*.yml",
   ]),
   // Next.js and TypeScript configuration
   {
     name: "next-typescript-config",
     files: ["**/*.{js,jsx,ts,tsx}"],
-    extends: [...compat.config({
-      extends: [
-        "next/typescript"
-      ],
-    })],
+    extends: [
+      ...compat.config({
+        extends: ["next", "next/typescript", "prettier"],
+      }),
+    ],
     rules: {
       "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_" },
+      ],
       // Additional best practice rules
       "@/prefer-const": "error",
       "@typescript-eslint/no-var-requires": "error",
