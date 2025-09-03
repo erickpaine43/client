@@ -1,7 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
+// The selector of image should accept any url, and as we use our own VPS we should not have issues with extra calls due unoptimized images
 "use client";
 
 import { useState, useCallback } from "react";
-import Image from "next/image";
 
 // Default avatar options
 const defaultAvatars = [
@@ -90,7 +91,7 @@ export default function AvatarSelector({
       onAvatarChange(src);
       setShowCustomInput(false);
     },
-    [onAvatarChange],
+    [onAvatarChange]
   );
 
   const handleCustomUrlApply = useCallback(() => {
@@ -117,11 +118,10 @@ export default function AvatarSelector({
             disabled={disabled}
           >
             <div className="h-16 rounded-full relative  overflow-hidden">
-              <Image
+              <img
                 src={avatar.src}
                 alt={avatar.alt}
-                fill
-                objectFit="cover"
+                className="h-16 rounded-full object-cover"
                 onError={(e) =>
                   ((e.target as HTMLImageElement).src =
                     "https://via.placeholder.com/64x64?text=No+Image")
@@ -168,11 +168,10 @@ export default function AvatarSelector({
         <div className="flex items-center gap-4">
           <p className="text-sm text-gray-500">Current avatar:</p>
           <div className="w-16 h-16 relative rounded-full overflow-hidden border border-gray-200">
-            <Image
+            <img
               src={currentAvatarUrl}
               alt="Current avatar"
-              fill
-              objectFit="cover"
+              className="h-16 rounded-full object-cover"
               onError={(e) =>
                 ((e.target as HTMLImageElement).src =
                   "https://via.placeholder.com/64x64?text=No+Image")

@@ -265,7 +265,7 @@ function ProfileForm() {
       fetchProfileData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authUser, authLoading, retryFetchProfile]);
+  }, [authUser, authLoading]);
 
   // Auto-retry when coming back online
   useEffect(() => {
@@ -280,7 +280,7 @@ function ProfileForm() {
 
       return () => clearTimeout(timer);
     }
-  }, [isOnline, wasOffline, profileError, retryFetchProfile]);
+  }, [isOnline, wasOffline, profileError]);
 
   // Show offline notification
   useEffect(() => {
