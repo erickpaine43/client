@@ -1,5 +1,5 @@
 import ConversationsList from "@/components/inbox/ConversationsList";
-import InboxFilter from "@/components/inbox/InboxFilter";
+import InboxFilter from "@/components/inbox/filters/InboxFilter";
 import SmartInsights from "@/components/inbox/smart-insights";
 
 export default async function InboxPage({

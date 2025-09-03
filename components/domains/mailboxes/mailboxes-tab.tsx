@@ -11,7 +11,7 @@ import {
 import { getStatusColor, mailboxes } from "@/lib/data/domains.mock";
 import { Mail, Plus } from "lucide-react";
 import Link from "next/link";
-import MailboxActions from "../MailboxActions";
+import MailboxActions from "../actions/MailboxActions";
 import MailboxesFilter from "./MailboxesFilter";
 
 function MailboxesTab() {

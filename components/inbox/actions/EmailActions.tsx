@@ -1,6 +1,6 @@
 import { Archive, MailOpen, Trash2 } from "lucide-react";
 import { Email } from "@/app/dashboard/inbox/schemas/schemas";
-import { TooltipButton } from "./tooltip-button";
+import { TooltipButton } from "../tooltip-button";
 import { showCustomToast } from "@/components/ui/custom/custom-toast";
 import { JSX } from "react";
 

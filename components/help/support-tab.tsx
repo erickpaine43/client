@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail } from "lucide-react";
-import ContactForm from "./contact-form";
+import ContactForm from "./forms/ContactForm";
 
 function SupportTab() {
   return (
