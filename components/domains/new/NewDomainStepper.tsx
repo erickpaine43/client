@@ -1,4 +1,4 @@
-import Stepper from "@/components/common/Stepper";
+import Stepper from "@/components/ui/Stepper";
 import { AddDomainContext } from "@/context/AddDomainContext";
 
 function NewDomainStepper() {

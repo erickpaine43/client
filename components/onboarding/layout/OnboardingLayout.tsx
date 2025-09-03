@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useOnboarding } from "@/context/onboarding-context";
 import { HelpSection } from "../HelpSection";
 import { StepCard } from "../steps/StepCard";
-import { Stepper, Step } from "@/components/common/Stepper";
+import { Stepper, Step } from "@/components/ui/Stepper";
 import { createContext } from "react";
 
 interface OnboardingStepperContext {
