@@ -4,7 +4,7 @@ import { Control, UseFormRegister, FieldErrors } from "react-hook-form";
 import {
   campaignFormSchema,
   campaignStepSchema,
-} from "@/components/campaigns/schemaValidations";
+} from "@/components/campaigns/data/schemaValidations";
 import { CampaignEventCondition } from "@/types/campaign";
 import { Template } from "@/types";
 

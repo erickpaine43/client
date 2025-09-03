@@ -3,7 +3,7 @@
 import React, { MouseEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Trash2, ArrowUp, ArrowDown } from "lucide-react";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../../data/copy";
 
 interface StepHeaderProps {
   stepIndex: number;

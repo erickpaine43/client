@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../data/copy";
 import { CampaignEventCondition } from "@/types/campaign";
 
 interface DelaySettingsProps {

@@ -13,9 +13,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Form } from "@/components/ui/form";
 import { FileText, Clock, Users } from "lucide-react";
 import { CampaignDetailsForm } from "./CampaignDetailsForm";
-import { ScheduleSettings } from "./ScheduleSettings";
-import { RecipientsSettings } from "./RecipientsSettings";
-import { copyText as t } from "./copy";
+import { ScheduleSettings } from "../settings/ScheduleSettings";
+import { RecipientsSettings } from "../settings/RecipientsSettings";
+import { copyText as t } from "../data/copy";
 import {
   getCampaignSendingAccountsAction,
   getTimezonesMockAction,
@@ -26,10 +26,10 @@ import {
   CampaignSteps,
   PartialCampaignStep,
 } from "@/types/campaign";
-import { CampaignDetails } from "./CampaignDetails";
-import { EmailSecuenceSettings } from "./EmailSecuenceSettings";
-import { defaultSteps } from "./const-mock";
-import Loader from "./loader";
+import { CampaignDetails } from "../details/CampaignDetails";
+import { EmailSecuenceSettings } from "../settings/EmailSecuenceSettings";
+import { defaultSteps } from "../data/const-mock";
+import Loader from "../steps/compositions/loader";
 import { CampaignEventCondition } from "@/types/campaign";
 
 export function CampaignForm({

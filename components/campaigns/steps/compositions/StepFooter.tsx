@@ -3,7 +3,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../../data/copy";
 
 interface StepFooterProps {
   stepType: "email" | "delay";

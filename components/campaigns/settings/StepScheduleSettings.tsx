@@ -1,7 +1,7 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Toggle } from "@/components/ui/toggle";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../data/copy";
 
 interface ScheduleSettingsProps {
   sendDays: number[];

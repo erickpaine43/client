@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../data/copy";
 import type { RecipientsSettingsProps } from "@/types/campaign";
 
 export function RecipientsSettings({

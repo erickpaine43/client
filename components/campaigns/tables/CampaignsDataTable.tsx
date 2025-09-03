@@ -49,7 +49,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Link from "next/link";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../data/copy";
 import { CampaignResponse, CampaignStatus } from "@/types/campaign";
 import { toast } from "sonner";
 import { useSearchParams, useRouter } from "next/navigation";

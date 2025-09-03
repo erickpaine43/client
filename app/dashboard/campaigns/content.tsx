@@ -1,7 +1,7 @@
 import SummaryCard from "@/components/analytics/SummaryCard";
-import CampaignsHeader from "@/components/campaigns/CampaignsHeader";
-import { CampaignsDataTable } from "@/components/campaigns/CampaignsDataTable";
-import { copyText as t } from "@/components/campaigns/copy";
+import CampaignsHeader from "@/components/campaigns/tables/CampaignsHeader";
+import { CampaignsDataTable } from "@/components/campaigns/tables/CampaignsDataTable";
+import { copyText as t } from "@/components/campaigns/data/copy";
 import { type CampaignResponse } from "@/types/campaign";
 
 type CampaignsContentProps = {

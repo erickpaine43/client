@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../data/copy";
 import {
   DropdownMenu,
   DropdownMenuContent,

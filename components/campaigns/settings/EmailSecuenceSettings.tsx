@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { Button } from "../ui/button";
-import { copyText as t } from "./copy";
+import { Button } from "@/components/ui/button";
+import { copyText as t } from "../data/copy";
 import { EmailSecuenceSettingsProps } from "@/types/campaigns";
 import { FileText } from "lucide-react";
-import { SequenceStep } from "./SequenceStep";
+import { SequenceStep } from "../steps/compositions/SequenceStep";
 
 export function EmailSecuenceSettings({
   steps,

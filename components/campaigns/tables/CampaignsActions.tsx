@@ -2,8 +2,8 @@
 import { campaignsData } from "@/lib/data/campaigns";
 import { Copy, Edit, Eye, Pause, Play } from "lucide-react";
 import Link from "next/link";
-import AlertDialogDelete from "../common/AlertDialogDelete";
-import { Button } from "../ui/button";
+import AlertDialogDelete from "../../common/AlertDialogDelete";
+import { Button } from "../../ui/button";
 export enum CampaignActionsEnum {
   VIEW = "view",
   EDIT = "edit",

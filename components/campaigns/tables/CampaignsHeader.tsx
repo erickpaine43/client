@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../data/copy";
 
 export default function CampaignsHeader() {
   return (

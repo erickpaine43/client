@@ -1,10 +1,10 @@
-import CampaignTableSkeleton from "@/components/campaigns/CampaignTableSkeleton";
-import CampaignsFilter from "@/components/campaigns/CampaignsFilter";
+import CampaignTableSkeleton from "@/components/campaigns/tables/CampaignTableSkeleton";
+import CampaignsFilter from "@/components/campaigns/tables/CampaignsFilter";
 import CampaignsTable, {
   campaignColumns,
-} from "@/components/campaigns/CampaignsTable";
+} from "@/components/campaigns/tables/CampaignsTable";
 import StatsCardSkeleton from "@/components/dashboard/StatsCardSkeleton";
-import StatsCards from "@/components/campaigns/StatsCards";
+import StatsCards from "@/components/campaigns/reports/StatsCards";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";

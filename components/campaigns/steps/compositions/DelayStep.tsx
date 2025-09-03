@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../../data/copy";
 import type { EmailStepType } from "@/types/campaign";
 
 interface DelayStepProps {

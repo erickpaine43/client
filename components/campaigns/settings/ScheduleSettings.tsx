@@ -11,8 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "../ui/button";
-import { copyText as t } from "./copy";
+import { Button } from "@/components/ui/button";
+import { copyText as t } from "../data/copy";
 import { ScheduleSettingsProps } from "@/types/campaigns";
 import {
   FormControl,
@@ -20,7 +20,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
+} from "@/components/ui/form";
 
 const daysOfWeek = [
   { id: 0, label: t.schedule.days.mon },

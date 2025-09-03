@@ -1,5 +1,5 @@
 import { CampaignDisplay as Campaign } from "@/lib/data/campaigns";
-import CampaignsActions, { CampaignActionsEnum } from "../CampaignsActions";
+import CampaignsActions, { CampaignActionsEnum } from "../tables/CampaignsActions";
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import BackArrow from "@/components/common/BackArrow";

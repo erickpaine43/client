@@ -2,9 +2,9 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { EmailStep } from "@/components/campaigns/EmailStep";
-import { StepHeader } from "@/components/campaigns/StepHeader";
-import { DelaySettings } from "./DelaySettings";
+import { EmailStep } from "./EmailStep";
+import { StepHeader } from "./StepHeader";
+import { DelaySettings } from "../../settings/DelaySettings";
 import { SequenceStepProps } from "@/types/campaigns";
 
 export function SequenceStep({

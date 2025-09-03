@@ -4,7 +4,7 @@
 import {
   mockCampaignEditDetail,
   timezones,
-} from "@/components/campaigns/mock-data";
+} from "@/components/campaigns/data/mock-data";
 import { CampaignFormValues } from "@/types";
 
 // Define the structure for campaign data based on the screenshot
