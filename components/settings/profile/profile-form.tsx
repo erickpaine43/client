@@ -39,7 +39,7 @@ import {
   type ProfileFormData,
   allTimezones,
 } from "@/lib/utils";
-import AvatarSelector from "@/components/settings/AvatarSelector";
+import AvatarSelector from "@/components/settings/profile/AvatarSelector";
 
 // Remove company and keep timezone for preferences section
 const profileSchema = z.object({

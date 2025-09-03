@@ -10,7 +10,7 @@ import {
 import { useOnboarding } from "@/context/onboarding-context";
 import { cn } from "@/lib/utils";
 import { CheckCircle } from "lucide-react";
-import { NavigationButtons } from "./NavigationButtons";
+import { NavigationButtons } from "../navigation/NavigationButtons";
 import { Step } from "./Step";
 import { OnboardingStep } from "@/context/onboarding-context";
 

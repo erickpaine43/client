@@ -1,9 +1,9 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
 import { useOnboarding } from "@/context/onboarding-context";
-import { HelpSection } from "./HelpSection";
-import { StepCard } from "./StepCard";
-import { Stepper } from "./Stepper";
+import { HelpSection } from "../HelpSection";
+import { StepCard } from "../steps/StepCard";
+import { Stepper } from "../steps/Stepper";
 
 export function OnboardingLayout() {
   const { currentStepData } = useOnboarding();

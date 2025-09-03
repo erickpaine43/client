@@ -1,10 +1,10 @@
-export { ActionButtons } from "./ActionButtons";
+export { ActionButtons } from "./navigation/ActionButtons";
 export { HelpSection } from "./HelpSection";
-export { NavigationButtons } from "./NavigationButtons";
-export { OnboardingLayout } from "./OnboardingLayout";
+export { NavigationButtons } from "./navigation/NavigationButtons";
+export { OnboardingLayout } from "./layout/OnboardingLayout";
 export { PromotionAlert } from "./PromotionAlert";
-export { Step } from "./Step";
-export { StepCard } from "./StepCard";
-export { Stepper } from "./Stepper";
+export { Step } from "./steps/Step";
+export { StepCard } from "./steps/StepCard";
+export { Stepper } from "./steps/Stepper";
 export { VideoTutorial } from "./VideoTutorial";
 export type { OnboardingStep } from "@/types/onboarding";

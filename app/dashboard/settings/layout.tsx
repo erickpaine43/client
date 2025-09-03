@@ -1,5 +1,5 @@
 import Icon from "@/components/ui/Icon";
-import NavLink from "@/components/settings/nav-link";
+import NavLink from "@/components/settings/general/nav-link";
 import { Separator } from "@/components/ui/separator";
 import { Bell, CreditCard, Shield, Target, User } from "lucide-react";
 

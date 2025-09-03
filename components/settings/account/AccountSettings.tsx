@@ -8,8 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import PasswordSettingsForm from "./PasswordSettingsForm";
-import { ProfileFormValues, ProfileSettingsForm } from "./ProfileSettingsForm";
+import PasswordSettingsForm from "../profile/PasswordSettingsForm";
+import { ProfileFormValues, ProfileSettingsForm } from "../profile/ProfileSettingsForm";
 
 interface AccountSettingsProps extends React.HTMLAttributes<HTMLDivElement> {
   userProfile: ProfileFormValues & { role: string; avatarUrl?: string };

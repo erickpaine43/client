@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AccountSettings from "@/components/settings/AccountSettings";
-import AppearanceSettings from "@/components/settings/AppearanceSettings";
-import NotificationSettings from "@/components/settings/NotificationSettings";
-import { ComplianceSettings } from "@/components/settings/ComplianceSettings";
-import BillingSettings from "@/components/settings/BillingSettings";
+import AccountSettings from "@/components/settings/account/AccountSettings";
+import AppearanceSettings from "@/components/settings/appearance/AppearanceSettings";
+import NotificationSettings from "@/components/settings/general/NotificationSettings";
+import { ComplianceSettings } from "@/components/settings/general/ComplianceSettings";
+import BillingSettings from "@/components/settings/billing/BillingSettings";
 
 interface UserProfileData {
   name: string;
