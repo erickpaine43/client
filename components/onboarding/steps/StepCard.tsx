@@ -1,74 +1,35 @@
-"use client";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { useOnboarding } from "@/context/onboarding-context";
-import { cn } from "@/lib/utils";
-import { CheckCircle } from "lucide-react";
-import { NavigationButtons } from "../navigation/NavigationButtons";
-import { Step } from "./Step";
-import { OnboardingStep } from "@/context/onboarding-context";
+import React from "react";
 
-interface StepHeaderProps {
-  step: OnboardingStep;
+interface StepCardProps {
+  number: number;
+  title: string;
+  description: string;
+  IconComponent: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  isLast?: boolean;
 }
 
-function StepHeader({ step }: StepHeaderProps) {
-  const IconComponent = step.icon;
+export const StepCard: React.FC<StepCardProps> = ({
+  number,
+  title,
+  description,
+  IconComponent,
+  isLast = false,
+}) => (
+  <div className="relative bg-[#1e293b] rounded-xl p-6 border border-gray-700 shadow-lg flex flex-col gap-4">
+    <div className="flex items-center justify-between">
+      <IconComponent className="w-10 h-10 text-blue-400" />
+      <span className="text-4xl">🐧</span>
+    </div>
+    <div className="flex items-center gap-2">
+      <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-sm flex items-center justify-center font-bold">
+        {number}
+      </span>
+      <h3 className="text-lg font-semibold">{title}</h3>
+    </div>
+    <p className="text-gray-400">{description}</p>
 
-  return (
-    <CardHeader className="border-b bg-gradient-to-r from-muted/50 to-blue-50 p-8">
-      <div className="flex items-center space-x-4">
-        <div
-          className={cn(
-            "flex h-16 w-16 items-center justify-center rounded-2xl",
-            step.completed ? "bg-green-500" : step.color,
-          )}
-        >
-          {step.completed ? (
-            <CheckCircle className="h-8 w-8 text-white" />
-          ) : (
-            <IconComponent className="h-8 w-8 text-white" />
-          )}
-        </div>
-        <div className="flex-1">
-          <div className="flex items-center space-x-3">
-            <CardTitle className="text-2xl font-bold">{step.title}</CardTitle>
-            {step.completed && (
-              <Badge
-                variant="secondary"
-                className="bg-green-100 text-green-800"
-              >
-                ✅ Completed
-              </Badge>
-            )}
-          </div>
-          <p className="text-lg text-muted-foreground">{step.subtitle}</p>
-        </div>
-      </div>
-    </CardHeader>
-  );
-}
-
-export function StepCard() {
-  const { currentStepData } = useOnboarding();
-
-  if (!currentStepData) return null;
-
-  return (
-    <Card className="w-full p-0">
-      <StepHeader step={currentStepData} />
-      <CardContent className="p-8">
-        <Step step={currentStepData} />
-      </CardContent>
-      <CardFooter className="border-t bg-muted/30 p-8">
-        <NavigationButtons />
-      </CardFooter>
-    </Card>
-  );
-}
+    {!isLast && (
+      <div className="hidden md:block absolute top-1/2 right-[-25px] w-15 h-0.5 bg-blue-500/50 z-10" />
+    )}
+  </div>
+);

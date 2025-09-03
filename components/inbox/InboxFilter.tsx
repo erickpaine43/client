@@ -1,5 +1,5 @@
 "use client";
-import { Filter, SearchInput } from "@/components/common/Filter";
+import { Filter, SearchInput } from "@/components/ui/Filter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

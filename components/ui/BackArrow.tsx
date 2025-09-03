@@ -1,6 +1,6 @@
 "use client";
 import { ArrowLeft } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "./button";
 import { useRouter } from "next/navigation";
 
 function BackArrow({ url }: { url?: string }) {

@@ -1,4 +1,4 @@
-import { DropDownFilter, Filter } from "@/components/common/Filter";
+import { DropDownFilter, Filter } from "@/components/ui/Filter";
 import Icon from "@/components/ui/Icon";
 import { Calendar, Filter as FilterIcon } from "lucide-react";
 

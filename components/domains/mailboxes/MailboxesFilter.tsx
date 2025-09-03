@@ -2,7 +2,7 @@ import {
   DropDownFilter,
   Filter,
   SearchInput,
-} from "@/components/common/Filter";
+} from "@/components/ui/Filter";
 import { Button } from "@/components/ui/button";
 
 function MailboxesFilter() {

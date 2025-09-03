@@ -120,5 +120,6 @@ function Stepper<T>({ context }: StepperProps<T>) {
   );
 }
 
+export { Stepper };
 export default Stepper;
 export type { StepperContextType, Step };

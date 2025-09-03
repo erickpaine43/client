@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { Calendar, CheckIcon, Search, Server } from "lucide-react";
 import { useState } from "react";
-import DatePicker from "../../common/DatePicker";
+import DatePicker from "../../ui/DatePicker";
 import { availableMailboxes } from "@/lib/data/campaigns";
 
 enum CampaignStatus {

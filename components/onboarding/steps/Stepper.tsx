@@ -1,97 +1,124 @@
 "use client";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
-import { useOnboarding } from "@/context/onboarding-context";
 import { cn } from "@/lib/utils";
-import { CheckCircle } from "lucide-react";
-import { Fragment } from "react";
-import { OnboardingStep } from "@/context/onboarding-context";
+import { Check, LucideIcon } from "lucide-react";
+import { Context, useContext } from "react";
 
-interface StepIndicatorProps {
-  step: OnboardingStep;
-  isActive: boolean;
-  isAccessible: boolean;
-  onClick: () => void;
+interface Step {
+  number: number;
+  title: string;
+  icon: LucideIcon;
+  color: string;
 }
 
-function StepIndicator({
-  step,
-  isActive,
-  isAccessible,
-  onClick,
-}: StepIndicatorProps) {
-  const IconComponent = step.icon;
-
-  return (
-    <Button
-      onClick={onClick}
-      disabled={!isAccessible}
-      size="icon"
-      variant={step.completed ? "default" : isActive ? "default" : "outline"}
-      className={cn(
-        "h-12 w-12 rounded-xl transition-all",
-        step.completed && "bg-green-500 hover:bg-green-600 text-white",
-        isActive && !step.completed && cn(step.color, "text-white"),
-        !isAccessible && "opacity-50 cursor-not-allowed",
-      )}
-      aria-label={`Step ${step.id}: ${step.title}`}
-    >
-      {step.completed ? (
-        <CheckCircle className="h-6 w-6" />
-      ) : (
-        <IconComponent className="h-6 w-6" />
-      )}
-    </Button>
-  );
+interface BaseStepperContextType {
+  setCurrentStep: (step: number) => void;
+  steps: Step[];
+  currentStep: number;
 }
 
-export function Stepper() {
-  const { currentStep, totalSteps, steps, setCurrentStep, isStepAccessible } =
-    useOnboarding();
+type StepperContextType<T> = BaseStepperContextType & T;
 
-  if (steps.length === 0) return null;
+interface StepperProps<T> {
+  context: Context<StepperContextType<T> | null>;
+}
+
+function Stepper<T>({ context }: StepperProps<T>) {
+  const contextValue = useContext(context);
+
+  if (!contextValue) {
+    throw new Error("Stepper must be used within a valid context provider");
+  }
+
+  const { setCurrentStep, steps, currentStep } = contextValue;
+
+  if (!setCurrentStep || !steps || typeof currentStep !== "number") {
+    throw new Error(
+      "setCurrentStep, steps, and currentStep must be properly defined in the context",
+    );
+  }
 
   return (
-    <Card className="w-full">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <CardTitle className="text-xl font-semibold">Setup Progress</CardTitle>
-        <Badge variant="secondary" className="text-sm font-medium">
-          Step {currentStep} of {totalSteps}
-        </Badge>
-      </CardHeader>
+    <div className="px-8 py-6">
+      <div className="flex items-center justify-center">
+        {steps.map((step, index) => {
+          const StepIcon = step.icon;
+          const isActive = currentStep === step.number;
+          const isCompleted = currentStep > step.number;
+          const isAccessible = currentStep >= step.number;
 
-      <CardContent className="space-y-6">
-        <div className="flex items-center justify-between">
-          {steps.map((step, index) => (
-            <Fragment key={step.id}>
-              <StepIndicator
-                step={step}
-                isActive={currentStep === step.id}
-                isAccessible={isStepAccessible(step.id)}
-                onClick={() =>
-                  isStepAccessible(step.id) && setCurrentStep(step.id)
-                }
-              />
-              {index < totalSteps - 1 && (
-                <Separator
-                  orientation="horizontal"
+          return (
+            <div key={step.number} className="flex items-center">
+              <div className="flex flex-col items-center">
+                <Button
+                  onClick={() => isAccessible && setCurrentStep(step.number)}
+                  disabled={!isAccessible}
+                  variant="ghost"
                   className={cn(
-                    "flex-1 mx-2 h-1 rounded-full transition-all",
-                    step.completed ? "bg-green-500" : "bg-muted",
+                    "flex flex-col items-center space-y-2 p-4 h-auto w-auto rounded-xl transition-all hover:bg-background/80",
+                    {
+                      "bg-background shadow-lg scale-105": isActive,
+                      "bg-background shadow-sm hover:shadow-md":
+                        isCompleted && !isActive,
+                      "bg-muted/50 opacity-50 cursor-not-allowed hover:bg-muted/50":
+                        !isAccessible,
+                    },
                   )}
-                />
+                >
+                  <div
+                    className={cn(
+                      "w-12 h-12 rounded-xl flex items-center justify-center transition-colors",
+                      {
+                        [step.color]: isActive,
+                        "bg-green-500": isCompleted && !isActive,
+                        "bg-muted-foreground/30": !isAccessible,
+                      },
+                    )}
+                  >
+                    {isCompleted ? (
+                      <Check className="w-6 h-6 text-white" />
+                    ) : (
+                      <StepIcon className="w-6 h-6 text-white" />
+                    )}
+                  </div>
+                  <div className="text-center min-w-[100px]">
+                    <p
+                      className={cn("text-sm font-medium", {
+                        "text-foreground": isActive,
+                        "text-foreground/70": isCompleted && !isActive,
+                        "text-muted-foreground": !isAccessible,
+                      })}
+                    >
+                      {step.title}
+                    </p>
+                    <p
+                      className={cn("text-xs", {
+                        "text-muted-foreground": isActive,
+                        "text-muted-foreground/60": !isActive,
+                      })}
+                    >
+                      Step {step.number} of {steps.length}
+                    </p>
+                  </div>
+                </Button>
+              </div>
+              {index < steps.length - 1 && (
+                <div className="flex items-center px-4">
+                  <div
+                    className={cn("w-48 h-1 rounded-full transition-colors", {
+                      "bg-green-500": isCompleted,
+                      "bg-muted": !isCompleted,
+                    })}
+                  />
+                </div>
               )}
-            </Fragment>
-          ))}
-        </div>
-        <Progress
-          value={(currentStep / totalSteps) * 100}
-          className="h-2 [&>div]:bg-gradient-to-r [&>div]:from-blue-500 [&>div]:to-green-500 [&>div]:rounded-full [&>div]:transition-all [&>div]:duration-500"
-        />
-      </CardContent>
-    </Card>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
+
+export { Stepper };
+export type { StepperContextType, Step };

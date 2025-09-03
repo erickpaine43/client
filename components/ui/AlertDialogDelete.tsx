@@ -11,8 +11,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../ui/alert-dialog";
-import { Button } from "../ui/button";
+} from "./alert-dialog";
+import { Button } from "./button";
 import { useState } from "react";
 import { toast } from "sonner";
 /**
