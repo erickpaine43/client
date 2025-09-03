@@ -1,9 +1,9 @@
 "use client";
 
 import { ActionButtons } from "../navigation/ActionButtons";
-import { PromotionAlert } from "../PromotionAlert";
+import { PromotionAlert } from "../components/PromotionAlert";
 import { OnboardingStep } from "@/context/onboarding-context";
-import { VideoTutorial } from "../VideoTutorial";
+import { VideoTutorial } from "../components/VideoTutorial";
 
 interface StepProps {
   step: OnboardingStep;

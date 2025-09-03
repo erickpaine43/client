@@ -10,7 +10,7 @@ import { PasswordInput } from "@/components/ui/custom/password-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { User } from "lucide-react";
-import { LandingLayout } from "@/components/layout/landing";
+import { LandingLayout } from "@/components/layout/components/landing";
 import { signupContent } from "./content";
 import type { PasswordStrength } from "@/lib/utils";
 import { AuthTemplate } from "@/components/auth/AuthTemplate";

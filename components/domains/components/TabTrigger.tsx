@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TabsTrigger } from "../ui/tabs";
+import { TabsTrigger } from "../../ui/tabs";
 
 function TabTrigger({
   id,

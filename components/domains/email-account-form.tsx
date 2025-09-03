@@ -36,8 +36,8 @@ import {
 import { Label } from "@/components/ui/label";
 // import { Switch } from "@/components/ui/switch"; // No longer directly used by this page
 import { Progress } from "@/components/ui/progress";
-import { emailAccountCopy } from "../domains/copy";
-import { EmailProvider } from "../domains/constants";
+import { emailAccountCopy } from "./copy";
+import { EmailProvider } from "./components/constants";
 import { WarmupStatus } from "@/types/mailbox";
 
 const copy = emailAccountCopy.form;

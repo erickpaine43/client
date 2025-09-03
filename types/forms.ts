@@ -7,7 +7,7 @@ import {
   EmailProvider,
   DnsProvider,
   DkimManagementType,
-} from "@/components/domains/constants";
+} from "@/components/domains/components/constants";
 import { WarmupStatus } from "@/types/mailbox";
 import { RelayType, DomainAccountCreationType } from "@/types/domain";
 

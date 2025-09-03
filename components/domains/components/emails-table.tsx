@@ -24,7 +24,7 @@ import {
   Edit,
   RefreshCcw,
 } from "lucide-react";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../copy";
 import { EmailAccount } from "@/types";
 import Link from "next/link";
 

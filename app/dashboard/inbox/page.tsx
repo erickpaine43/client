@@ -1,6 +1,6 @@
-import ConversationsList from "@/components/inbox/ConversationsList";
+import ConversationsList from "@/components/inbox/components/ConversationsList";
 import InboxFilter from "@/components/inbox/filters/InboxFilter";
-import SmartInsights from "@/components/inbox/smart-insights";
+import SmartInsights from "@/components/inbox/components/smart-insights";
 
 export default async function InboxPage({
   searchParams,

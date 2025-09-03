@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getTagColor, knowledgeBaseArticles } from "@/lib/data/knowledge.mock";
 import { ArrowRight, ExternalLink } from "lucide-react";
-import { DropDownFilter, Filter, SearchInput } from "../ui/custom/Filter";
+import { DropDownFilter, Filter, SearchInput } from "../../ui/custom/Filter";
 import { useState, useMemo } from "react";
 
 function KnowledgeTab() {

@@ -1,5 +1,5 @@
-import { DomainsHeader } from "@/components/domains/header";
-import OverviewCards from "@/components/domains/overview-cards";
+import { DomainsHeader } from "@/components/domains/components/header";
+import OverviewCards from "@/components/domains/components/overview-cards";
 import { DomainsTable } from "@/components/domains/domains-table";
 import { type Domain } from "@/types/domain";
 

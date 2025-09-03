@@ -1,4 +1,4 @@
-import ListsTab from "@/components/leads/listsTab";
+import ListsTab from "@/components/leads/components/listsTab";
 import StatsCardSkeleton from "@/components/dashboard/cards/StatsCardSkeleton";
 import Icon from "@/components/ui/custom/Icon";
 import StatsCard from "@/components/analytics/cards/StatsCard";
@@ -6,8 +6,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { leadsStats, leadsTabs } from "@/lib/data/leads";
 import { Suspense } from "react";
-import CSVUploadTab from "@/components/leads/CSVUploadTab";
-import ContactsTab from "@/components/leads/ContactsTab";
+import CSVUploadTab from "@/components/leads/components/CSVUploadTab";
+import ContactsTab from "@/components/leads/components/ContactsTab";
 
 function LeadsPage() {
   return (

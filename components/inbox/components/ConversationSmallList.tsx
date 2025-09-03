@@ -1,3 +1,4 @@
+import React from "react";
 import { conversations, getTagColor } from "@/lib/data/Inbox.mock";
 import ConversationsListHeader from "./ConversationsListHeader";
 import { cn, getRelativeTime } from "@/lib/utils";

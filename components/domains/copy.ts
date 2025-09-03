@@ -1,4 +1,4 @@
-import { EmailProvider } from "./constants";
+import { EmailProvider } from "./components/constants";
 
 export const copyText = {
   title: "Domains",

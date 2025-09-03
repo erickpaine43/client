@@ -1,6 +1,6 @@
-import Navbar from "../landing/navbar";
-import Footer from "../landing/footer";
-import GoToTopButton from "../landing/go-to-top";
+import Navbar from "./navbar";
+import Footer from "./footer";
+import GoToTopButton from "./go-to-top";
 
 export const LandingLayout = ({
   children,

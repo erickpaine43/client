@@ -6,7 +6,7 @@ import { PasswordInput } from "@/components/ui/custom/password-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogIn, User } from "lucide-react";
-import { LandingLayout } from "@/components/layout/landing";
+import { LandingLayout } from "@/components/layout/components/landing";
 import { loginContent } from "./content";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";

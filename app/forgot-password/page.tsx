@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { KeyRound, MailCheck, User } from "lucide-react"; // Icons
-import { LandingLayout } from "@/components/layout/landing";
+import { LandingLayout } from "@/components/layout/components/landing";
 import { forgotPasswordContent } from "./content";
 import { AuthTemplate } from "@/components/auth/AuthTemplate";
 import { useAuth } from "@/context/AuthContext";

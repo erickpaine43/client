@@ -1,4 +1,4 @@
-import DomainsTab from "@/components/domains/domains-tab";
+import DomainsTab from "@/components/domains/components/domains-tab";
 
 function page() {
   return <DomainsTab />;

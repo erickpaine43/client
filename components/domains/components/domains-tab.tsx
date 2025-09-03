@@ -5,7 +5,7 @@ import { domains, getStatusColor } from "@/lib/data/domains.mock";
 import { cn } from "@/lib/utils";
 import { AlertTriangle, Check, Copy, Plus, X } from "lucide-react";
 import Link from "next/link";
-import DeleteDomainDialog from "./dialogs/DeleteDomainDialog";
+import DeleteDomainDialog from "../dialogs/DeleteDomainDialog";
 
 export const getRecordIcon = (status: string) => {
   switch (status) {

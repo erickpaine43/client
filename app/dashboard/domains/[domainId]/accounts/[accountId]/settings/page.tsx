@@ -12,7 +12,7 @@ import {
   RelayType,
   VerificationStatus,
 } from "@/types/domain";
-import { EmailProvider } from "@/components/domains/constants";
+import { EmailProvider } from "@/components/domains/components/constants";
 import { WarmupStatus } from "@/types/mailbox";
 import { MailboxStatus } from "@/types/mailbox";
 

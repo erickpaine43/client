@@ -1,5 +1,5 @@
-import OverviewCards from "@/components/domains/overview-cards";
-import TabTrigger from "@/components/domains/TabTrigger";
+import OverviewCards from "@/components/domains/components/overview-cards";
+import TabTrigger from "@/components/domains/components/TabTrigger";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsList } from "@/components/ui/tabs";
 import { tabs } from "@/lib/data/domains.mock";

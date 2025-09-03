@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { DnsProvider } from "@/components/domains/constants";
+import { DnsProvider } from "@/components/domains/components/constants";
 
 interface CreateDomainData {
   domain: string;

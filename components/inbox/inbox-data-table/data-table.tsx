@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DataTableToolbar } from "./datatable-toolbar";
-import EmailTableSkeleton from "../EmailTableSkeleton";
+import EmailTableSkeleton from "../components/EmailTableSkeleton";
 import { Email } from "@/app/dashboard/inbox/schemas/schemas";
 
 interface DataTableProps<TData> {

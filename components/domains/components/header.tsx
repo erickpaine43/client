@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../copy";
 import Link from "next/link";
 
 export function DomainsHeader() {

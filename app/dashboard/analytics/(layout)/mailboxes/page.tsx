@@ -1,5 +1,5 @@
 import AnalyticsNavLinks from "@/components/analytics/nav/AnalyticsNavLinks";
-import AnalyticsStatistics from "@/components/analytics/analytics-statistics";
+import AnalyticsStatistics from "@/components/analytics/components/analytics-statistics";
 import CampaignPerformanceTable from "@/components/campaigns/analytics/CampaignPerformanceTable";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";

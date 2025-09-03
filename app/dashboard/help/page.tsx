@@ -1,8 +1,8 @@
-import GlossaryTab from "@/components/help/glossary-tab";
-import KnowledgeTab from "@/components/help/knowledge-tab";
-import OurServicesTab from "@/components/help/our-services-tab";
-import SupportTab from "@/components/help/support-tab";
-import VideoTutorialsTab from "@/components/help/video-tutorial-tab";
+import GlossaryTab from "@/components/help/components/glossary-tab";
+import KnowledgeTab from "@/components/help/components/knowledge-tab";
+import OurServicesTab from "@/components/help/components/our-services-tab";
+import SupportTab from "@/components/help/components/support-tab";
+import VideoTutorialsTab from "@/components/help/components/video-tutorial-tab";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Book, BookOpen, Briefcase, MessageCircle, Video } from "lucide-react";
 const tabs = [
