@@ -1,4 +1,4 @@
-import { DropDownFilter, Filter } from "@/components/Filter";
+import { DropDownFilter, Filter } from "@/components/common/Filter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {

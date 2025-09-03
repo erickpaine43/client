@@ -6,7 +6,7 @@ import { videoTutorials } from "@/lib/data/knowledge.mock";
 import { cn } from "@/lib/utils";
 import { Play } from "lucide-react";
 import Image from "next/image";
-import { DropDownFilter, Filter } from "../Filter";
+import { DropDownFilter, Filter } from "../common/Filter";
 import { useState, useMemo } from "react";
 
 function VideoTutorialsTab() {

@@ -1,5 +1,5 @@
-import { DropDownFilter, Filter } from "@/components/Filter";
-import Icon from "@/components/Icon";
+import { DropDownFilter, Filter } from "@/components/common/Filter";
+import Icon from "@/components/ui/Icon";
 import { Calendar, Filter as FilterIcon } from "lucide-react";
 
 function WarmupAnalyticsFilter() {

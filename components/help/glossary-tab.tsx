@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { glossaryTerms } from "@/lib/data/knowledge.mock";
-import { DropDownFilter, Filter, SearchInput } from "../Filter";
+import { DropDownFilter, Filter, SearchInput } from "../common/Filter";
 import { useState, useMemo } from "react";
 
 const getTypeVariant = (type: string) => {

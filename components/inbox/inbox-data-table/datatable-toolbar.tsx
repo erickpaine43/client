@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, Search, User } from "lucide-react";
 import { DataTableViewOptions } from "./datatable-view-options";
-import { getUniqueFiltersAction } from "../../actions";
+import { getUniqueFiltersAction } from "@/app/dashboard/inbox/actions";
 import { ModalFilter } from "./modal-filter";
 import { useAuth } from "@/context/AuthContext";
 

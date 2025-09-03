@@ -1,4 +1,4 @@
-import Stepper from "@/components/Stepper";
+import Stepper from "@/components/common/Stepper";
 import { AddTemplateContext } from "@/context/AddTemplateContext";
 
 function NewTemplateStepper() {

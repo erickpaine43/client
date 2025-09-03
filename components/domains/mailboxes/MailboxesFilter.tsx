@@ -1,4 +1,4 @@
-import { DropDownFilter, Filter, SearchInput } from "@/components/Filter";
+import { DropDownFilter, Filter, SearchInput } from "@/components/common/Filter";
 import { Button } from "@/components/ui/button";
 
 function MailboxesFilter() {

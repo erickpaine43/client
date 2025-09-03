@@ -1,7 +1,7 @@
 import ListsTab from "@/components/leads/listsTab";
 import StatsCardSkeleton from "@/components/dashboard/StatsCardSkeleton";
-import Icon from "@/components/Icon";
-import StatsCard from "@/components/StatsCard";
+import Icon from "@/components/ui/Icon";
+import StatsCard from "@/components/common/StatsCard";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { leadsStats, leadsTabs } from "@/lib/data/leads";

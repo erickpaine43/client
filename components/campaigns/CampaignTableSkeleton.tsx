@@ -1,8 +1,8 @@
-import { Card, CardContent, CardHeader } from "./ui/card";
-import { Separator } from "./ui/separator";
-import { Skeleton } from "./ui/skeleton";
+import { Card, CardContent, CardHeader } from "../ui/card";
+import { Separator } from "../ui/separator";
+import { Skeleton } from "../ui/skeleton";
 
-function TableSkeleton({
+function CampaignTableSkeleton({
   title = "Table Skeleton",
   className = "",
   columns,
@@ -83,4 +83,4 @@ function TableSkeleton({
   );
 }
 
-export default TableSkeleton;
+export default CampaignTableSkeleton;

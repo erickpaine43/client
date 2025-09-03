@@ -1,7 +1,7 @@
 import { domains, mailboxes } from "@/lib/data/domains.mock";
 import { cn } from "@/lib/utils";
 import { CheckCircle, Clock, Globe, Mail } from "lucide-react";
-import StatsCard from "../StatsCard";
+import StatsCard from "../common/StatsCard";
 
 function OverviewCards() {
   const readyMailboxes = mailboxes.filter(

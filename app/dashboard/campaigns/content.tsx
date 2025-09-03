@@ -1,4 +1,4 @@
-import SummaryCard from "@/components/SummaryCard";
+import SummaryCard from "@/components/common/SummaryCard";
 import CampaignsHeader from "@/components/campaigns/CampaignsHeader";
 import { CampaignsDataTable } from "@/components/campaigns/CampaignsDataTable";
 import { copyText as t } from "@/components/campaigns/copy";

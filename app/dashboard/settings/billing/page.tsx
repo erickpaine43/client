@@ -1,4 +1,4 @@
-import Icon from "@/components/Icon";
+import Icon from "@/components/ui/Icon";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart3, CreditCard } from "lucide-react";
 import BillingTab from "./Billing-Tab";

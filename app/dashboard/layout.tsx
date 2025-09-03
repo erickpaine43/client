@@ -1,6 +1,6 @@
 import Header from "@/components/layout/DashboardHeader";
 import AppSideBar from "@/components/layout/Sidebar";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import React from "react";
 

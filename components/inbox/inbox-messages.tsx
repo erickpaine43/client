@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
 import { Star } from "lucide-react";
-import { Email } from "../schemas/schemas";
+import { Email } from "@/app/dashboard/inbox/schemas/schemas";
 import EmailActions from "./actions-email";
 import Link from "next/link";
 

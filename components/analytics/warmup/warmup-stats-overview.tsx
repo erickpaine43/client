@@ -1,4 +1,4 @@
-import StatsCard from "@/components/StatsCard";
+import StatsCard from "@/components/common/StatsCard";
 import { mockMailboxes } from "@/lib/data/analytics.mock";
 import { AlertTriangle, Mail, MessageSquare, Zap } from "lucide-react";
 

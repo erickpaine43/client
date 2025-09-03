@@ -1,4 +1,4 @@
-import DomainSetupClient from "@/components/domain-setup-client";
+import DomainSetupClient from "@/components/domains/domain-setup-client";
 
 // Server component (Next.js page requirements)
 export default async function DomainSetupPage({

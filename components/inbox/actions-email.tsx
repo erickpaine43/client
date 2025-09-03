@@ -1,7 +1,7 @@
 import { Archive, MailOpen, Trash2 } from "lucide-react";
-import { Email } from "../schemas/schemas";
+import { Email } from "@/app/dashboard/inbox/schemas/schemas";
 import { TooltipButton } from "./tooltip-button";
-import { showCustomToast } from "../../../../components/ui/custom-toast";
+import { showCustomToast } from "@/components/ui/custom-toast";
 import { JSX } from "react";
 
 export default function EmailActions({ email }: { email: Email }) {

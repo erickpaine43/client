@@ -1,4 +1,4 @@
-import NavLink from "@/components/NavLink";
+import NavLink from "@/components/common/NavLink";
 import CreateNewFolderButton from "@/components/templates/create-new-folder-button";
 import ConditionalNewTemplateButton from "@/components/templates/ConditionalNewTemplateButton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";

@@ -4,7 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
 import { AuthProvider } from "@/context/AuthContext";
-import { Providers } from "@/components/providers";
+import { Providers } from "@/components/common/providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

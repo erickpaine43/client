@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Settings } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import AlertDialogDelete from "../AlertDialogDelete";
+import AlertDialogDelete from "../common/AlertDialogDelete";
 import { Button } from "../ui/button";
 import {
   Dialog,

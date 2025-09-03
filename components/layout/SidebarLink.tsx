@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { NavLinkItem } from "@/types/nav-link";
 import { redirect, usePathname, useRouter } from "next/navigation";
-import Icon from "../Icon";
+import Icon from "../ui/Icon";
 import { SidebarMenuButton, useSidebar } from "../ui/sidebar";
 
 function SidebarLink({ link }: { link: NavLinkItem }) {

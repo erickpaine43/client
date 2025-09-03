@@ -1,6 +1,6 @@
 "use client";
 import { Row } from "@tanstack/react-table";
-import { Email } from "../schemas/schemas";
+import { Email } from "@/app/dashboard/inbox/schemas/schemas";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -21,7 +21,7 @@ import {
   hideEmailAction,
   markEmailAsReadAction,
   softDeleteEmailAction,
-} from "../actions";
+} from "@/app/dashboard/inbox/actions";
 import { redirect } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 

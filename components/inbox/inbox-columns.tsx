@@ -1,9 +1,9 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { Client, Email } from "../schemas/schemas";
+import { Client, Email } from "@/app/dashboard/inbox/schemas/schemas";
 import { Campaign } from "@/types/campaign";
 import { Button } from "@/components/ui/button";
-import { markEmailAsStarredAction } from "../actions";
+import { markEmailAsStarredAction } from "@/app/dashboard/inbox/actions";
 import { toast } from "sonner";
 import { InboxColumnAction } from "./inbox-column-action";
 import { showCustomToast } from "@/components/ui/custom-toast";

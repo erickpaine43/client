@@ -1,4 +1,4 @@
-import TableSkeleton from "@/components/TableSkeleton";
+import CampaignTableSkeleton from "@/components/campaigns/CampaignTableSkeleton";
 import CampaignsFilter from "@/components/campaigns/CampaignsFilter";
 import CampaignsTable, {
   campaignColumns,
@@ -53,7 +53,7 @@ export default async function CampaignsPage({
 
       <Suspense
         fallback={
-          <TableSkeleton title="Campaigns Table" columns={campaignColumns} />
+          <CampaignTableSkeleton title="Campaigns Table" columns={campaignColumns} />
         }
       >
         <CampaignsTable />

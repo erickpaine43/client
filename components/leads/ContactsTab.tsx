@@ -10,7 +10,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
-import { DropDownFilter, Filter, SearchInput } from "../Filter";
+import { DropDownFilter, Filter, SearchInput } from "../common/Filter";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
