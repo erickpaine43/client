@@ -41,13 +41,17 @@ export function EmailSecuenceSettings({ steps, templates, emailBodyRef, currentE
           </Button>
         </div>
       </div>
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       {(stepErrors as any)?.message && (
         <p className="text-sm font-medium text-destructive mt-2">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {(stepErrors as any)?.message}
         </p>
       )}
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       {(stepErrors as any)?.root?.message && (
         <p className="text-sm font-medium text-destructive mt-2">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {(stepErrors as any)?.root.message}
         </p>
       )}

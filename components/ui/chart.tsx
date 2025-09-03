@@ -127,7 +127,7 @@ function ChartTooltipContent({
     nameKey?: string
     labelKey?: string
     active?: boolean
-    payload?: Record<string, any>[]
+    payload?: Record<string, any>[] // eslint-disable-line @typescript-eslint/no-explicit-any
     label?: string
   }) {
   const { config } = useChart()
@@ -183,7 +183,7 @@ function ChartTooltipContent({
     >
       {!nestLabel ? tooltipLabel : null}
       <div className="grid gap-1.5">
-        {payload.map((item: Record<string, any>, index) => {
+        {payload.map((item: Record<string, any>, index) => { // eslint-disable-line @typescript-eslint/no-explicit-any
           const key = `${nameKey || item.name || item.dataKey || "value"}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
           const indicatorColor = color || item.payload.fill || item.color
@@ -261,7 +261,7 @@ function ChartLegendContent({
   verticalAlign = "bottom",
   nameKey,
 }: React.ComponentProps<"div"> & {
-  payload?: Record<string, any>[]
+  payload?: Record<string, any>[] // eslint-disable-line @typescript-eslint/no-explicit-any
   verticalAlign?: "bottom" | "top" | "middle"
   hideIcon?: boolean
   nameKey?: string
@@ -280,7 +280,7 @@ function ChartLegendContent({
         className
       )}
     >
-      {payload.map((item: Record<string, any>) => {
+      {payload.map((item: Record<string, any>) => { // eslint-disable-line @typescript-eslint/no-explicit-any
         const key = `${nameKey || item.dataKey || "value"}`
         const itemConfig = getPayloadConfigFromPayload(config, item, key)
 

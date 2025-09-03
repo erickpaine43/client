@@ -10,7 +10,7 @@ import { copyText as t } from "./copy";
 
 type RecipientsSettingsProps = {
   recipients: string;
-  handleChangeRecipients: (evt: any) => void;
+  handleChangeRecipients: (evt: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
 export function RecipientsSettings({ recipients, handleChangeRecipients }: RecipientsSettingsProps) {

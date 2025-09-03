@@ -29,8 +29,13 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+type ChartTooltipProps = {
+  active?: boolean;
+  payload?: { payload?: any }[]; // eslint-disable-line @typescript-eslint/no-explicit-any
+  label?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+};
 
-const CustomTooltip = ({ active, payload, _label }: any) => {
+const CustomTooltip = ({ active, payload }: Pick<ChartTooltipProps, 'active' | 'payload'>) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     const date = new Date(data.date);

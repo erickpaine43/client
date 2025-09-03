@@ -151,7 +151,7 @@ export const isPasswordStrongEnough = (password: string): boolean => {
 };
 
 // Debounce utility function
-export const debounce = <T extends (...args: any[]) => any>(
+export const debounce = <T extends (...args: any[]) => any>( // eslint-disable-line @typescript-eslint/no-explicit-any
   func: T,
   wait: number
 ): ((...args: Parameters<T>) => void) => {
