@@ -1,21 +1,29 @@
-export const mockClients = Array.from({ length: 50 }, (_, i) => ({
-  id: i + 1,
-  email: `client${i + 1}@example.com`,
-  firstName: `FirstName${i + 1}`,
-  lastName: `LastName${i + 1}`,
-  createdAt: new Date(2024, 0, i + 1),
-  updatedAt: new Date(2024, 0, i + 1),
-  notes: `Notes for client ${i + 1}`,
-  maskPII: false,
-  campaignId: 1,
-  companyId: 1,
-}));
+// Mock data for clients
+export function getMockClientsPage(page: number = 1, pageSize: number = 10) {
+  const mockClients = [
+    {
+      id: 1,
+      email: "john.doe@example.com",
+      firstName: "John",
+      lastName: "Doe",
+      notes: "Lead Developer",
+    },
+    {
+      id: 2,
+      email: "jane.smith@example.com",
+      firstName: "Jane",
+      lastName: "Smith",
+      notes: "Product Manager",
+    },
+    // Add more mock clients as needed
+  ];
 
-export const getMockClientsPage = (page: number, itemsPerPage: number = 10) => {
-  const start = (page - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
+  const totalPages = Math.ceil(mockClients.length / pageSize);
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+
   return {
-    clients: mockClients.slice(start, end),
-    pages: Math.ceil(mockClients.length / itemsPerPage),
+    clients: mockClients.slice(startIndex, endIndex),
+    pages: totalPages,
   };
-};
+}

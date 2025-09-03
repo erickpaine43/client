@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getClient } from "@/lib/queries/clients";
-import ClientForm from "@/components/clients/client-form";
-import { ClientHeader } from "@/components/clients/client-header";
+import ClientForm from "@/components/clients/forms/client-form";
+import { ClientHeader } from "@/components/clients/forms/client-header";
 
 interface EditClientPageProps {
   params: Promise<{ campaignId: string; clientId: string }>;

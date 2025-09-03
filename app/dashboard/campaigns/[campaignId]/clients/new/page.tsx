@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import NewClientForm from "@/components/clients/client-form";
+import NewClientForm from "@/components/clients/forms/client-form";
 import { Header } from "@/components/clients/header";
-import { copyText as t } from "@/components/clients/copy";
+import { copyText as t } from "@/components/clients/data/copy";
 
 export const metadata: Metadata = {
   title: t.page.title,

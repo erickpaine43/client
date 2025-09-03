@@ -1,10 +1,10 @@
-import KpiCards from "@/components/dashboard/KpiCards";
-import QuickActions from "@/components/dashboard/QuickActions";
+import KpiCards from "@/components/dashboard/cards/KpiCards";
+import QuickActions from "@/components/dashboard/actions/QuickActions";
 import RecentRepliesList from "@/components/inbox/RecentReply/RecentReplyList";
 import RecentReplySkeleton from "@/components/inbox/RecentReply/RecentReplySkeleton";
-import StatsCardSkeleton from "@/components/dashboard/StatsCardSkeleton";
-import WarmupSummary from "@/components/dashboard/WarmupSummary";
-import WarmupSummarySkeleton from "@/components/dashboard/WarmupSummarySkeleton";
+import StatsCardSkeleton from "@/components/dashboard/cards/KpiCardSkeleton";
+import WarmupSummary from "@/components/dashboard/summaries/WarmupSummary";
+import WarmupSummarySkeleton from "@/components/dashboard/summaries/WarmupSummarySkeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Suspense } from "react";
 

@@ -12,7 +12,7 @@ import { useAnalytics } from "@/context/AnalyticsContext";
 import { DataGranularity, DateRangePreset } from "@/types";
 import { campaignData, mailboxes, metrics } from "@/lib/data/analytics.mock";
 import { ChevronDown, Mail, Settings, Target } from "lucide-react";
-import { DropDownFilter, Filter } from "../common/Filter";
+import { DropDownFilter, Filter } from "../../common/Filter";
 
 const dateRangeOptions = [
   { value: "7d", label: "Last 7 days" },

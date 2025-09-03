@@ -1,4 +1,4 @@
-import { copyText as t } from "./copy";
+import { copyText as t } from "./data/copy";
 
 export function Header() {
   return (

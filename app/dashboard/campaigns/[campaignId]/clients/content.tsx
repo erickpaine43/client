@@ -11,13 +11,13 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
 } from "@tanstack/react-table";
-import { createColumns } from "../../../../../components/clients/columns";
+import { createColumns } from "../../../../../components/clients/tables/columns";
 import { getClientsPage } from "./actions";
-import { ClientsHeader } from "@/components/clients/clients-header";
-import { ClientsTable } from "@/components/clients/clients-table";
-import { ClientsFilters } from "@/components/clients/clients-filters";
-import { ClientsPagination } from "@/components/clients/clients-pagination";
-import { RemoveClientDialog } from "@/components/clients/remove-client-dialog";
+import { ClientsHeader } from "@/components/clients/filters/clients-header";
+import { ClientsTable } from "@/components/clients/tables/clients-table";
+import { ClientsFilters } from "@/components/clients/filters/clients-filters";
+import { ClientsPagination } from "@/components/clients/filters/clients-pagination";
+import { RemoveClientDialog } from "@/components/clients/dialogs/remove-client-dialog";
 import { Client } from "@/app/dashboard/inbox/schemas/schemas";
 
 type ClientsContentProps = {

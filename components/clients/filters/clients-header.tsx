@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../data/copy";
 
 interface ClientsHeaderProps {
   showPII: boolean;

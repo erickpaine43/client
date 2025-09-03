@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../data/copy";
 
 interface ClientsPaginationProps {
   currentPage: number;

@@ -1,4 +1,4 @@
-import AnalyticsNavLinks from "@/components/analytics/AnalyticsNavLinks";
+import AnalyticsNavLinks from "@/components/analytics/nav/AnalyticsNavLinks";
 import EmailMailboxesTable from "@/components/analytics/warmup/email-mailboxes-table";
 import WarmupAnalyticsFilter from "@/components/analytics/warmup/warmup-analytics-filter";
 import WarmUpLineChart from "@/components/analytics/warmup/warmup-line-chart";

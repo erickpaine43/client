@@ -17,7 +17,7 @@ import {
   removeFromCampaign,
   deleteClient,
 } from "@/app/dashboard/campaigns/[campaignId]/clients/new/actions";
-import { copyText as t } from "@/components/clients/copy";
+import { copyText as t } from "@/components/clients/data/copy";
 
 // Add this new action import or create it in the actions file
 async function maskClientPII(clientId: number) {

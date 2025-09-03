@@ -1,4 +1,4 @@
-import StatsCard from "@/components/analytics/StatsCard";
+import StatsCard from "@/components/analytics/cards/StatsCard";
 import { statsCards } from "@/lib/data/stats.mock";
 
 async function StatsCards() {

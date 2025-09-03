@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { BarChart3, Mail, Target, Zap } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Icon from "../ui/Icon";
+import Icon from "../../ui/Icon";
 
 const links = [
   { id: "", label: "Overview", icon: BarChart3 },

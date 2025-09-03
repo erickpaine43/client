@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../data/copy";
 import { Client } from "@/app/dashboard/inbox/schemas/schemas";
 
 interface RemoveClientDialogProps {

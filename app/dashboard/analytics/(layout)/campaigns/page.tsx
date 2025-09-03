@@ -1,4 +1,4 @@
-import AnalyticsNavLinks from "@/components/analytics/AnalyticsNavLinks";
+import AnalyticsNavLinks from "@/components/analytics/nav/AnalyticsNavLinks";
 import AnalyticsStatistics from "@/components/analytics/analytics-statistics";
 import CampaignPerformanceTable from "@/components/campaigns/analytics/CampaignPerformanceTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

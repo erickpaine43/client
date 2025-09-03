@@ -1,9 +1,9 @@
-import AnalyticChartsLegend from "@/components/analytics/AnalyticChartsLegend";
-import AnalyticsOverview from "@/components/analytics/analytics-overview";
-import AnalyticsNavLinks from "@/components/analytics/AnalyticsNavLinks";
-import OverviewBarChat from "@/components/analytics/OverviewBarChat";
-import OverviewLineChart from "@/components/analytics/OverviewLineChart";
-import PerformanceFilter from "@/components/analytics/PerformanceFilter";
+import AnalyticChartsLegend from "@/components/analytics/charts/AnalyticChartsLegend";
+import AnalyticsOverview from "@/components/analytics/overview/analytics-overview";
+import AnalyticsNavLinks from "@/components/analytics/nav/AnalyticsNavLinks";
+import OverviewBarChat from "@/components/analytics/charts/OverviewBarChat";
+import OverviewLineChart from "@/components/analytics/charts/OverviewLineChart";
+import PerformanceFilter from "@/components/analytics/filters/PerformanceFilter";
 import {
   Card,
   CardContent,

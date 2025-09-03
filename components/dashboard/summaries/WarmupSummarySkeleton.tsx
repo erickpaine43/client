@@ -4,7 +4,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 function WarmupSummarySkeleton() {
   return (
     <Card className="bg-white rounded-xl shadow-sm border border-gray-200 ">

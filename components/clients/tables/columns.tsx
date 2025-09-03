@@ -1,7 +1,7 @@
 "use client";
 
 import { toast } from "sonner";
-import { copyText as t } from "@/components/clients/copy";
+import { copyText as t } from "@/components/clients/data/copy";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";

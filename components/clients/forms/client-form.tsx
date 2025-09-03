@@ -9,7 +9,7 @@ import {
   createClient,
   updateClient,
 } from "@/app/dashboard/campaigns/[campaignId]/clients/new/actions";
-import { copyText as t } from "./copy";
+import { copyText as t } from "../data/copy";
 
 interface ClientFormProps {
   campaignId: string;

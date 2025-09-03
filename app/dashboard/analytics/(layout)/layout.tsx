@@ -1,4 +1,4 @@
-import AnalyticsHeaderActions from "@/components/analytics/AnalyticsHeaderActions";
+import AnalyticsHeaderActions from "@/components/analytics/actions/AnalyticsHeaderActions";
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (

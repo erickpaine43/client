@@ -1,6 +1,6 @@
 "use client";
 import { useAnalytics } from "@/context/AnalyticsContext";
-import AnalyticsStatistics from "./analytics-statistics";
+import AnalyticsStatistics from "../summary/analytics-statistics";
 
 function AnalyticsOverview() {
   const { totalSent, openRate, replyRate, clickRate } = useAnalytics();
