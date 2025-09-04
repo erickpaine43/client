@@ -1,12 +1,67 @@
-import { domains, mailboxes } from "@/lib/data/domains.mock";
+"use client";
+import { getDomainsData } from "@/lib/actions/domainsActions";
 import { cn } from "@/lib/utils";
 import { CheckCircle, Clock, Globe, Mail } from "lucide-react";
+import { useAnalytics } from "@/context/AnalyticsContext";
+import { useState, useEffect } from "react";
+import type { MailboxWarmupData } from "@/types";
 import StatsCard from "@/components/analytics/cards/StatsCard";
 
+// TODO: Replace with DomainMock from centralized types once added to types/domains.ts
+// See types/DOMAIN_TYPE_FIX_PROMPT.md for implementation details
+type DomainMock = {
+  id: number;
+  domain: string;
+  status: string;
+  mailboxes: number;
+  records: {
+    spf: string;
+    dkim: string;
+    dmarc: string;
+    mx: string;
+  };
+  addedDate: string;
+  name?: string;
+  provider?: string;
+  daysActive?: number;
+  reputation?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  companyId?: number;
+  createdById?: string;
+};
+
 function OverviewCards() {
-  const readyMailboxes = mailboxes.filter(
-    (m) => m.warmupStatus === "WARMED",
-  ).length;
+  const [mailboxes, setMailboxes] = useState<MailboxWarmupData[]>([]);
+  const [domains, setDomains] = useState<DomainMock[]>([]);
+  const { fetchMailboxes } = useAnalytics();
+
+  useEffect(() => {
+    const getMailboxes = async () => {
+      try {
+        const data = await fetchMailboxes();
+        setMailboxes(data);
+      } catch (error) {
+        console.error("Failed to fetch mailboxes:", error);
+      }
+    };
+    getMailboxes();
+  }, [fetchMailboxes]);
+
+  useEffect(() => {
+    const getDomains = async () => {
+      try {
+        const { domains: domainsData } = await getDomainsData();
+        setDomains(domainsData);
+      } catch (error) {
+        console.error("Failed to fetch domains:", error);
+      }
+    };
+    getDomains();
+  }, []);
+
+  const readyMailboxes = mailboxes.filter((m) => m.status === "active").length; // Active means ready to send
+  const warmingMailboxes = mailboxes.filter((m) => m.status === "warming").length;
 
   const cards = [
     {
@@ -18,7 +73,7 @@ function OverviewCards() {
     },
     {
       title: "Active Mailboxes",
-      value: mailboxes.filter((m) => m.status === "ACTIVE").length,
+      value: mailboxes.length,
       icon: Mail,
       iconBg: "bg-purple-100",
       iconColor: "text-purple-600",
@@ -32,7 +87,7 @@ function OverviewCards() {
     },
     {
       title: "Warming Up",
-      value: 2,
+      value: warmingMailboxes,
       icon: Clock,
       iconBg: "bg-orange-100",
       iconColor: "text-orange-600",
