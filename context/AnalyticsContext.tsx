@@ -7,6 +7,7 @@ import {
 import { createContext, useContext, useState, useMemo, useEffect } from "react";
 import {
   AnalyticsContextState,
+  AnalyticsFilterState,
   DataGranularity,
   DateRangePreset,
 } from "@/types";
@@ -74,6 +75,45 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
     return generateTimeSeriesData(days, granularity);
   }, [days, granularity]);
 
+  // Create filters object
+  const filters: AnalyticsFilterState = useMemo(() => ({
+    visibleMetrics,
+    setVisibleMetrics,
+    showCustomDate,
+    setShowCustomDate,
+    dateRange,
+    setDateRange,
+    granularity,
+    setGranularity,
+    allowedGranularities,
+    customDateStart,
+    setCustomDateStart,
+    customDateEnd,
+    setCustomDateEnd,
+    selectedCampaigns,
+    setSelectedCampaigns,
+    selectedMailboxes,
+    setSelectedMailboxes,
+  }), [
+    visibleMetrics,
+    setVisibleMetrics,
+    showCustomDate,
+    setShowCustomDate,
+    dateRange,
+    setDateRange,
+    granularity,
+    setGranularity,
+    allowedGranularities,
+    customDateStart,
+    setCustomDateStart,
+    customDateEnd,
+    setCustomDateEnd,
+    selectedCampaigns,
+    setSelectedCampaigns,
+    selectedMailboxes,
+    setSelectedMailboxes,
+  ]);
+
   // Calculate summary metrics from chart data
   const { totalSent, openRate, clickRate, replyRate } = useMemo(() => {
     const sent = chartData.reduce((sum, d) => sum + d.sent, 0);
@@ -114,6 +154,7 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
         setSelectedCampaigns,
         selectedMailboxes,
         setSelectedMailboxes,
+        filters,
       }}
     >
       {children}

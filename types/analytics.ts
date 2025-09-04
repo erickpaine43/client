@@ -241,6 +241,48 @@ export interface AnalyticsContextState {
   selectedMailboxes: string[];
   /** Function to update selected mailboxes */
   setSelectedMailboxes: (mailboxes: string[]) => void;
+  /** Filters state object for easier access to filter-related properties */
+  filters: AnalyticsFilterState;
+}
+
+/**
+ * Analytics filter state interface - subset for filter-related properties
+ */
+export interface AnalyticsFilterState {
+  /** Visible metrics configuration */
+  visibleMetrics: Record<string, boolean>;
+  /** Function to update visible metrics */
+  setVisibleMetrics: (metrics: Record<string, boolean>) => void;
+  /** Whether custom date range is active */
+  showCustomDate: boolean;
+  /** Function to toggle custom date visibility */
+  setShowCustomDate: (show: boolean) => void;
+  /** Current date range preset */
+  dateRange: DateRangePreset;
+  /** Function to set date range */
+  setDateRange: (range: DateRangePreset) => void;
+  /** Current data granularity */
+  granularity: DataGranularity;
+  /** Function to set granularity */
+  setGranularity: (granularity: DataGranularity) => void;
+  /** Allowed granularity options based on date range */
+  allowedGranularities: DataGranularity[];
+  /** Custom date range start (ISO string) */
+  customDateStart: string;
+  /** Function to set custom start date */
+  setCustomDateStart: (date: string) => void;
+  /** Custom date range end (ISO string) */
+  customDateEnd: string;
+  /** Function to set custom end date */
+  setCustomDateEnd: (date: string) => void;
+  /** Selected campaign IDs for filtering */
+  selectedCampaigns: string[];
+  /** Function to update selected campaigns */
+  setSelectedCampaigns: (campaigns: string[]) => void;
+  /** Selected mailbox IDs for filtering */
+  selectedMailboxes: string[];
+  /** Function to update selected mailboxes */
+  setSelectedMailboxes: (mailboxes: string[]) => void;
 }
 
 /**

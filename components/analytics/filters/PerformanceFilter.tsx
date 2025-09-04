@@ -29,6 +29,7 @@ const granularityOptions = [
 ];
 
 function PerformanceFilter() {
+  const { filters } = useAnalytics();
   const {
     visibleMetrics,
     setVisibleMetrics,
@@ -47,7 +48,7 @@ function PerformanceFilter() {
     setSelectedCampaigns,
     selectedMailboxes,
     setSelectedMailboxes,
-  } = useAnalytics();
+  } = filters;
 
   // Filter granularity options based on allowed granularities
   const filteredGranularityOptions = granularityOptions.filter((option) =>
