@@ -23,6 +23,10 @@ import {
   getMailboxAnalyticsAction,
   getMultipleMailboxAnalyticsAction,
 } from "@/lib/actions/mailboxActions";
+import {
+  getDomainsWithMailboxesData,
+  DomainWithMailboxesData,
+} from "@/lib/actions/domainsActions";
 
 // Helper function to get allowed granularities based on date range
 const getAllowedGranularities = (days: number): DataGranularity[] => {
@@ -185,6 +189,13 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
     return await getMultipleMailboxAnalyticsAction(mailboxIds, range, gran, userid, companyid);
   }, [dateRange, granularity]);
 
+  const fetchDomainsWithMailboxes = useMemo(() => async (
+    userid?: string,
+    companyid?: string
+  ): Promise<DomainWithMailboxesData[]> => {
+    return await getDomainsWithMailboxesData(userid, companyid);
+  }, []);
+
   return (
     <AnalyticsContext.Provider
       value={{
@@ -222,6 +233,8 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
         fetchMailboxes,
         fetchMailboxAnalytics,
         fetchMultipleMailboxAnalytics,
+        // Domain methods
+        fetchDomainsWithMailboxes,
       }}
     >
       {children}

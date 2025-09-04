@@ -1,3 +1,5 @@
+"use client";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -9,7 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getStatusColor } from "@/lib/utils/domains";
-import { mailboxes } from "@/lib/data/domains.mock";
 import { cn } from "@/lib/utils";
 import {
   AlertTriangle,
@@ -18,10 +19,17 @@ import {
   Clock,
   Mail,
   Pause,
-  Play,
   Settings,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
+import { useAnalytics } from "@/context/AnalyticsContext";
+import { DomainWithMailboxesData } from "@/lib/actions/domainsActions";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function WarmupTab() {
   return (
@@ -58,21 +66,92 @@ function WarmupTab() {
 
 export default WarmupTab;
 
-const getStatusIcon = (status: string) => {
-  switch (status) {
-    case "WARMED":
-      return <CheckCircle className="w-3 h-3" />;
-    case "WARMING":
-      return <Clock className="w-3 h-3" />;
-    case "PAUSED":
-      return <Pause className="w-3 h-3" />;
-    case "NOT_STARTED":
-    default:
-      return <Clock className="w-3 h-3" />;
-  }
-};
-
 function WarmupMailboxesTable() {
+  const { fetchDomainsWithMailboxes } = useAnalytics();
+  const [domainsData, setDomainsData] = useState<DomainWithMailboxesData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDomains = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await fetchDomainsWithMailboxes();
+        setDomainsData(data);
+      } catch (err) {
+        console.error('Failed to fetch domains:', err);
+        setError('Failed to load domain data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDomains();
+  }, [fetchDomainsWithMailboxes]);
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "WARMED":
+        return <CheckCircle className="w-3 h-3 text-green-600" />;
+      case "WARMING":
+        return <Clock className="w-3 h-3 text-blue-600" />;
+      case "PAUSED":
+        return <Pause className="w-3 h-3 text-yellow-600" />;
+      case "NOT_STARTED":
+      default:
+        return <Clock className="w-3 h-3 text-gray-600" />;
+    }
+  };
+
+  if (loading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Warmup Status</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="w-8 h-8 animate-spin mr-2" />
+            <span>Loading domain data...</span>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Warmup Status</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center py-12">
+            <AlertTriangle className="w-8 h-8 text-red-500 mr-2" />
+            <span>{error}</span>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (domainsData.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Warmup Status</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-12">
+            <Mail className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+            <span>No domains found</span>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
@@ -93,116 +172,147 @@ function WarmupMailboxesTable() {
           <Table>
             <TableHeader className="bg-gray-100">
               <TableRow>
-                <TableHead>Mailbox</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Domain</TableHead>
+                <TableHead>Status Summary</TableHead>
+                <TableHead>Mailboxes</TableHead>
                 <TableHead>Daily Count</TableHead>
                 <TableHead>Performance</TableHead>
-                <TableHead>Days Active</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mailboxes.map((mailbox) => (
-                <TableRow
-                  key={mailbox.id}
-                  className="hover:bg-gray-50 transition-colors group"
-                >
-                  <TableCell className="px-8 py-6">
-                    <div>
-                      <h3 className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors text-lg">
-                        {mailbox.email}
-                      </h3>
-                      <p className="text-sm text-gray-500 mt-1">
-                        Date Created :{" "}
-                        {Intl.DateTimeFormat("en-US").format(
-                          new Date(mailbox.createdAt),
-                        )}
-                      </p>
-                      <p className="text-xs text-gray-400 mt-1">
-                        Domain: {mailbox.domain}
-                      </p>
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-6 py-6">
-                    <span
-                      className={`inline-flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm font-medium ${getStatusColor(
-                        mailbox.warmupStatus,
-                      )}`}
-                    >
-                      {getStatusIcon(mailbox.warmupStatus)}
-                      <span className="capitalize">
-                        {mailbox.warmupStatus === "WARMED"
-                          ? "Ready"
-                          : mailbox.warmupStatus === "WARMING"
-                            ? "Warming"
-                            : mailbox.warmupStatus === "PAUSED"
-                              ? "Paused"
-                              : mailbox.warmupStatus === "NOT_STARTED"
-                                ? "Not Started"
-                                : mailbox.warmupStatus}
-                      </span>
-                    </span>
-                  </TableCell>
+              {domainsData.map((domainData) => {
+                const { domain, aggregated } = domainData;
+                const mainStatus = aggregated.statusSummary.NOT_STARTED > 0 ? 'NOT_STARTED'
+                  : aggregated.statusSummary.WARMING > 0 ? 'WARMING'
+                    : aggregated.statusSummary.PAUSED > 0 ? 'PAUSED'
+                      : aggregated.statusSummary.WARMED > 0 ? 'WARMED' : 'NOT_STARTED';
 
-                  <TableCell className="px-6 py-6">
-                    <div className="flex items-center space-x-2">
-                      <Mail className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm font-medium text-gray-900">
-                        {mailbox.warmupStatus === "PAUSED"
-                          ? "0"
-                          : Math.floor(
-                              mailbox.dailyLimit *
-                                (mailbox.warmupProgress / 100),
-                            )}{" "}
-                        emails
-                      </span>
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      Daily warmup count
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-6 py-6">
-                    <div className="space-y-1">
+                return (
+                  <TableRow
+                    key={domain.id}
+                    className="hover:bg-gray-50 transition-colors group"
+                  >
+                    <TableCell className="px-8 py-6">
+                      <div>
+                        <h3 className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors text-lg">
+                          {domain.domain}
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-1">
+                          Status: {domain.status}
+                        </p>
+                        <p className="text-xs text-gray-400 mt-1">
+                          DNS: {domain.records?.spf === 'verified' ? '✅' : '❌'} SPF, {domain.records?.dkim === 'verified' ? '✅' : '❌'} DKIM, {domain.records?.dmarc === 'verified' ? '✅' : '❌'} DMARC
+                        </p>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-6 py-6">
+                      <div className="space-y-1">
+                        <span
+                          className={`inline-flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm font-medium ${getStatusColor(
+                            mainStatus,
+                          )}`}
+                        >
+                          {getStatusIcon(mainStatus)}
+                          <span className="capitalize">
+                            {mainStatus === "WARMED"
+                              ? "Ready"
+                              : mainStatus === "WARMING"
+                                ? "Warming"
+                                : mainStatus === "PAUSED"
+                                  ? "Paused"
+                                  : mainStatus === "NOT_STARTED"
+                                    ? "Not Started"
+                                    : mainStatus}
+                          </span>
+                        </span>
+                        <div className="text-xs text-gray-500">
+                          {aggregated.statusSummary.WARMED} Ready, {aggregated.statusSummary.WARMING} Warming, {aggregated.statusSummary.PAUSED} Paused
+                        </div>
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="px-6 py-6">
                       <div className="flex items-center space-x-2">
+                        <Mail className="w-4 h-4 text-gray-400" />
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="text-sm font-medium text-gray-900 cursor-pointer hover:text-blue-600 underline decoration-dotted">
+                              {aggregated.totalMailboxes}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-sm">
+                            <div className="space-y-1 bg-gray-90">
+                              <div className="font-medium">Mailboxes in {domain.domain}:</div>
+                              {domainData.mailboxes.length > 0 ? (
+                                domainData.mailboxes.map((mailbox) => (
+                                  <div key={mailbox.id} className="text-xs">
+                                    <span className="font-medium">{mailbox.email}</span>
+                                    <span> - {mailbox.warmupStatus}</span>
+                                  </div>
+                                ))
+                              ) : (
+                                <div className="text-xs text-muted-foreground">No mailboxes configured</div>
+                              )}
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {aggregated.activeMailboxes} active
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="px-6 py-6">
+                      <div className="flex items-center space-x-2">
+                        <Mail className="w-4 h-4 text-gray-400" />
                         <span className="text-sm font-medium text-gray-900">
-                          {mailbox.totalSent}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          total sent
+                          {aggregated.totalWarmups}
                         </span>
                       </div>
-                      <div className="text-xs text-gray-500">
-                        {mailbox.replies} replies ({mailbox.engagement})
+                      <div className="text-xs text-gray-500 mt-1">
+                        Average daily: {aggregated.avgDailyLimit}
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-6 py-6">
-                    <span className="text-sm font-medium text-gray-900">
-                      {mailbox.warmupDays} days
-                    </span>
-                    <div className="text-xs text-gray-500 mt-1">
-                      Active period
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-6 py-6 text-right">
-                    <div className="flex items-center justify-end space-x-2">
-                      {mailbox.warmupStatus === "WARMING" ||
-                      mailbox.warmupStatus === "WARMED" ? (
-                        <Button variant="ghost" size="icon">
-                          <Pause className="w-4 h-4" />
-                        </Button>
-                      ) : (
-                        <Button variant="ghost" size="icon">
-                          <Play className="w-4 h-4" />
-                        </Button>
-                      )}
-                      <Button variant="ghost" size="icon">
-                        <Settings className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                    </TableCell>
+
+                    <TableCell className="px-6 py-6">
+                      <div className="space-y-1">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm font-medium text-gray-900">
+                            {aggregated.totalSent}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            total sent
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm font-medium text-green-600">
+                            {aggregated.avgWarmupProgress}%
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            avg progress
+                          </span>
+                        </div>
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="px-6 py-6 text-right">
+                      <div className="flex items-center justify-end space-x-2">
+                        <Link href={`/dashboard/domains/${domain.id}`}>
+                          <Button variant="ghost" size="icon">
+                            <Settings className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                        <Link href={`/dashboard/analytics/mailboxes?domain=${domain.domain}`}>
+                          <Button variant="ghost" size="icon">
+                            <BarChart3 className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
