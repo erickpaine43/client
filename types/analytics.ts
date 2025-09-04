@@ -219,6 +219,10 @@ export interface MailboxWarmupData {
   dailyVolume: number;
   /** Reputation health score (0-100) */
   healthScore: number;
+  /** Domain of the email */
+  domain?: string;
+  /** Created at date string */
+  createdAt?: string;
 }
 
 /**

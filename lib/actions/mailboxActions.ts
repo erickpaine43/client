@@ -38,6 +38,8 @@ export async function getMailboxesAction(
       warmupProgress: baseMailbox.warmupProgress,
       dailyVolume: baseMailbox.dailyVolume,
       healthScore: baseMailbox.healthScore,
+      domain: domain,
+      createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(), // Mock createdAt within last 30 days
     });
   });
 
