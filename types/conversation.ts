@@ -1,16 +1,32 @@
 // Email Types
 import { ComponentType, SVGProps } from "react";
+import type { Client } from "./clients-leads";
+
+// Email campaign association type (different from Campaign management type)
+export interface EmailCampaign {
+  id: number;
+  name: string;
+}
+
 export interface Email {
   id: number;
   subject: string;
   starred: boolean;
   read: boolean;
-  body: string;
+  body: string; // Primary message content
+  message?: string; // Alias for body for backward compatibility
   date: string; // ISO date string
   preview: string;
   createdAt: Date;
-  campaign?: object; // Can be extended with proper campaign type
-  client?: object; // Can be extended with proper client type
+  campaign?: EmailCampaign;
+  client?: Client;
+  htmlContent?: string; // HTML representation of content
+}
+
+// Extended email interface for additional details
+export interface EmailWithDetails extends Email {
+  campaign?: EmailCampaign;
+  client?: Client;
 }
 
 // Message Types for individual messages in conversations
