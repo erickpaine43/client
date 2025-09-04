@@ -1,9 +1,8 @@
 "use client";
 import { useAnalytics } from "@/context/AnalyticsContext";
-import { metrics } from "@/lib/data/analytics.mock";
 
 function AnalyticChartsLegend() {
-  const { visibleMetrics } = useAnalytics();
+  const { visibleMetrics, metrics } = useAnalytics();
   return metrics
     .filter((m) => visibleMetrics[m.key])
     .map((metric) => {
@@ -14,7 +13,7 @@ function AnalyticChartsLegend() {
             className="w-3 h-3 rounded"
             style={{ backgroundColor: metric.color }}
           />
-          <Icon className="w-4 h-4" style={{ color: metric.color }} />
+          <Icon className={`w-4 h-4 text-[${metric.color}]`} />
           <span className="text-sm text-gray-600">{metric.label}</span>
         </div>
       );
