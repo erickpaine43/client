@@ -15,7 +15,14 @@ import {
   DataGranularity,
   DateRangePreset,
   WarmupMetric,
+  MailboxWarmupData,
+  MailboxAnalyticsData,
 } from "@/types";
+import {
+  getMailboxesAction,
+  getMailboxAnalyticsAction,
+  getMultipleMailboxAnalyticsAction,
+} from "@/lib/actions/mailboxActions";
 
 // Helper function to get allowed granularities based on date range
 const getAllowedGranularities = (days: number): DataGranularity[] => {
@@ -146,6 +153,38 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
     };
   }, [chartData]);
 
+  // Mailbox analytics methods
+  const fetchMailboxes = useMemo(() => async (
+    userid?: string,
+    companyid?: string
+  ): Promise<MailboxWarmupData[]> => {
+    return await getMailboxesAction(userid, companyid);
+  }, []);
+
+  const fetchMailboxAnalytics = useMemo(() => async (
+    mailboxId: string,
+    dateRangePreset?: DateRangePreset,
+    granularityLevel?: DataGranularity,
+    userid?: string,
+    companyid?: string
+  ): Promise<MailboxAnalyticsData> => {
+    const range = dateRangePreset || dateRange;
+    const gran = granularityLevel || granularity;
+    return await getMailboxAnalyticsAction(mailboxId, range, gran, userid, companyid);
+  }, [dateRange, granularity]);
+
+  const fetchMultipleMailboxAnalytics = useMemo(() => async (
+    mailboxIds: string[],
+    dateRangePreset?: DateRangePreset,
+    granularityLevel?: DataGranularity,
+    userid?: string,
+    companyid?: string
+  ): Promise<Record<string, MailboxAnalyticsData>> => {
+    const range = dateRangePreset || dateRange;
+    const gran = granularityLevel || granularity;
+    return await getMultipleMailboxAnalyticsAction(mailboxIds, range, gran, userid, companyid);
+  }, [dateRange, granularity]);
+
   return (
     <AnalyticsContext.Provider
       value={{
@@ -179,6 +218,10 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
         visibleWarmupMetrics,
         setVisibleWarmupMetrics,
         warmupChartData,
+        // Mailbox analytics methods
+        fetchMailboxes,
+        fetchMailboxAnalytics,
+        fetchMultipleMailboxAnalytics,
       }}
     >
       {children}

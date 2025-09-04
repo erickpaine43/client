@@ -320,6 +320,12 @@ export interface AnalyticsContextState {
   setVisibleWarmupMetrics: (metrics: Record<string, boolean>) => void;
   /** Warmup chart data */
   warmupChartData: WarmupChartData[];
+  /** Function to fetch mailboxes */
+  fetchMailboxes: (userid?: string, companyid?: string) => Promise<MailboxWarmupData[]>;
+  /** Function to fetch analytics for a single mailbox */
+  fetchMailboxAnalytics: (mailboxId: string, dateRangePreset?: DateRangePreset, granularityLevel?: DataGranularity, userid?: string, companyid?: string) => Promise<MailboxAnalyticsData>;
+  /** Function to fetch analytics for multiple mailboxes */
+  fetchMultipleMailboxAnalytics: (mailboxIds: string[], dateRangePreset?: DateRangePreset, granularityLevel?: DataGranularity, userid?: string, companyid?: string) => Promise<Record<string, MailboxAnalyticsData>>;
 }
 
 /**

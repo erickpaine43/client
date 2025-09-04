@@ -12,18 +12,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { mockMailboxes } from "@/lib/data/analytics.mock";
 import { Mail, Loader2, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { useAnalytics } from "@/context/AnalyticsContext";
 import {
   MailboxWarmupData,
-  MailboxAnalyticsData,
   ProgressiveAnalyticsState
 } from "@/types";
 
 function EmailMailboxesTable() {
-  const { dateRange } = useAnalytics();
+  const {
+    dateRange,
+    fetchMailboxes,
+    fetchMultipleMailboxAnalytics
+  } = useAnalytics();
   const [mailboxesLoading, setMailboxesLoading] = useState(true);
   const [mailboxes, setMailboxes] = useState<MailboxWarmupData[]>([]);
   const [mailboxesError, setMailboxesError] = useState<string | null>(null);
@@ -31,73 +33,83 @@ function EmailMailboxesTable() {
   // Progressive analytics state mapping
   const [analyticsState, setAnalyticsState] = useState<ProgressiveAnalyticsState>({});
 
-  // Simulate mailboxes fetch
+  // Fetch mailboxes using server action
   useEffect(() => {
-    const fetchMailboxes = () => {
+    const fetchMailboxesData = async () => {
       setMailboxesLoading(true);
       setMailboxesError(null);
 
-      setTimeout(() => {
-        try {
-          // Cast mockMailboxes to match MailboxWarmupData type
-          setMailboxes(mockMailboxes as MailboxWarmupData[]);
-        } catch {
-          setMailboxesError("Failed to load mailboxes");
-        } finally {
-          setMailboxesLoading(false);
-        }
-      }, 1500); // Simulate network delay
+      try {
+        const mailboxesData = await fetchMailboxes();
+        setMailboxes(mailboxesData);
+      } catch (error) {
+        console.error("Failed to fetch mailboxes:", error);
+        setMailboxesError("Failed to load mailboxes");
+      } finally {
+        setMailboxesLoading(false);
+      }
     };
 
-    fetchMailboxes();
-  }, []);
+    fetchMailboxesData();
+  }, [fetchMailboxes]);
 
-  // Progressive analytics fetch simulation
+  // Progressive analytics fetch using server actions
   useEffect(() => {
     if (mailboxes.length === 0) return;
 
-    const fetchAnalyticsForMailbox = async (mailbox: MailboxWarmupData) => {
-      setAnalyticsState((prev: ProgressiveAnalyticsState) => ({
-        ...prev,
-        [mailbox.id]: { data: null, loading: true, error: null }
-      }));
+    const fetchAllAnalytics = async () => {
+      try {
+        // Initialize loading state for all mailboxes
+        const initialState: ProgressiveAnalyticsState = {};
+        mailboxes.forEach((mailbox) => {
+          initialState[mailbox.id] = { data: null, loading: true, error: null };
+        });
+        setAnalyticsState(initialState);
 
-      // Simulate API call delay with random timing to show progressive loading
-      const delay = Math.random() * 2000 + 500; // 500ms - 2.5s
+        // Fetch analytics for all mailboxes using server action
+        const mailboxIds = mailboxes.map(mailbox => mailbox.id);
+        const analyticsResults = await fetchMultipleMailboxAnalytics(
+          mailboxIds,
+          dateRange,
+          undefined, // use current granularity
+          undefined, // userid
+          undefined  // companyid
+        );
 
-      setTimeout(() => {
-        try {
-          // Simulate analytics calculation based on mock data
-          const analytics: MailboxAnalyticsData = {
-            mailboxId: mailbox.id,
-            warmupProgress: mailbox.warmupProgress,
-            totalWarmups: Math.floor(Math.random() * 500) + 200,
-            spamFlags: Math.floor(Math.random() * 10) + 1,
-            replies: Math.floor(Math.random() * 30) + 5,
-            healthScore: mailbox.healthScore,
-            lastUpdated: new Date()
-          };
-
-          setAnalyticsState((prev: ProgressiveAnalyticsState) => ({
-            ...prev,
-            [mailbox.id]: { data: analytics, loading: false, error: null }
-          }));
-        } catch {
-          setAnalyticsState((prev: ProgressiveAnalyticsState) => ({
-            ...prev,
-            [mailbox.id]: {
+        // Update state with the results
+        const newState: ProgressiveAnalyticsState = {};
+        mailboxes.forEach((mailbox) => {
+          const analytics = analyticsResults[mailbox.id];
+          if (analytics) {
+            newState[mailbox.id] = { data: analytics, loading: false, error: null };
+          } else {
+            newState[mailbox.id] = {
               data: null,
               loading: false,
               error: "Failed to load analytics"
-            }
-          }));
-        }
-      }, delay);
+            };
+          }
+        });
+        setAnalyticsState(newState);
+
+      } catch (error) {
+        console.error("Failed to fetch mailbox analytics:", error);
+
+        // Set error state for all mailboxes
+        const errorState: ProgressiveAnalyticsState = {};
+        mailboxes.forEach((mailbox) => {
+          errorState[mailbox.id] = {
+            data: null,
+            loading: false,
+            error: "Failed to load analytics"
+          };
+        });
+        setAnalyticsState(errorState);
+      }
     };
 
-    // Start fetching analytics for each mailbox
-    mailboxes.forEach(fetchAnalyticsForMailbox);
-  }, [mailboxes, dateRange]);
+    fetchAllAnalytics();
+  }, [mailboxes, dateRange, fetchMultipleMailboxAnalytics]);
 
   const filteredMailboxes = mailboxes;
   // Show loading state while fetching mailboxes
