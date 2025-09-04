@@ -1,5 +1,4 @@
 "use client";
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -23,7 +22,6 @@ import {
   Loader2,
 } from "lucide-react";
 import Link from "next/link";
-import { useAnalytics } from "@/context/AnalyticsContext";
 import { DomainWithMailboxesData } from "@/lib/actions/domainsActions";
 import {
   Tooltip,
@@ -31,10 +29,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-function WarmupTab() {
+function WarmupTab({ domainsData, loading, error }: { domainsData: DomainWithMailboxesData[], loading: boolean, error: string | null }) {
   return (
     <div className="space-y-8">
-      <WarmupMailboxesTable />
+      <WarmupMailboxesTable domainsData={domainsData} loading={loading} error={error} />
       <Card>
         <CardContent className="p-6">
           <div className="flex items-start space-x-3">
@@ -66,29 +64,7 @@ function WarmupTab() {
 
 export default WarmupTab;
 
-function WarmupMailboxesTable() {
-  const { fetchDomainsWithMailboxes } = useAnalytics();
-  const [domainsData, setDomainsData] = useState<DomainWithMailboxesData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchDomains = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await fetchDomainsWithMailboxes();
-        setDomainsData(data);
-      } catch (err) {
-        console.error('Failed to fetch domains:', err);
-        setError('Failed to load domain data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDomains();
-  }, [fetchDomainsWithMailboxes]);
+function WarmupMailboxesTable({ domainsData, loading, error }: { domainsData: DomainWithMailboxesData[], loading: boolean, error: string | null }) {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
