@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { getStatusColor } from "@/lib/utils/domains";
 import { AlertTriangle, Check, Copy, Plus, X } from "lucide-react";
 import Link from "next/link";
 import DeleteDomainDialog from "../dialogs/DeleteDomainDialog";
@@ -16,24 +17,6 @@ export const getRecordIcon = (status: string) => {
       return <X className="w-4 h-4 text-red-600" />;
     default:
       return <AlertTriangle className="w-4 h-4 text-gray-600" />;
-  }
-};
-
-export const getStatusColor = (status: string) => {
-  switch (status) {
-    case "verified":
-    case "active":
-    case "WARMED":
-      return "bg-green-100 text-green-800";
-    case "pending":
-    case "WARMING":
-      return "bg-orange-100 text-orange-800";
-    case "NOT_STARTED":
-    case "failed":
-    case "PAUSED":
-      return "bg-red-100 text-red-800";
-    default:
-      return "bg-gray-100 text-gray-800";
   }
 };
 

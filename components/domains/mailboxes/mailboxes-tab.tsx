@@ -8,7 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getStatusColor, mailboxes } from "@/lib/data/domains.mock";
+import { getStatusColor } from "@/lib/utils/domains";
+import { mailboxes } from "@/lib/data/domains.mock";
 import { Mail, Plus } from "lucide-react";
 import Link from "next/link";
 import MailboxActions from "../actions/MailboxActions";

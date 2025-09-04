@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { campaignLeads } from "@/lib/data/campaigns";
 import LeadsFilter from "./LeadsFilter";
+
 const getStatusColor = (status: string) => {
   switch (status) {
     case "replied":
@@ -60,7 +61,7 @@ function LeadsTab() {
                   <td className="px-6 py-4">
                     <span
                       className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
-                        lead.status,
+                        lead.status
                       )}`}
                     >
                       {lead.status}

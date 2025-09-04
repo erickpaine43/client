@@ -8,7 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getStatusColor, mailboxes } from "@/lib/data/domains.mock";
+import { getStatusColor } from "@/lib/utils/domains";
+import { mailboxes } from "@/lib/data/domains.mock";
 import { cn } from "@/lib/utils";
 import {
   AlertTriangle,
