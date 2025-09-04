@@ -1,7 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { domains, getStatusColor } from "@/lib/data/domains.mock";
 import { cn } from "@/lib/utils";
 import { AlertTriangle, Check, Copy, Plus, X } from "lucide-react";
 import Link from "next/link";
@@ -20,25 +19,45 @@ export const getRecordIcon = (status: string) => {
   }
 };
 
-function DomainsTab() {
-  const dnsRecords = [
-    {
-      name: "SPF Record",
-      value: "v=spf1 include:_spf.google.com ~all",
-    },
-    {
-      name: "DKIM Record",
-      value: "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3...",
-    },
-    {
-      name: "DMARC Record",
-      value: "v=DMARC1; p=quarantine; rua=mailto:...",
-    },
-    {
-      name: "MX Record",
-      value: "10 mx1.emailprovider.com",
-    },
-  ];
+export const getStatusColor = (status: string) => {
+  switch (status) {
+    case "verified":
+    case "active":
+    case "WARMED":
+      return "bg-green-100 text-green-800";
+    case "pending":
+    case "WARMING":
+      return "bg-orange-100 text-orange-800";
+    case "NOT_STARTED":
+    case "failed":
+    case "PAUSED":
+      return "bg-red-100 text-red-800";
+    default:
+      return "bg-gray-100 text-gray-800";
+  }
+};
+
+interface DomainsTabProps {
+  domains: Array<{
+    id: number;
+    domain: string;
+    status: string;
+    mailboxes: number;
+    records: {
+      spf: string;
+      dkim: string;
+      dmarc: string;
+      mx: string;
+    };
+    addedDate: string;
+  }>;
+  dnsRecords: Array<{
+    name: string;
+    value: string;
+  }>;
+}
+
+function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
 
   return (
     <div className="space-y-6">
