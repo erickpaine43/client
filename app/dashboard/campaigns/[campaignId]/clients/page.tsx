@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import ClientsContent from "./content";
-import { getMockClientsPage } from "@/components/clients/mock";
+import { getClientsPage } from "./actions";
 
 export default async function ClientsPage({
   params,
@@ -14,7 +14,7 @@ export default async function ClientsPage({
   if (!campaignId) {
     redirect("/dashboard/campaigns");
   }
-  const data = getMockClientsPage(Number(page) || 1);
+  const data = await getClientsPage(campaignId, Number(page) || 1);
 
   return (
     <ClientsContent
