@@ -19,7 +19,7 @@ import {
   MessageSquare,
   TrendingUp,
 } from "lucide-react";
-import { useState } from "react";
+import { useAnalytics } from "@/context/AnalyticsContext";
 import {
   CartesianGrid,
   Line,
@@ -30,19 +30,6 @@ import {
   YAxis,
 } from "recharts";
 
-interface ChartData {
-  date: string;
-  totalWarmups: number;
-  spamFlags: number;
-  replies: number;
-}
-
-interface MetricToggle {
-  totalWarmups: boolean;
-  spamFlags: boolean;
-  replies: boolean;
-}
-
 interface TooltipPayloadItem {
   dataKey: string;
   value: number;
@@ -51,28 +38,18 @@ interface TooltipPayloadItem {
 }
 
 function WarmUpLineChart() {
-  const [activeMetrics, setActiveMetrics] = useState<MetricToggle>({
-    totalWarmups: true,
-    spamFlags: true,
-    replies: true,
-  });
+  const {
+    visibleWarmupMetrics,
+    setVisibleWarmupMetrics,
+    warmupChartData,
+    warmupMetrics
+  } = useAnalytics();
 
-  // Mock data for the chart
-  const chartData: ChartData[] = [
-    { date: "Aug 5", totalWarmups: 245, spamFlags: 3, replies: 12 },
-    { date: "Aug 6", totalWarmups: 267, spamFlags: 2, replies: 18 },
-    { date: "Aug 7", totalWarmups: 289, spamFlags: 5, replies: 15 },
-    { date: "Aug 8", totalWarmups: 312, spamFlags: 1, replies: 22 },
-    { date: "Aug 9", totalWarmups: 298, spamFlags: 4, replies: 19 },
-    { date: "Aug 10", totalWarmups: 334, spamFlags: 2, replies: 25 },
-    { date: "Aug 11", totalWarmups: 356, spamFlags: 3, replies: 28 },
-  ];
-
-  const toggleMetric = (metric: keyof MetricToggle) => {
-    setActiveMetrics((prev) => ({
-      ...prev,
-      [metric]: !prev[metric],
-    }));
+  const toggleMetric = (metric: "totalWarmups" | "spamFlags" | "replies") => {
+    setVisibleWarmupMetrics({
+      ...visibleWarmupMetrics,
+      [metric]: !visibleWarmupMetrics[metric],
+    });
   };
 
    
@@ -110,32 +87,20 @@ function WarmUpLineChart() {
     return null;
   };
 
-  const footerMetrics = [
-    {
-      key: "totalWarmups",
-      label: "Total Warmups",
-      color: "text-blue-600",
-      tooltip:
-        "Emails we sent from your mailbox as part of the warmup process to improve deliverability.",
-      value: chartData.reduce((sum, d) => sum + d.totalWarmups, 0),
-    },
-    {
-      key: "spamFlags",
-      label: "Spam Flags",
-      color: "text-red-600",
-      tooltip:
-        "Emails that landed in the spam folder during warmups. We then moved them to the inbox to help improve the reputation.",
-      value: chartData.reduce((sum, d) => sum + d.spamFlags, 0),
-    },
-    {
-      key: "replies",
-      label: "Total Replies",
-      color: "text-green-600",
-      tooltip:
-        "Replies we sent to emails received from your mailbox during the warmup process to simulate real conversations.",
-      value: chartData.reduce((sum, d) => sum + d.replies, 0),
-    },
-  ];
+  const footerMetrics = warmupMetrics.map(metric => ({
+    key: metric.key,
+    label: metric.label,
+    color: metric.key === "totalWarmups" ? "text-blue-600" : metric.key === "spamFlags" ? "text-red-600" : "text-green-600",
+    tooltip: metric.tooltip,
+    value: warmupChartData.reduce((sum, d) => {
+      switch (metric.key) {
+        case "totalWarmups": return sum + d.totalWarmups;
+        case "spamFlags": return sum + d.spamFlags;
+        case "replies": return sum + d.replies;
+        default: return sum;
+      }
+    }, 0),
+  }));
 
   return (
     <TooltipProvider>
@@ -151,11 +116,11 @@ function WarmUpLineChart() {
 
             <div className="flex items-center space-x-2">
               <Button
-                variant={activeMetrics.totalWarmups ? "default" : "outline"}
+                variant={visibleWarmupMetrics.totalWarmups ? "default" : "outline"}
                 size="sm"
                 onClick={() => toggleMetric("totalWarmups")}
                 className={
-                  activeMetrics.totalWarmups
+                  visibleWarmupMetrics.totalWarmups
                     ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
                     : ""
                 }
@@ -165,11 +130,11 @@ function WarmUpLineChart() {
               </Button>
 
               <Button
-                variant={activeMetrics.spamFlags ? "default" : "outline"}
+                variant={visibleWarmupMetrics.spamFlags ? "default" : "outline"}
                 size="sm"
                 onClick={() => toggleMetric("spamFlags")}
                 className={
-                  activeMetrics.spamFlags
+                  visibleWarmupMetrics.spamFlags
                     ? "bg-red-100 text-red-700 hover:bg-red-200"
                     : ""
                 }
@@ -179,11 +144,11 @@ function WarmUpLineChart() {
               </Button>
 
               <Button
-                variant={activeMetrics.replies ? "default" : "outline"}
+                variant={visibleWarmupMetrics.replies ? "default" : "outline"}
                 size="sm"
                 onClick={() => toggleMetric("replies")}
                 className={
-                  activeMetrics.replies
+                  visibleWarmupMetrics.replies
                     ? "bg-green-100 text-green-700 hover:bg-green-200"
                     : ""
                 }
@@ -198,7 +163,7 @@ function WarmUpLineChart() {
         <CardContent>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData}>
+              <LineChart data={warmupChartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis
                   dataKey="date"
@@ -213,7 +178,7 @@ function WarmUpLineChart() {
                 />
                 <RechartsTooltip content={<CustomTooltip />} />
 
-                {activeMetrics.totalWarmups && (
+                {visibleWarmupMetrics.totalWarmups && (
                   <Line
                     type="monotone"
                     dataKey="totalWarmups"
@@ -224,7 +189,7 @@ function WarmUpLineChart() {
                   />
                 )}
 
-                {activeMetrics.spamFlags && (
+                {visibleWarmupMetrics.spamFlags && (
                   <Line
                     type="monotone"
                     dataKey="spamFlags"
@@ -235,7 +200,7 @@ function WarmUpLineChart() {
                   />
                 )}
 
-                {activeMetrics.replies && (
+                {visibleWarmupMetrics.replies && (
                   <Line
                     type="monotone"
                     dataKey="replies"

@@ -150,6 +150,38 @@ export interface CampaignFilter {
 // ============================================================================
 
 /**
+ * Data point for warmup analytics charts
+ */
+export interface WarmupChartData {
+  /** Date in readable format (e.g., "Aug 11") */
+  date: string;
+  /** Total number of warmup emails sent */
+  totalWarmups: number;
+  /** Number of emails marked as spam */
+  spamFlags: number;
+  /** Number of replies received */
+  replies: number;
+}
+
+/**
+ * Configuration for warmup analytics metrics
+ */
+export interface WarmupMetric {
+  /** Unique key identifier for the metric */
+  key: "totalWarmups" | "spamFlags" | "replies";
+  /** Display label for the metric */
+  label: string;
+  /** Hex color code for chart representation */
+  color: string;
+  /** Icon component for the metric */
+  icon: React.ComponentType<{ className?: string }>;
+  /** Whether this metric is currently visible */
+  visible: boolean;
+  /** Tooltip description for the metric */
+  tooltip: string;
+}
+
+/**
  * Daily warmup statistics for a specific mailbox
  */
 export interface DailyWarmupStats {
@@ -249,6 +281,14 @@ export interface AnalyticsContextState {
   campaignPerformanceData: CampaignPerformanceData[];
   /** Available campaigns for filtering */
   campaigns: CampaignFilter[];
+  /** Warmup analytics metrics */
+  warmupMetrics: WarmupMetric[];
+  /** Visible warmup metrics configuration */
+  visibleWarmupMetrics: Record<string, boolean>;
+  /** Function to update visible warmup metrics */
+  setVisibleWarmupMetrics: (metrics: Record<string, boolean>) => void;
+  /** Warmup chart data */
+  warmupChartData: WarmupChartData[];
 }
 
 /**

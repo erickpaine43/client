@@ -1,3 +1,5 @@
+"use client";
+
 import AnalyticsNavLinks from "@/components/analytics/nav/AnalyticsNavLinks";
 import EmailMailboxesTable from "@/components/analytics/warmup/email-mailboxes-table";
 import WarmupAnalyticsFilter from "@/components/analytics/warmup/warmup-analytics-filter";

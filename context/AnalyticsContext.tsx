@@ -1,8 +1,10 @@
 "use client";
 import {
   generateTimeSeriesData,
+  generateWarmupChartData,
   getDaysFromRange,
   metrics,
+  warmupMetrics,
   campaignData,
   campaigns,
 } from "@/lib/data/analytics.mock";
@@ -12,6 +14,8 @@ import {
   AnalyticsFilterState,
   DataGranularity,
   DateRangePreset,
+  WarmupChartData,
+  WarmupMetric,
 } from "@/types";
 
 // Helper function to get allowed granularities based on date range
@@ -46,6 +50,12 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
       {},
     ),
   );
+  const [visibleWarmupMetrics, setVisibleWarmupMetrics] = useState(
+    warmupMetrics.reduce(
+      (acc, metric) => ({ ...acc, [metric.key]: metric.visible }),
+      {},
+    ),
+  );
 
   // Calculate days based on date range
   const days = useMemo(() => {
@@ -75,6 +85,11 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
   // Generate chart data when dependencies change
   const chartData = useMemo(() => {
     return generateTimeSeriesData(days, granularity);
+  }, [days, granularity]);
+
+  // Generate warmup chart data when dependencies change
+  const warmupChartData = useMemo(() => {
+    return generateWarmupChartData(days, granularity);
   }, [days, granularity]);
 
   // Create filters object
@@ -115,6 +130,12 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
     selectedMailboxes,
     setSelectedMailboxes,
   ]);
+
+  // Create warmup filters object
+  const warmupFilters = useMemo(() => ({
+    visibleWarmupMetrics,
+    setVisibleWarmupMetrics,
+  }), [visibleWarmupMetrics, setVisibleWarmupMetrics]);
 
   // Calculate summary metrics from chart data
   const { totalSent, openRate, clickRate, replyRate } = useMemo(() => {
@@ -160,6 +181,10 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
         filters,
         campaignPerformanceData: campaignData,
         campaigns,
+        warmupMetrics: warmupMetrics as WarmupMetric[],
+        visibleWarmupMetrics,
+        setVisibleWarmupMetrics,
+        warmupChartData,
       }}
     >
       {children}
