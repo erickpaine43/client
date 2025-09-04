@@ -29,6 +29,8 @@ export const domains = [
 ];
 import { Mailbox } from "@/types/mailbox";
 import { WarmupResponse } from "@/types/accounts";
+import { CheckCircle, Globe, Server } from "lucide-react";
+import { DNSRecord } from "@/types/domains";
 
 export const mailboxes: Mailbox[] = [
   {
@@ -281,3 +283,59 @@ export const warmupData: WarmupResponse = {
     },
   ],
 };
+
+export const steps = [
+  {
+    number: 1,
+    title: "Enter Domain",
+    subtitle: "Provide your domain name",
+    icon: Globe,
+    color: "bg-blue-500",
+  },
+  {
+    number: 2,
+    title: "Set Up DNS Records",
+    subtitle: "Configure DNS settings",
+    icon: Server,
+    color: "bg-purple-500",
+  },
+  {
+    number: 3,
+    title: "Confirmation",
+    subtitle: "Domain verified successfully",
+    icon: CheckCircle,
+    color: "bg-green-500 text-white",
+  },
+];
+
+export const dnsRecords: DNSRecord[] = [
+  {
+    type: "SPF",
+    name: "@",
+    value: "v=spf1 include:penguinmails.com ~all",
+    status: "pending",
+    description: "Sender Policy Framework - Prevents email spoofing",
+  },
+  {
+    type: "DKIM",
+    name: "penguin._domainkey",
+    value:
+      "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC7vbqajDw4o6gJy8ousKZQrBqj...",
+    status: "pending",
+    description: "DomainKeys Identified Mail - Email authentication",
+  },
+  {
+    type: "DMARC",
+    name: "_dmarc",
+    value: "v=DMARC1; p=none; rua=mailto:dmarc@penguinmails.com",
+    status: "pending",
+    description: "Domain-based Message Authentication - Email policy",
+  },
+  {
+    type: "MX",
+    name: "@",
+    value: "mx.penguinmails.com",
+    status: "pending",
+    description: "Mail Exchange - Routes incoming emails",
+  },
+];
