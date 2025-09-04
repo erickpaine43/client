@@ -4,36 +4,12 @@ import { cn } from "@/lib/utils";
 import { CheckCircle, Clock, Globe, Mail } from "lucide-react";
 import { useAnalytics } from "@/context/AnalyticsContext";
 import { useState, useEffect } from "react";
-import type { MailboxWarmupData } from "@/types";
+import type { MailboxWarmupData, Domain } from "@/types";
 import StatsCard from "@/components/analytics/cards/StatsCard";
-
-// TODO: Replace with DomainMock from centralized types once added to types/domains.ts
-// See types/DOMAIN_TYPE_FIX_PROMPT.md for implementation details
-type DomainMock = {
-  id: number;
-  domain: string;
-  status: string;
-  mailboxes: number;
-  records: {
-    spf: string;
-    dkim: string;
-    dmarc: string;
-    mx: string;
-  };
-  addedDate: string;
-  name?: string;
-  provider?: string;
-  daysActive?: number;
-  reputation?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  companyId?: number;
-  createdById?: string;
-};
 
 function OverviewCards() {
   const [mailboxes, setMailboxes] = useState<MailboxWarmupData[]>([]);
-  const [domains, setDomains] = useState<DomainMock[]>([]);
+  const [domains, setDomains] = useState<Domain[]>([]);
   const { fetchMailboxes } = useAnalytics();
 
   useEffect(() => {

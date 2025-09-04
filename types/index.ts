@@ -5,7 +5,7 @@
 export * from "./campaign";
 
 // Export all domain related types
-export * from "./domain-fixed";
+export * from "./domains";
 
 // Export all mailbox related types
 export * from "./mailbox";

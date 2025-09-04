@@ -32,7 +32,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { InfoIcon } from "lucide-react";
 import { DnsProvider, DNS_RECORD_TYPES, DkimManagementType } from "./components/constants";
-import { VerificationStatus } from "@/types/domain-fixed";
+import { VerificationStatus } from "@/types";
 import { copyText as t } from "./copy";
 
 const DOMAIN_REGEX =

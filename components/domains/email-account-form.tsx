@@ -4,7 +4,7 @@ import {
   RelayType,
   DomainAccountCreationType,
   EmailAccount,
-} from "@/types/domain-fixed";
+} from "@/types";
 // import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, UseFormReturn } from "react-hook-form";
 import * as z from "zod";
