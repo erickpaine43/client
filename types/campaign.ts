@@ -119,7 +119,7 @@ export const CampaignEventCondition = {
 
 // Zod schemas and inferred types
 import { z } from "zod";
-import { RefObject, ComponentType } from "react";
+import { RefObject } from "react";
 import type { LucideIcon } from "lucide-react";
 import type { Template } from "./templates"; // Assuming templates are in types
 

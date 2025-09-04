@@ -221,6 +221,37 @@ export interface MailboxWarmupData {
   healthScore: number;
 }
 
+/**
+ * Progressive analytics state for individual mailboxes
+ */
+export interface ProgressiveAnalyticsState {
+  [mailboxId: string]: {
+    data: MailboxAnalyticsData | null;
+    loading: boolean;
+    error: string | null;
+  };
+}
+
+/**
+ * Progressive mailbox analytics data interface
+ */
+export interface MailboxAnalyticsData {
+  /** Unique mailbox identifier */
+  mailboxId: string;
+  /** Warmup progress as percentage (0-100) */
+  warmupProgress: number;
+  /** Total number of warmup emails sent */
+  totalWarmups: number;
+  /** Number of emails marked as spam */
+  spamFlags: number;
+  /** Number of replies received */
+  replies: number;
+  /** Health score out of 100 */
+  healthScore: number;
+  /** Last updated timestamp */
+  lastUpdated: Date;
+}
+
 // ============================================================================
 // ANALYTICS CONTEXT AND STATE TYPES
 // ============================================================================

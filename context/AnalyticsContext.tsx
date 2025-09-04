@@ -14,7 +14,6 @@ import {
   AnalyticsFilterState,
   DataGranularity,
   DateRangePreset,
-  WarmupChartData,
   WarmupMetric,
 } from "@/types";
 
@@ -131,11 +130,6 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
     setSelectedMailboxes,
   ]);
 
-  // Create warmup filters object
-  const warmupFilters = useMemo(() => ({
-    visibleWarmupMetrics,
-    setVisibleWarmupMetrics,
-  }), [visibleWarmupMetrics, setVisibleWarmupMetrics]);
 
   // Calculate summary metrics from chart data
   const { totalSent, openRate, clickRate, replyRate } = useMemo(() => {
