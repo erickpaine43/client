@@ -3,6 +3,8 @@ import {
   generateTimeSeriesData,
   getDaysFromRange,
   metrics,
+  campaignData,
+  campaigns,
 } from "@/lib/data/analytics.mock";
 import { createContext, useContext, useState, useMemo, useEffect } from "react";
 import {
@@ -156,6 +158,8 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
         selectedMailboxes,
         setSelectedMailboxes,
         filters,
+        campaignPerformanceData: campaignData,
+        campaigns,
       }}
     >
       {children}

@@ -13,11 +13,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { campaignData } from "@/lib/data/analytics.mock";
 import { cn } from "@/lib/utils";
 import { Info } from "lucide-react";
+import { CampaignPerformanceData } from "@/types";
 
-function CampaignPerformanceTable() {
+interface CampaignPerformanceTableProps {
+  data: CampaignPerformanceData[];
+}
+
+function CampaignPerformanceTable({ data }: CampaignPerformanceTableProps) {
   return (
     <>
       <>
@@ -68,7 +72,7 @@ function CampaignPerformanceTable() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {campaignData.map((campaign, index) => (
+                {data.map((campaign, index) => (
                   <TableRow key={index} className={cn("hover:bg-muted/50")}>
                     <TableCell className="font-medium">
                       {campaign.name}

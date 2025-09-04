@@ -245,6 +245,10 @@ export interface AnalyticsContextState {
   setSelectedMailboxes: (mailboxes: string[]) => void;
   /** Filters state object for easier access to filter-related properties */
   filters: AnalyticsFilterState;
+  /** Campaign performance data for tables and comparisons */
+  campaignPerformanceData: CampaignPerformanceData[];
+  /** Available campaigns for filtering */
+  campaigns: CampaignFilter[];
 }
 
 /**
