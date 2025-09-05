@@ -1,6 +1,7 @@
 "use server";
 
 import { inboxMockEmails, inboxMockFroms, inboxMockCampaigns } from "@/lib/data/emails.mock";
+import { conversations } from "@/lib/data/Inbox.mock";
 
 interface Query {
   email?: string[];
@@ -106,6 +107,19 @@ export async function fetchEmailByIdAction(id: string, _idToken = "") {
   } catch (error) {
     console.error("Error in fetchEmailByIdAction:", error);
     throw new Error("Failed to fetch by id the email.");
+  }
+}
+
+export async function fetchConversationByIdAction(id: string, _idToken = "") {
+  try {
+    const conversation = conversations.find((conv) => conv.id.toString() === id);
+    if (!conversation) {
+      return null;
+    }
+    return conversation;
+  } catch (error) {
+    console.error("Error in fetchConversationByIdAction:", error);
+    throw new Error("Failed to fetch conversation.");
   }
 }
 

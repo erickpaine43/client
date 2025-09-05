@@ -10,7 +10,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { ConversationProvider } from "@/context/ConversationContext";
-import { conversations } from "@/lib/data/Inbox.mock";
+import { fetchConversationByIdAction } from "@/app/dashboard/inbox/actions";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -27,7 +27,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
 }
 export default page;
 async function Conversation({ id }: { id: string }) {
-  const conversation = conversations.find((conv) => conv.id.toString() === id);
+  const conversation = await fetchConversationByIdAction(id);
   if (!conversation) {
     return notFound();
   }
