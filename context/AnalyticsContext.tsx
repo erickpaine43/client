@@ -7,6 +7,7 @@ import {
   warmupMetrics,
   campaignData,
   campaigns,
+  smartInsightsList,
 } from "@/lib/data/analytics.mock";
 import { createContext, useContext, useState, useMemo, useEffect } from "react";
 import {
@@ -229,6 +230,7 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
         visibleWarmupMetrics,
         setVisibleWarmupMetrics,
         warmupChartData,
+        smartInsightsList,
         // Mailbox analytics methods
         fetchMailboxes,
         fetchMailboxAnalytics,

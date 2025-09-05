@@ -324,6 +324,8 @@ export interface AnalyticsContextState {
   setVisibleWarmupMetrics: (metrics: Record<string, boolean>) => void;
   /** Warmup chart data */
   warmupChartData: WarmupChartData[];
+  /** Smart insights data for inbox analytics */
+  smartInsightsList: SmartInsight[];
   /** Function to fetch mailboxes */
   fetchMailboxes: (userid?: string, companyid?: string) => Promise<MailboxWarmupData[]>;
   /** Function to fetch analytics for a single mailbox */
@@ -482,4 +484,24 @@ export interface EntityFilterProps<T = { id: string; name: string }> {
   label: string;
   /** Icon to display */
   icon?: React.ReactNode;
+}
+
+/**
+ * Individual smart insight item structure
+ */
+export interface SmartInsight {
+  /** Unique identifier */
+  id: string;
+  /** Display label */
+  label: string;
+  /** Value to display (number or string) */
+  count: number | string;
+  /** Icon component */
+  icon: React.ComponentType<{ className?: string }>;
+  /** Border color classes */
+  borderColor: string;
+  /** Icon background color classes */
+  iconBackground: string;
+  /** Icon color classes */
+  iconColor: string;
 }
