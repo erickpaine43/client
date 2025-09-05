@@ -7,9 +7,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { EmailsTable } from "@/components/domains/components/emails-table";
-import { EmailAccount } from "@/types/domain";
 import { ArrowLeft, PlusCircle } from "lucide-react";
 import Link from "next/link";
+import { getDomainWithAccounts } from "@/lib/actions/domainsActions";
+import { notFound } from "next/navigation";
 
 export default async function DomainAccountsPage({
   params,
@@ -17,50 +18,13 @@ export default async function DomainAccountsPage({
   params: Promise<{ domainId: string }>;
 }) {
   const { domainId } = await params;
-  // TODO: Fetch domain and accounts data based on domainId
-  const domain = {
-    id: domainId,
-    name: "example.com",
-  };
+  const domainData = await getDomainWithAccounts(parseInt(domainId));
 
-  const emailAccounts: EmailAccount[] = [
-    {
-      id: 1,
-      email: "sales@example.com",
-      provider: "Google Workspace",
-      status: "ACTIVE",
-      reputation: 92,
-      warmupStatus: "WARMED",
-      dayLimit: 300,
-      sent24h: 250,
-      lastSync: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-      spf: true,
-      dkim: true,
-      dmarc: true,
-      createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
-      updatedAt: new Date().toISOString(),
-      companyId: 1,
-      createdById: "user_1",
-    },
-    {
-      id: 2,
-      email: "support@example.com",
-      provider: "Google Workspace",
-      status: "ACTIVE",
-      reputation: 88,
-      warmupStatus: "WARMING",
-      dayLimit: 200,
-      sent24h: 150,
-      lastSync: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
-      spf: true,
-      dkim: true,
-      dmarc: true,
-      createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-      updatedAt: new Date().toISOString(),
-      companyId: 1,
-      createdById: "user_1",
-    },
-  ];
+  if (!domainData) {
+    notFound();
+  }
+
+  const { domain, emailAccounts } = domainData;
 
   return (
     <div className="container mx-auto py-6">

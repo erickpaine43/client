@@ -140,7 +140,7 @@ export async function getDomainSettings(domainId: number): Promise<DomainSetting
   }
 
   return {
-    domain: domain.name,
+    domain: domain.name || domain.domain,
     authentication: {
       ...domain.authentication,
       spf: {
@@ -164,5 +164,41 @@ export async function getDomainSettings(domainId: number): Promise<DomainSetting
     },
     reputationFactors: domain.reputationFactors,
     provider: DNSProvider.OTHER, // Default since "Google Workspace" doesn't match enum
+  };
+}
+
+export async function getDomainWithAccounts(domainId: number): Promise<{
+  domain: { id: string; name: string };
+  emailAccounts: EmailAccount[];
+} | null> {
+  const domain = domains.find(d => d.id === domainId);
+  if (!domain) return null;
+
+  const domainMailboxes = mailboxes.filter(mb => mb.domain === domain.domain);
+  const accounts: EmailAccount[] = domainMailboxes.map(mb => ({
+    id: mb.id,
+    email: mb.email,
+    provider: mb.provider,
+    status: mb.status as EmailAccountStatus,
+    reputation: mb.reputation,
+    warmupStatus: mb.warmupStatus,
+    dayLimit: mb.dailyLimit,
+    sent24h: mb.sent24h,
+    lastSync: mb.lastSync,
+    spf: mb.spf,
+    dkim: mb.dkim,
+    dmarc: mb.dmarc,
+    createdAt: mb.createdAt,
+    updatedAt: mb.updatedAt,
+    companyId: mb.companyId,
+    createdById: mb.createdById,
+  }));
+
+  return {
+    domain: {
+      id: domainId.toString(),
+      name: domain.name || domain.domain,
+    },
+    emailAccounts: accounts,
   };
 }
