@@ -1,8 +1,8 @@
 "use server";
 
 import { nile } from "@/app/api/[...nile]/nile";
-import { 
-  mockUserSettings, 
+import {
+  mockUserSettings,
   mockGeneralSettings,
   mockSecuritySettings,
   type UserSettings,
@@ -13,6 +13,7 @@ import type {
   GeneralSettings,
   SecuritySettings
 } from "../../types/settings";
+import { getCurrentUserId } from "@/lib/utils/auth";
 
 // Action Result Types
 export type ActionResult<T> = 
@@ -138,25 +139,6 @@ type DeepPartial<T> = T extends object ? {
   [P in keyof T]?: DeepPartial<T[P]>;
 } : T;
 
-// Authentication helper
-async function getCurrentUserId(): Promise<string | null> {
-  try {
-    const user = await nile.users.getSelf();
-    
-    if (user instanceof Response) {
-      return null;
-    }
-    
-    if (user && typeof user === "object" && "id" in user) {
-      return user.id as string;
-    }
-    
-    return null;
-  } catch (error) {
-    console.error("Failed to get current user:", error);
-    return null;
-  }
-}
 
 // Main Server Actions
 

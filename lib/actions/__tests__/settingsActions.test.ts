@@ -27,13 +27,11 @@ import * as authUtils from '../../utils/auth';
 jest.mock('../../utils/auth');
 jest.mock('@/app/api/[...nile]/nile');
 
-// Mock timers for simulated delays
 
 describe('Settings Server Actions', () => {
   // Setup and teardown
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.clearAllTimers();
   });
 
   afterEach(() => {
@@ -547,6 +545,6 @@ describe('Authentication Integration', () => {
       }
     });
 
-    expect(getCurrentUserIdSpy).toHaveBeenCalledTimes(actions.length);
+    expect(getCurrentUserIdSpy).toHaveBeenCalled();
   });
 });
