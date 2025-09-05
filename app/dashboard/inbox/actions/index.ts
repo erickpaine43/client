@@ -1,5 +1,7 @@
 "use server";
 
+import { inboxMockEmails, inboxMockFroms, inboxMockCampaigns } from "@/lib/data/emails.mock";
+
 interface Query {
   email?: string[];
   from?: string[];
@@ -37,26 +39,9 @@ export const getAllMessagesAction = async (
   });
 
   try {
-    // mock implementation
-    const emails = [
-      {
-        id: 1,
-        subject: "Hello World",
-        body: "This is a test email.",
-        toUser: {
-          email: "john@example.com",
-        },
-        client: {
-          firstName: "John",
-          lastName: "Doe",
-        },
-        campaign: {
-          name: "Test Campaign",
-        },
-      },
-    ];
+    const emails = inboxMockEmails;
     const unread = 1;
-    const total = 1;
+    const total = emails.length;
     return {
       emails,
       unread,
@@ -72,42 +57,9 @@ export const getAllMessagesAction = async (
 
 export const getUniqueFiltersAction = async (_idToken = "") => {
   try {
-    const emails = [
-      {
-        id: 1,
-        subject: "Hello World",
-        body: "This is a test email.",
-        toUser: {
-          email: "john@example.com",
-        },
-        client: {
-          firstName: "John",
-          lastName: "Doe",
-          email: "john@example.com",
-        },
-        campaign: {
-          name: "Test Campaign",
-        },
-      },
-    ];
-    const froms = [
-      {
-        id: 1,
-        client: {
-          firstName: "John",
-          lastName: "Doe",
-        },
-      },
-    ];
-    const campaigns = [
-      {
-        id: 1,
-        name: "Test Campaign",
-        campaign: {
-          name: "Test Campaign",
-        },
-      },
-    ];
+    const emails = inboxMockEmails;
+    const froms = inboxMockFroms;
+    const campaigns = inboxMockCampaigns;
 
     const email = emails
       .map((e) => e.client?.email)
@@ -142,21 +94,7 @@ export const getUniqueFiltersAction = async (_idToken = "") => {
 
 export async function fetchEmailByIdAction(id: string, _idToken = "") {
   try {
-    const email = {
-      id: 1,
-      subject: "Hello World",
-      body: "This is a test email.",
-      toUser: {
-        email: "john@example.com",
-      },
-      client: {
-        firstName: "John",
-        lastName: "Doe",
-      },
-      campaign: {
-        name: "Test Campaign",
-      },
-    };
+    const email = inboxMockEmails[0];
 
     if (!email) {
       return null;
@@ -176,21 +114,7 @@ export async function markEmailAsReadAction(
   _idToken = "",
 ) {
   try {
-    const email = {
-      id: 1,
-      subject: "Hello World",
-      body: "This is a test email.",
-      toUser: {
-        email: "john@example.com",
-      },
-      client: {
-        firstName: "John",
-        lastName: "Doe",
-      },
-      campaign: {
-        name: "Test Campaign",
-      },
-    };
+    const email = inboxMockEmails[0];
 
     return email;
   } catch (error) {
@@ -206,21 +130,7 @@ export async function markEmailAsStarredAction(
 ) {
   try {
     console.log({ id, starred, idToken });
-    const email = {
-      id: 1,
-      subject: "Hello World",
-      body: "This is a test email.",
-      toUser: {
-        email: "john@example.com",
-      },
-      client: {
-        firstName: "John",
-        lastName: "Doe",
-      },
-      campaign: {
-        name: "Test Campaign",
-      },
-    };
+    const email = inboxMockEmails[0];
 
     return email;
   } catch (error) {

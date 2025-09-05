@@ -1,5 +1,31 @@
 import { EmailWithDetails } from "@/types/conversation";
 
+export const inboxMockEmails = [
+  {
+    id: 1,
+    subject: "Hello World",
+    body: "This is a test email.",
+    toUser: { email: "john@example.com" },
+    client: { firstName: "John", lastName: "Doe", email: "john@example.com" },
+    campaign: { name: "Test Campaign" },
+  },
+];
+
+export const inboxMockFroms = [
+  {
+    id: 1,
+    client: { firstName: "John", lastName: "Doe" },
+  },
+];
+
+export const inboxMockCampaigns = [
+  {
+    id: 1,
+    name: "Test Campaign",
+    campaign: { name: "Test Campaign" },
+  },
+];
+
 export const mockEmails: EmailWithDetails[] = [
   {
     id: 1,
