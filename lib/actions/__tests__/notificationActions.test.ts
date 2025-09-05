@@ -23,13 +23,9 @@ import {
   preferencesToSettingsProps,
   bulkUpdateNotificationPreferences,
   NOTIFICATION_ERROR_CODES,
-  type ActionResult,
 } from '../notificationActions';
 import { 
   mockNotificationPreferences,
-  mockNotificationHistory,
-  mockNotificationSchedules,
-  notificationTypes,
 } from '../../data/notifications.mock';
 import * as authUtils from '../../utils/auth';
 
@@ -144,7 +140,7 @@ describe('Notification Server Actions', () => {
 
       const result = await updateNotificationPreferences({
         email: {
-          newReplies: 'invalid' as any,
+          newReplies: 'invalid' as never,
         },
       });
 
@@ -223,7 +219,7 @@ describe('Notification Server Actions', () => {
       jest.spyOn(authUtils, 'requireUserId').mockResolvedValue('user-123');
 
       const result = await updateEmailNotifications({
-        newReplies: 123 as any,
+        newReplies: 123 as never,
       });
 
       expect(result.success).toBe(false);
@@ -430,7 +426,7 @@ describe('Notification Server Actions', () => {
       jest.spyOn(authUtils, 'requireUserId').mockResolvedValue('user-123');
 
       const result = await upsertNotificationSchedule({
-        type: 'invalidType' as any,
+        type: 'invalidType' as never,
       });
 
       expect(result.success).toBe(false);
