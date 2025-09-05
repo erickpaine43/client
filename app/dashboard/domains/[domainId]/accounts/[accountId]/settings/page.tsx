@@ -7,14 +7,7 @@ import Link from "next/link";
 import EmailAccountForm, {
   EmailAccountFormValues,
 } from "@/components/domains/email-account-form";
-import {
-  DomainAccountCreationType,
-  RelayType,
-  VerificationStatus,
-} from "@/types/domain";
-import { EmailProvider } from "@/components/domains/components/constants";
-import { WarmupStatus } from "@/types/mailbox";
-import { MailboxStatus } from "@/types/mailbox";
+import { getAccountDetails } from "@/lib/actions/domainsActions";
 
 // Define the type for the data EmailAccountForm expects for its initialData prop
 type EmailAccountFormInitialData = Partial<EmailAccountFormValues> & {
@@ -31,44 +24,6 @@ function AccountSettingsClient({
   params: Promise<{ domainId: string; accountId: string }>;
 }) {
   const { domainId, accountId } = use(params);
-  // The fetchAccountDetails function remains outside as helper
-  const fetchAccountDetails = async (
-    accountId: string,
-  ): Promise<EmailAccountFormInitialData> => {
-    console.log("Fetching account details for:", accountId);
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    // Return mock data - replace with actual API call
-    return {
-      email: "sales@example.com",
-      provider: EmailProvider.GMAIL, // Corrected enum key
-      status: MailboxStatus.ACTIVE,
-      reputation: 95,
-      warmupStatus: WarmupStatus.WARMED,
-      dayLimit: 250, // This was currentDailyLimit in old mock
-      // sent24h: 0, // Defaulted in schema
-      password: "currentpassword", // For editing, might not show but needed for submission
-      accountType: DomainAccountCreationType.VIRTUAL_USER_DB,
-      accountSmtpAuthStatus: VerificationStatus.VERIFIED,
-      relayType: RelayType.DEFAULT_SERVER_CONFIG,
-      // relayHost: "", // Only if EXTERNAL
-      virtualMailboxMapping: "sales/",
-      mailboxPath: "/var/mail/example.com/sales",
-      mailboxQuotaMB: 1024,
-      warmupDailyIncrement: 10, // This was dailyIncrease
-      warmupTargetDailyVolume: 500, // This was maxDailyEmails
-      accountSetupStatus: "Configuration Complete",
-      accountDeliverabilityStatus: "Checks Passed",
-      domainAuthStatus: {
-        // Mocked domain auth status
-        spfVerified: true,
-        dkimVerified: true,
-        dmarcVerified: true,
-      },
-      // The 'metrics' object from the old mock is not part of EmailAccountFormValues
-      // and would be handled by the separate "Performance Metrics" card if kept.
-    };
-  };
 
   const [initialData, setInitialData] =
     useState<EmailAccountFormInitialData | null>(null);
@@ -79,7 +34,7 @@ function AccountSettingsClient({
     async function loadAccountData() {
       setIsFetchingData(true);
       try {
-        const data = await fetchAccountDetails(accountId);
+        const data = await getAccountDetails(Number(accountId));
         setInitialData(data);
       } catch (error) {
         console.error("Failed to fetch account details:", error);

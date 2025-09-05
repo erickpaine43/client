@@ -4,6 +4,8 @@ import { domains, mailboxes } from "@/lib/data/domains.mock";
 import { Domain, EmailAccount, EmailAccountStatus } from "@/types/domain";
 import { Mailbox } from "@/types/mailbox";
 import { DomainSettings, DNSProvider } from "@/types/domains";
+import { EmailProvider } from "@/components/domains/components/constants";
+import { VerificationStatus, DomainAccountCreationType, RelayType } from "@/types/domain";
 
 export interface DomainWithMailboxesData {
   domain: Domain;
@@ -200,5 +202,62 @@ export async function getDomainWithAccounts(domainId: number): Promise<{
       name: domain.name || domain.domain,
     },
     emailAccounts: accounts,
+  };
+}
+
+export async function getAccountDetails(accountId: number) {
+  console.log(`Fetching account details for ID: ${accountId}`);
+
+  // Simulate network delay
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  const mailbox = mailboxes.find(mb => mb.id === accountId);
+  if (!mailbox) {
+    return null;
+  }
+
+  const domain = domains.find(d => d.domain === mailbox.domain);
+  if (!domain) {
+    return null;
+  }
+
+  // Map provider string to EmailProvider enum
+  const providerMap: Record<string, EmailProvider> = {
+    'Gmail': EmailProvider.GMAIL,
+    'Outlook': EmailProvider.OUTLOOK,
+    'Office 365': EmailProvider.OFFICE365,
+    'SMTP': EmailProvider.SMTP,
+    'SendGrid': EmailProvider.SENDGRID,
+    'Mailgun': EmailProvider.MAILGUN,
+    'Amazon SES': EmailProvider.AMAZON_SES,
+    'Custom SMTP': EmailProvider.SMTP,
+    'Yahoo': EmailProvider.YAHOO,
+    'Zoho': EmailProvider.ZOHO,
+  };
+
+  return {
+    email: mailbox.email,
+    provider: providerMap[mailbox.provider] || EmailProvider.SMTP,
+    status: mailbox.status as EmailAccountStatus,
+    reputation: mailbox.reputation,
+    warmupStatus: mailbox.warmupStatus,
+    dayLimit: mailbox.dailyLimit,
+    sent24h: mailbox.sent24h,
+    password: "currentpassword",
+    accountType: mailbox.accountType as DomainAccountCreationType,
+    accountSmtpAuthStatus: mailbox.status === "ACTIVE" ? VerificationStatus.VERIFIED : VerificationStatus.PENDING,
+    relayType: RelayType.DEFAULT_SERVER_CONFIG,
+    virtualMailboxMapping: `${mailbox.email.split('@')[0]}/`,
+    mailboxPath: `/var/mail/${domain.domain}/${mailbox.email.split('@')[0]}`,
+    mailboxQuotaMB: 1024,
+    warmupDailyIncrement: 10,
+    warmupTargetDailyVolume: mailbox.dailyLimit,
+    accountSetupStatus: "Configuration Complete",
+    accountDeliverabilityStatus: "Checks Passed",
+    domainAuthStatus: {
+      spfVerified: domain.spf,
+      dkimVerified: domain.dkim,
+      dmarcVerified: domain.dmarc,
+    },
   };
 }

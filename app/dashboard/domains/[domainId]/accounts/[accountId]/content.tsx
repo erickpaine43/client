@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AccountDetails } from "@/types/mailbox";
 import {
   ArrowUpRight,
   Mail,
@@ -33,26 +34,6 @@ import {
 } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
 
-// This interface should match the one in page.tsx and the API response
-interface AccountDetails {
-  id: string;
-  email: string;
-  status: "Active" | "Inactive" | "Warming";
-  sentToday: number;
-  dailyLimit: number;
-  inboxRate: number;
-  spamRate: number;
-  reputation: number;
-  daysActive: number;
-  parentDomain: string;
-  stats: {
-    name: string; // Typically a date string like "May 05"
-    volume: number;
-    inbox: number;
-    spam: number;
-    reputation: number;
-  }[];
-}
 
 interface AccountWarmupDetailsContentProps {
   accountDetails: AccountDetails;

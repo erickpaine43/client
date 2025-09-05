@@ -85,3 +85,23 @@ export type EmailProvider =
   | "MAILGUN"
   | "AMAZON_SES"
   | "OTHER";
+
+export interface AccountDetails {
+  id: string;
+  email: string;
+  status: "Active" | "Inactive" | "Warming";
+  sentToday: number;
+  dailyLimit: number;
+  inboxRate: number;
+  spamRate: number;
+  reputation: number;
+  daysActive: number;
+  parentDomain: string;
+  stats: {
+    name: string;
+    volume: number;
+    inbox: number;
+    spam: number;
+    reputation: number;
+  }[];
+}

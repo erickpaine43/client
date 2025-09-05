@@ -1,30 +1,11 @@
 import { notFound } from "next/navigation";
 import AccountWarmupDetailsContent from "./content";
+import { AccountDetails } from "@/types/mailbox";
 
 type AccountPageParams = Promise<{
   domainId: string;
   accountId: string;
 }>;
-
-interface AccountDetails {
-  id: string;
-  email: string;
-  status: "Active" | "Inactive" | "Warming";
-  sentToday: number;
-  dailyLimit: number;
-  inboxRate: number;
-  spamRate: number;
-  reputation: number;
-  daysActive: number;
-  parentDomain: string;
-  stats: {
-    name: string;
-    volume: number;
-    inbox: number;
-    spam: number;
-    reputation: number;
-  }[];
-}
 
 async function getAccountDetails(
   domainId: string,
