@@ -25,7 +25,8 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 function InboxFilter() {
   const [selectedFilter, setSelectedFilter] = useState<string>("all");
@@ -33,6 +34,24 @@ function InboxFilter() {
   const [mailboxFilter, setMailboxFilter] = useState<string[]>([]);
   const [tagFilter, setTagFilter] = useState<string[]>([]);
   const [timeFilter, setTimeFilter] = useState("all");
+
+  const router = useRouter();
+  const currentSearchParams = useSearchParams();
+
+  useEffect(() => {
+    const params = new URLSearchParams(currentSearchParams);
+    const filter = params.get('filter') || 'all';
+    setSelectedFilter(filter);
+    const campaigns = params.getAll('campaigns');
+    setCampaignFilter(campaigns);
+    const mailboxes = params.getAll('mailboxes');
+    setMailboxFilter(mailboxes);
+    const tags = params.getAll('tags');
+    setTagFilter(tags);
+
+    const time = params.get('time') || 'all';
+    setTimeFilter(time);
+  }, [currentSearchParams]);
 
   const filters = [
     { id: "all", label: "All Messages", count: 156, icon: Inbox },
@@ -42,6 +61,16 @@ function InboxFilter() {
     { id: "trash", label: "Trash", count: 12, icon: Trash2 },
     { id: "team", label: "Team", count: 8, icon: Users },
   ];
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedFilter !== 'all') params.append('filter', selectedFilter);
+    campaignFilter.forEach(c => params.append('campaigns', c));
+    tagFilter.forEach(t => params.append('tags', t));
+    mailboxFilter.forEach(m => params.append('mailboxes', m));
+    if (timeFilter !== 'all') params.append('time', timeFilter);
+    router.push(`/dashboard/inbox?${params.toString()}`, { scroll: false });
+  }, [selectedFilter, campaignFilter, tagFilter, mailboxFilter, timeFilter, router]);
+
 
   const tags = ["Interested", "Not Interested", "Maybe Later", "Follow Up"];
 

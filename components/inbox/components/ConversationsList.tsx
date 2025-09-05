@@ -1,7 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { conversations } from "@/lib/data/Inbox.mock";
 import { cn, getRelativeTime } from "@/lib/utils";
 import { Eye, MoreHorizontal, Pin, Star } from "lucide-react";
 import Link from "next/link";
@@ -24,12 +23,15 @@ const getTagColor = (tag: string) => {
   }
 };
 
+import { conversations } from "@/lib/data/Inbox.mock";
+
 function ConversationsList({
+  conversations: filteredConversations,
   _searchParams,
 }: {
+  conversations: typeof conversations;
   _searchParams?: Record<string, string | string[] | undefined>;
 }) {
-  const filteredConversations = conversations;
 
   return (
     <div className="flex flex-col h-full w-full">
