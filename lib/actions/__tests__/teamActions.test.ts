@@ -4,8 +4,23 @@
  * Tests role-based permissions, CRUD operations, and error handling
  */
 
-import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import {
+import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
+import type { TeamMember, TeamInvite } from '@/types/team';
+import * as teamActions from '../teamActions';
+import * as authUtils from '../../utils/auth';
+
+// Mock data for tests - these will be replaced by the imported mock data
+
+// Import TextEncoder/TextDecoder from util
+import { TextEncoder, TextDecoder } from 'util';
+
+// Add to global scope for tests
+global.TextEncoder = TextEncoder;
+// @ts-expect-error - TextDecoder type compatibility issue in test environment
+global.TextDecoder = TextDecoder as typeof globalThis.TextDecoder;
+
+// Re-export for convenience
+const {
   getTeamMembers,
   addTeamMember,
   updateTeamMember,
@@ -16,9 +31,10 @@ import {
   updateTeamSettings,
   validateTeamEmail,
   bulkInviteMembers,
+  mockTeamMembers,
+  mockInvites,
   TEAM_ERROR_CODES,
-} from '../teamActions';
-import * as authUtils from '../../utils/auth';
+} = teamActions;
 
 // Mock the auth module
 jest.mock('../../utils/auth', () => ({
@@ -28,9 +44,45 @@ jest.mock('../../utils/auth', () => ({
   checkRateLimit: jest.fn(),
 }));
 
+// Mock the team actions module to access and modify mock data
+jest.mock('../teamActions', () => {
+  const originalModule = jest.requireActual('../teamActions');
+  
+  return {
+    ...originalModule,
+    // Use the original mock data arrays but make them mutable for tests
+    mockTeamMembers: originalModule.mockTeamMembers,
+    mockInvites: originalModule.mockInvites,
+  };
+});
+
 describe('Team Server Actions', () => {
-  beforeEach(() => {
+  let originalMockTeamMembers: TeamMember[];
+  let originalMockInvites: TeamInvite[];
+
+  beforeEach(async () => {
+    // Clear all mocks
     jest.clearAllMocks();
+    
+    // Store original mock data state with proper deep copies
+    originalMockTeamMembers = mockTeamMembers.map(member => ({
+      ...member,
+      joinedAt: new Date(member.joinedAt),
+      lastActiveAt: member.lastActiveAt ? new Date(member.lastActiveAt) : undefined,
+    }));
+    originalMockInvites = mockInvites.map(invite => ({
+      ...invite,
+      invitedAt: new Date(invite.invitedAt),
+      expiresAt: new Date(invite.expiresAt),
+    }));
+  });
+
+  afterEach(async () => {
+    // Restore original mock data after each test
+    mockTeamMembers.length = 0;
+    mockTeamMembers.push(...originalMockTeamMembers);
+    mockInvites.length = 0;
+    mockInvites.push(...originalMockInvites);
   });
 
   describe('getTeamMembers', () => {
@@ -200,7 +252,7 @@ describe('Team Server Actions', () => {
       jest.spyOn(authUtils, 'checkRateLimit').mockResolvedValue(true);
 
       const result = await addTeamMember({
-        email: 'newadmin@example.com',
+        email: 'higherrole@example.com',
         role: 'admin',
         sendInvite: true,
       });

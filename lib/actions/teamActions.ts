@@ -24,7 +24,7 @@ import {
 import { ActionResult } from '@/types/common';
 
 // Mock data for team members (replace with actual database calls)
-const mockTeamMembers: TeamMember[] = [
+export const mockTeamMembers: TeamMember[] = [
   {
     id: 'member-1',
     userId: 'user-123',
@@ -67,7 +67,7 @@ const mockTeamMembers: TeamMember[] = [
 ];
 
 // Mock pending invites
-const mockInvites: TeamInvite[] = [
+export const mockInvites: TeamInvite[] = [
   {
     id: 'invite-1',
     teamId: 'team-1',
@@ -153,7 +153,7 @@ const updateTeamMemberSchema = z.object({
 /**
  * Check if a user has permission to perform an action on team members
  */
-async function checkTeamPermission(
+export async function checkTeamPermission(
   userId: string,
   permission: TeamPermission,
   targetMemberId?: string
@@ -313,32 +313,7 @@ export async function addTeamMember(
     }
     
     const { email, role, sendInvite } = validationResult.data;
-    
-    // Check permission
-    const hasAccess = await checkTeamPermission(userId, 'members:write');
-    if (!hasAccess) {
-      return {
-        success: false,
-        error: 'You do not have permission to add team members',
-        code: TEAM_ERROR_CODES.PERMISSION_DENIED,
-      };
-    }
-    
-    // Check if user can assign this role
-    const currentMember = mockTeamMembers.find(m => m.userId === userId);
-    if (currentMember && currentMember.role !== 'owner') {
-      const currentLevel = ROLE_HIERARCHY[currentMember.role];
-      const newRoleLevel = ROLE_HIERARCHY[role];
-      
-      if (newRoleLevel > currentLevel) {
-        return {
-          success: false,
-          error: `You cannot assign a role higher than your own (${currentMember.role})`,
-          code: TEAM_ERROR_CODES.PERMISSION_DENIED,
-        };
-      }
-    }
-    
+
     // Check if member already exists
     const existingMember = mockTeamMembers.find(m => m.email === email);
     if (existingMember) {
@@ -348,7 +323,7 @@ export async function addTeamMember(
         code: TEAM_ERROR_CODES.MEMBER_EXISTS,
       };
     }
-    
+
     // Check if invite already exists
     const existingInvite = mockInvites.find(i => i.email === email && i.status === 'pending');
     if (existingInvite) {
@@ -358,7 +333,7 @@ export async function addTeamMember(
         code: TEAM_ERROR_CODES.INVITE_EXISTS,
       };
     }
-    
+
     // Check team member limit
     const memberCount = mockTeamMembers.length + mockInvites.filter(i => i.status === 'pending').length;
     if (memberCount >= 10) { // Example limit
@@ -366,6 +341,31 @@ export async function addTeamMember(
         success: false,
         error: 'Team member limit reached. Please upgrade your plan.',
         code: TEAM_ERROR_CODES.TEAM_LIMIT_REACHED,
+      };
+    }
+
+    // Check if user can assign this role
+    const currentMember = mockTeamMembers.find(m => m.userId === userId);
+    if (currentMember && currentMember.role !== 'owner') {
+      const currentLevel = ROLE_HIERARCHY[currentMember.role];
+      const newRoleLevel = ROLE_HIERARCHY[role];
+
+      if (newRoleLevel > currentLevel) {
+        return {
+          success: false,
+          error: `You cannot assign a role higher than your own (${currentMember.role})`,
+          code: TEAM_ERROR_CODES.PERMISSION_DENIED,
+        };
+      }
+    }
+
+    // Check permission
+    const hasAccess = await checkTeamPermission(userId, 'members:write');
+    if (!hasAccess) {
+      return {
+        success: false,
+        error: 'You do not have permission to add team members',
+        code: TEAM_ERROR_CODES.PERMISSION_DENIED,
       };
     }
     
@@ -445,6 +445,16 @@ export async function updateTeamMember(
       };
     }
     
+    // Find the member first
+    const memberIndex = mockTeamMembers.findIndex(m => m.id === memberId);
+    if (memberIndex === -1) {
+      return {
+        success: false,
+        error: 'Team member not found',
+        code: TEAM_ERROR_CODES.MEMBER_NOT_FOUND,
+      };
+    }
+
     // Check permission
     const hasAccess = await checkTeamPermission(userId, 'members:write', memberId);
     if (!hasAccess) {
@@ -455,29 +465,22 @@ export async function updateTeamMember(
       };
     }
     
-    // Find the member
-    const memberIndex = mockTeamMembers.findIndex(m => m.id === memberId);
-    if (memberIndex === -1) {
-      return {
-        success: false,
-        error: 'Team member not found',
-        code: TEAM_ERROR_CODES.MEMBER_NOT_FOUND,
-      };
-    }
-    
     const member = mockTeamMembers[memberIndex];
     
-    // Check special cases for role changes
-    if (updates.role) {
-      // Cannot change owner role
-      if (member.role === 'owner') {
+    // Check if trying to update owner
+    if (member.role === 'owner') {
+      const currentMember = mockTeamMembers.find(m => m.userId === userId);
+      if (currentMember && currentMember.role !== 'owner') {
         return {
           success: false,
           error: 'Cannot change the role of the team owner',
           code: TEAM_ERROR_CODES.CANNOT_DEMOTE_OWNER,
         };
       }
-      
+    }
+    
+    // Check special cases for role changes
+    if (updates.role) {
       // Check if user can assign this role
       const currentMember = mockTeamMembers.find(m => m.userId === userId);
       if (currentMember && currentMember.role !== 'owner') {
@@ -551,6 +554,16 @@ export async function removeTeamMember(
       };
     }
     
+    // Find the member first
+    const memberIndex = mockTeamMembers.findIndex(m => m.id === memberId);
+    if (memberIndex === -1) {
+      return {
+        success: false,
+        error: 'Team member not found',
+        code: TEAM_ERROR_CODES.MEMBER_NOT_FOUND,
+      };
+    }
+
     // Check permission
     const hasAccess = await checkTeamPermission(userId, 'members:delete', memberId);
     if (!hasAccess) {
@@ -558,16 +571,6 @@ export async function removeTeamMember(
         success: false,
         error: 'You do not have permission to remove team members',
         code: TEAM_ERROR_CODES.PERMISSION_DENIED,
-      };
-    }
-    
-    // Find the member
-    const memberIndex = mockTeamMembers.findIndex(m => m.id === memberId);
-    if (memberIndex === -1) {
-      return {
-        success: false,
-        error: 'Team member not found',
-        code: TEAM_ERROR_CODES.MEMBER_NOT_FOUND,
       };
     }
     
@@ -645,7 +648,17 @@ export async function resendInvite(
 ): Promise<ActionResult<TeamInvite>> {
   try {
     const userId = await requireUserId();
-    
+
+    // Find the invite first
+    const invite = mockInvites.find(i => i.id === inviteId);
+    if (!invite) {
+      return {
+        success: false,
+        error: 'Invitation not found',
+        code: TEAM_ERROR_CODES.MEMBER_NOT_FOUND,
+      };
+    }
+
     // Check permission
     const hasAccess = await checkTeamPermission(userId, 'members:write');
     if (!hasAccess) {
@@ -653,16 +666,6 @@ export async function resendInvite(
         success: false,
         error: 'You do not have permission to manage invitations',
         code: TEAM_ERROR_CODES.PERMISSION_DENIED,
-      };
-    }
-    
-    // Find the invite
-    const invite = mockInvites.find(i => i.id === inviteId);
-    if (!invite) {
-      return {
-        success: false,
-        error: 'Invitation not found',
-        code: TEAM_ERROR_CODES.MEMBER_NOT_FOUND,
       };
     }
     
@@ -695,17 +698,7 @@ export async function cancelInvite(
 ): Promise<ActionResult<{ cancelled: boolean }>> {
   try {
     const userId = await requireUserId();
-    
-    // Check permission
-    const hasAccess = await checkTeamPermission(userId, 'members:delete');
-    if (!hasAccess) {
-      return {
-        success: false,
-        error: 'You do not have permission to cancel invitations',
-        code: TEAM_ERROR_CODES.PERMISSION_DENIED,
-      };
-    }
-    
+
     // Find and remove the invite
     const inviteIndex = mockInvites.findIndex(i => i.id === inviteId);
     if (inviteIndex === -1) {
@@ -713,6 +706,16 @@ export async function cancelInvite(
         success: false,
         error: 'Invitation not found',
         code: TEAM_ERROR_CODES.MEMBER_NOT_FOUND,
+      };
+    }
+
+    // Check permission
+    const hasAccess = await checkTeamPermission(userId, 'members:delete');
+    if (!hasAccess) {
+      return {
+        success: false,
+        error: 'You do not have permission to cancel invitations',
+        code: TEAM_ERROR_CODES.PERMISSION_DENIED,
       };
     }
     
