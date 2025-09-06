@@ -56,3 +56,8 @@ export interface ComponentBaseProps {
   children?: React.ReactNode;
   disabled?: boolean;
 }
+
+// Server action result type for consistent error handling
+export type ActionResult<T> = 
+  | { success: true; data: T }
+  | { success: false; error: string; code?: string };

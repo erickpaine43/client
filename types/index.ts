@@ -30,7 +30,7 @@ export * from "./tab";
 
 // Export common/shared utility types
 // Export settings and configuration types
-export * from "./settings";
+export type { TeamMember as SettingsTeamMember } from "./settings";
 // Export client and lead related types
 export * from "./clients-leads";
 export * from "./common";
@@ -40,3 +40,6 @@ export * from "./ui";
 
 // Export analytics related types
 export * from "./analytics";
+
+// Export team management related types
+export * from "./team";
