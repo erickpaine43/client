@@ -73,6 +73,7 @@ const localStorageMock = (() => {
     }),
   };
   // Expose store for test access
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (mock as any).store = store;
   return mock;
 })();
@@ -97,6 +98,7 @@ beforeEach(() => {
   localStorageMock.clear.mockReset();
 
   // Re-implement mocks with store-based logic
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const store = (localStorageMock as any).store;
   localStorageMock.getItem.mockImplementation((key: string) => store[key] || null);
   localStorageMock.setItem.mockImplementation((key: string, value: string) => { store[key] = value; });
@@ -143,7 +145,7 @@ describe('Storage Availability', () => {
 
   it('should handle undefined window object', () => {
     // Temporarily remove localStorage from window first
-    // @ts-expect-error
+    // @ts-expect-error - Temporarily delete localStorage for testing undefined window
     delete global.window.localStorage;
 
     // Temporarily remove window
@@ -869,7 +871,6 @@ describe('MemoryStorage Fallback', () => {
     });
     localStorageMock.getItem.mockImplementation(() => null); // Make getItem return null too
     // Reset availability check state
-    require('./clientStorage').isStorageAvailable = null;
 
     // This should trigger fallback to MemoryStorage
     setStorageItem(StorageKeys.THEME, 'dark' as Theme);

@@ -52,7 +52,7 @@ export interface RecentSearch {
 export interface FavoriteFilter {
   id: string;
   name: string;
-  filter: Record<string, any>;
+  filter: Record<string, unknown>;
   createdAt: number;
 }
 
@@ -113,7 +113,7 @@ const DEFAULT_VALUES: StorageTypeMap = {
 // In-memory fallback storage for when localStorage is unavailable
 // In-memory fallback storage for when localStorage is unavailable
 class MemoryStorage {
-  private static instance: MemoryStorage;
+  private static instance: MemoryStorage | null = null;
   private storage: Map<string, string> = new Map();
 
   private constructor() {}
@@ -126,7 +126,7 @@ class MemoryStorage {
   }
 
   static resetInstance(): void {
-    MemoryStorage.instance = null as any;
+    MemoryStorage.instance = null;
   }
 
   getItem(key: string): string | null {
@@ -185,7 +185,7 @@ export function checkStorageAvailability(): boolean {
     window.localStorage.removeItem(testKey);
     isStorageAvailable = true;
     return true;
-  } catch (e) {
+  } catch {
     isStorageAvailable = false;
     console.warn('localStorage is not available, falling back to memory storage');
     return false;
@@ -397,7 +397,7 @@ export function getFavoriteFilters(): FavoriteFilter[] {
   return getStorageItem(StorageKeys.FAVORITE_FILTERS);
 }
 
-export function addFavoriteFilter(name: string, filter: Record<string, any>): string {
+export function addFavoriteFilter(name: string, filter: Record<string, unknown>): string {
   const filters = getFavoriteFilters();
   const newFilter: FavoriteFilter = {
     id: `filter_${Date.now()}`,
@@ -494,7 +494,7 @@ export function isAnnouncementDismissed(id: string, version?: string): boolean {
  * Storage change listener
  */
 export function onStorageChange(
-  callback: (key: StorageKeys, value: any) => void
+  callback: (key: StorageKeys, value: unknown) => void
 ): () => void {
   if (typeof window === 'undefined') {
     return () => {};
@@ -560,8 +560,8 @@ export function migrateStorage(fromVersion: string, toVersion: string): boolean 
 /**
  * Export all preferences as JSON
  */
-export function exportPreferences(): Record<string, any> {
-  const preferences: Record<string, any> = {};
+export function exportPreferences(): Record<string, unknown> {
+  const preferences: Record<string, unknown> = {};
   
   Object.values(StorageKeys).forEach((key) => {
     preferences[key] = getStorageItem(key as StorageKeys);
@@ -573,11 +573,26 @@ export function exportPreferences(): Record<string, any> {
 /**
  * Import preferences from JSON
  */
-export function importPreferences(preferences: Record<string, any>): boolean {
+export function importPreferences(preferences: Record<string, unknown>): boolean {
   try {
     for (const [key, value] of Object.entries(preferences)) {
       if (Object.values(StorageKeys).includes(key as StorageKeys)) {
-        const success = setStorageItem(key as StorageKeys, value);
+        const success = setStorageItem(
+          key as StorageKeys,
+          value as
+            | Theme
+            | boolean
+            | SidebarView
+            | Language
+            | string
+            | DateFormat
+            | TimeFormat
+            | FirstDayOfWeek
+            | RecentSearch[]
+            | FavoriteFilter[]
+            | DashboardLayout
+            | AnnouncementDismissal[]
+        );
         if (!success) {
           return false; // Return false if any setStorageItem fails
         }
