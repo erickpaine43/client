@@ -19,6 +19,7 @@ import { useState } from "react";
 import DatePicker from "../../ui/custom/DatePicker";
 import { availableMailboxes } from "@/lib/data/campaigns";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 enum CampaignStatus {
   All = "all",
@@ -147,11 +148,10 @@ function CampaignsFilter() {
           </SelectContent>
         </Select>
         <Popover open={isMailboxOpen} onOpenChange={setIsMailboxOpen}>
-          <PopoverTrigger asChild className="font-normal">
+          <PopoverTrigger asChild>
             <Button
               variant="outline"
-              className="w-full sm:w-auto justify-start"
-              onClick={() => setIsMailboxOpen(!isMailboxOpen)}
+              className="w-full sm:w-auto justify-start text-gray-500"
             >
               <Server className="w-4 h-4 mr-2" />
               {selectedMailboxes.length === 0
@@ -159,7 +159,7 @@ function CampaignsFilter() {
                 : `${selectedMailboxes.length} selected`}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-80 p-0" align="start">
+          <PopoverContent align="start" className="w-80 p-0">
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <h4 className="font-medium">Select Mailboxes</h4>
@@ -194,9 +194,14 @@ function CampaignsFilter() {
                 </div>
               )}
 
-              <div className="space-y-2 max-h-50 overflow-y-auto">
+              <div className="space-y-2 max-h-50 overflow-y-auto ">
                 {availableMailboxes.map((mailbox) => (
-                  <div key={mailbox} className="flex items-center space-x-2">
+                  <div
+                    key={mailbox}
+                    className={cn("flex items-center space-x-2", {
+                      "opacity-50": !selectedMailboxes.includes(mailbox),
+                    })}
+                  >
                     <Checkbox
                       id={mailbox}
                       checked={selectedMailboxes.includes(mailbox)}
