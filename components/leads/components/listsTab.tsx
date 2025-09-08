@@ -9,9 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { leadListsData } from "@/lib/data/leads";
+import { getLeadsLists } from "@/lib/actions/leadsActions";
+import { LeadListData } from "@/types/clients-leads";
 import { ArrowUpDown } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ListTableRow from "./ListTableRow";
 import { cn } from "@/lib/utils";
 const listTableColumn = [
@@ -25,8 +26,13 @@ const listTableColumn = [
 ];
 
 function ListsTab() {
-  const [filteredLists, setFilteredLists] = useState([...leadListsData]);
+  const [filteredLists, setFilteredLists] = useState<LeadListData[]>([]);
   const [sortById, setSortById] = useState<string | null>(null);
+
+  useEffect(() => {
+    getLeadsLists().then((data) => setFilteredLists(data as LeadListData[]));
+  }, []);
+
   function handleSortBy(columnId: string) {
     if (sortById === columnId) {
       setFilteredLists([...filteredLists].reverse());
