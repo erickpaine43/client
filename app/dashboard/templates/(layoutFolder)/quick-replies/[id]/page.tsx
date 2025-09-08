@@ -8,18 +8,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { initialQuickReplies } from "@/lib/data/template.mock";
+import { getQuickReplyById } from "@/lib/actions/templateActions";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 async function page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const quickReply = initialQuickReplies.find(
-    (reply) => reply.id === parseInt(id),
-  );
+  const result = await getQuickReplyById(id);
 
-  if (quickReply === undefined) notFound();
+  if (!result.success || !result.data) {
+    notFound();
+  }
+
+  const quickReply = result.data;
 
   return (
     <div className="p-4 h-full">

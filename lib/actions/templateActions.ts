@@ -1,6 +1,6 @@
 "use server";
 
-import { initialTemplates as initialTemplatesMock } from "@/lib/data/template.mock";
+import { initialTemplates as initialTemplatesMock, initialQuickReplies } from "@/lib/data/template.mock";
 import { getCurrentUserId } from "@/lib/utils/auth";
 import type { Template, TemplateFolder, TemplateCategoryType } from "@/types";
 import type { ActionResult } from "./settings.types";
@@ -148,9 +148,7 @@ export async function getQuickReplies(): Promise<ActionResult<Template[]>> {
     await new Promise(resolve => setTimeout(resolve, 100)); // Simulate network delay
 
     // Filter and map mock data to Template type
-    const quickReplies: Template[] = initialTemplatesMock
-      .filter(mockTemplate => mockTemplate.type === "quick-reply")
-      .map(mapMockToTemplate);
+    const quickReplies: Template[] = initialQuickReplies.map(mapMockToTemplate);
 
     return {
       success: true,
@@ -178,6 +176,63 @@ export async function getQuickReplies(): Promise<ActionResult<Template[]>> {
 }
 
 /**
+ * Get a specific quick reply by ID for the authenticated user
+ */
+export async function getQuickReplyById(id: string): Promise<ActionResult<Template | null>> {
+  try {
+    // Check authentication
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return {
+        success: false,
+        error: "You must be logged in to view quick replies",
+        code: ERROR_CODES.AUTH_REQUIRED,
+      };
+    }
+
+    // Simulate database fetch with mock data
+    // In production, this would fetch from database based on user company
+    await new Promise(resolve => setTimeout(resolve, 100)); // Simulate network delay
+
+    // Find the quick reply by ID
+    const mockQuickReply = initialQuickReplies.find(reply => reply.id === parseInt(id));
+    if (!mockQuickReply) {
+      return {
+        success: false,
+        error: "Quick reply not found",
+        code: ERROR_CODES.INTERNAL_ERROR,
+      };
+    }
+
+    // Map to Template type
+    const quickReply: Template = mapMockToTemplate(mockQuickReply);
+
+    return {
+      success: true,
+      data: quickReply,
+    };
+  } catch (error) {
+    console.error("getQuickReplyById error:", error);
+
+    const errorMessage = error instanceof Error ? error.message : String(error);
+
+    if (errorMessage.includes("network") || errorMessage.includes("fetch")) {
+      return {
+        success: false,
+        error: "Network error. Please check your connection and try again.",
+        code: ERROR_CODES.NETWORK_ERROR,
+      };
+    }
+
+    return {
+      success: false,
+      error: "Failed to retrieve quick reply",
+      code: ERROR_CODES.INTERNAL_ERROR,
+    };
+  }
+}
+
+/**
   * Get counts for template tabs
   */
 export async function getTabCounts(): Promise<ActionResult<Record<string, number>>> {
@@ -196,14 +251,8 @@ export async function getTabCounts(): Promise<ActionResult<Record<string, number
     await new Promise(resolve => setTimeout(resolve, 100));
 
     // Calculate counts from mock data (in production, this would come from database)
-    const templates = initialTemplatesMock;
-    const quickReplies = initialTemplatesMock.filter(
-      (template) => template.type === "quick-reply"
-    );
-    const templatesCount = templates.filter(
-      (template) => template.type === "template"
-    ).length;
-    const quickRepliesCount = quickReplies.length;
+    const quickRepliesCount = initialQuickReplies.length;
+    const templatesCount = initialTemplatesMock.length;
 
     const counts = {
       "quick-replies": quickRepliesCount,
