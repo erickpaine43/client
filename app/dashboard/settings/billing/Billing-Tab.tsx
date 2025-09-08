@@ -25,6 +25,7 @@ import {
   getBillingDataForSettings,
   updateBillingInfo,
 } from "@/lib/actions/billingActions";
+import { updateCompanyInfo } from "@/lib/actions/settingsActions";
 import {
   useServerAction,
   useServerActionWithParams,
@@ -76,25 +77,38 @@ function BillingTab() {
     updateOptions
   );
 
+  const updateCompanyOptions = useMemo(
+    () => ({
+      onSuccess: () => {
+        toast.success("Company name updated successfully");
+        // Refresh billing data in case it includes company info
+        loadBilling();
+      },
+      onError: (error: string) => {
+        toast.error("Failed to update company name", {
+          description: error,
+        });
+      },
+    }),
+    [loadBilling]
+  );
+
+  const updateCompanyAction = useServerActionWithParams(
+    updateCompanyInfo,
+    updateCompanyOptions
+  );
+
   // Load billing data on component mount
   useEffect(() => {
     loadBilling();
   }, [loadBilling]);
 
   // Handle company name update
-  const handleCompanyNameUpdate = async (_newName: string) => {
+  const handleCompanyNameUpdate = async (newName: string) => {
     if (!billingDataAction.data) return;
 
-    await updateBillingAction.execute({
-      billingAddress: {
-        street: "123 Business Street", // This should come from current data
-        city: "San Francisco",
-        state: "CA",
-        zipCode: "94105",
-        country: "United States",
-      },
-      // In a real implementation, you'd update the company info through a separate action
-      // For now, we'll just show the toast
+    await updateCompanyAction.execute({
+      name: newName,
     });
   };
 
@@ -237,12 +251,13 @@ function BillingTab() {
               className="text-sm text-blue-600 hover:text-blue-800 underline disabled:opacity-50"
               disabled={updateBillingAction.loading}
               onClick={() => {
+                const currentName = "Acme Corporation"; // TODO: Get from current company data
                 const newCompanyName = prompt(
                   "Enter company name:",
-                  "Acme Corporation" // This should come from server data
+                  currentName
                 );
-                if (newCompanyName && newCompanyName !== "Acme Corporation") {
-                  handleCompanyNameUpdate(newCompanyName);
+                if (newCompanyName && newCompanyName.trim() && newCompanyName.trim() !== currentName) {
+                  handleCompanyNameUpdate(newCompanyName.trim());
                 }
               }}
             >
