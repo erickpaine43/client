@@ -327,4 +327,13 @@ export interface DomainSettings {
   warmup: WarmupConfig;
   reputationFactors: ReputationFactors;
   provider: DNSProvider;
+  // Additional properties for settings page usage
+  warmupEnabled?: boolean;
+  dailyIncrease?: number;
+  maxDailyEmails?: number;
+  initialDailyVolume?: number;
+  warmupSpeed?: "slow" | "moderate" | "fast";
+  replyRate?: string;
+  threadDepth?: string;
+  autoAdjustWarmup?: boolean;
 }

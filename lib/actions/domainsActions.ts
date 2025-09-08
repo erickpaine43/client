@@ -141,32 +141,41 @@ export async function getDomainSettings(domainId: number): Promise<DomainSetting
     return null;
   }
 
-  return {
-    domain: domain.name || domain.domain,
-    authentication: {
-      ...domain.authentication,
-      spf: {
-        ...domain.authentication.spf,
-        policy: domain.authentication.spf.policy as "strict" | "soft" | "neutral",
-      },
-      dmarc: {
-        ...domain.authentication.dmarc,
-        policy: domain.authentication.dmarc.policy as "none" | "quarantine" | "reject",
-      },
-    },
-    warmup: {
-      enabled: domain.warmupEnabled || false,
-      initialDailyVolume: domain.initialDailyVolume || 10,
-      dailyIncrease: domain.dailyIncrease || 10,
-      maxDailyEmails: domain.maxDailyEmails || 1000,
-      warmupSpeed: (domain.warmupSpeed || "moderate") as "slow" | "moderate" | "fast",
-      replyRate: domain.replyRate || "80",
-      threadDepth: domain.threadDepth || "3",
-      autoAdjustWarmup: domain.autoAdjustWarmup || false,
-    },
-    reputationFactors: domain.reputationFactors,
-    provider: DNSProvider.OTHER, // Default since "Google Workspace" doesn't match enum
-  };
+ return {
+   domain: domain.name || domain.domain,
+   // Top-level properties for the settings page
+   warmupEnabled: domain.warmupEnabled || false,
+   dailyIncrease: domain.dailyIncrease || 10,
+   maxDailyEmails: domain.maxDailyEmails || 1000,
+   initialDailyVolume: domain.initialDailyVolume || 10,
+   warmupSpeed: (domain.warmupSpeed || "moderate") as "slow" | "moderate" | "fast",
+   replyRate: domain.replyRate || "80",
+   threadDepth: domain.threadDepth || "3",
+   autoAdjustWarmup: domain.autoAdjustWarmup || false,
+   authentication: {
+     ...domain.authentication,
+     spf: {
+       ...domain.authentication.spf,
+       policy: domain.authentication.spf.policy as "strict" | "soft" | "neutral",
+     },
+     dmarc: {
+       ...domain.authentication.dmarc,
+       policy: domain.authentication.dmarc.policy as "none" | "quarantine" | "reject",
+     },
+   },
+   warmup: {
+     enabled: domain.warmupEnabled || false,
+     initialDailyVolume: domain.initialDailyVolume || 10,
+     dailyIncrease: domain.dailyIncrease || 10,
+     maxDailyEmails: domain.maxDailyEmails || 1000,
+     warmupSpeed: (domain.warmupSpeed || "moderate") as "slow" | "moderate" | "fast",
+     replyRate: domain.replyRate || "80",
+     threadDepth: domain.threadDepth || "3",
+     autoAdjustWarmup: domain.autoAdjustWarmup || false,
+   },
+   reputationFactors: domain.reputationFactors,
+   provider: DNSProvider.OTHER, // Default since "Google Workspace" doesn't match enum
+ };
 }
 
 export async function getDomainWithAccounts(domainId: number): Promise<{
