@@ -1,6 +1,6 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { Client, Email } from "@/app/dashboard/inbox/schemas/schemas";
+import { Client, Email } from "@/types/inbox";
 import { Campaign } from "@/types/campaign";
 import { User } from "@/types/auth";
 import { Button } from "@/components/ui/button";

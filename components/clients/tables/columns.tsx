@@ -20,7 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Client } from "@/app/dashboard/inbox/schemas/schemas";
+import { Client } from "@/types/inbox";
 
 export const createColumns = (
   maskPII: (text: string) => string,
