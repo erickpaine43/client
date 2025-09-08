@@ -407,27 +407,87 @@ export async function getQuickReplyById(id: string): Promise<ActionResult<Templa
       };
     }
 
-    // Simulate database fetch with mock data
-    // In production, this would fetch from database based on user company
-    await new Promise(resolve => setTimeout(resolve, 100)); // Simulate network delay
+    // Fetch quick reply from database by ID and type
+    // Nile automatically scopes queries to the current tenant
+    try {
+      const result = await nile.db.query(`
+        SELECT id, name, body, body_html as "bodyHtml", subject, content, category,
+               folder_id as "folderId", usage, open_rate as "openRate", reply_rate as "replyRate",
+               last_used as "lastUsed", is_starred as "isStarred", type, tenant_id,
+               description, created_by_id as "createdById", created_at as "createdAt",
+               updated_at as "updatedAt"
+        FROM templates
+        WHERE id = $1 AND type = 'quick-reply'
+      `, [parseInt(id)]);
 
-    // Find the quick reply by ID
-    const mockQuickReply = initialQuickReplies.find(reply => reply.id === parseInt(id));
-    if (!mockQuickReply) {
+      // Define type for database result row
+      interface DbTemplateRow {
+        id: number;
+        name: string;
+        body: string | null;
+        bodyHtml: string | null;
+        subject: string | null;
+        content: string | null;
+        category: string;
+        folderId: number | null;
+        usage: number | null;
+        openRate: string | null;
+        replyRate: string | null;
+        lastUsed: string | null;
+        isStarred: boolean | null;
+        type: string;
+        tenant_id: number;
+        description: string | null;
+        createdById: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+      }
+
+      const row = (result as DbTemplateRow[])[0];
+      if (!row) {
+        return {
+          success: false,
+          error: "Quick reply not found",
+          code: ERROR_CODES.INTERNAL_ERROR,
+        };
+      }
+
+      // Map database result to Template type
+      const quickReply: Template = {
+        id: row.id,
+        name: row.name,
+        body: row.body || "",
+        bodyHtml: row.bodyHtml || "",
+        subject: row.subject || "",
+        content: row.content || "",
+        category: row.category as TemplateCategoryType,
+        folderId: row.folderId,
+        usage: row.usage || 0,
+        openRate: row.openRate || "",
+        replyRate: row.replyRate || "",
+        lastUsed: row.lastUsed || "",
+        isStarred: row.isStarred || false,
+        type: row.type as "template" | "quick-reply",
+        companyId: row.tenant_id, // Set company ID from tenant
+        description: row.description || "",
+        createdById: row.createdById,
+        createdAt: new Date(row.createdAt),
+        updatedAt: new Date(row.updatedAt),
+      };
+
+      return {
+        success: true,
+        data: quickReply,
+      };
+    } catch (dbError) {
+      console.error("Database error in getQuickReplyById:", dbError);
+      // Do not fallback to mock data - return error instead
       return {
         success: false,
-        error: "Quick reply not found",
+        error: "Failed to retrieve quick reply from database",
         code: ERROR_CODES.INTERNAL_ERROR,
       };
     }
-
-    // Map to Template type
-    const quickReply: Template = mapMockToTemplate(mockQuickReply);
-
-    return {
-      success: true,
-      data: quickReply,
-    };
   } catch (error) {
     console.error("getQuickReplyById error:", error);
 

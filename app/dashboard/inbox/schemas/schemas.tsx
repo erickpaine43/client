@@ -15,7 +15,17 @@ export const CampaignSchema = z.object({
   fromEmail: z.string().email(),
   companyId: z.number(),
   createdById: z.string().optional(),
-  metrics: z.any().optional(),
+  metrics: z
+    .object({
+      sent: z.number(),
+      opens: z.union([z.number(), z.null()]),
+      clicks: z.union([z.number(), z.null()]),
+      replies: z.number(),
+      bounced: z.number().optional(),
+      openRate: z.number(),
+      replyRate: z.number(),
+    })
+    .optional(),
   sendDays: z.array(z.number().int().min(0).max(6)),
   sendTimeStart: z
     .string()

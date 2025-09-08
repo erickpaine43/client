@@ -16,15 +16,9 @@ import {
 import {
   removeFromCampaign,
   deleteClient,
-} from "@/app/dashboard/campaigns/[campaignId]/clients/new/actions";
+  maskClientPII,
+} from "@/lib/actions/clientActions";
 import { copyText as t } from "@/components/clients/data/copy";
-
-// Add this new action import or create it in the actions file
-async function maskClientPII(clientId: number) {
-  console.log("Masking PII for client:", clientId);
-  // Implement the server action to update the client
-  // This should update maskPII to true and modify the name fields
-}
 
 interface ClientHeaderProps {
   client?: {
