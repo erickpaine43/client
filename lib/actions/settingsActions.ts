@@ -1,58 +1,21 @@
 "use server";
 
 import { nile } from "@/app/api/[...nile]/nile";
-import {
-  mockUserSettings,
-  mockGeneralSettings,
-  mockSecuritySettings,
-  type UserSettings,
-  type CompanyInfo,
-  type BillingAddress
-} from "../data/settings.mock";
-import type {
-  GeneralSettings,
-  SecuritySettings
-} from "../../types/settings";
+import { mockUserSettings, mockGeneralSettings, mockSecuritySettings } from "../data/settings.mock";
 import { getCurrentUserId } from "@/lib/utils/auth";
-
-// Action Result Types
-export type ActionResult<T> = 
-  | {
-      success: true;
-      data: T;
-    }
-  | {
-      success: false;
-      error: string;
-      code?: string;
-      field?: string; // For field-specific validation errors
-    };
-
-// Error codes for better error handling
-const ERROR_CODES = {
-  // Authentication errors
-  AUTH_REQUIRED: "AUTH_REQUIRED",
-  UNAUTHORIZED: "UNAUTHORIZED",
-  SESSION_EXPIRED: "SESSION_EXPIRED",
-  
-  // Validation errors
-  VALIDATION_FAILED: "VALIDATION_FAILED",
-  INVALID_INPUT: "INVALID_INPUT",
-  REQUIRED_FIELD: "REQUIRED_FIELD",
-  
-  // Database errors
-  DATABASE_ERROR: "DATABASE_ERROR",
-  SETTINGS_NOT_FOUND: "SETTINGS_NOT_FOUND",
-  UPDATE_FAILED: "UPDATE_FAILED",
-  
-  // Network errors
-  NETWORK_ERROR: "NETWORK_ERROR",
-  TIMEOUT: "TIMEOUT",
-  
-  // General errors
-  INTERNAL_ERROR: "INTERNAL_ERROR",
-  UNKNOWN_ERROR: "UNKNOWN_ERROR",
-} as const;
+import type { 
+  UserSettings, 
+  CompanyInfo, 
+  BillingAddress, 
+  GeneralSettings, 
+  SecuritySettings,
+  ActionResult,
+  SimpleNotificationPreferences
+} from "./settings.types";
+import { 
+  ERROR_CODES,
+  mockSimpleNotificationPreferences 
+} from "./settings.types";
 
 // Validation functions
 function validateUserSettings(settings: DeepPartial<UserSettings>): string | null {
@@ -610,6 +573,129 @@ export async function getAllSettings(): Promise<ActionResult<{
       success: false,
       error: "Failed to retrieve settings",
       code: ERROR_CODES.INTERNAL_ERROR,
+    };
+  }
+}
+
+// Simple Notification Preferences Actions
+
+/**
+ * Get simple notification preferences for the authenticated user
+ */
+export async function getSimpleNotificationPreferences(): Promise<ActionResult<SimpleNotificationPreferences>> {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return {
+        success: false,
+        error: "You must be logged in to view notification preferences",
+        code: ERROR_CODES.AUTH_REQUIRED,
+      };
+    }
+    
+    // Simulate database fetch
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Return mock data with current user ID
+    const preferences: SimpleNotificationPreferences = {
+      ...mockSimpleNotificationPreferences,
+      userId,
+      updatedAt: new Date(),
+    };
+    
+    return {
+      success: true,
+      data: preferences,
+    };
+  } catch (error) {
+    console.error("getSimpleNotificationPreferences error:", error);
+    
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    
+    if (errorMessage.includes("network") || errorMessage.includes("fetch")) {
+      return {
+        success: false,
+        error: "Network error. Please check your connection and try again.",
+        code: ERROR_CODES.NETWORK_ERROR,
+      };
+    }
+    
+    return {
+      success: false,
+      error: "Failed to retrieve notification preferences",
+      code: ERROR_CODES.INTERNAL_ERROR,
+    };
+  }
+}
+
+/**
+ * Update simple notification preferences for the authenticated user
+ */
+export async function updateSimpleNotificationPreferences(
+  preferences: Partial<Pick<SimpleNotificationPreferences, 'newReplies' | 'campaignUpdates' | 'weeklyReports' | 'domainAlerts' | 'warmupCompletion'>>
+): Promise<ActionResult<SimpleNotificationPreferences>> {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return {
+        success: false,
+        error: "You must be logged in to update notification preferences",
+        code: ERROR_CODES.AUTH_REQUIRED,
+      };
+    }
+    
+    // Validate that all provided values are boolean
+    for (const [key, value] of Object.entries(preferences)) {
+      if (value !== undefined && typeof value !== "boolean") {
+        return {
+          success: false,
+          error: `Invalid value for notification preference '${key}': must be true or false`,
+          code: ERROR_CODES.VALIDATION_FAILED,
+          field: key,
+        };
+      }
+    }
+    
+    // Simulate database update
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    // Merge with existing preferences
+    const updatedPreferences: SimpleNotificationPreferences = {
+      ...mockSimpleNotificationPreferences,
+      ...(preferences as Partial<SimpleNotificationPreferences>),
+      userId,
+      updatedAt: new Date(),
+    };
+    
+    return {
+      success: true,
+      data: updatedPreferences,
+    };
+  } catch (error) {
+    console.error("updateSimpleNotificationPreferences error:", error);
+    
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    
+    if (errorMessage.includes("network") || errorMessage.includes("fetch")) {
+      return {
+        success: false,
+        error: "Network error. Please check your connection and try again.",
+        code: ERROR_CODES.NETWORK_ERROR,
+      };
+    }
+    
+    if (errorMessage.includes("database") || errorMessage.includes("constraint")) {
+      return {
+        success: false,
+        error: "Failed to update preferences in database",
+        code: ERROR_CODES.DATABASE_ERROR,
+      };
+    }
+    
+    return {
+      success: false,
+      error: "Failed to update notification preferences",
+      code: ERROR_CODES.UPDATE_FAILED,
     };
   }
 }

@@ -22,115 +22,9 @@ import {
   TeamSettings,
 } from '@/types/team';
 import { ActionResult } from '@/types/common';
+import { TEAM_ERROR_CODES, ROLE_HIERARCHY, ROLE_PERMISSIONS } from '../constants/team';
+import { mockTeamMembers, mockInvites } from '../mocks/team';
 
-// Mock data for team members (replace with actual database calls)
-export const mockTeamMembers: TeamMember[] = [
-  {
-    id: 'member-1',
-    userId: 'user-123',
-    teamId: 'team-1',
-    email: 'owner@example.com',
-    name: 'John Owner',
-    role: 'owner',
-    status: 'active',
-    avatar: 'https://avatar.vercel.sh/owner.png',
-    joinedAt: new Date('2024-01-01'),
-    lastActiveAt: new Date(),
-    permissions: ['all'],
-  },
-  {
-    id: 'member-2',
-    userId: 'user-456',
-    teamId: 'team-1',
-    email: 'admin@example.com',
-    name: 'Jane Admin',
-    role: 'admin',
-    status: 'active',
-    avatar: 'https://avatar.vercel.sh/admin.png',
-    joinedAt: new Date('2024-02-01'),
-    lastActiveAt: new Date(),
-    permissions: ['members:read', 'members:write', 'settings:read', 'settings:write'],
-  },
-  {
-    id: 'member-3',
-    userId: 'user-789',
-    teamId: 'team-1',
-    email: 'member@example.com',
-    name: 'Bob Member',
-    role: 'member',
-    status: 'active',
-    avatar: 'https://avatar.vercel.sh/member.png',
-    joinedAt: new Date('2024-03-01'),
-    lastActiveAt: new Date(),
-    permissions: ['members:read', 'settings:read'],
-  },
-];
-
-// Mock pending invites
-export const mockInvites: TeamInvite[] = [
-  {
-    id: 'invite-1',
-    teamId: 'team-1',
-    email: 'pending@example.com',
-    role: 'member',
-    invitedBy: 'user-123',
-    invitedAt: new Date('2024-11-01'),
-    expiresAt: new Date('2024-12-01'),
-    status: 'pending',
-  },
-];
-
-// Error codes for team operations
-export const TEAM_ERROR_CODES = {
-  AUTH_REQUIRED: 'TEAM_AUTH_REQUIRED',
-  PERMISSION_DENIED: 'TEAM_PERMISSION_DENIED',
-  MEMBER_NOT_FOUND: 'TEAM_MEMBER_NOT_FOUND',
-  INVALID_ROLE: 'TEAM_INVALID_ROLE',
-  INVALID_EMAIL: 'TEAM_INVALID_EMAIL',
-  MEMBER_EXISTS: 'TEAM_MEMBER_EXISTS',
-  INVITE_EXISTS: 'TEAM_INVITE_EXISTS',
-  OWNER_REQUIRED: 'TEAM_OWNER_REQUIRED',
-  CANNOT_REMOVE_OWNER: 'TEAM_CANNOT_REMOVE_OWNER',
-  CANNOT_DEMOTE_OWNER: 'TEAM_CANNOT_DEMOTE_OWNER',
-  TEAM_LIMIT_REACHED: 'TEAM_LIMIT_REACHED',
-  RATE_LIMIT_EXCEEDED: 'TEAM_RATE_LIMIT_EXCEEDED',
-  VALIDATION_FAILED: 'TEAM_VALIDATION_FAILED',
-  UPDATE_FAILED: 'TEAM_UPDATE_FAILED',
-} as const;
-
-// Role hierarchy for permission checks
-const ROLE_HIERARCHY: Record<TeamRole, number> = {
-  owner: 3,
-  admin: 2,
-  member: 1,
-  viewer: 0,
-};
-
-// Permissions by role
-const ROLE_PERMISSIONS: Record<TeamRole, TeamPermission[]> = {
-  owner: ['all'],
-  admin: [
-    'members:read',
-    'members:write',
-    'members:delete',
-    'settings:read',
-    'settings:write',
-    'billing:read',
-    'campaigns:read',
-    'campaigns:write',
-  ],
-  member: [
-    'members:read',
-    'settings:read',
-    'campaigns:read',
-    'campaigns:write',
-  ],
-  viewer: [
-    'members:read',
-    'settings:read',
-    'campaigns:read',
-  ],
-};
 
 // Validation schemas
 const emailSchema = z.string().email('Invalid email address');
@@ -178,6 +72,7 @@ export async function checkTeamPermission(
     
     // Check specific permission
     if (!currentMember.permissions.includes(permission)) {
+      console.log('User does not have permission:', permission);
       return false;
     }
     
@@ -195,8 +90,10 @@ export async function checkTeamPermission(
       }
     }
     
+    console.log('Permission check passed, returning true');
     return true;
-  } catch {
+  } catch (error) {
+    console.log('Error in checkTeamPermission:', error);
     return false;
   }
 }
@@ -648,10 +545,12 @@ export async function resendInvite(
 ): Promise<ActionResult<TeamInvite>> {
   try {
     const userId = await requireUserId();
+    console.log('resendInvite - userId:', userId);
 
     // Find the invite first
     const invite = mockInvites.find(i => i.id === inviteId);
     if (!invite) {
+      console.log('resendInvite - Invite not found:', inviteId);
       return {
         success: false,
         error: 'Invitation not found',
@@ -660,8 +559,12 @@ export async function resendInvite(
     }
 
     // Check permission
+    console.log('resendInvite - Checking permission for user:', userId, 'permission: members:write');
     const hasAccess = await checkTeamPermission(userId, 'members:write');
+    console.log('resendInvite - hasAccess:', hasAccess);
+    
     if (!hasAccess) {
+      console.log('resendInvite - Access denied for user:', userId);
       return {
         success: false,
         error: 'You do not have permission to manage invitations',
@@ -848,7 +751,6 @@ export async function updateTeamSettings(
 async function logTeamActivity(activity: Omit<TeamActivity, 'id' | 'teamId' | 'timestamp' | 'performedByName'>): Promise<void> {
   try {
     // In a real implementation, this would save to database
-    console.log('Team activity:', activity);
   } catch (error) {
     console.error('Failed to log team activity:', error);
   }

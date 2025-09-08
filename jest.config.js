@@ -10,7 +10,6 @@ module.exports = {
     '**/*.{ts,tsx}',
     '!**/*.d.ts',
   ],
-  setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },

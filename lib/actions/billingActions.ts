@@ -16,13 +16,18 @@ import {
   type UsageMetrics,
   type Invoice,
   type SubscriptionPlan,
-  getUsagePercentage,
   getDaysUntilRenewal,
 } from "../data/billing.mock";
+import { BILLING_ERROR_CODES } from "../constants/billing";
 import type { BillingAddress } from "../data/settings.mock";
 import type {
   BillingData
 } from "../../types/settings";
+import {
+  calculateUsagePercentages,
+  calculateOverage,
+  projectMonthlyUsage,
+} from "../utils/billingUtils";
 
 // Helper type for deep partial
 type DeepPartial<T> = T extends object ? {
@@ -42,41 +47,7 @@ export type ActionResult<T> =
       field?: string;
     };
 
-// Error codes for billing operations
-export const BILLING_ERROR_CODES = {
-  // Authentication errors
-  AUTH_REQUIRED: "AUTH_REQUIRED",
-  UNAUTHORIZED: "UNAUTHORIZED",
-  
-  // Validation errors
-  VALIDATION_FAILED: "VALIDATION_FAILED",
-  INVALID_PAYMENT_METHOD: "INVALID_PAYMENT_METHOD",
-  INVALID_BILLING_ADDRESS: "INVALID_BILLING_ADDRESS",
-  INVALID_PLAN: "INVALID_PLAN",
-  
-  // Business logic errors
-  INSUFFICIENT_PERMISSIONS: "INSUFFICIENT_PERMISSIONS",
-  PLAN_DOWNGRADE_BLOCKED: "PLAN_DOWNGRADE_BLOCKED",
-  PAYMENT_REQUIRED: "PAYMENT_REQUIRED",
-  USAGE_LIMIT_EXCEEDED: "USAGE_LIMIT_EXCEEDED",
-  
-  // Database errors
-  DATABASE_ERROR: "DATABASE_ERROR",
-  BILLING_NOT_FOUND: "BILLING_NOT_FOUND",
-  UPDATE_FAILED: "UPDATE_FAILED",
-  
-  // Payment errors
-  PAYMENT_FAILED: "PAYMENT_FAILED",
-  CARD_DECLINED: "CARD_DECLINED",
-  INVALID_CARD: "INVALID_CARD",
-  
-  // Rate limiting
-  RATE_LIMIT_EXCEEDED: "RATE_LIMIT_EXCEEDED",
-  
-  // General errors
-  INTERNAL_ERROR: "INTERNAL_ERROR",
-  NETWORK_ERROR: "NETWORK_ERROR",
-} as const;
+// Error codes moved to non-server constants to satisfy "use server" export rules
 
 // Validation functions
 function validatePaymentMethod(
@@ -177,106 +148,7 @@ function validateSubscriptionChange(
   return null;
 }
 
-// Usage calculation functions
-export function calculateUsagePercentages(usage: UsageMetrics): {
-  emailsSentPercentage: number;
-  contactsReachedPercentage: number;
-  campaignsActivePercentage: number;
-  storageUsedPercentage: number;
-  emailAccountsPercentage: number;
-} {
-  return {
-    emailsSentPercentage: getUsagePercentage(usage.emailsSent, usage.emailsLimit),
-    contactsReachedPercentage: getUsagePercentage(usage.contactsReached, usage.contactsLimit),
-    campaignsActivePercentage: getUsagePercentage(usage.campaignsActive, usage.campaignsLimit),
-    storageUsedPercentage: getUsagePercentage(usage.storageUsed, usage.storageLimit),
-    emailAccountsPercentage: getUsagePercentage(usage.emailAccountsActive, usage.emailAccountsLimit),
-  };
-}
 
-export function calculateOverage(usage: UsageMetrics): {
-  hasOverage: boolean;
-  overageItems: Array<{
-    metric: string;
-    used: number;
-    limit: number;
-    overage: number;
-    cost: number;
-  }>;
-  totalOverageCost: number;
-} {
-  const overageItems: Array<{
-    metric: string;
-    used: number;
-    limit: number;
-    overage: number;
-    cost: number;
-  }> = [];
-  
-  // Email overage: $0.001 per email over limit
-  if (usage.emailsLimit > 0 && usage.emailsSent > usage.emailsLimit) {
-    const overage = usage.emailsSent - usage.emailsLimit;
-    overageItems.push({
-      metric: "Emails",
-      used: usage.emailsSent,
-      limit: usage.emailsLimit,
-      overage,
-      cost: overage * 0.001,
-    });
-  }
-  
-  // Contact overage: $0.01 per contact over limit
-  if (usage.contactsLimit > 0 && usage.contactsReached > usage.contactsLimit) {
-    const overage = usage.contactsReached - usage.contactsLimit;
-    overageItems.push({
-      metric: "Contacts",
-      used: usage.contactsReached,
-      limit: usage.contactsLimit,
-      overage,
-      cost: overage * 0.01,
-    });
-  }
-  
-  // Storage overage: $5 per GB over limit
-  if (usage.storageLimit > 0 && usage.storageUsed > usage.storageLimit) {
-    const overage = usage.storageUsed - usage.storageLimit;
-    overageItems.push({
-      metric: "Storage (GB)",
-      used: usage.storageUsed,
-      limit: usage.storageLimit,
-      overage,
-      cost: overage * 5,
-    });
-  }
-  
-  const totalOverageCost = overageItems.reduce((sum, item) => sum + item.cost, 0);
-  
-  return {
-    hasOverage: overageItems.length > 0,
-    overageItems,
-    totalOverageCost,
-  };
-}
-
-export function projectMonthlyUsage(
-  usage: UsageMetrics,
-  daysIntoMonth: number = new Date().getDate()
-): UsageMetrics {
-  const daysInCurrentMonth = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth() + 1,
-    0
-  ).getDate();
-  
-  const projectionMultiplier = daysInCurrentMonth / Math.max(1, daysIntoMonth);
-  
-  return {
-    ...usage,
-    emailsSent: Math.round(usage.emailsSent * projectionMultiplier),
-    contactsReached: Math.round(usage.contactsReached * projectionMultiplier),
-    // Storage and active items don't need projection as they're current state
-  };
-}
 
 // Main Server Actions
 
