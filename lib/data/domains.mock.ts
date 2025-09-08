@@ -119,11 +119,22 @@ export const domains = [
     mailboxes: 2, // Two top accounts
   },
 ];
+
+export const accountMetrics = {
+  bounceRate: 0.02,
+  spamComplaints: 0.001,
+  openRate: 0.45,
+  replyRate: 0.12,
+  maxBounceRateThreshold: 0.05,
+  maxSpamComplaintRateThreshold: 0.005,
+  minOpenRateThreshold: 0.2,
+  minReplyRateThreshold: 0.05,
+};
+
 import { Mailbox } from "@/types/mailbox";
 import { WarmupResponse } from "@/types/accounts";
 import { CheckCircle, Globe, Server } from "lucide-react";
 import { DNSRecord } from "@/types/domains";
-
 export const mailboxes: Mailbox[] = [
   {
     id: 1,

@@ -1,4 +1,6 @@
 "use client";
+
+import { accountMetrics } from "@/lib/data/domains.mock";
 import {
   VerificationStatus,
   RelayType,
@@ -165,17 +167,6 @@ export default function EmailAccountForm({
     }
   };
 
-  // Mock metrics data, as it's separate from the form
-  const accountMetrics = {
-    bounceRate: 0.02,
-    spamComplaints: 0.001,
-    openRate: 0.45,
-    replyRate: 0.12,
-    maxBounceRateThreshold: 0.05,
-    maxSpamComplaintRateThreshold: 0.005,
-    minOpenRateThreshold: 0.2,
-    minReplyRateThreshold: 0.05,
-  };
 
   return (
     <Form {...form}>
