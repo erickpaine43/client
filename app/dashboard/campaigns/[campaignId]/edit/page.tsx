@@ -9,7 +9,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { AddCampaignProvider } from "@/context/AddCampaignContext";
-import { campaignsData } from "@/lib/data/campaigns";
+import { getCampaign } from "@/lib/actions/campaignActions";
 import { notFound } from "next/navigation";
 
 export default async function CampaignCreatePage({
@@ -18,7 +18,7 @@ export default async function CampaignCreatePage({
   params: Promise<{ campaignId: string }>;
 }) {
   const { campaignId } = await params;
-  const campaign = campaignsData.find((c) => c.id === Number(campaignId));
+  const campaign = await getCampaign(campaignId);
   if (!campaign) {
     notFound();
   }
