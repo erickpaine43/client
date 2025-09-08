@@ -154,7 +154,7 @@ export async function getDashboardMockDataAction(
 }
 
 // Import the data from campaigns.ts
-import { statsCards, recentReplies, warmupSummaryData } from "@/lib/data/campaigns";
+import { statsCards, recentReplies, warmupSummaryData, campaignLeads, sequenceSteps } from "@/lib/data/campaigns";
 import { StatsCardData, RecentReply, WarmupSummaryData } from "@/types/campaign";
 
 export async function getStatsCards(): Promise<StatsCardData[]> {
@@ -167,6 +167,14 @@ export async function getRecentReplies(): Promise<RecentReply[]> {
 
 export async function getWarmupSummaryData(): Promise<WarmupSummaryData> {
   return warmupSummaryData;
+}
+
+export async function getCampaignLeads(): Promise<typeof campaignLeads> {
+  return campaignLeads;
+}
+
+export async function getSequenceSteps(): Promise<typeof sequenceSteps> {
+  return sequenceSteps;
 }
 
 // Campaign operation server actions

@@ -1,18 +1,36 @@
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { campaignLeads, sequenceSteps } from "@/lib/data/campaigns";
-import { BarChart3, Mail, Users } from "lucide-react";
+"use client";
 
-const tabs = [
-  {
-    id: "sequence",
-    label: "Sequence",
-    icon: Mail,
-    count: sequenceSteps.length,
-  },
-  { id: "stats", label: "Stats", icon: BarChart3 },
-  { id: "leads", label: "Leads", icon: Users, count: campaignLeads.length },
-];
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getCampaignLeads, getSequenceSteps } from "@/lib/actions/dashboardActions";
+import { BarChart3, Mail, Users } from "lucide-react";
+import { useState, useEffect } from "react";
+
 function CampaignTabs({ children }: { children?: React.ReactNode }) {
+  const [sequencesCount, setSequencesCount] = useState(0);
+  const [leadsCount, setLeadsCount] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [sequenceData, leadsData] = await Promise.all([
+        getSequenceSteps(),
+        getCampaignLeads(),
+      ]);
+      setSequencesCount(sequenceData.length);
+      setLeadsCount(leadsData.length);
+    };
+    fetchData();
+  }, []);
+
+  const tabs = [
+    {
+      id: "sequence",
+      label: "Sequence",
+      icon: Mail,
+      count: sequencesCount,
+    },
+    { id: "stats", label: "Stats", icon: BarChart3 },
+    { id: "leads", label: "Leads", icon: Users, count: leadsCount },
+  ];
   return (
     <Tabs defaultValue="sequence" className="w-full ">
       <TabsList className="flex space-x-8 px-0 bg-transparent border-b border-gray-200">
