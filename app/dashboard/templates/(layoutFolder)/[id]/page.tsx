@@ -8,19 +8,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { initialTemplates } from "@/lib/data/template.mock";
+import { getTemplateById } from "@/lib/actions/templateActions";
 import { ArrowLeft, Star } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 async function page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const currentTemplate = initialTemplates.find(
-    (template) => template.id === parseInt(id),
-  );
-  if (!currentTemplate) {
+  const templateResult = await getTemplateById(id);
+  if (!templateResult.success || !templateResult.data) {
     notFound();
   }
+  const currentTemplate = templateResult.data;
   const { name, category, content, isStarred, subject } = currentTemplate;
 
   return (

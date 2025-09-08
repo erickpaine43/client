@@ -233,8 +233,65 @@ export async function getQuickReplyById(id: string): Promise<ActionResult<Templa
 }
 
 /**
-  * Get counts for template tabs
-  */
+ * Get a specific template by ID for the authenticated user
+ */
+export async function getTemplateById(id: string): Promise<ActionResult<Template | null>> {
+  try {
+    // Check authentication
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return {
+        success: false,
+        error: "You must be logged in to view templates",
+        code: ERROR_CODES.AUTH_REQUIRED,
+      };
+    }
+
+    // Simulate database fetch with mock data
+    // In production, this would fetch from database based on user company
+    await new Promise(resolve => setTimeout(resolve, 100)); // Simulate network delay
+
+    // Find the template by ID
+    const mockTemplate = initialTemplatesMock.find(template => template.id === parseInt(id));
+    if (!mockTemplate) {
+      return {
+        success: false,
+        error: "Template not found",
+        code: ERROR_CODES.INTERNAL_ERROR,
+      };
+    }
+
+    // Map to Template type
+    const template: Template = mapMockToTemplate(mockTemplate);
+
+    return {
+      success: true,
+      data: template,
+    };
+  } catch (error) {
+    console.error("getTemplateById error:", error);
+
+    const errorMessage = error instanceof Error ? error.message : String(error);
+
+    if (errorMessage.includes("network") || errorMessage.includes("fetch")) {
+      return {
+        success: false,
+        error: "Network error. Please check your connection and try again.",
+        code: ERROR_CODES.NETWORK_ERROR,
+      };
+    }
+
+    return {
+      success: false,
+      error: "Failed to retrieve template",
+      code: ERROR_CODES.INTERNAL_ERROR,
+    };
+  }
+}
+
+/**
+   * Get counts for template tabs
+   */
 export async function getTabCounts(): Promise<ActionResult<Record<string, number>>> {
   try {
     // Check authentication
