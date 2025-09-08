@@ -321,6 +321,14 @@ export interface ReputationFactors {
   engagement: number;
 }
 
+export const ACCOUNT_STATUSES = [
+  "PENDING",
+  "ACTIVE",
+  "ISSUE",
+  "SUSPENDED",
+  "DELETED",
+] as const;
+
 export interface DomainSettings {
   domain: string;
   authentication: DomainAuthentication;

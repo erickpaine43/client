@@ -1,9 +1,8 @@
 "use client";
 import { use } from "react";
 import { Button } from "@/components/ui/button";
-import EmailAccountForm, {
-  type EmailAccountFormValues,
-} from "@/components/domains/email-account-form";
+import EmailAccountForm from "@/components/domains/email-account-form";
+import { type EmailAccountFormValues } from "@/types/forms";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 

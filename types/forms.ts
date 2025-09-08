@@ -2,14 +2,14 @@ import { z } from "zod";
 import { isValidTimeRange } from "@/lib/utils";
 import { CampaignEventCondition, CampaignStatus } from "@/types/campaign";
 import { TemplateCategory } from "@/types";
-import { VerificationStatus } from "@/types/domain";
+import { VerificationStatus, RelayType, DomainAccountCreationType, EmailAccount, ACCOUNT_STATUSES } from "@/types/domains";
 import {
   EmailProvider,
   DnsProvider,
   DkimManagementType,
 } from "@/components/domains/components/constants";
 import { WarmupStatus } from "@/types/mailbox";
-import { RelayType, DomainAccountCreationType } from "@/types/domain";
+import { UseFormReturn } from "react-hook-form";
 
 const DOMAIN_REGEX =
   /^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}$/;
@@ -177,19 +177,14 @@ export const domainFormSchema = z.object({
 
 // Email account schema
 export const emailAccountFormSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.string().email("Please enter a valid email address"),
   provider: z.nativeEnum(EmailProvider),
-  status: z
-    .enum(["PENDING", "ACTIVE", "ISSUE", "SUSPENDED", "DELETED"])
-    .default("PENDING"),
+  status: z.enum(ACCOUNT_STATUSES).default("PENDING" as const),
   reputation: z.number().min(0).max(100).default(100),
   warmupStatus: z.nativeEnum(WarmupStatus).default(WarmupStatus.NOT_STARTED),
   dayLimit: z.number().min(1).max(2000).default(100),
   sent24h: z.number().default(0),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .optional(),
+  password: z.string().min(8, "Password must be at least 8 characters").optional(),
   accountType: z
     .nativeEnum(DomainAccountCreationType)
     .default(DomainAccountCreationType.VIRTUAL_USER_DB),
@@ -200,23 +195,42 @@ export const emailAccountFormSchema = z.object({
     .default(VerificationStatus.NOT_CONFIGURED)
     .optional(),
 
-  // Relay settings
+  // Relay settings (kept as per decision)
   relayType: z.nativeEnum(RelayType).default(RelayType.DEFAULT_SERVER_CONFIG),
   relayHost: z.string().optional(),
 
-  // Mailbox configuration
-  virtualMailboxMapping: z.string().optional(),
-  mailboxPath: z.string().optional(),
+  // Mailbox configuration (now tied to accountType in UI logic)
+  virtualMailboxMapping: z.string().optional(), // e.g., "newaccount/" for /etc/postfix/virtual
+  mailboxPath: z.string().optional(), // Full path if needed, or derived
   mailboxQuotaMB: z.number().positive().optional(),
 
-  // Warmup strategy
+  // Warmup strategy refinements
   warmupDailyIncrement: z.number().positive().optional(),
   warmupTargetDailyVolume: z.number().positive().optional(),
 
   // Overall account statuses
-  accountSetupStatus: z.string().optional(),
-  accountDeliverabilityStatus: z.string().optional(),
+  accountSetupStatus: z.string().optional(), // General setup status
+  accountDeliverabilityStatus: z.string().optional(), // For specific deliverability checks
 });
+
+// Interfaces for email account form
+export interface DomainAuthStatusProps {
+  // For the read-only display
+  spfVerified?: boolean;
+  dkimVerified?: boolean;
+  dmarcVerified?: boolean;
+}
+
+export interface EmailAccountFormProps {
+  initialData?: Partial<EmailAccount> & {
+    domainAuthStatus?: DomainAuthStatusProps;
+  }; // Add domainAuthStatus here
+  onSubmit: (data: EmailAccountFormValues) => Promise<void>;
+  isLoading?: boolean;
+  isEditing?: boolean;
+  form?: UseFormReturn<EmailAccountFormValues>;
+  // domainAuthStatus?: DomainAuthStatusProps; // Prop to pass domain's auth status
+}
 
 // Inferred TypeScript types
 export type CampaignStepValues = z.infer<typeof campaignStepSchema>;

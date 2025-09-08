@@ -5,11 +5,11 @@ import {
   VerificationStatus,
   RelayType,
   DomainAccountCreationType,
-  EmailAccount,
+  ACCOUNT_STATUSES,
 } from "@/types";
+import { EmailAccountFormValues, EmailAccountFormProps } from "@/types/forms";
 // import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, UseFormReturn } from "react-hook-form";
-import * as z from "zod";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -36,80 +36,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-// import { Switch } from "@/components/ui/switch"; // No longer directly used by this page
 import { Progress } from "@/components/ui/progress";
 import { emailAccountCopy } from "./copy";
 import { EmailProvider } from "./components/constants";
 import { WarmupStatus } from "@/types/mailbox";
-
-const copy = emailAccountCopy.form;
-
-const ACCOUNT_STATUSES = [
-  "PENDING",
-  "ACTIVE",
-  "ISSUE",
-  "SUSPENDED",
-  "DELETED",
-] as const;
-
-export const emailAccountFormSchema = z.object({
-  email: z.string().email(copy.validation.email.invalid),
-  provider: z.nativeEnum(EmailProvider),
-  status: z.enum(ACCOUNT_STATUSES).default("PENDING" as const),
-  reputation: z.number().min(0).max(100).default(100),
-  warmupStatus: z.nativeEnum(WarmupStatus).default(WarmupStatus.NOT_STARTED),
-  dayLimit: z.number().min(1).max(2000).default(100),
-  sent24h: z.number().default(0),
-  password: z.string().min(8, copy.validation.password.minLength).optional(),
-  accountType: z
-    .nativeEnum(DomainAccountCreationType)
-    .default(DomainAccountCreationType.VIRTUAL_USER_DB), // Default to one type
-
-  // Account-specific SMTP Auth Status
-  accountSmtpAuthStatus: z
-    .nativeEnum(VerificationStatus)
-    .default(VerificationStatus.NOT_CONFIGURED)
-    .optional(),
-
-  // Relay settings (kept as per decision)
-  relayType: z.nativeEnum(RelayType).default(RelayType.DEFAULT_SERVER_CONFIG),
-  relayHost: z.string().optional(),
-
-  // Mailbox configuration (now tied to accountType in UI logic)
-  virtualMailboxMapping: z.string().optional(), // e.g., "newaccount/" for /etc/postfix/virtual
-  mailboxPath: z.string().optional(), // Full path if needed, or derived
-  mailboxQuotaMB: z.number().positive().optional(),
-
-  // Warmup strategy refinements
-  warmupDailyIncrement: z.number().positive().optional(),
-  warmupTargetDailyVolume: z.number().positive().optional(),
-
-  // Overall account statuses
-  accountSetupStatus: z.string().optional(), // General setup status
-  accountDeliverabilityStatus: z.string().optional(), // For specific deliverability checks
-});
-
-export type EmailAccountFormValues = Partial<
-  z.infer<typeof emailAccountFormSchema>
->;
-
-interface DomainAuthStatusProps {
-  // For the read-only display
-  spfVerified?: boolean;
-  dkimVerified?: boolean;
-  dmarcVerified?: boolean;
-}
-
-interface EmailAccountFormProps {
-  initialData?: Partial<EmailAccount> & {
-    domainAuthStatus?: DomainAuthStatusProps;
-  }; // Add domainAuthStatus here
-  onSubmit: (data: EmailAccountFormValues) => Promise<void>;
-  isLoading?: boolean;
-  isEditing?: boolean;
-  form?: UseFormReturn<EmailAccountFormValues>;
-  // domainAuthStatus?: DomainAuthStatusProps; // Prop to pass domain's auth status
-}
 
 export default function EmailAccountForm({
   initialData,

@@ -4,9 +4,8 @@ import { use, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import EmailAccountForm, {
-  EmailAccountFormValues,
-} from "@/components/domains/email-account-form";
+import EmailAccountForm from "@/components/domains/email-account-form";
+import { EmailAccountFormValues } from "@/types/forms";
 import { getAccountDetails } from "@/lib/actions/domainsActions";
 
 // Define the type for the data EmailAccountForm expects for its initialData prop
