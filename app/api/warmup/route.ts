@@ -15,11 +15,11 @@ export async function GET() {
 
     return NextResponse.json(warmupData);
   } catch (error: unknown) {
-    console.error("Warmup Data Error:", error);
+    console.error("Warmup Data Error:", String(error));
     const errorMessage =
       error instanceof Error
         ? error.message
-        : "An internal server error occurred";
+        : String(error) || "An internal server error occurred";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
