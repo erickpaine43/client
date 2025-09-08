@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,7 +18,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { zodResolver } from "@hookform/resolvers/zod";
+import { SettingsLoadingSkeleton } from "@/components/settings/common/SettingsLoadingSkeleton";
+import { SettingsErrorState } from "@/components/settings/common/SettingsErrorState";
+import { showSaveSuccess } from "@/components/settings/common/SettingsSuccessNotification";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -30,10 +33,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useServerAction } from "@/hooks/useServerAction";
+import {
+  getComplianceSettings,
+  updateComplianceSettings,
+} from "@/lib/actions/settingsActions";
+import { Loader2 } from "lucide-react";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const complianceFormSchema = z.object({
-  autoAddUnsubscribeLink: z.boolean().default(true),
+  autoAddUnsubscribeLink: z.boolean(),
   unsubscribeText: z
     .string()
     .min(1, { message: "Unsubscribe text is required." }),
@@ -52,21 +60,96 @@ const complianceFormSchema = z.object({
 type ComplianceFormValues = z.infer<typeof complianceFormSchema>;
 
 interface ComplianceSettingsProps {
-  complianceData: ComplianceFormValues; // Assuming this data is fetched and passed down
+  complianceData?: ComplianceFormValues; // Optional - will be fetched if not provided
 }
 
 export function ComplianceSettings({
-  complianceData,
+  complianceData: initialData,
 }: ComplianceSettingsProps) {
+  const [submitLoading, setSubmitLoading] = useState(false);
+
+  // Server action for fetching compliance settings
+  const complianceAction = useServerAction(() => getComplianceSettings(), {
+    onError: (error) => {
+      console.error("Failed to load compliance settings:", error);
+    },
+  });
+
   const form = useForm<ComplianceFormValues>({
-    // resolver: zodResolver(complianceFormSchema),
-    defaultValues: complianceData,
+    resolver: zodResolver(complianceFormSchema),
+    defaultValues: {
+      autoAddUnsubscribeLink: true,
+      unsubscribeText: "Click here to unsubscribe",
+      unsubscribeLandingPage: "",
+      companyName: "",
+      addressLine1: "",
+      addressLine2: "",
+      city: "",
+      state: "",
+      zip: "",
+      country: "",
+    },
     mode: "onChange",
   });
 
-  function onSubmit(data: ComplianceFormValues) {
-    console.log("Compliance settings saved:", data);
-    // Submit to API
+  // Load compliance data on mount if not provided
+  useEffect(() => {
+    if (!initialData) {
+      complianceAction.execute();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialData]);
+
+  // Update form when data is loaded
+  useEffect(() => {
+    const data = initialData || complianceAction.data;
+    if (data) {
+      form.reset(data);
+    }
+  }, [initialData, complianceAction.data, form]);
+
+  async function onSubmit(data: ComplianceFormValues) {
+    setSubmitLoading(true);
+    try {
+      const result = await updateComplianceSettings(data);
+
+      if (result.success) {
+        showSaveSuccess("Compliance settings have been updated successfully.");
+      } else {
+        // Handle validation errors
+        if (result.field) {
+          form.setError(result.field as keyof ComplianceFormValues, {
+            message: result.error,
+          });
+        } else {
+          console.error("Failed to save compliance settings:", result.error);
+        }
+      }
+    } catch (error) {
+      console.error("Error saving compliance settings:", error);
+    } finally {
+      setSubmitLoading(false);
+    }
+  }
+
+  // Show loading state
+  if (complianceAction.loading && !complianceAction.data && !initialData) {
+    return <SettingsLoadingSkeleton variant="form" itemCount={8} />;
+  }
+
+  // Show error state
+  if (complianceAction.error && !initialData) {
+    return (
+      <SettingsErrorState
+        error={complianceAction.error}
+        errorType="network"
+        onRetry={() => complianceAction.execute()}
+        retryLoading={complianceAction.loading}
+        canRetry={complianceAction.canRetry}
+        variant="card"
+        showDetails
+      />
+    );
   }
 
   return (
@@ -265,7 +348,19 @@ export function ComplianceSettings({
             </div>
 
             <div className="flex justify-end">
-              <Button type="submit">Save Compliance Settings</Button>
+              <Button
+                type="submit"
+                disabled={submitLoading || complianceAction.loading}
+              >
+                {submitLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  "Save Compliance Settings"
+                )}
+              </Button>
             </div>
           </form>
         </Form>

@@ -29,6 +29,7 @@ interface ClientPreferencesContextType {
   ) => void;
   resetPreferences: () => void;
   isLoading: boolean;
+  error: string | null;
 }
 
 const ClientPreferencesContext = createContext<
@@ -51,6 +52,7 @@ export function ClientPreferencesProvider({
   const [preferences, setPreferences] =
     useState<ClientPreferences>(defaultPreferences);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Load preferences from localStorage on mount
   useEffect(() => {
@@ -66,6 +68,7 @@ export function ClientPreferencesProvider({
         setPreferences(loadedPreferences);
       } catch (error) {
         console.error("Failed to load client preferences:", error);
+        setError(error instanceof Error ? error.message : "Failed to load preferences");
         setPreferences(defaultPreferences);
       } finally {
         setIsLoading(false);
@@ -162,6 +165,7 @@ export function ClientPreferencesProvider({
     updatePreference,
     resetPreferences,
     isLoading,
+    error,
   };
 
   return (

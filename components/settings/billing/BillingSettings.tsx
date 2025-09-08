@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,40 +9,93 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { SettingsLoadingSkeleton } from "@/components/settings/common/SettingsLoadingSkeleton";
+import { SettingsErrorState } from "@/components/settings/common/SettingsErrorState";
+import { showBillingUpdateSuccess } from "@/components/settings/common/SettingsSuccessNotification";
+import { useServerAction } from "@/hooks/useServerAction";
+import {
+  getBillingDataForSettings as getBillingInfo,
+} from "@/lib/actions/billingActions";
+import { Loader2 } from "lucide-react";
+import type { BillingData } from "@/types/settings";
 
-interface BillingData {
-  renewalDate: string;
-  emailAccountsUsed: number;
-  campaignsUsed: number;
-  emailsPerMonthUsed: number;
-  planDetails: {
-    id: string;
-    name: string;
-    isMonthly: boolean;
-    price: number;
-    description: string;
-    maxEmailAccounts: number; // 0 for "Unlimited" or a number
-    maxCampaigns: number;
-    maxEmailsPerMonth: number;
+const BillingSettings: React.FC<{ billing?: BillingData }> = ({
+  billing: initialBilling,
+}) => {
+  const [updateLoading, setUpdateLoading] = useState(false);
+
+  // Server action for fetching billing data
+  const billingAction = useServerAction(() => getBillingInfo(), {
+    onError: (error) => {
+      console.error("Failed to load billing information:", error);
+    },
+  });
+
+  // Load billing data on mount if not provided
+  useEffect(() => {
+    if (!initialBilling) {
+      billingAction.execute();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialBilling]);
+
+  const handlePlanChange = async () => {
+    setUpdateLoading(true);
+    try {
+      // Simulate plan change
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      showBillingUpdateSuccess();
+    } catch (error) {
+      console.error("Failed to change plan:", error);
+    } finally {
+      setUpdateLoading(false);
+    }
   };
-  paymentMethod: {
-    lastFour: string;
-    expiry: string;
-    brand: string; // e.g., "Visa"
+
+  const handlePaymentMethodChange = async () => {
+    setUpdateLoading(true);
+    try {
+      // Simulate payment method change
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      showBillingUpdateSuccess();
+    } catch (error) {
+      console.error("Failed to update payment method:", error);
+    } finally {
+      setUpdateLoading(false);
+    }
   };
-  billingHistory: Array<{
-    date: string;
-    description: string;
-    amount: string;
-    method: string; // e.g., "Visa •••• 4242"
-  }>;
-}
 
-interface BillingSettingsProps {
-  billing: BillingData;
-}
+  // Show loading state
+  if (billingAction.loading && !billingAction.data && !initialBilling) {
+    return <SettingsLoadingSkeleton variant="cards" itemCount={4} />;
+  }
 
-const BillingSettings: React.FC<BillingSettingsProps> = ({ billing }) => {
+  // Show error state
+  if (billingAction.error && !initialBilling) {
+    return (
+      <SettingsErrorState
+        error={billingAction.error}
+        errorType="network"
+        onRetry={() => billingAction.execute()}
+        retryLoading={billingAction.loading}
+        canRetry={billingAction.canRetry}
+        variant="card"
+        showDetails
+      />
+    );
+  }
+
+  const billing = initialBilling || billingAction.data;
+
+  if (!billing) {
+    return (
+      <SettingsErrorState
+        error="No billing information available"
+        errorType="generic"
+        variant="card"
+      />
+    );
+  }
   return (
     <Card>
       <CardHeader>
@@ -63,7 +116,20 @@ const BillingSettings: React.FC<BillingSettingsProps> = ({ billing }) => {
                 {billing.renewalDate}{" "}
               </p>
             </div>
-            <Button variant="outline">Change Plan</Button>
+            <Button
+              variant="outline"
+              onClick={handlePlanChange}
+              disabled={updateLoading}
+            >
+              {updateLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                "Change Plan"
+              )}
+            </Button>
           </div>
 
           <div className="mt-4 space-y-1">
@@ -114,8 +180,17 @@ const BillingSettings: React.FC<BillingSettingsProps> = ({ billing }) => {
                 </p>
               </div>
             </div>
-            <Button variant="ghost" size="sm">
-              Change
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handlePaymentMethodChange}
+              disabled={updateLoading}
+            >
+              {updateLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                "Change"
+              )}
             </Button>
           </div>
         </div>

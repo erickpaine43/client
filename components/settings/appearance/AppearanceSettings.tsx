@@ -10,9 +10,12 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { SettingsLoadingSkeleton } from "@/components/settings/common/SettingsLoadingSkeleton";
+import { SettingsErrorState } from "@/components/settings/common/SettingsErrorState";
+import { showAppearanceUpdateSuccess } from "@/components/settings/common/SettingsSuccessNotification";
 import { useClientPreferences } from "@/context/ClientPreferencesContext";
 import { usePreferenceSync } from "@/hooks/usePreferenceSync";
-import { Sun, Moon, Monitor } from "lucide-react";
+import { Sun, Moon, Monitor, Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import type { TableDensity } from "@/lib/utils/clientStorage";
 
@@ -29,75 +32,84 @@ const densityOptions = [
 ];
 
 const AppearanceSettings: React.FC = () => {
-  const { preferences, theme, setTheme, updatePreference, isLoading } =
+  const { preferences, theme, setTheme, updatePreference, isLoading, error } =
     useClientPreferences();
 
   const { syncToServer } = usePreferenceSync();
 
-  // Local state for campaign previews (this would be stored in localStorage or server)
+  // Local state for campaign previews and loading states
   const [showCampaignPreviews, setShowCampaignPreviews] = useState(true);
+  const [syncLoading, setSyncLoading] = useState(false);
 
   const handleThemeChange = async (newTheme: string) => {
-    setTheme(newTheme);
-
-    // Sync to server if needed
+    setSyncLoading(true);
     try {
+      setTheme(newTheme);
       await syncToServer();
+      showAppearanceUpdateSuccess();
     } catch (error) {
       console.error("Failed to sync theme preference to server:", error);
+      // Could show error toast here
+    } finally {
+      setSyncLoading(false);
     }
   };
 
   const handleDensityChange = async (newDensity: string) => {
-    updatePreference("tableDensity", newDensity as TableDensity);
-
-    // Sync to server if needed
+    setSyncLoading(true);
     try {
+      updatePreference("tableDensity", newDensity as TableDensity);
       await syncToServer();
+      showAppearanceUpdateSuccess();
     } catch (error) {
       console.error("Failed to sync density preference to server:", error);
+      // Could show error toast here
+    } finally {
+      setSyncLoading(false);
     }
   };
 
-  const handleCampaignPreviewsChange = (checked: boolean) => {
-    setShowCampaignPreviews(checked);
-    // This could also be stored in localStorage or synced to server
+  const handleCampaignPreviewsChange = async (checked: boolean) => {
+    setSyncLoading(true);
+    try {
+      setShowCampaignPreviews(checked);
+      // This could also be stored in localStorage or synced to server
+      await syncToServer();
+      showAppearanceUpdateSuccess();
+    } catch (error) {
+      console.error("Failed to sync campaign preview preference:", error);
+    } finally {
+      setSyncLoading(false);
+    }
   };
 
+  const handleSidebarToggle = async (checked: boolean) => {
+    setSyncLoading(true);
+    try {
+      updatePreference("sidebarCollapsed", !checked);
+      await syncToServer();
+      showAppearanceUpdateSuccess();
+    } catch (error) {
+      console.error("Failed to sync sidebar preference:", error);
+    } finally {
+      setSyncLoading(false);
+    }
+  };
+
+  // Show loading state
   if (isLoading) {
+    return <SettingsLoadingSkeleton variant="appearance" />;
+  }
+
+  // Show error state
+  if (error) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Appearance</CardTitle>
-          <CardDescription>
-            Customize the appearance of the application.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <Label>Theme</Label>
-            <div className="grid grid-cols-3 gap-2">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-10 bg-gray-200 rounded animate-pulse"
-                />
-              ))}
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label>Density</Label>
-            <div className="grid grid-cols-3 gap-2">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-10 bg-gray-200 rounded animate-pulse"
-                />
-              ))}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <SettingsErrorState
+        error={error}
+        errorType="generic"
+        variant="card"
+        showDetails
+      />
     );
   }
 
@@ -122,8 +134,13 @@ const AppearanceSettings: React.FC = () => {
                   variant={theme === option.value ? "default" : "outline"}
                   className="justify-start"
                   onClick={() => handleThemeChange(option.value)}
+                  disabled={syncLoading}
                 >
-                  <Icon className="mr-2 h-4 w-4" />
+                  {syncLoading && theme === option.value ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Icon className="mr-2 h-4 w-4" />
+                  )}
                   {option.label}
                 </Button>
               );
@@ -148,7 +165,11 @@ const AppearanceSettings: React.FC = () => {
                 }
                 className="justify-start"
                 onClick={() => handleDensityChange(option.value)}
+                disabled={syncLoading}
               >
+                {syncLoading && preferences.tableDensity === option.value ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
                 {option.label}
               </Button>
             ))}
@@ -169,6 +190,7 @@ const AppearanceSettings: React.FC = () => {
             <Switch
               checked={showCampaignPreviews}
               onCheckedChange={handleCampaignPreviewsChange}
+              disabled={syncLoading}
             />
           </div>
 
@@ -181,9 +203,8 @@ const AppearanceSettings: React.FC = () => {
             </div>
             <Switch
               checked={!preferences.sidebarCollapsed}
-              onCheckedChange={(checked) =>
-                updatePreference("sidebarCollapsed", !checked)
-              }
+              onCheckedChange={handleSidebarToggle}
+              disabled={syncLoading}
             />
           </div>
         </div>

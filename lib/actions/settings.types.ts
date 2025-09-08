@@ -71,3 +71,26 @@ export const mockSimpleNotificationPreferences: SimpleNotificationPreferences = 
   createdAt: new Date(),
   updatedAt: new Date(),
 };
+
+// Compliance settings types
+export interface ComplianceSettings {
+  autoAddUnsubscribeLink: boolean;
+  unsubscribeText: string;
+  unsubscribeLandingPage: string;
+  companyName: string;
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+}
+
+// Security recommendation type
+export interface SecurityRecommendation {
+  id: string;
+  title: string;
+  description: string;
+  status: "enabled" | "recommended" | "warning";
+  actionRequired: boolean;
+}

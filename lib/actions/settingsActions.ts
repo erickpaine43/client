@@ -3,14 +3,16 @@
 import { nile } from "@/app/api/[...nile]/nile";
 import { mockUserSettings, mockGeneralSettings, mockSecuritySettings } from "../data/settings.mock";
 import { getCurrentUserId } from "@/lib/utils/auth";
-import type { 
-  UserSettings, 
-  CompanyInfo, 
-  BillingAddress, 
-  GeneralSettings, 
+import type {
+  UserSettings,
+  CompanyInfo,
+  BillingAddress,
+  GeneralSettings,
   SecuritySettings,
   ActionResult,
-  SimpleNotificationPreferences
+  SimpleNotificationPreferences,
+  ComplianceSettings,
+  SecurityRecommendation
 } from "./settings.types";
 import { 
   ERROR_CODES,
@@ -696,6 +698,172 @@ export async function updateSimpleNotificationPreferences(
       success: false,
       error: "Failed to update notification preferences",
       code: ERROR_CODES.UPDATE_FAILED,
+    };
+  }
+}
+
+/**
+ * Get compliance settings
+ */
+export async function getComplianceSettings(): Promise<ActionResult<ComplianceSettings>> {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return {
+        success: false,
+        error: "You must be logged in to view compliance settings",
+        code: ERROR_CODES.AUTH_REQUIRED,
+      };
+    }
+
+    // Simulate database fetch
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Mock compliance settings
+    const complianceSettings: ComplianceSettings = {
+      autoAddUnsubscribeLink: true,
+      unsubscribeText: "Click here to unsubscribe",
+      unsubscribeLandingPage: "",
+      companyName: "",
+      addressLine1: "",
+      city: "",
+      state: "",
+      zip: "",
+      country: "",
+    };
+
+    return {
+      success: true,
+      data: complianceSettings,
+    };
+  } catch (error) {
+    console.error("getComplianceSettings error:", error);
+    return {
+      success: false,
+      error: "Failed to retrieve compliance settings",
+      code: ERROR_CODES.INTERNAL_ERROR,
+    };
+  }
+}
+
+/**
+ * Update compliance settings
+ */
+export async function updateComplianceSettings(
+  settings: DeepPartial<ComplianceSettings>
+): Promise<ActionResult<ComplianceSettings>> {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return {
+        success: false,
+        error: "You must be logged in to update compliance settings",
+        code: ERROR_CODES.AUTH_REQUIRED,
+      };
+    }
+
+    // Validate unsubscribeText if provided
+    if (settings.unsubscribeText && settings.unsubscribeText.length === 0) {
+      return {
+        success: false,
+        error: "Unsubscribe text is required",
+        code: ERROR_CODES.VALIDATION_FAILED,
+        field: "unsubscribeText",
+      };
+    }
+
+    // Validate companyName if provided
+    if (settings.companyName && settings.companyName.length === 0) {
+      return {
+        success: false,
+        error: "Company name is required",
+        code: ERROR_CODES.VALIDATION_FAILED,
+        field: "companyName",
+      };
+    }
+
+    // Simulate database update
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    // Mock updated settings
+    const updatedSettings: ComplianceSettings = {
+      autoAddUnsubscribeLink: settings.autoAddUnsubscribeLink ?? true,
+      unsubscribeText: settings.unsubscribeText || "Click here to unsubscribe",
+      unsubscribeLandingPage: settings.unsubscribeLandingPage || "",
+      companyName: settings.companyName || "",
+      addressLine1: settings.addressLine1 || "",
+      city: settings.city || "",
+      state: settings.state || "",
+      zip: settings.zip || "",
+      country: settings.country || "",
+    };
+
+    return {
+      success: true,
+      data: updatedSettings,
+    };
+  } catch (error) {
+    console.error("updateComplianceSettings error:", error);
+    return {
+      success: false,
+      error: "Failed to update compliance settings",
+      code: ERROR_CODES.UPDATE_FAILED,
+    };
+  }
+}
+
+/**
+ * Get security recommendations
+ */
+export async function getSecurityRecommendations(): Promise<ActionResult<SecurityRecommendation[]>> {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return {
+        success: false,
+        error: "You must be logged in to view security recommendations",
+        code: ERROR_CODES.AUTH_REQUIRED,
+      };
+    }
+
+    // Simulate database fetch
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Mock security recommendations
+    const securityRecommendations: SecurityRecommendation[] = [
+      {
+        id: "strong-password",
+        title: "Strong Password",
+        description: "Your password meets our security requirements.",
+        status: "enabled",
+        actionRequired: false,
+      },
+      {
+        id: "two-factor-auth",
+        title: "Two-Factor Authentication",
+        description: "Enabling 2FA adds an extra layer of security to your account.",
+        status: "recommended",
+        actionRequired: true,
+      },
+      {
+        id: "activity-monitoring",
+        title: "Recent Activity Monitoring",
+        description: "We monitor your account for suspicious activity and will notify you of any concerns.",
+        status: "enabled",
+        actionRequired: false,
+      },
+    ];
+
+    return {
+      success: true,
+      data: securityRecommendations,
+    };
+  } catch (error) {
+    console.error("getSecurityRecommendations error:", error);
+    return {
+      success: false,
+      error: "Failed to retrieve security recommendations",
+      code: ERROR_CODES.INTERNAL_ERROR,
     };
   }
 }
