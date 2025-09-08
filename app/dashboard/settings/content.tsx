@@ -16,12 +16,6 @@ interface UserProfileData {
   avatarUrl?: string;
 }
 
-interface AppearanceData {
-  theme: "light" | "dark" | "system" | string;
-  density: "compact" | "default" | "comfortable" | string;
-  showCampaignPreviews: boolean;
-}
-
 interface NotificationData {
   email: {
     campaignCompletions: boolean;
@@ -79,7 +73,6 @@ interface BillingData {
 // Mock data structure based on potential server-fetched data
 interface MockSettingsData {
   userProfile: UserProfileData;
-  appearance: AppearanceData;
   notifications: NotificationData;
   compliance: ComplianceData;
   billing: BillingData;
@@ -93,8 +86,7 @@ export function SettingsContent({ settingsData }: SettingsContentProps) {
   const [currentTab, setCurrentTab] = useState("account");
 
   // Use the mock data passed as props
-  const { userProfile, appearance, notifications, compliance, billing } =
-    settingsData;
+  const { userProfile, notifications, compliance, billing } = settingsData;
 
   // You can add state or effects here if needed for client-side interactions
   // For now, we just use the data passed down.
@@ -135,12 +127,8 @@ export function SettingsContent({ settingsData }: SettingsContentProps) {
           <AccountSettings userProfile={userProfile} />
         </TabsContent>
         <TabsContent value="appearance" className="pt-4">
-          {/* Pass relevant mock data to AppearancePage */}
-          <AppearanceSettings
-            theme={appearance.theme}
-            density={appearance.density}
-            showCampaignPreviews={appearance.showCampaignPreviews}
-          />
+          {/* AppearanceSettings now manages its own state through client preferences */}
+          <AppearanceSettings />
         </TabsContent>
         <TabsContent value="notifications" className="pt-4">
           {/* Pass relevant mock data to NotificationPage */}

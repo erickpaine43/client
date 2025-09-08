@@ -1,1 +1,2 @@
-import '@testing-library/jest-dom'
+// @ts-nocheck
+require('@testing-library/jest-dom')
