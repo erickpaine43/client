@@ -120,3 +120,19 @@ export const CSV_COLUMNS: CSVColumn[] = [
   { key: "website", label: "Website", required: false },
   { key: "phone", label: "Phone Number", required: false },
 ];
+
+// Database result type for lead lists
+export interface DbLeadList {
+  id: string;
+  name: string;
+  contacts: number;
+  description: string;
+}
+
+// Database result type for lead lists row from query
+export interface DbLeadListRow {
+  id: string;
+  name: string;
+  contacts: number;
+  description: string;
+}

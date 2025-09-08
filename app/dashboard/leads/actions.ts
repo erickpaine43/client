@@ -3,14 +3,7 @@
 import { leadsStats, leadLists, LeadStats } from "@/lib/data/leads";
 import { nile } from "@/app/api/[...nile]/nile";
 import { getCurrentUserId } from "@/lib/utils/auth";
-
-// Database result type for lead lists
-interface DbLeadList {
-  id: string;
-  name: string;
-  contacts: number;
-  description: string;
-}
+import { DbLeadList, DbLeadListRow } from "@/types/clients-leads";
 
 export async function getLeadsStats(): Promise<LeadStats> {
   try {
@@ -102,14 +95,6 @@ export async function getLeadLists(): Promise<DbLeadList[]> {
         FROM lead_lists
         ORDER BY name
       `);
-
-      // Database result type for lead lists
-      interface DbLeadListRow {
-        id: string;
-        name: string;
-        contacts: number;
-        description: string;
-      }
 
       // Map database results to expected format
       const dbLeadLists: DbLeadList[] = (result as DbLeadListRow[]).map((row) => ({
