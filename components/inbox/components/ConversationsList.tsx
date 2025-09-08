@@ -1,38 +1,21 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { cn, getRelativeTime } from "@/lib/utils";
+import { cn, getRelativeTime, getTagColor } from "@/lib/utils";
 import { Eye, MoreHorizontal, Pin, Star } from "lucide-react";
 import Link from "next/link";
 import ConversationsListHeader from "./ConversationsListHeader";
 
-const getTagColor = (tag: string) => {
-  switch (tag) {
-    case "interested":
-      return "bg-green-50 text-green-700 border-green-200 hover:bg-green-100";
-    case "not-interested":
-      return "bg-red-50 text-red-700 border-red-200 hover:bg-red-100";
-    case "maybe-later":
-      return "bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100";
-    case "replied":
-      return "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100";
-    case "follow-up":
-      return "bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100";
-    default:
-      return "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100";
-  }
-};
-
-import { conversations } from "@/lib/data/Inbox.mock";
+import { Conversation } from "@/types";
 
 function ConversationsList({
   conversations: filteredConversations,
 }: {
-  conversations: typeof conversations;
+  conversations: Conversation[];
 }) {
   return (
     <div className="flex flex-col h-full w-full">
-      <ConversationsListHeader />
+      <ConversationsListHeader title="All Conversations" />
 
       <div className="flex-1 overflow-y-auto p-2">
         <div className="space-y-4">

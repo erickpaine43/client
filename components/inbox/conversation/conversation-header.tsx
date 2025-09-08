@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useConversation } from "@/context/ConversationContext";
 import { Calendar } from "lucide-react";
 import ConversationHeaderButtons from "./conversation-header-buttons";
-import { getTagColor } from "@/lib/data/Inbox.mock";
+import { getTagColor } from "@/lib/utils";
 function ConversationHeader() {
   const { selectedConversation } = useConversation();
 

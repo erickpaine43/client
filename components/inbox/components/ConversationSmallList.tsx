@@ -1,13 +1,14 @@
 import React from "react";
-import { conversations, getTagColor } from "@/lib/data/Inbox.mock";
+import { getAllConversations } from "@/lib/actions/inboxActions";
 import ConversationsListHeader from "./ConversationsListHeader";
-import { cn, getRelativeTime } from "@/lib/utils";
+import { cn, getRelativeTime, getTagColor } from "@/lib/utils";
 import { ArrowRight, Pin, Star } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-function ConversationSmallList() {
-  const filteredConversations = conversations;
+
+export default async function ConversationSmallList() {
+  const filteredConversations = await getAllConversations();
   return (
     <div className="flex flex-col h-full">
       <ConversationsListHeader title="Conversations" />
@@ -96,4 +97,3 @@ function ConversationSmallList() {
     </div>
   );
 }
-export default ConversationSmallList;
