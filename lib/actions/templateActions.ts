@@ -1,6 +1,6 @@
 "use server";
 
-import { initialTemplates as initialTemplatesMock, initialQuickReplies } from "@/lib/data/template.mock";
+import { initialTemplates as initialTemplatesMock, initialQuickReplies, initialFolders } from "@/lib/data/template.mock";
 import { getCurrentUserId } from "@/lib/utils/auth";
 import { nile } from "@/app/api/[...nile]/nile";
 import type { Template, TemplateFolder, TemplateCategoryType } from "@/types";
@@ -115,11 +115,11 @@ export async function getTemplateFolders(): Promise<ActionResult<TemplateFolder[
     // Simulate database fetch
     await new Promise(resolve => setTimeout(resolve, 100));
 
-    // For now, return empty array since the page doesn't use folders
-    // In a full implementation, this would return the folder structure
+    // Return mock folder structure
+    // In a full implementation, this would fetch from database
     return {
       success: true,
-      data: [],
+      data: initialFolders as TemplateFolder[],
     };
   } catch (error) {
     console.error("getTemplateFolders error:", error);

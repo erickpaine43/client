@@ -1,10 +1,16 @@
 import Folders from "@/components/templates/Folder-Structure/Folders";
-import { initialFolders } from "@/lib/data/template.mock";
+import { getTemplateFolders } from "@/lib/actions/templateActions";
 import { TemplateFolder } from "@/types";
 import { FolderIcon } from "lucide-react";
 
-function TemplateFolders() {
-  const folders = initialFolders.filter(
+async function TemplateFolders() {
+  const result = await getTemplateFolders();
+
+  if (!result.success) {
+    return <div>Error: {result.error}</div>;
+  }
+
+  const folders = result.data.filter(
     (folder) => folder.type === "quick-reply",
   ) as TemplateFolder[];
   const files = folders.flatMap((folder) => folder.children);

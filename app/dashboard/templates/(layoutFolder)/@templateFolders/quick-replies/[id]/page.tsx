@@ -5,14 +5,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { initialQuickReplies } from "@/lib/data/template.mock";
+import { getQuickReplies } from "@/lib/actions/templateActions";
 import { cn } from "@/lib/utils";
 import { Template } from "@/types";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 async function page({ params }: { params: Promise<{ id: string }> }) {
-  const quickReplies = initialQuickReplies;
+  const result = await getQuickReplies();
+
+  if (!result.success) {
+    return <div>Error: {result.error}</div>;
+  }
+
+  const quickReplies = result.data;
   const { id } = await params;
   return (
     <div className="bg-gray-50 p-2 px-4 border-r border-gray-200 w-72 space-y-5">

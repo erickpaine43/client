@@ -12,7 +12,10 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getUsageWithCalculations, getStorageOptions } from "@/lib/actions/billingActions";
+import {
+  getUsageWithCalculations,
+  getStorageOptions,
+} from "@/lib/actions/billingActions";
 import { cn } from "@/lib/utils";
 import { Globe, HardDrive, Mail, Plus, Server, Users } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -81,8 +84,10 @@ function UsageTab() {
   const [usageData, setUsageData] = useState<UsageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [storageOptions, setStorageOptions] = useState<{gb: number; price: number}[] | null>(null);
-  const [setLoadingStorage] = useState(true);
+  const [storageOptions, setStorageOptions] = useState<
+    { gb: number; price: number }[] | null
+  >(null);
+  const [loadingStorage, setLoadingStorage] = useState(true);
 
   const fetchUsageData = async () => {
     try {
@@ -137,9 +142,9 @@ function UsageTab() {
     fetchUsageData();
   }, []);
 
-  useEffect(() => {
-    fetchStorageOptions();
-  }, []);
+ useEffect(() => {
+   fetchStorageOptions();
+ }, []);
 
   if (loading) {
     return <UsageTabSkeleton />;
@@ -340,21 +345,28 @@ function UsageTab() {
           </AddStorageTrigger>
         </CardHeader>
         <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {storageOptions && storageOptions.map((option) => (
-            <Card
-              key={option.gb}
-              className="bg-gray-50 rounded-lg p-4 text-center border border-gray-200 hover:border-blue-300 transition-colors cursor-pointer"
-            >
-              <CardContent>
-                <div className="text-lg font-semibold text-gray-900">
-                  {option.gb} GB
-                </div>
-                <div className="text-sm text-gray-600">
-                  ${option.price}/month
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+          {loadingStorage ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-24 w-full" />
+            ))
+          ) : (
+            storageOptions &&
+            storageOptions.map((option) => (
+              <Card
+                key={option.gb}
+                className="bg-gray-50 rounded-lg p-4 text-center border border-gray-200 hover:border-blue-300 transition-colors cursor-pointer"
+              >
+                <CardContent>
+                  <div className="text-lg font-semibold text-gray-900">
+                    {option.gb} GB
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    ${option.price}/month
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
         </CardContent>
       </Card>
     </div>

@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -34,8 +35,10 @@ function AddStorageTrigger({
   const [open, setOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [storageOptions, setStorageOptions] = useState<{gb: number; price: number}[] | null>(null);
-  const [setLoadingStorage] = useState(true);
+  const [storageOptions, setStorageOptions] = useState<
+    { gb: number; price: number }[] | null
+  >(null);
+  const [loadingStorage, setLoadingStorage] = useState(true);
 
   const handleSubmit = async () => {
     try {
@@ -132,24 +135,31 @@ function AddStorageTrigger({
           <div className="space-y-3">
             <Label className="text-sm font-medium">Select storage amount</Label>
             <div className="grid grid-cols-2 gap-3">
-              {storageOptions && storageOptions.map((option) => (
-                <Button
-                  key={option.gb}
-                  variant="outline"
-                  onClick={() => setSelectedAmount(option.gb)}
-                  className={cn(
-                    "h-auto p-4 flex-col space-y-1 transition-all",
-                    selectedAmount === option.gb
-                      ? "border-primary bg-primary/5 text-primary"
-                      : "hover:border-muted-foreground/50"
-                  )}
-                >
-                  <div className="text-lg font-semibold">{option.gb} GB</div>
-                  <div className="text-sm text-muted-foreground">
-                    ${option.price}/month
-                  </div>
-                </Button>
-              ))}
+              {loadingStorage ? (
+                Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton key={i} className="h-20 w-full" />
+                ))
+              ) : (
+                storageOptions &&
+                storageOptions.map((option) => (
+                  <Button
+                    key={option.gb}
+                    variant="outline"
+                    onClick={() => setSelectedAmount(option.gb)}
+                    className={cn(
+                      "h-auto p-4 flex-col space-y-1 transition-all",
+                      selectedAmount === option.gb
+                        ? "border-primary bg-primary/5 text-primary"
+                        : "hover:border-muted-foreground/50"
+                    )}
+                  >
+                    <div className="text-lg font-semibold">{option.gb} GB</div>
+                    <div className="text-sm text-muted-foreground">
+                      ${option.price}/month
+                    </div>
+                  </Button>
+                ))
+              )}
             </div>
           </div>
 
