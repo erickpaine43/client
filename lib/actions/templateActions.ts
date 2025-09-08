@@ -5,6 +5,8 @@ import { getCurrentUserId } from "@/lib/utils/auth";
 import type { Template, TemplateFolder, TemplateCategoryType } from "@/types";
 import type { ActionResult } from "./settings.types";
 import { ERROR_CODES } from "./settings.types";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 // Use the actual type inference from mock data
 type MockTemplateType = typeof initialTemplatesMock[0];
@@ -233,8 +235,8 @@ export async function getQuickReplyById(id: string): Promise<ActionResult<Templa
 }
 
 /**
- * Get a specific template by ID for the authenticated user
- */
+  * Get a specific template by ID for the authenticated user
+  */
 export async function getTemplateById(id: string): Promise<ActionResult<Template | null>> {
   try {
     // Check authentication
@@ -286,6 +288,49 @@ export async function getTemplateById(id: string): Promise<ActionResult<Template
       error: "Failed to retrieve template",
       code: ERROR_CODES.INTERNAL_ERROR,
     };
+  }
+}
+
+/**
+  * Update a specific template by ID for the authenticated user
+  */
+export async function updateTemplate(formData: FormData): Promise<void> {
+  try {
+    // Check authentication
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      throw new Error("You must be logged in to update templates");
+    }
+
+    const id = parseInt(formData.get('id') as string);
+    const name = formData.get('name') as string;
+    const subject = formData.get('subject') as string;
+    const content = formData.get('content') as string;
+
+    if (!id || !name || !subject || !content) {
+      throw new Error("Missing required fields");
+    }
+
+    // Find and update the mock template
+    const templateIndex = initialTemplatesMock.findIndex(template => template.id === id);
+    if (templateIndex === -1) {
+      throw new Error("Template not found");
+    }
+
+    // Update the template
+    initialTemplatesMock[templateIndex] = {
+      ...initialTemplatesMock[templateIndex],
+      name,
+      subject,
+      content,
+    };
+
+    // Revalidate and redirect
+    revalidatePath('/dashboard/templates');
+    redirect(`/dashboard/templates/${id}`);
+  } catch (error) {
+    console.error("updateTemplate error:", error);
+    throw new Error("Failed to update template");
   }
 }
 

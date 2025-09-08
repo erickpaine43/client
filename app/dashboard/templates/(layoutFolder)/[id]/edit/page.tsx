@@ -9,19 +9,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { initialTemplates } from "@/lib/data/template.mock";
+import { getTemplateById, updateTemplate } from "@/lib/actions/templateActions";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 async function page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const currentTemplate = initialTemplates.find(
-    (template) => template.id === parseInt(id),
-  );
-  if (!currentTemplate) {
+  const result = await getTemplateById(id);
+  if (!result.success || !result.data) {
     notFound();
   }
+  const currentTemplate = result.data;
   const { name, category, content, subject } = currentTemplate;
 
   return (
@@ -46,31 +45,51 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
               </div>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline">Cancel</Button>
-              <Button>Save Changes</Button>
+              <Button variant="outline" asChild>
+                <Link href={`/dashboard/templates/${id}`}>Cancel</Link>
+              </Button>
+              <Button type="submit" form="edit-form">Save Changes</Button>
             </div>
           </div>
         </CardHeader>
         <Separator />
         <CardContent className="space-y-6">
-          <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">
-              Template Name
-            </h3>
-            <Input className="text-gray-900" defaultValue={name} />
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">
-              Subject Line
-            </h3>
-            <Input className="text-gray-900" defaultValue={subject} />
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">
-              Email Content
-            </h3>
-            <Textarea className="text-gray-900 h-64" defaultValue={content} />
-          </div>
+          <form action={updateTemplate} id="edit-form">
+            <input type="hidden" name="id" value={id} />
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 mb-2">
+                Template Name
+              </h3>
+              <Input
+                className="text-gray-900"
+                defaultValue={name}
+                name="name"
+                required
+              />
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 mb-2">
+                Subject Line
+              </h3>
+              <Input
+                className="text-gray-900"
+                defaultValue={subject}
+                name="subject"
+                required
+              />
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 mb-2">
+                Email Content
+              </h3>
+              <Textarea
+                className="text-gray-900 h-64"
+                defaultValue={content}
+                name="content"
+                required
+              />
+            </div>
+          </form>
         </CardContent>
       </Card>
     </div>
