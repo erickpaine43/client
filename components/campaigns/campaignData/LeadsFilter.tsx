@@ -9,6 +9,26 @@ import {
 } from "@/components/ui/select";
 import { ArrowUpDown, Download } from "lucide-react";
 
+const exportCampaignLeads = async () => {
+  try {
+    const response = await fetch("/api/campaign-leads-csv");
+    if (!response.ok) {
+      console.error("Failed to export campaign leads");
+      return;
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "campaign-leads.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error exporting campaign leads:", error);
+  }
+};
+
 function LeadsFilter() {
   return (
     <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-4 lg:space-y-0 lg:space-x-4 p-4 bg-white border rounded-lg shadow-sm">
@@ -50,6 +70,7 @@ function LeadsFilter() {
       <Button
         variant="outline"
         className="flex items-center space-x-2 w-full sm:w-auto"
+        onClick={exportCampaignLeads}
       >
         <Download className="w-4 h-4" />
         <span>Export CSV</span>
