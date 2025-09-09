@@ -1,6 +1,6 @@
 'use server';
 
-import { campaignLeads, campaignsData, sequenceSteps } from '@/lib/data/campaigns';
+import { campaignLeads, campaignsData, sequenceSteps, mockedCampaigns } from '@/lib/data/campaigns';
 import { Campaign } from '@/types';
 
 export async function getCampaignLeads() {
@@ -23,6 +23,7 @@ export async function getUserCampaignsAction(userId?: string, companyId?: string
 }
 
 export async function getCampaignAnalyticsAction(campaigns: Partial<Campaign>[], days: number) {
+  console.log("Generating campaign analytics:", campaigns, days);
   // In a real implementation, this would generate analytics from campaign data
   // For now, generate mock chart data
   const chartData = [];
@@ -70,4 +71,31 @@ export async function getSequenceSteps() {
   // In a real implementation, this would fetch from a database
   // For now, return the static mock data
   return sequenceSteps;
+}
+
+// Server action to fetch campaign data (using mock data)
+export async function getCampaignsDataAction(companyId: string) {
+  // Simulate fetching data based on companyId (though not used in mock)
+  console.log(`Fetching campaign data for company: ${companyId}`);
+
+  // Simulate network delay
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  // Calculate summary data from mock campaigns
+  const totalCampaigns = mockedCampaigns.length;
+  const activeCampaigns = mockedCampaigns.filter(
+    (c) => c.status === "Running",
+  ).length;
+  const emailsSent = mockedCampaigns.reduce((sum, c) => sum + c.progressTotal, 0);
+  const totalReplies = mockedCampaigns.reduce((sum, c) => sum + c.replies, 0);
+
+  return {
+    summary: {
+      totalCampaigns,
+      activeCampaigns,
+      emailsSent,
+      totalReplies,
+    },
+    campaigns: mockedCampaigns,
+  };
 }
