@@ -1,3 +1,5 @@
+import { Client, ClientStatus } from '../../types/clients-leads';
+
 export const leadLists = [
   {
     id: "1",
@@ -161,3 +163,63 @@ export const SAMPLE_CSV_DATA = [
   ["john.doe@example.com", "John", "Doe", "Example Inc.", "Software Engineer"],
   ["jane.smith@testcorp.com", "Jane", "Smith", "Test Corp.", "Product Manager"],
 ];
+
+export const campaignLeadsData = [
+  ["Email", "Name", "Status", "First Contact", "Campaign"],
+  ["jane.doe@softwareco.com", "Jane Doe", "Replied", "2024-01-15", "Software CEOs Outreach"],
+  ["john.smith@techstartup.io", "John Smith", "Clicked", "2024-01-16", "Software CEOs Outreach"],
+  ["sarah.wilson@cloudtech.com", "Sarah Wilson", "Opened", "2024-01-17", "Software CEOs Outreach"],
+  ["mike.brown@salesforce.com", "Mike Brown", "Sent", "2024-01-18", "Software CEOs Outreach"],
+  ["emma.davis@datacorp.net", "Emma Davis", "Replied", "2024-01-19", "Software CEOs Outreach"],
+  ["alex.johnson@devtools.io", "Alex Johnson", "Clicked", "2024-01-20", "Software CEOs Outreach"],
+  ["lisa.garcia@webapps.com", "Lisa Garcia", "Opened", "2024-01-21", "Software CEOs Outreach"],
+  ["david.perez@machinelearning.co", "David Perez", "Sent", "2024-01-22", "Software CEOs Outreach"],
+  ["anna.lee@analytics.com", "Anna Lee", "Replied", "2024-01-23", "Software CEOs Outreach"],
+];
+
+export const mockClients: Client[] = [
+  {
+    id: 1,
+    email: "john.doe@example.com",
+    firstName: "John",
+    lastName: "Doe",
+    notes: "Lead Developer",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    maskPII: false,
+    companyId: 1,
+    status: ClientStatus.ACTIVE,
+  },
+  {
+    id: 2,
+    email: "jane.smith@example.com",
+    firstName: "Jane",
+    lastName: "Smith",
+    notes: "Product Manager",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    maskPII: false,
+    companyId: 1,
+    status: ClientStatus.ACTIVE,
+  },
+  ...Array.from({ length: 50 }, (_, i) => ({
+    id: i + 3,
+    email: `client${i + 3}@example.com`,
+    firstName: `FirstName${i + 3}`,
+    lastName: `LastName${i + 3}`,
+    createdAt: new Date(2024, 0, i + 1),
+    updatedAt: new Date(2024, 0, i + 1),
+    notes: `Notes for client ${i + 3}`,
+    maskPII: false,
+    companyId: 1,
+  })),
+];
+
+export async function getMockClientsPage(page: number = 1, pageSize: number = 10) {
+  const start = (page - 1) * pageSize;
+  const end = start + pageSize;
+  return {
+    clients: mockClients.slice(start, end),
+    pages: Math.ceil(mockClients.length / pageSize),
+  };
+}
