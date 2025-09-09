@@ -14,9 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { AnalyticsProvider, useAnalytics } from "@/context/AnalyticsContext";
-import { useMemo, useEffect, useState } from "react";
-import { getMailboxesAction } from "@/lib/actions/mailboxActions";
-import type { MailboxWarmupData } from "@/types";
+import { useMailboxes } from "@/hooks/useMailboxes";
 
 function AnalyticsPage() {
   return (
@@ -33,30 +31,19 @@ function AnalyticsContent() {
   const campaignData = analytics.campaignPerformanceData;
   const metrics = analytics.metrics;
 
-  const [mailboxesData, setMailboxesData] = useState<MailboxWarmupData[]>([]);
+  const { mailboxes, loading: mailboxesLoading, error: mailboxesError } = useMailboxes();
 
-  useEffect(() => {
-    async function fetchMailboxes() {
-      try {
-        const data = await getMailboxesAction();
-        setMailboxesData(data);
-      } catch (error) {
-        console.error("Failed to fetch mailboxes:", error);
-        // Fallback to empty array
-        setMailboxesData([]);
-      }
-    }
+  if (mailboxesLoading) {
+    return <div>Loading mailboxes...</div>;
+  }
 
-    fetchMailboxes();
-  }, []);
+  if (mailboxesError) {
+    return <div className="text-red-500">Error: {mailboxesError}</div>;
+  }
 
-  const mailboxes = useMemo(() => {
-    const fetchedMailboxes = mailboxesData.map((mb) => ({
-      id: mb.id,
-      name: mb.email,
-    }));
-    return [{ id: "all", name: "All Mailboxes" }, ...fetchedMailboxes];
-  }, [mailboxesData]);
+  if (mailboxes.length === 0) {
+    return <div>No mailboxes available. Please set up a mailbox to view analytics.</div>;
+  }
 
   return (
     <div className="space-y-10">
