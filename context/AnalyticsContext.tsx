@@ -9,6 +9,7 @@ import {
   campaigns,
   smartInsightsList,
 } from "@/lib/data/analytics.mock";
+import { accountMetrics } from "@/lib/data/domains.mock";
 import { createContext, useContext, useState, useMemo, useEffect } from "react";
 import {
   AnalyticsContextState,
@@ -18,6 +19,7 @@ import {
   WarmupMetric,
   MailboxWarmupData,
   MailboxAnalyticsData,
+  AccountMetrics,
 } from "@/types";
 import {
   getMailboxesAction,
@@ -237,6 +239,8 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
         fetchMultipleMailboxAnalytics,
         // Domain methods
         fetchDomainsWithMailboxes,
+        // Account metrics method
+        getAccountMetrics: () => accountMetrics,
       }}
     >
       {children}

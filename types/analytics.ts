@@ -107,6 +107,7 @@ export interface KPIMetric {
   color?: "positive" | "warning" | "danger" | "neutral";
 }
 
+
 // ============================================================================
 // CAMPAIGN ANALYTICS TYPES
 // ============================================================================
@@ -334,6 +335,8 @@ export interface AnalyticsContextState {
   fetchMultipleMailboxAnalytics: (mailboxIds: string[], dateRangePreset?: DateRangePreset, granularityLevel?: DataGranularity, userid?: string, companyid?: string) => Promise<Record<string, MailboxAnalyticsData>>;
   /** Function to fetch domains with mailboxes data */
   fetchDomainsWithMailboxes: (userid?: string, companyid?: string) => Promise<import("/home/israel/personal/code/penguinmails/client/lib/actions/domainsActions").DomainWithMailboxesData[]>;
+  /** Function to get account performance metrics */
+  getAccountMetrics: () => AccountMetrics;
 }
 
 /**
@@ -498,10 +501,33 @@ export interface SmartInsight {
   count: number | string;
   /** Icon component */
   icon: React.ComponentType<{ className?: string }>;
-  /** Border color classes */
+  /** Border color class */
   borderColor: string;
-  /** Icon background color classes */
+  /** Icon background color class */
   iconBackground: string;
-  /** Icon color classes */
+  /** Icon color class */
   iconColor: string;
+
+}
+
+/**
+ * Account performance metrics data structure
+ */
+export interface AccountMetrics {
+  /** Bounce rate as decimal (0-1) */
+  bounceRate: number;
+  /** Spam complaints rate as decimal (0-1) */
+  spamComplaints: number;
+  /** Open rate as decimal (0-1) */
+  openRate: number;
+  /** Reply rate as decimal (0-1) */
+  replyRate: number;
+  /** Maximum acceptable bounce rate threshold */
+  maxBounceRateThreshold: number;
+  /** Maximum acceptable spam complaint rate threshold */
+  maxSpamComplaintRateThreshold: number;
+  /** Minimum acceptable open rate threshold */
+  minOpenRateThreshold: number;
+  /** Minimum acceptable reply rate threshold */
+  minReplyRateThreshold: number;
 }

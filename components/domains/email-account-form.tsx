@@ -1,6 +1,5 @@
 "use client";
 
-import { accountMetrics } from "@/lib/data/domains.mock";
 import {
   VerificationStatus,
   RelayType,
@@ -8,7 +7,6 @@ import {
   ACCOUNT_STATUSES,
 } from "@/types";
 import { EmailAccountFormValues, EmailAccountFormProps } from "@/types/forms";
-// import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,6 +38,7 @@ import { Progress } from "@/components/ui/progress";
 import { emailAccountCopy } from "./copy";
 import { EmailProvider } from "./components/constants";
 import { WarmupStatus } from "@/types/mailbox";
+import { useAnalytics } from "@/context/AnalyticsContext";
 
 export default function EmailAccountForm({
   initialData,
@@ -48,6 +47,8 @@ export default function EmailAccountForm({
   isEditing = false,
 }: EmailAccountFormProps) {
   const copy = emailAccountCopy.form;
+  const { getAccountMetrics } = useAnalytics();
+  const accountMetrics = getAccountMetrics();
 
   const form = useForm<EmailAccountFormValues>({
     // resolver: zodResolver(emailAccountFormSchema),
