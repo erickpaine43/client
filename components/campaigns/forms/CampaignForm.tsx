@@ -28,10 +28,9 @@ import {
 } from "@/types/campaign";
 import { CampaignDetails } from "../details/CampaignDetails";
 import { EmailSecuenceSettings } from "../settings/EmailSecuenceSettings";
-import { defaultSteps } from "../data/const-mock";
+// Default steps moved from const-mock as internal default data
 import Loader from "../steps/compositions/loader";
 import { CampaignEventCondition } from "@/types/campaign";
-
 export function CampaignForm({
   initialData,
   onSubmit,
@@ -40,6 +39,18 @@ export function CampaignForm({
   submitLoadingLabel = t.buttons.creating,
   readOnly = false,
 }: CampaignFormProps) {
+  const defaultSteps: CampaignSteps = [
+    {
+      sequenceOrder: 0,
+      delayDays: 0,
+      delayHours: 0,
+      templateId: 0,
+      campaignId: 0,
+      emailSubject: "",
+      emailBody: "",
+      condition: CampaignEventCondition.ALWAYS,
+    },
+  ];
   const [steps, setSteps] = useState<CampaignSteps>(
     initialData?.steps || defaultSteps,
   );
