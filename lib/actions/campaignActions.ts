@@ -62,9 +62,31 @@ export async function getCampaignSendingAccountsAction(companyId?: string | numb
   return [];
 }
 
+// Common timezone identifiers used in email scheduling
+const availableTimezones = [
+  "UTC",
+  "America/New_York",
+  "America/Chicago",
+  "America/Denver",
+  "America/Los_Angeles",
+  "America/Vancouver",
+  "Europe/London",
+  "Europe/Paris",
+  "Europe/Berlin",
+  "Asia/Tokyo",
+  "Asia/Shanghai",
+  "Australia/Sydney",
+  "Pacific/Auckland"
+];
+
+export async function getTimezonesAction() {
+  // Return common timezones for scheduling
+  return availableTimezones;
+}
+
+// Deprecated: Use getTimezonesAction instead
 export async function getTimezonesMockAction() {
-  // Mock function for timezones
-  return [];
+  return getTimezonesAction();
 }
 
 export async function getSequenceSteps() {

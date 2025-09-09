@@ -18,7 +18,7 @@ import { RecipientsSettings } from "../settings/RecipientsSettings";
 import { copyText as t } from "../data/copy";
 import {
   getCampaignSendingAccountsAction,
-  getTimezonesMockAction,
+  getTimezonesAction,
 } from "@/lib/actions/campaignActions";
 import {
   CampaignFormProps,
@@ -31,6 +31,8 @@ import { EmailSecuenceSettings } from "../settings/EmailSecuenceSettings";
 // Default steps moved from const-mock as internal default data
 import Loader from "../steps/compositions/loader";
 import { CampaignEventCondition } from "@/types/campaign";
+import { useAuth } from "@/context/AuthContext";
+
 export function CampaignForm({
   initialData,
   onSubmit,
@@ -39,6 +41,7 @@ export function CampaignForm({
   submitLoadingLabel = t.buttons.creating,
   readOnly = false,
 }: CampaignFormProps) {
+  const { user } = useAuth();
   const defaultSteps: CampaignSteps = [
     {
       sequenceOrder: 0,
@@ -81,18 +84,19 @@ export function CampaignForm({
 
   useEffect(() => {
     const fetchSendingAccounts = async () => {
+      if (!user?.claims?.companyId) return;
+
       setLoadingAccounts(true);
-      const companyMockId = 1;
-      const accounts = await getCampaignSendingAccountsAction(companyMockId);
+      const accounts = await getCampaignSendingAccountsAction(user.claims.companyId);
       setSendingAccounts(accounts);
       setLoadingAccounts(false);
     };
     fetchSendingAccounts();
-  }, []);
+  }, [user?.claims?.companyId]);
 
   useEffect(() => {
     const fetchTimezones = async () => {
-      const fetchedTimezones = await getTimezonesMockAction();
+      const fetchedTimezones = await getTimezonesAction();
       setTimezones(fetchedTimezones);
     };
     fetchTimezones();
