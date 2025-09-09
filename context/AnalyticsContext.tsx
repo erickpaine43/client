@@ -19,7 +19,6 @@ import {
   WarmupMetric,
   MailboxWarmupData,
   MailboxAnalyticsData,
-  AccountMetrics,
 } from "@/types";
 import {
   getMailboxesAction,
@@ -46,7 +45,7 @@ const getAllowedGranularities = (days: number): DataGranularity[] => {
 };
 
 const AnalyticsContext = createContext<AnalyticsContextState | undefined>(
-  undefined,
+  undefined
 );
 
 function AnalyticsProvider({ children }: { children: React.ReactNode }) {
@@ -60,14 +59,14 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
   const [visibleMetrics, setVisibleMetrics] = useState(
     metrics.reduce(
       (acc, metric) => ({ ...acc, [metric.key]: metric.visible }),
-      {},
-    ),
+      {}
+    )
   );
   const [visibleWarmupMetrics, setVisibleWarmupMetrics] = useState(
     warmupMetrics.reduce(
       (acc, metric) => ({ ...acc, [metric.key]: metric.visible }),
-      {},
-    ),
+      {}
+    )
   );
 
   // Calculate days based on date range
@@ -76,7 +75,7 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
       const start = new Date(customDateStart);
       const end = new Date(customDateEnd);
       return Math.ceil(
-        (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24),
+        (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
       );
     }
     return getDaysFromRange(dateRange);
@@ -106,44 +105,46 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
   }, [days, granularity]);
 
   // Create filters object
-  const filters: AnalyticsFilterState = useMemo(() => ({
-    visibleMetrics,
-    setVisibleMetrics,
-    showCustomDate,
-    setShowCustomDate,
-    dateRange,
-    setDateRange,
-    granularity,
-    setGranularity,
-    allowedGranularities,
-    customDateStart,
-    setCustomDateStart,
-    customDateEnd,
-    setCustomDateEnd,
-    selectedCampaigns,
-    setSelectedCampaigns,
-    selectedMailboxes,
-    setSelectedMailboxes,
-  }), [
-    visibleMetrics,
-    setVisibleMetrics,
-    showCustomDate,
-    setShowCustomDate,
-    dateRange,
-    setDateRange,
-    granularity,
-    setGranularity,
-    allowedGranularities,
-    customDateStart,
-    setCustomDateStart,
-    customDateEnd,
-    setCustomDateEnd,
-    selectedCampaigns,
-    setSelectedCampaigns,
-    selectedMailboxes,
-    setSelectedMailboxes,
-  ]);
-
+  const filters: AnalyticsFilterState = useMemo(
+    () => ({
+      visibleMetrics,
+      setVisibleMetrics,
+      showCustomDate,
+      setShowCustomDate,
+      dateRange,
+      setDateRange,
+      granularity,
+      setGranularity,
+      allowedGranularities,
+      customDateStart,
+      setCustomDateStart,
+      customDateEnd,
+      setCustomDateEnd,
+      selectedCampaigns,
+      setSelectedCampaigns,
+      selectedMailboxes,
+      setSelectedMailboxes,
+    }),
+    [
+      visibleMetrics,
+      setVisibleMetrics,
+      showCustomDate,
+      setShowCustomDate,
+      dateRange,
+      setDateRange,
+      granularity,
+      setGranularity,
+      allowedGranularities,
+      customDateStart,
+      setCustomDateStart,
+      customDateEnd,
+      setCustomDateEnd,
+      selectedCampaigns,
+      setSelectedCampaigns,
+      selectedMailboxes,
+      setSelectedMailboxes,
+    ]
+  );
 
   // Calculate summary metrics from chart data
   const { totalSent, openRate, clickRate, replyRate } = useMemo(() => {
@@ -161,43 +162,71 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
   }, [chartData]);
 
   // Mailbox analytics methods
-  const fetchMailboxes = useMemo(() => async (
-    userid?: string,
-    companyid?: string
-  ): Promise<MailboxWarmupData[]> => {
-    return await getMailboxesAction(userid, companyid);
-  }, []);
+  const fetchMailboxes = useMemo(
+    () =>
+      async (
+        userid?: string,
+        companyid?: string
+      ): Promise<MailboxWarmupData[]> => {
+        return await getMailboxesAction(userid, companyid);
+      },
+    []
+  );
 
-  const fetchMailboxAnalytics = useMemo(() => async (
-    mailboxId: string,
-    dateRangePreset?: DateRangePreset,
-    granularityLevel?: DataGranularity,
-    userid?: string,
-    companyid?: string
-  ): Promise<MailboxAnalyticsData> => {
-    const range = dateRangePreset || dateRange;
-    const gran = granularityLevel || granularity;
-    return await getMailboxAnalyticsAction(mailboxId, range, gran, userid, companyid);
-  }, [dateRange, granularity]);
+  const fetchMailboxAnalytics = useMemo(
+    () =>
+      async (
+        mailboxId: string,
+        dateRangePreset?: DateRangePreset,
+        granularityLevel?: DataGranularity,
+        userid?: string,
+        companyid?: string
+      ): Promise<MailboxAnalyticsData> => {
+        const range = dateRangePreset || dateRange;
+        const gran = granularityLevel || granularity;
+        return await getMailboxAnalyticsAction(
+          mailboxId,
+          range,
+          gran,
+          userid,
+          companyid
+        );
+      },
+    [dateRange, granularity]
+  );
 
-  const fetchMultipleMailboxAnalytics = useMemo(() => async (
-    mailboxIds: string[],
-    dateRangePreset?: DateRangePreset,
-    granularityLevel?: DataGranularity,
-    userid?: string,
-    companyid?: string
-  ): Promise<Record<string, MailboxAnalyticsData>> => {
-    const range = dateRangePreset || dateRange;
-    const gran = granularityLevel || granularity;
-    return await getMultipleMailboxAnalyticsAction(mailboxIds, range, gran, userid, companyid);
-  }, [dateRange, granularity]);
+  const fetchMultipleMailboxAnalytics = useMemo(
+    () =>
+      async (
+        mailboxIds: string[],
+        dateRangePreset?: DateRangePreset,
+        granularityLevel?: DataGranularity,
+        userid?: string,
+        companyid?: string
+      ): Promise<Record<string, MailboxAnalyticsData>> => {
+        const range = dateRangePreset || dateRange;
+        const gran = granularityLevel || granularity;
+        return await getMultipleMailboxAnalyticsAction(
+          mailboxIds,
+          range,
+          gran,
+          userid,
+          companyid
+        );
+      },
+    [dateRange, granularity]
+  );
 
-  const fetchDomainsWithMailboxes = useMemo(() => async (
-    userid?: string,
-    companyid?: string
-  ): Promise<DomainWithMailboxesData[]> => {
-    return await getDomainsWithMailboxesData(userid, companyid);
-  }, []);
+  const fetchDomainsWithMailboxes = useMemo(
+    () =>
+      async (
+        userid?: string,
+        companyid?: string
+      ): Promise<DomainWithMailboxesData[]> => {
+        return await getDomainsWithMailboxesData(userid, companyid);
+      },
+    []
+  );
 
   return (
     <AnalyticsContext.Provider

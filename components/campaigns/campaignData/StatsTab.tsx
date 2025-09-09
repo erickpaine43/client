@@ -33,10 +33,19 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+
+type TooltipPayloadItem = {
+  color: string;
+  dataKey: string;
+  name: string;
+  value: number;
+  payload: ChartData;
+};
+
 type ChartTooltipProps = {
   active?: boolean;
-  payload?: { payload?: any }[]; // eslint-disable-line @typescript-eslint/no-explicit-any
-  label?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  payload?: TooltipPayloadItem[];
+  label?: string;
 };
 
 const CustomTooltip = ({
