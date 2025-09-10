@@ -1,5 +1,5 @@
 import { domains, mailboxes } from "@/lib/data/domains.mock";
-import { Globe, Mail, Zap } from "lucide-react";
+import { Globe, Mail, Server, Zap } from "lucide-react";
 
 export const getStatusColor = (status: string) => {
   switch (status) {
@@ -28,4 +28,7 @@ export const tabs = [
     count: mailboxes.filter((m) => m.warmupStatus !== "WARMED").length,
     icon: Zap,
   },
+  {
+    id:"ip-manager", label: "IP Manager", count: 0, icon: Server
+  }
 ];

@@ -18,6 +18,7 @@ import {
   FileText,
   Inbox,
   LayoutDashboard,
+  Mail,
   Send,
   Server,
   Users,
@@ -57,7 +58,12 @@ const navigationGroups: NavLink[] = [
   {
     title: "Infrastructure",
     items: [
-      { to: "/dashboard/domains", label: "Domains & Mailboxes", icon: Server },
+      { to: "/dashboard/domains", label: "Domains & IPs", icon: Server },
+      {
+        to: "/dashboard/mailboxes",
+        label: "Mailboxes & Warmups",
+        icon: Mail,
+      },
     ],
   },
   {
@@ -75,7 +81,7 @@ function AppSideBar() {
         <SidebarHeader className=" flex items-center justify-between ">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton className="flex items-center gap-2" size="lg">
+              <SidebarMenuButton className="flex items-center gap-1" size="lg">
                 <Logo />
               </SidebarMenuButton>
             </SidebarMenuItem>
