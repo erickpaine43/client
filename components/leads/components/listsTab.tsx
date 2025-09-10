@@ -20,7 +20,6 @@ const listTableColumn = [
   { id: "contacts", label: "Contacts", canSort: true },
   { id: "status", label: "Status" },
   { id: "campaign", label: "Campaign" },
-  { id: "performance", label: "Performance" },
   { id: "uploadDate", label: "Upload Date", canSort: true },
   { id: "actions", label: "Actions" },
 ];

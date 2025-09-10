@@ -101,47 +101,12 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
           )}
         </div>
       </TableCell>
-      <TableCell>
-        {isUsed ? (
-          <div className="space-y-1">
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-blue-600">
-                {list.performance.openRate}%
-              </span>
-              <span className="text-xs text-gray-500">open</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-green-600">
-                {list.performance.replyRate}%
-              </span>
-              <span className="text-xs text-gray-500">reply</span>
-            </div>
-          </div>
-        ) : (
-          <span className="text-sm text-gray-500 italic">Not used yet</span>
-        )}
-      </TableCell>
+
       <TableCell className="text-sm text-gray-500">
         {new Date(list.uploadDate).toLocaleDateString()}
       </TableCell>
       <TableCell className="text-right">
         <div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className=" hover:text-blue-600 hover:bg-blue-50"
-            title="View Contacts"
-          >
-            <Eye className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className=" hover:text-gray-600 hover:bg-gray-100"
-            title="Edit List"
-          >
-            <Edit className="w-4 h-4" />
-          </Button>
           <Button
             variant="ghost"
             size="icon"
