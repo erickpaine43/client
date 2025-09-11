@@ -97,8 +97,6 @@ function EditLeadListButton({ list }: { list: LeadList }) {
                 Separate tags with commas
               </p>
             </div>
-
-
           </div>
 
           <DialogFooter className="flex justify-end gap-2">
