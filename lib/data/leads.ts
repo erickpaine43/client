@@ -1,4 +1,4 @@
-import { LeadListStatus } from "@/types";
+import { Client, ClientStatus } from '../../types/clients-leads';
 
 export const leadLists = [
   {
@@ -23,7 +23,6 @@ export const leadLists = [
 
 export type LeadList = typeof leadListsData[number];
 
-
 export const leadsStats = [
   {
     title: "Total Contacts",
@@ -39,73 +38,59 @@ export const leadsStats = [
   },
 ];
 
-export type LeadStats = typeof leadsStats;
-
-
-export type LeadList = (typeof leadListsData)[number];
-export const leadListsData  = [
+export const leadListsData = [
   {
     id: 1,
     name: "Q1 Tech Prospects",
-    description: "Technology decision makers and influencers",
     contacts: 847,
     status: "used",
     campaign: "Q1 SaaS Outreach",
     uploadDate: "2024-01-15",
     bounced: 24,
-    statuse: "active",
     tags: ["enterprise", "tech"],
     performance: { openRate: 34.2, replyRate: 8.6 },
   },
   {
     id: 2,
     name: "Enterprise Decision Makers",
-    description: "C-level executives at enterprise companies",
     contacts: 1203,
     status: "being-used",
     campaign: "Enterprise Prospects",
     uploadDate: "2024-01-08",
     bounced: 47,
-    statuse: "paused",
     tags: ["enterprise", "c-level"],
     performance: { openRate: 41.7, replyRate: 10.3 },
   },
   {
     id: 3,
     name: "SMB Follow-up List",
-    description: "Small to medium business prospects",
     contacts: 492,
     status: "used",
     campaign: "SMB Follow-up",
     uploadDate: "2024-01-01",
     bounced: 14,
-    statuse: "completed",
     tags: ["smb", "follow-up"],
     performance: { openRate: 28.9, replyRate: 7.7 },
   },
   {
     id: 4,
     name: "Healthcare Prospects",
-    description: "Healthcare industry contacts",
     contacts: 324,
     status: "not-used",
     campaign: null,
     uploadDate: "2024-01-20",
     bounced: 0,
-    statuse: "active",
     tags: ["healthcare", "prospects"],
     performance: { openRate: 0, replyRate: 0 },
   },
   {
     id: 5,
     name: "Education Sector List",
-    description: "Contacts from educational institutions",
     contacts: 156,
     status: "not-used",
     campaign: null,
     uploadDate: "2024-01-22",
     bounced: 0,
-    statuse: "paused",
     tags: ["education", "institutions"],
     performance: { openRate: 0, replyRate: 0 },
   },
@@ -118,7 +103,7 @@ export const sampleLeads = [
     email: "sarah@techcorp.com",
     company: "TechCorp",
     title: "VP of Engineering",
-    status: LeadListStatus.USED,
+    status: "sent",
     tags: ["enterprise", "tech", "decision-maker"],
     lastContact: "2024-01-15",
     campaign: "Q1 SaaS Outreach",
@@ -130,7 +115,7 @@ export const sampleLeads = [
     email: "mike@startup.io",
     company: "Startup.io",
     title: "CEO",
-    status: LeadListStatus.BEING_USED,
+    status: "replied",
     tags: ["startup", "ceo", "hot-lead"],
     lastContact: "2024-01-14",
     campaign: "Enterprise Prospects",
@@ -142,7 +127,7 @@ export const sampleLeads = [
     email: "lisa@enterprise.com",
     company: "Enterprise Inc",
     title: "Head of Operations",
-    status: LeadListStatus.NOT_USED,
+    status: "bounced",
     tags: ["enterprise", "operations"],
     lastContact: "2024-01-13",
     campaign: "Q1 SaaS Outreach",
@@ -154,7 +139,7 @@ export const sampleLeads = [
     email: "david@consulting.com",
     company: "Kim Consulting",
     title: "Managing Partner",
-    status: LeadListStatus.BEING_USED,
+    status: "sent",
     tags: ["consulting", "partner"],
     lastContact: "2024-01-12",
     campaign: "SMB Follow-up",
@@ -166,7 +151,7 @@ export const sampleLeads = [
     email: "emily@techstart.com",
     company: "TechStart",
     title: "CTO",
-    status: LeadListStatus.NOT_USED,
+    status: "not-used",
     tags: ["tech", "startup", "cto"],
     lastContact: null,
     campaign: null,

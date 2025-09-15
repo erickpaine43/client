@@ -30,7 +30,7 @@ function EditLeadListButton({ list }: { list: LeadList }) {
   const form = useForm<FormData>({
     defaultValues: {
       name: list.name,
-      description: list.description,
+      description: list.name,
       tags: list.tags?.join(", "),
       status: list.status,
       campaign: list.campaign || "",

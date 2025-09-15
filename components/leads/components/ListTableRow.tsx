@@ -1,9 +1,15 @@
+import { leadListsData } from "@/lib/data/leads";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { LeadList } from "@/lib/data/leads";
-import { CheckCircle, Clock, Download, Trash2, Users } from "lucide-react";
+import {
+  CheckCircle,
+  Clock,
+  Download,
+  Edit,
+  Eye,
+  Trash2,
+  Users,
+} from "lucide-react";
 import { Button } from "../../ui/button";
-import EditLeadListButton from "./EditLeadListButton";
-import ShowLeadListItemButton from "./ShowLeadListItemButton";
 const getStatusColor = (status: string) => {
   switch (status) {
     case "used":
@@ -40,8 +46,9 @@ const getStatusLabel = (status: string) => {
   }
 };
 
-function ListTableRow({ list }: { list: LeadList }) {
+function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
   const isUsed = list.status === "used" || list.status === "being-used";
+
   return (
     <TableRow key={list.id}>
       <TableCell>
@@ -78,7 +85,7 @@ function ListTableRow({ list }: { list: LeadList }) {
       <TableCell>
         <span
           className={`inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
-            list.status
+            list.status,
           )}`}
         >
           {getStatusIcon(list.status)}
@@ -94,14 +101,47 @@ function ListTableRow({ list }: { list: LeadList }) {
           )}
         </div>
       </TableCell>
-
+      <TableCell>
+        {isUsed ? (
+          <div className="space-y-1">
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium text-blue-600">
+                {list.performance.openRate}%
+              </span>
+              <span className="text-xs text-gray-500">open</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium text-green-600">
+                {list.performance.replyRate}%
+              </span>
+              <span className="text-xs text-gray-500">reply</span>
+            </div>
+          </div>
+        ) : (
+          <span className="text-sm text-gray-500 italic">Not used yet</span>
+        )}
+      </TableCell>
       <TableCell className="text-sm text-gray-500">
         {new Date(list.uploadDate).toLocaleDateString()}
       </TableCell>
       <TableCell className="text-right">
         <div>
-          <ShowLeadListItemButton list={list} />
-          <EditLeadListButton list={list} />
+          <Button
+            variant="ghost"
+            size="icon"
+            className=" hover:text-blue-600 hover:bg-blue-50"
+            title="View Contacts"
+          >
+            <Eye className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className=" hover:text-gray-600 hover:bg-gray-100"
+            title="Edit List"
+          >
+            <Edit className="w-4 h-4" />
+          </Button>
           <Button
             variant="ghost"
             size="icon"

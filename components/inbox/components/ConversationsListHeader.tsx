@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { conversations } from "@/lib/data/Inbox.mock";
+import { getConversationCount } from "@/lib/actions/inboxActions";
 import { RefreshCw } from "lucide-react";
 
 export default async function ConversationsListHeader({

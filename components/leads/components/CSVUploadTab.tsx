@@ -25,8 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CSV_COLUMNS, SAMPLE_CSV_DATA } from "@/lib/data/leads";
-import { AlertCircle, Download, Loader2, Upload, X, Plus } from "lucide-react";
+import { AlertCircle, Download, Loader2, Plus, Upload, X } from "lucide-react";
 import Papa from "papaparse";
 import { useRef, useState } from "react";
 import { CSV_COLUMNS, CSVRecord } from "@/types/clients-leads";
@@ -39,18 +38,16 @@ const downloadSampleCSV = async () => {
       return;
     }
 
-const downloadSampleCSV = () => {
-  const csvContent = SAMPLE_CSV_DATA.map((row) =>
-    row.map((cell) => `"${cell}"`).join(",")
-  ).join("\n");
-
-  const blob = new Blob([csvContent], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "sample-leads.csv";
-  a.click();
-  URL.revokeObjectURL(url);
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "sample-leads.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error downloading sample CSV:", error);
+  }
 };
 
 function FileUploadZone({
