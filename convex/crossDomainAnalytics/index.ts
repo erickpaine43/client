@@ -6,11 +6,19 @@ export {
   getMailboxDomainJoinedAnalytics,
   getCrossDomainTimeSeriesAnalytics,
   getMailboxDomainImpactAnalysis,
+  getPerformanceComparison,
+  getCorrelationAnalysis,
+  getTrendAnalysis,
+  getAggregatedMetrics,
+  getTimeSeriesData,
+  generateInsights,
+  getHealthStatus,
 } from "./queries";
 
 export {
   // Mutation handlers
   updateCrossDomainAnalytics,
+  exportAnalytics,
 } from "./mutations";
 
 export {

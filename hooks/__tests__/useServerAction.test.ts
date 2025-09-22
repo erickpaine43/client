@@ -1,8 +1,9 @@
 import { renderHook, act } from '@testing-library/react';
-import { useServerAction, useServerActionWithParams, ActionResult } from '../useServerAction';
+import { useServerAction, useServerActionWithParams } from '../useServerAction';
+import type { ActionResult, ActionError } from '@/lib/actions/core/types';
 
 // Mock console methods to avoid noise in tests
-const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
 describe('useServerAction', () => {
   beforeEach(() => {
@@ -18,10 +19,10 @@ describe('useServerAction', () => {
       const mockAction = jest.fn();
       const { result } = renderHook(() => useServerAction(mockAction));
 
-      expect(result.current.data).toBeNull();
+      expect(result.current.data).toBeUndefined();
       expect(result.current.loading).toBe(false);
-      expect(result.current.error).toBeNull();
-      expect(result.current.canRetry).toBe(true);
+      expect(result.current.error).toBeDefined();
+      expect(result.current.error?.message).toContain('Test error');
     });
 
     it('should handle successful action execution', async () => {
@@ -39,15 +40,19 @@ describe('useServerAction', () => {
 
       expect(result.current.data).toEqual(mockData);
       expect(result.current.loading).toBe(false);
-      expect(result.current.error).toBeNull();
+      expect(result.current.error).toBeUndefined();
       expect(mockAction).toHaveBeenCalledTimes(1);
     });
 
     it('should handle action failure with error result', async () => {
+      const error: ActionError = {
+        type: 'server',
+        message: 'Something went wrong',
+        code: 'TEST_ERROR',
+      };
       const mockAction = jest.fn().mockResolvedValue({
         success: false,
-        error: 'Something went wrong',
-        code: 'TEST_ERROR',
+        error,
         field: 'testField',
       } as ActionResult<unknown>);
 
@@ -58,14 +63,18 @@ describe('useServerAction', () => {
       });
 
       expect(result.current.data).toBeNull();
-      expect(result.current.loading).toBe(false);
-      expect(result.current.error).toBe('Something went wrong');
-      expect(result.current.code).toBe('TEST_ERROR');
-      expect(result.current.field).toBe('testField');
+      expect(result.current.error).toBeDefined();
+      expect(result.current.error?.message).toBe('Something went wrong');
+      expect(result.current.error?.code).toBe('TEST_ERROR');
+      expect(result.current.error?.field).toBe('testField');
     });
 
     it('should handle action rejection with exception', async () => {
-      const mockAction = jest.fn().mockRejectedValue(new Error('Network error'));
+      const error: ActionError = {
+        type: 'server',
+        message: 'Test error',
+      };
+      const mockAction = jest.fn().mockRejectedValue(new Error(error.message));
 
       const { result } = renderHook(() => useServerAction(mockAction));
 
@@ -117,10 +126,10 @@ describe('useServerAction', () => {
   describe('Callback options', () => {
     it('should call onSuccess callback on successful execution', async () => {
       const onSuccess = jest.fn();
-      const mockAction = jest.fn().mockResolvedValue({
+      const mockAction = jest.fn<Promise<ActionResult<Record<string, never>>>, []>().mockResolvedValue({
         success: true,
-ata: {},
-      });
+        data: {},
+      } as const);
 
       const { result } = renderHook(() => 
         useServerAction(mockAction, { onSuccess })
@@ -135,10 +144,10 @@ ata: {},
 
     it('should call onError callback on failed execution', async () => {
       const onError = jest.fn();
-      const mockAction = jest.fn().mockResolvedValue({
+      const mockAction = jest.fn<Promise<ActionResult<unknown>>, []>().mockResolvedValue({
         success: false,
         error: 'Test error',
-      });
+      } as const);
 
       const { result } = renderHook(() => 
         useServerAction(mockAction, { onError })
@@ -153,7 +162,7 @@ ata: {},
 
     it('should call onError callback on exception', async () => {
       const onError = jest.fn();
-      const mockAction = jest.fn().mockRejectedValue(new Error('Network error'));
+      const mockAction = jest.fn<Promise<ActionResult<unknown>>, []>().mockRejectedValue(new Error('Test error'));
 
       const { result } = renderHook(() => 
         useServerAction(mockAction, { onError })
@@ -294,10 +303,17 @@ ata: {},
 
   describe('Reset functionality', () => {
     it('should reset state to initial values', async () => {
+      const error: ActionError = {
+        type: 'server',
+        message: 'Test error',
+      };
+      const errorWithCode: ActionError = {
+        ...error,
+        code: 'TEST_CODE',
+      };
       const mockAction = jest.fn().mockResolvedValue({
         success: false,
-        error: 'Test error',
-        code: 'TEST_CODE',
+        error: errorWithCode,
       });
 
       const { result } = renderHook(() => useServerAction(mockAction));

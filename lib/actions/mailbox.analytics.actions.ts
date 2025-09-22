@@ -1,12 +1,54 @@
 "use server";
 
+// ============================================================================
+// MAILBOX ANALYTICS SERVER ACTIONS - MIGRATED TO STANDARDIZED MODULE
+// ============================================================================
+
+// This file has been migrated to the standardized analytics module.
+// Please use the new module at: lib/actions/analytics/mailbox-analytics.ts
+//
+// Migration notes:
+// - All functions now use ConvexQueryHelper for consistent error handling
+// - Standardized ActionResult return types
+// - Enhanced authentication and rate limiting
+// - Improved type safety and performance monitoring
+
+import {
+  getMailboxAnalytics,
+  getMailboxAnalyticsSummary,
+  getWarmupAnalytics,
+  getMailboxTimeSeries,
+  updateWarmupProgress,
+  refreshMailboxHealthScores,
+  exportMailboxAnalytics,
+  getMailboxAnalyticsHealth,
+  type MailboxPerformanceMetrics,
+  type MailboxAnalyticsSummary,
+  type WarmupAnalytics
+} from './analytics/mailbox-analytics';
+
+// Re-export all functions for backward compatibility
+export {
+  getMailboxAnalytics,
+  getMailboxAnalyticsSummary,
+  getWarmupAnalytics,
+  getMailboxTimeSeries,
+  updateWarmupProgress,
+  refreshMailboxHealthScores,
+  exportMailboxAnalytics,
+  getMailboxAnalyticsHealth,
+  type MailboxPerformanceMetrics,
+  type MailboxAnalyticsSummary,
+  type WarmupAnalytics
+};
+
+// Legacy imports for backward compatibility
 import {
   AnalyticsFilters,
   PerformanceMetrics,
   TimeSeriesDataPoint,
   AnalyticsComputeOptions,
 } from "@/types/analytics/core";
-// Use service parameter types to interoperate with legacy service signatures
 import { 
   WarmupStatus,
   DailyWarmupStats 
@@ -533,33 +575,41 @@ export async function batchUpdateMailboxAnalytics(
 
   // Calculate health scores for successful updates
   const enhancedResults = result.results.map((res) => {
-    if (res.success) {
-      const record = records.find(r => r.mailboxId === res.mailboxId);
-      if (record) {
-        const performanceMetrics: PerformanceMetrics = {
-          sent: record.sent,
-          delivered: record.delivered,
-          opened_tracked: record.opened_tracked,
-          clicked_tracked: record.clicked_tracked,
-          replied: record.replied,
-          bounced: record.bounced,
-          unsubscribed: record.unsubscribed,
-          spamComplaints: record.spamComplaints,
-        };
-        
-        const healthScore = AnalyticsCalculator.calculateHealthScore(performanceMetrics);
-        
-        return {
-          ...res,
-          healthScore,
-        };
-      }
+    const record = records.find(r => r.mailboxId === (res as { id?: string }).id);
+    if (res.success && record) {
+      const performanceMetrics: PerformanceMetrics = {
+        sent: record.sent,
+        delivered: record.delivered,
+        opened_tracked: record.opened_tracked,
+        clicked_tracked: record.clicked_tracked,
+        replied: record.replied,
+        bounced: record.bounced,
+        unsubscribed: record.unsubscribed,
+        spamComplaints: record.spamComplaints,
+      };
+      
+      const healthScore = AnalyticsCalculator.calculateHealthScore(performanceMetrics);
+      
+      return {
+        ...res,
+        mailboxId: record.mailboxId,
+        healthScore,
+      };
     }
-    return res;
+    return {
+      ...res,
+      mailboxId: record?.mailboxId ?? String((res as { id?: string }).id ?? ""),
+    };
   });
 
+  const totalRecords = records.length;
+  const successful = enhancedResults.filter(r => r.success).length;
+  const failed = totalRecords - successful;
+
   return {
-    ...result,
+    totalRecords,
+    successful,
+    failed,
     results: enhancedResults,
   };
 }

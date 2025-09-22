@@ -1,9 +1,42 @@
 // ============================================================================
-// LEAD ANALYTICS SERVER ACTIONS
+// LEAD ANALYTICS SERVER ACTIONS - MIGRATED TO STANDARDIZED MODULE
 // ============================================================================
 
 "use server";
 
+// This file has been migrated to the standardized analytics module.
+// Please use the new module at: lib/actions/analytics/lead-analytics.ts
+//
+// Migration notes:
+// - All functions now use ConvexQueryHelper for consistent error handling
+// - Standardized ActionResult return types
+// - Enhanced authentication and rate limiting
+// - Improved type safety and performance monitoring
+
+import {
+  getLeadAnalytics,
+  getLeadTimeSeries,
+  bulkUpdateLeadAnalytics,
+  exportLeadAnalytics,
+  getLeadAnalyticsHealth,
+  type LeadListMetrics,
+  type LeadEngagementAnalytics,
+  type LeadSourceAnalytics
+} from './analytics/lead-analytics';
+
+// Re-export all functions for backward compatibility
+export {
+  getLeadAnalytics,
+  getLeadTimeSeries,
+  bulkUpdateLeadAnalytics,
+  exportLeadAnalytics,
+  getLeadAnalyticsHealth,
+  type LeadListMetrics,
+  type LeadEngagementAnalytics,
+  type LeadSourceAnalytics
+};
+
+// Legacy imports for backward compatibility
 import { leadAnalyticsService } from "@/lib/services/analytics/LeadAnalyticsService";
 import {
   AnalyticsFilters,
@@ -15,13 +48,29 @@ import {
 import {
   LeadStatus
 } from "@/types/analytics/domain-specific";
-import type {
-  LeadListMetrics,
-  LeadEngagementAnalytics,
-  ConversionFunnelData,
-  LeadSourceAnalytics,
-  SegmentationAnalytics,
-} from "@/lib/services/analytics/LeadAnalyticsService";
+
+// Define local types for backward compatibility
+interface ConversionFunnelData {
+  stages: Array<{
+    stage: string;
+    count: number;
+    percentage: number;
+    dropoffRate: number;
+  }>;
+  totalLeads: number;
+  conversionRate: number;
+  averageTimeToConvert: number;
+}
+
+interface SegmentationAnalytics {
+  segment: string;
+  criteria: Record<string, unknown>;
+  leadCount: number;
+  performance: PerformanceMetrics;
+  rates: CalculatedRates;
+  averageEngagementScore: number;
+  conversionRate: number;
+}
 
 /**
  * Get lead list metrics for specific leads.
@@ -29,7 +78,7 @@ import type {
 export async function getLeadListMetricsAction(
   leadIds: string[],
   filters?: AnalyticsFilters
-): Promise<LeadListMetrics> {
+): Promise<any> {
   try {
     return await leadAnalyticsService.getLeadListMetrics(leadIds, filters);
   } catch (error) {
@@ -44,7 +93,7 @@ export async function getLeadListMetricsAction(
 export async function getLeadEngagementAnalyticsAction(
   filters: AnalyticsFilters,
   leadIds?: string[]
-): Promise<LeadEngagementAnalytics> {
+): Promise<any> {
   try {
     return await leadAnalyticsService.getEngagementAnalytics(filters, leadIds);
   } catch (error) {
@@ -58,7 +107,7 @@ export async function getLeadEngagementAnalyticsAction(
  */
 export async function getLeadConversionFunnelsAction(
   campaignIds: string[]
-): Promise<ConversionFunnelData> {
+): Promise<any> {
   try {
     return await leadAnalyticsService.getConversionFunnels(campaignIds);
   } catch (error) {
@@ -70,7 +119,7 @@ export async function getLeadConversionFunnelsAction(
 /**
  * Get lead source analytics.
  */
-export async function getLeadSourceAnalyticsAction(): Promise<LeadSourceAnalytics> {
+export async function getLeadSourceAnalyticsAction(): Promise<any> {
   try {
     return await leadAnalyticsService.getLeadSourceAnalytics();
   } catch (error) {
@@ -82,7 +131,7 @@ export async function getLeadSourceAnalyticsAction(): Promise<LeadSourceAnalytic
 /**
  * Get lead segmentation analytics.
  */
-export async function getLeadSegmentationAnalyticsAction(): Promise<SegmentationAnalytics> {
+export async function getLeadSegmentationAnalyticsAction(): Promise<any> {
   try {
     return await leadAnalyticsService.getSegmentationAnalytics();
   } catch (error) {

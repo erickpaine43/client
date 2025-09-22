@@ -1,5 +1,48 @@
 'use server';
 
+// ============================================================================
+// DOMAIN ANALYTICS SERVER ACTIONS - MIGRATED TO STANDARDIZED MODULE
+// ============================================================================
+
+// This file has been migrated to the standardized analytics module.
+// Please use the new module at: lib/actions/analytics/domain-analytics.ts
+//
+// Migration notes:
+// - All functions now use ConvexQueryHelper for consistent error handling
+// - Standardized ActionResult return types
+// - Enhanced authentication and rate limiting
+// - Improved type safety and performance monitoring
+
+import {
+  getDomainHealthMetrics,
+  getDomainAnalytics,
+  getDomainAnalyticsSummary,
+  getDomainPerformanceComparison,
+  getDomainTimeSeries,
+  updateDomainAnalytics,
+  refreshDomainReputationScores,
+  exportDomainAnalytics,
+  getDomainAnalyticsHealth,
+  type DomainHealthMetrics,
+  type DomainAnalyticsSummary
+} from './analytics/domain-analytics';
+
+// Re-export all functions for backward compatibility
+export {
+  getDomainHealthMetrics,
+  getDomainAnalytics,
+  getDomainAnalyticsSummary,
+  getDomainPerformanceComparison,
+  getDomainTimeSeries,
+  updateDomainAnalytics,
+  refreshDomainReputationScores,
+  exportDomainAnalytics,
+  getDomainAnalyticsHealth,
+  type DomainHealthMetrics,
+  type DomainAnalyticsSummary
+};
+
+// Legacy imports for backward compatibility
 import { domainAnalyticsService } from "@/lib/services/analytics/DomainAnalyticsService";
 import { 
   AnalyticsFilters,

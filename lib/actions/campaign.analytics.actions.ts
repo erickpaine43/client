@@ -1,122 +1,109 @@
 'use server';
 
 // ============================================================================
-// CAMPAIGN ANALYTICS SERVER ACTIONS - Domain-specific analytics operations
+// CAMPAIGN ANALYTICS SERVER ACTIONS - MIGRATED TO STANDARDIZED MODULE
 // ============================================================================
 
+// This file has been migrated to the standardized analytics module.
+// Please use the new module at: lib/actions/analytics/campaign-analytics.ts
+//
+// Migration notes:
+// - Replaced safeQuery/safeMutation with ConvexQueryHelper
+// - All functions now use standardized ActionResult return types
+// - Enhanced authentication and rate limiting
+// - Improved error handling and type safety
+// - Performance monitoring and caching improvements
+
+import {
+  getCampaignPerformanceMetrics as _getCampaignPerformanceMetrics,
+  getCampaignAnalytics,
+  getCampaignAnalyticsSummary,
+  getSequenceStepAnalytics,
+  getCampaignTimeSeries,
+  updateCampaignAnalytics as _updateCampaignAnalytics,
+  bulkUpdateCampaignAnalytics,
+  exportCampaignAnalytics,
+  getCampaignAnalyticsHealth,
+  refreshCampaignAnalyticsCache,
+  type CampaignPerformanceMetrics,
+  type CampaignAnalyticsSummary
+} from './analytics/campaign-analytics';
+
+// Re-export all functions for backward compatibility
+export {
+  getCampaignAnalytics,
+  getCampaignAnalyticsSummary,
+  getSequenceStepAnalytics,
+  getCampaignTimeSeries,
+  bulkUpdateCampaignAnalytics,
+  exportCampaignAnalytics,
+  getCampaignAnalyticsHealth,
+  refreshCampaignAnalyticsCache,
+  type CampaignPerformanceMetrics,
+  type CampaignAnalyticsSummary
+};
+
+// Legacy imports for backward compatibility
 import { api } from "@/convex/_generated/api";
-import { ConvexHttpClient } from "convex/browser";
-import { 
-  AnalyticsFilters, 
-  PerformanceMetrics, 
+import { safeQuery, safeMutation } from "@/lib/utils/safe-convex";
+import {
+  AnalyticsFilters,
+  PerformanceMetrics,
   TimeSeriesDataPoint,
-  FilteredDataset,
   AnalyticsComputeOptions
 } from "@/types/analytics/core";
 import {
   CampaignAnalytics,
-  SequenceStepAnalytics
+  SequenceStepAnalytics,
+  CampaignStatus
 } from "@/types/analytics/domain-specific";
-import { 
-  AnalyticsCalculator, 
+import {
+  CampaignAnalyticsRecord,
+  AggregatedCampaignMetrics,
+  TimeSeriesData
+} from "@/convex/campaignAnalytics/types";
+import {
+  AnalyticsCalculator,
   analyticsCache,
-  CACHE_TTL 
+  CACHE_TTL
 } from "@/lib/services/analytics";
 import { ConvexMigrationUtils } from "@/lib/utils/convex-migration";
 
-// Initialize Convex client
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-
-/**
- * Get performance metrics for specific campaigns.
- * Returns standardized PerformanceMetrics with raw counts (no stored rates).
- */
-export async function getCampaignPerformanceMetrics(
-  campaignIds?: string[],
-  filters?: AnalyticsFilters,
-  companyId?: string
-): Promise<CampaignAnalytics[]> {
-  const cacheKey = analyticsCache.generateCacheKey(
-    "campaigns",
-    "performance",
-    campaignIds || [],
-    { ...filters, additionalFilters: { ...filters?.additionalFilters, companyId } }
-  );
-
-  // Try cache first
-  if (analyticsCache.isAvailable()) {
-    try {
-      const cached = await analyticsCache.get<CampaignAnalytics[]>(cacheKey);
-      if (cached) {
-        return cached;
-      }
-    } catch (error) {
-      console.warn("Cache read error:", error);
-    }
-  }
-
-  try {
-    // Use default filters if none provided
-    const analyticsFilters = filters || createDefaultFilters();
-    const effectiveCompanyId = companyId || getCurrentCompanyId();
-
-    // Query Convex for campaign performance data
-    const performanceData = await convex.query(
-      api.campaignAnalytics.getCampaignPerformanceMetrics,
-      {
-        campaignIds: campaignIds || [],
-        dateRange: analyticsFilters.dateRange,
-        companyId: effectiveCompanyId,
-      }
-    );
-
-    // Transform to standardized CampaignAnalytics format
-    const result: CampaignAnalytics[] = performanceData.map(campaign => ({
-      id: campaign.campaignId,
-      name: campaign.campaignName,
-      campaignId: campaign.campaignId,
-      campaignName: campaign.campaignName,
-      status: campaign.status,
-      leadCount: campaign.leadCount,
-      activeLeads: campaign.activeLeads,
-      completedLeads: campaign.completedLeads,
-      
-      // Raw performance metrics (rates calculated client-side)
-      sent: campaign.sent,
-      delivered: campaign.delivered,
-      opened_tracked: campaign.opened_tracked,
-      clicked_tracked: campaign.clicked_tracked,
-      replied: campaign.replied,
-      bounced: campaign.bounced,
-      unsubscribed: campaign.unsubscribed,
-      spamComplaints: campaign.spamComplaints,
-      
-      updatedAt: campaign.updatedAt,
-    }));
-
-    // Validate metrics
-    result.forEach(campaign => {
-      const validation = AnalyticsCalculator.validateMetrics(campaign);
-      if (!validation.isValid) {
-        console.warn(`Invalid metrics for campaign ${campaign.campaignName}:`, validation.errors);
-      }
-    });
-
-    // Cache the result
-    if (analyticsCache.isAvailable()) {
-      try {
-        await analyticsCache.set(cacheKey, result, CACHE_TTL.RECENT);
-      } catch (error) {
-        console.warn("Cache write error:", error);
-      }
-    }
-
-    return result;
-  } catch (error) {
-    console.error("Error fetching campaign performance metrics:", error);
-    throw new Error("Failed to fetch campaign performance metrics");
-  }
+// Type definitions for Convex query responses
+interface CampaignPerformanceMetricsResponse {
+  campaignId: string;
+  campaignName: string;
+  status: CampaignStatus;
+  metrics: AggregatedCampaignMetrics;
+  updatedAt: number;
 }
+
+interface CampaignAnalyticsResponse {
+  results: CampaignAnalyticsRecord[];
+  nextCursor?: string;
+  hasMore: boolean;
+}
+
+interface LegacyCampaignData {
+  campaignId?: string;
+  campaignName?: string;
+  sent?: number;
+  delivered?: number;
+  opened_tracked?: number;
+  clicked_tracked?: number;
+  replied?: number;
+  bounced?: number;
+  unsubscribed?: number;
+  spamComplaints?: number;
+  status?: CampaignStatus;
+  leadCount?: number;
+  activeLeads?: number;
+  completedLeads?: number;
+  [key: string]: unknown;
+}
+
+// Using shared Convex client via safeQuery wrapper
+
 
 /**
  * Get time series analytics data for campaigns.
@@ -151,8 +138,10 @@ export async function getCampaignTimeSeriesData(
     const analyticsFilters = filters || createDefaultFilters();
     const effectiveCompanyId = companyId || getCurrentCompanyId();
 
-    // Query Convex for time series data
-    const timeSeriesData = await convex.query(
+    // Query Convex for time series data via safe wrapper
+    const rawTs = await safeQuery(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - Convex generated type for this function can cause deep instantiation
       api.campaignAnalytics.getCampaignTimeSeriesAnalytics,
       {
         campaignIds: campaignIds || [],
@@ -164,16 +153,18 @@ export async function getCampaignTimeSeriesData(
         granularity,
       }
     );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const timeSeriesData = (rawTs as any) as TimeSeriesData[];
 
     // Transform to standardized TimeSeriesDataPoint format
-    const result: TimeSeriesDataPoint[] = timeSeriesData.map(point => ({
-      date: point.date,
-      label: point.label,
+    const result: TimeSeriesDataPoint[] = timeSeriesData.map((point: TimeSeriesData) => ({
+      date: point.timeKey,
+      label: point.timeLabel,
       metrics: {
         sent: point.metrics.sent,
         delivered: point.metrics.delivered,
-        opened_tracked: point.metrics.opened_tracked,
-        clicked_tracked: point.metrics.clicked_tracked,
+        opened_tracked: point.metrics.openedTracked,
+        clicked_tracked: point.metrics.clickedTracked,
         replied: point.metrics.replied,
         bounced: point.metrics.bounced,
         unsubscribed: point.metrics.unsubscribed,
@@ -210,7 +201,6 @@ export async function computeAnalyticsForFilteredData(
   rates: ReturnType<typeof AnalyticsCalculator.calculateAllRates>;
   timeSeriesData?: TimeSeriesDataPoint[];
   performanceMetrics?: ReturnType<typeof AnalyticsCalculator.calculateAllRates>;
-  comparativeData?: any;
 }> {
   const cacheKey = analyticsCache.generateCacheKey(
     "campaigns",
@@ -227,7 +217,6 @@ export async function computeAnalyticsForFilteredData(
         rates: ReturnType<typeof AnalyticsCalculator.calculateAllRates>;
         timeSeriesData?: TimeSeriesDataPoint[];
         performanceMetrics?: ReturnType<typeof AnalyticsCalculator.calculateAllRates>;
-        comparativeData?: any;
       }>(cacheKey);
       if (cached) {
         return cached;
@@ -239,22 +228,32 @@ export async function computeAnalyticsForFilteredData(
 
   try {
     const effectiveCompanyId = companyId || getCurrentCompanyId();
-    const startTime = Date.now();
+    const effectiveFilters = filters || createDefaultFilters();
+    const effectiveCampaignIds = effectiveFilters.entityIds || [];
 
-    // Query filtered data from Convex
-    const rawData = await convex.query(
+    // Query filtered data from Convex via safe wrapper
+    const rawDataUnknown = await safeQuery(
       api.campaignAnalytics.getCampaignAnalytics,
       {
-        campaignIds: filters.entityIds,
-        dateRange: filters.dateRange,
+        campaignIds: effectiveCampaignIds.length > 0 ? effectiveCampaignIds : undefined,
+        dateRange: effectiveFilters.dateRange,
         companyId: effectiveCompanyId,
       }
     );
-
-    const queryTime = Date.now() - startTime;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const rawData = (rawDataUnknown as any) as CampaignAnalyticsResponse;
 
     // Extract metrics from raw data
-    const metrics = rawData.map((item: any) => item.metrics || item);
+    const metrics = rawData.results.map((item: CampaignAnalyticsRecord) => ({
+      sent: item.sent,
+      delivered: item.delivered,
+      opened_tracked: item.openedTracked,
+      clicked_tracked: item.clickedTracked,
+      replied: item.replied,
+      bounced: item.bounced,
+      unsubscribed: item.unsubscribed,
+      spamComplaints: item.spamComplaints,
+    }));
     
     // Aggregate metrics
     const aggregatedMetrics = AnalyticsCalculator.aggregateMetrics(metrics);
@@ -317,8 +316,8 @@ export async function getCampaignSequenceAnalytics(
     const analyticsFilters = filters || createDefaultFilters();
     const effectiveCompanyId = companyId || getCurrentCompanyId();
 
-    // Query sequence analytics from Convex
-    const sequenceData = await convex.query(
+    // Query sequence analytics from Convex via safe wrapper
+    const rawSeq = await safeQuery(
       api.sequenceStepAnalytics.getCampaignSequenceAnalytics,
       {
         campaignId,
@@ -326,6 +325,8 @@ export async function getCampaignSequenceAnalytics(
         companyId: effectiveCompanyId,
       }
     );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sequenceData = rawSeq as any[];
 
     // Transform to standardized SequenceStepAnalytics format
     const result: SequenceStepAnalytics[] = sequenceData.map(step => ({
@@ -361,65 +362,13 @@ export async function getCampaignSequenceAnalytics(
   }
 }
 
-/**
- * Update campaign analytics data.
- * Used to store new analytics data in Convex.
- */
-export async function updateCampaignAnalytics(
-  campaignData: {
-    campaignId: string;
-    campaignName: string;
-    date: string;
-    companyId: string;
-    sent: number;
-    delivered: number;
-    opened_tracked: number;
-    clicked_tracked: number;
-    replied: number;
-    bounced: number;
-    unsubscribed: number;
-    spamComplaints: number;
-    status: "ACTIVE" | "PAUSED" | "COMPLETED" | "DRAFT";
-    leadCount: number;
-    activeLeads: number;
-    completedLeads: number;
-  }
-): Promise<string> {
-  try {
-    // Validate the data before storing
-    const validation = AnalyticsCalculator.validateMetrics(campaignData);
-    if (!validation.isValid) {
-      throw new Error(`Invalid campaign analytics data: ${validation.errors.join(", ")}`);
-    }
-
-    // Store in Convex
-    const result = await convex.mutation(
-      api.campaignAnalytics.upsertCampaignAnalytics,
-      campaignData
-    );
-
-    // Invalidate related cache entries
-    if (analyticsCache.isAvailable()) {
-      try {
-        await analyticsCache.invalidateEntities("campaigns", [campaignData.campaignId]);
-      } catch (error) {
-        console.warn("Cache invalidation error:", error);
-      }
-    }
-
-    return result;
-  } catch (error) {
-    console.error("Error updating campaign analytics:", error);
-    throw new Error("Failed to update campaign analytics");
-  }
-}
 
 /**
  * Migrate legacy campaign data to Convex format.
  * Uses ConvexMigrationUtils for data transformation.
  */
 export async function migrateLegacyCampaignData(
-  legacyData: any[],
+  legacyData: LegacyCampaignData[],
   companyId: string
 ): Promise<{ success: number; errors: number; details: string[] }> {
   const results = {
@@ -440,7 +389,7 @@ export async function migrateLegacyCampaignData(
     );
 
     if (migratedData.length > 0) {
-      // Prepare data for Convex insertion
+      // Prepare data for Convex insertion, mapping to camelCase
       const convexRecords = migratedData.map(campaign => ({
         campaignId: campaign.campaignId,
         campaignName: campaign.campaignName,
@@ -448,8 +397,8 @@ export async function migrateLegacyCampaignData(
         companyId,
         sent: campaign.sent,
         delivered: campaign.delivered,
-        opened_tracked: campaign.opened_tracked,
-        clicked_tracked: campaign.clicked_tracked,
+        openedTracked: campaign.opened_tracked,
+        clickedTracked: campaign.clicked_tracked,
         replied: campaign.replied,
         bounced: campaign.bounced,
         unsubscribed: campaign.unsubscribed,
@@ -460,11 +409,11 @@ export async function migrateLegacyCampaignData(
         completedLeads: campaign.completedLeads,
       }));
 
-      // Batch insert into Convex
-      const insertedIds = await convex.mutation(
-        api.campaignAnalytics.batchInsertCampaignAnalytics,
+      // Batch insert into Convex via safe wrapper
+      const insertedIds = await safeMutation(
+        api.campaignAnalytics.batchUpsertCampaignAnalytics,
         { records: convexRecords }
-      );
+      ) as string[];
 
       results.success = insertedIds.length;
       results.details.push(`Successfully migrated ${insertedIds.length} campaign records`);
@@ -488,6 +437,105 @@ export async function migrateLegacyCampaignData(
   }
 }
 
+/**
+ * Backward-compatible wrapper for getCampaignPerformanceMetrics.
+ * Maintains the old signature expected by existing services.
+ */
+export async function getCampaignPerformanceMetrics(
+  campaignIds?: string[],
+  filters?: AnalyticsFilters,
+  companyId?: string
+): Promise<CampaignAnalytics[]> {
+  try {
+    // Call the new standardized function
+    const result = await _getCampaignPerformanceMetrics(campaignIds || [], filters);
+
+    if (!result.success || !result.data) {
+      throw new Error(result.error?.message || 'Failed to fetch campaign performance metrics');
+    }
+
+    // Transform the new response format to the old format
+    return result.data.map((item: any) => ({
+      id: item.campaignId,
+      name: item.campaignName,
+      campaignId: item.campaignId,
+      campaignName: item.campaignName,
+      status: item.status,
+      leadCount: 0, // Not provided in new format
+      activeLeads: 0, // Not provided in new format
+      completedLeads: 0, // Not provided in new format
+      sent: item.performance.sent,
+      delivered: item.performance.delivered,
+      opened_tracked: item.performance.openedTracked,
+      clicked_tracked: item.performance.clickedTracked,
+      replied: item.performance.replied,
+      bounced: item.performance.bounced,
+      unsubscribed: item.performance.unsubscribed,
+      spamComplaints: item.performance.spamComplaints,
+      updatedAt: item.updatedAt,
+    }));
+  } catch (error) {
+    console.error("Error in backward-compatible getCampaignPerformanceMetrics:", error);
+    throw error;
+  }
+}
+
+/**
+ * Backward-compatible wrapper for updateCampaignAnalytics.
+ * Maintains the old signature expected by existing services.
+ */
+export async function updateCampaignAnalytics(
+  campaignData: {
+    campaignId: string;
+    campaignName: string;
+    date: string;
+    companyId: string;
+    sent: number;
+    delivered: number;
+    opened_tracked: number;
+    clicked_tracked: number;
+    replied: number;
+    bounced: number;
+    unsubscribed: number;
+    spamComplaints: number;
+    status: "ACTIVE" | "PAUSED" | "COMPLETED" | "DRAFT";
+    leadCount: number;
+    activeLeads: number;
+    completedLeads: number;
+  }
+): Promise<string> {
+ try {
+   // Transform old format to new format
+   const updateData = {
+     campaignName: campaignData.campaignName,
+     sent: campaignData.sent,
+     delivered: campaignData.delivered,
+     opened_tracked: campaignData.opened_tracked,
+     clicked_tracked: campaignData.clicked_tracked,
+     replied: campaignData.replied,
+     bounced: campaignData.bounced,
+     unsubscribed: campaignData.unsubscribed,
+     spamComplaints: campaignData.spamComplaints,
+     status: campaignData.status,
+     leadCount: campaignData.leadCount,
+     activeLeads: campaignData.activeLeads,
+     completedLeads: campaignData.completedLeads,
+   };
+
+   // Call the new standardized function
+   const result = await _updateCampaignAnalytics(campaignData.campaignId, updateData);
+
+   if (!result.success) {
+     throw new Error(result.error?.message || 'Failed to update campaign analytics');
+   }
+
+   // Return the campaign ID as string (old format)
+   return campaignData.campaignId;
+ } catch (error) {
+   console.error("Error in backward-compatible updateCampaignAnalytics:", error);
+   throw error;
+ }
+}
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================

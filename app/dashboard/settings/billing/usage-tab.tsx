@@ -97,11 +97,11 @@ function UsageTab() {
       const result = await getUsageWithCalculations();
 
       if (result.success) {
-        setUsageData(result.data);
+        setUsageData(result.data!);
       } else {
-        setError(result.error);
+        setError(result.error?.message ?? "Failed to load usage data");
         toast.error("Failed to load usage data", {
-          description: result.error,
+          description: result.error?.message ?? "An error occurred",
         });
       }
     } catch (err) {
@@ -121,10 +121,10 @@ function UsageTab() {
       setLoadingStorage(true);
       const result = await getStorageOptions();
       if (result.success) {
-        setStorageOptions(result.data);
+        setStorageOptions(result.data!);
       } else {
         toast.error("Failed to load storage options", {
-          description: result.error,
+          description: result.error?.message ?? "An error occurred",
         });
       }
     } catch (err) {

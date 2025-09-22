@@ -74,7 +74,7 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
   if (billingAction.error && !initialBilling) {
     return (
       <SettingsErrorState
-        error={billingAction.error}
+        error={billingAction.error?.message ?? "Failed to load billing data"}
         errorType="network"
         onRetry={() => billingAction.execute()}
         retryLoading={billingAction.loading}

@@ -24,7 +24,8 @@ export async function updateAnalytics(data: MailboxAnalyticsUpdate): Promise<str
   try {
     const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
     const convexHelper = createAnalyticsConvexHelper(convex, "MailboxAnalyticsService");
-    // @ts-expect-error - Convex type instantiation is excessively deep (platform limitation)
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const result = await convexHelper.mutation<string>(api.mailboxAnalytics.upsertMailboxAnalytics, {
       mailboxId: data.mailboxId,
       email: data.email,

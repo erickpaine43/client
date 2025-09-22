@@ -1,9 +1,52 @@
 // ============================================================================
-// TEMPLATE ANALYTICS ACTIONS - MIGRATED
+// TEMPLATE ANALYTICS ACTIONS - MIGRATED TO STANDARDIZED MODULE
 // ============================================================================
 
 "use server";
 
+// This file has been migrated to the standardized analytics module.
+// Please use the new module at: lib/actions/analytics/template-analytics.ts
+//
+// Migration notes:
+// - All functions now use ConvexQueryHelper for consistent error handling
+// - Standardized ActionResult return types
+// - Enhanced authentication and rate limiting
+// - Improved type safety and performance monitoring
+
+import {
+  getTemplateAnalytics,
+  getTemplateUsageAnalytics,
+  getTemplateComparison,
+  getTemplateAnalyticsByCategory,
+  getTemplateTimeSeries,
+  updateTemplateAnalytics,
+  trackTemplateUsage,
+  bulkUpdateTemplateAnalytics,
+  exportTemplateAnalytics,
+  getTemplateAnalyticsHealth,
+  type TemplatePerformanceAnalytics,
+  type TemplateUsageAnalytics,
+  type TemplateComparison
+} from './analytics/template-analytics';
+
+// Re-export all functions for backward compatibility
+export {
+  getTemplateAnalytics,
+  getTemplateUsageAnalytics,
+  getTemplateComparison,
+  getTemplateAnalyticsByCategory,
+  getTemplateTimeSeries,
+  updateTemplateAnalytics,
+  trackTemplateUsage,
+  bulkUpdateTemplateAnalytics,
+  exportTemplateAnalytics,
+  getTemplateAnalyticsHealth,
+  type TemplatePerformanceAnalytics,
+  type TemplateUsageAnalytics,
+  type TemplateComparison
+};
+
+// Legacy imports for backward compatibility
 import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
 import { TemplateAnalytics } from "@/types/analytics/domain-specific";
 import { PerformanceMetrics } from "@/types/analytics/core";

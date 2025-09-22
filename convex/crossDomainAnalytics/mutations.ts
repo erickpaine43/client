@@ -122,3 +122,35 @@ export const updateCrossDomainAnalytics = mutation({
     };
   },
 });
+
+/**
+ * Export cross-domain analytics data
+ */
+export const exportAnalytics = mutation({
+  args: {
+    domainIds: v.optional(v.array(v.string())),
+    analysisType: v.union(v.literal("performance"), v.literal("correlation"), v.literal("trend"), v.literal("all")),
+    companyId: v.string(),
+    filters: v.optional(v.object({
+      dateRange: v.optional(v.object({
+        start: v.string(),
+        end: v.string(),
+      })),
+    })),
+    format: v.union(v.literal("csv"), v.literal("json")),
+    requestedBy: v.string(),
+    requestedAt: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const { analysisType, format } = args;
+
+    // Generate download URL (simplified - in real implementation this would generate actual export)
+    const downloadUrl = `https://exports.example.com/${Date.now()}-${analysisType}.${format}`;
+    const expiresAt = Date.now() + (24 * 60 * 60 * 1000); // 24 hours
+
+    return {
+      downloadUrl,
+      expiresAt,
+    };
+  },
+});

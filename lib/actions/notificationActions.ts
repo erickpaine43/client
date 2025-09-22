@@ -1,5 +1,20 @@
 "use server";
 
+/**
+ * @deprecated This file has been split into a notifications module for better organization.
+ * Please use the new module structure:
+ * - lib/actions/notifications/index.ts - Main notification functions
+ * - lib/actions/notifications/preferences.ts - Preference management
+ * - lib/actions/notifications/history.ts - History management
+ * - lib/actions/notifications/schedules.ts - Schedule management
+ * 
+ * This file will be removed in a future version.
+ */
+
+// Re-export from the new notifications module for backward compatibility
+export * from './notifications';
+
+// Legacy imports for backward compatibility
 import {
   requireUserId,
   getCurrentUserId,

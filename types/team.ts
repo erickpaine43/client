@@ -131,7 +131,7 @@ export interface TeamStats {
   inactiveMembers: number;
   pendingInvites: number;
   memberLimit: number;
-  lastActivityAt: Date;
+  lastActivityAt: string;
   storageUsed: number;
   storageLimit: number;
   emailsSent: number;

@@ -191,7 +191,11 @@ export async function getDomainSettings(domainId: number): Promise<DomainSetting
      threadDepth: domain.threadDepth || "3",
      autoAdjustWarmup: domain.autoAdjustWarmup || false,
    },
-   // reputationFactors: domain.reputationFactors, // Property doesn't exist on Domain interface
+   reputationFactors: {
+     bounceRate: domain.metrics ? (domain.metrics.bounced / domain.metrics.sent) * 100 : 0,
+     spamComplaints: domain.metrics?.spamComplaints || 0,
+     engagement: domain.metrics ? (domain.metrics.opened_tracked / domain.metrics.sent) * 100 : 0,
+   },
    provider: DNSProvider.OTHER, // Default since "Google Workspace" doesn't match enum
  };
 }

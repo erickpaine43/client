@@ -7,18 +7,6 @@ export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
 };
 
-// Action Result Types
-export type ActionResult<T> = 
-  | {
-      success: true;
-      data: T;
-    }
-  | {
-      success: false;
-      error: string;
-      code?: string;
-      field?: string; // For field-specific validation errors
-    };
 
 // Error codes for better error handling
 export const ERROR_CODES = {

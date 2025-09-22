@@ -469,7 +469,7 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
         );
       }
 
-      await analyticsService.invalidateCache(domain);
+      await analyticsService.invalidateCache(domain ? [domain] : undefined);
     } catch (error) {
       console.error("Failed to invalidate cache:", error);
       throw error;

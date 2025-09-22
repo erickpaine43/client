@@ -139,7 +139,7 @@ function BillingTab() {
   if (billingDataAction.error && !billingDataAction.data) {
     return (
       <SettingsErrorFallback
-        error={billingDataAction.error}
+        error={billingDataAction.error?.message ?? "An error occurred"}
         retry={loadBilling}
       />
     );

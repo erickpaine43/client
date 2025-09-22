@@ -58,7 +58,7 @@ export async function updateCampaignAnalyticsData(campaignData: {
 export async function migrateLegacyCampaignDataAction(campaignId?: string, companyId?: string): Promise<void> {
   if (typeof companyId !== 'string') throw new Error('Company id is required');
   if (typeof campaignId !== 'string') throw new Error('Campaign id is required');
-  await migrateLegacyCampaignData([campaignId], companyId);
+  await migrateLegacyCampaignData([{ campaignId }], companyId);
 }
 
 /**

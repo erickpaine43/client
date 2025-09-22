@@ -316,6 +316,34 @@ export function groupByTimePeriod(
 }
 
 /**
+ * Calculate performance rates from email metrics
+ * @param metrics Email metrics
+ * @returns Standard performance rates
+ */
+export function calculatePerformanceRates(metrics: EmailMetrics): {
+  deliveryRate: number;
+  openRate: number;
+  clickRate: number;
+  replyRate: number;
+  bounceRate: number;
+  unsubscribeRate: number;
+  spamRate: number;
+} {
+  const delivered = metrics.delivered || 0;
+  const sent = metrics.sent || 0;
+
+  return {
+    deliveryRate: sent > 0 ? delivered / sent : 0,
+    openRate: delivered > 0 ? metrics.opened_tracked / delivered : 0,
+    clickRate: delivered > 0 ? metrics.clicked_tracked / delivered : 0,
+    replyRate: delivered > 0 ? metrics.replied / delivered : 0,
+    bounceRate: sent > 0 ? metrics.bounced / sent : 0,
+    unsubscribeRate: delivered > 0 ? metrics.unsubscribed / delivered : 0,
+    spamRate: delivered > 0 ? metrics.spamComplaints / delivered : 0,
+  };
+}
+
+/**
  * Calculate correlation metrics for time series data
  * @param metrics Domain metrics
  * @param mailboxInsights Mailbox insights

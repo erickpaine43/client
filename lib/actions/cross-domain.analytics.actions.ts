@@ -1,5 +1,48 @@
 'use server';
 
+// ============================================================================
+// CROSS-DOMAIN ANALYTICS SERVER ACTIONS - MIGRATED TO STANDARDIZED MODULE
+// ============================================================================
+
+// This file has been migrated to the standardized analytics module.
+// Please use the new module at: lib/actions/analytics/cross-domain-analytics.ts
+//
+// Migration notes:
+// - All functions now use ConvexQueryHelper for consistent error handling
+// - Standardized ActionResult return types
+// - Enhanced authentication and rate limiting
+// - Improved type safety and performance monitoring
+
+import {
+  getCrossDomainPerformanceComparison,
+  getCrossDomainCorrelationAnalysis,
+  getCrossDomainTrendAnalysis,
+  getCrossDomainAggregatedMetrics,
+  getCrossDomainTimeSeries,
+  generateCrossDomainInsights,
+  exportCrossDomainAnalytics,
+  getCrossDomainAnalyticsHealth,
+  type CrossDomainPerformanceComparison,
+  type CrossDomainCorrelationAnalysis,
+  type CrossDomainTrendAnalysis
+} from './analytics/cross-domain-analytics';
+
+// Re-export all functions for backward compatibility
+export {
+  getCrossDomainPerformanceComparison,
+  getCrossDomainCorrelationAnalysis,
+  getCrossDomainTrendAnalysis,
+  getCrossDomainAggregatedMetrics,
+  getCrossDomainTimeSeries,
+  generateCrossDomainInsights,
+  exportCrossDomainAnalytics,
+  getCrossDomainAnalyticsHealth,
+  type CrossDomainPerformanceComparison,
+  type CrossDomainCorrelationAnalysis,
+  type CrossDomainTrendAnalysis
+};
+
+// Legacy imports for backward compatibility
 import { crossDomainAnalyticsService } from "@/lib/services/analytics/CrossDomainAnalyticsService";
 import { 
   AnalyticsFilters, 
@@ -8,6 +51,7 @@ import {
 } from "@/types/analytics/core";
 import { MailboxDomainImpactAnalysis } from "@/lib/services/analytics/CrossDomainAnalyticsService";
 import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+import { safeExtractCompanyId } from "@/lib/utils/analytics-mappers";
 
 /**
  * Get comprehensive mailbox-domain joined analytics.
@@ -19,7 +63,9 @@ export async function getMailboxDomainJoinedAnalyticsAction(
   filters?: AnalyticsFilters
 ) {
   try {
+    const companyId = safeExtractCompanyId(filters, "default");
     const joinedAnalytics = await crossDomainAnalyticsService.getMailboxDomainJoinedAnalytics(
+      companyId,
       domainIds,
       mailboxIds,
       filters
@@ -113,7 +159,9 @@ export async function getCrossDomainTimeSeriesDataAction(
   granularity: "day" | "week" | "month" = "day"
 ) {
   try {
+    const companyId = safeExtractCompanyId(filters, "default");
     const timeSeriesData = await crossDomainAnalyticsService.getCrossDomainTimeSeriesData(
+      companyId,
       domainIds,
       mailboxIds,
       filters,
@@ -191,7 +239,9 @@ export async function getMailboxDomainImpactAnalysisAction(
   filters?: AnalyticsFilters
 ) {
   try {
+    const companyId = safeExtractCompanyId(filters, "default");
     const impactAnalysis = await crossDomainAnalyticsService.getMailboxDomainImpactAnalysis(
+      companyId,
       domainId,
       filters
     );
@@ -272,13 +322,13 @@ export async function updateCrossDomainAnalyticsAction(
   mailboxMetrics: PerformanceMetrics
 ) {
   try {
-    const result = await crossDomainAnalyticsService.updateCrossDomainAnalytics(
+    const result = await crossDomainAnalyticsService.updateCrossDomainAnalytics({
       mailboxId,
       domain,
       companyId,
       date,
-      mailboxMetrics
-    );
+      mailboxMetrics,
+    });
 
     // Calculate rates for the updated metrics
     const rates = AnalyticsCalculator.calculateAllRates(result.aggregatedMetrics);
@@ -325,7 +375,9 @@ export async function getFilteredCrossDomainAnalyticsAction(
   options: AnalyticsComputeOptions = {}
 ) {
   try {
+    const companyId = safeExtractCompanyId(filters, "default");
     const result = await crossDomainAnalyticsService.getFilteredCrossDomainAnalytics(
+      companyId,
       filters,
       options
     );
@@ -375,7 +427,9 @@ export async function getCrossDomainCorrelationInsightsAction(
   filters?: AnalyticsFilters
 ) {
   try {
+    const companyId = safeExtractCompanyId(filters, "default");
     const correlationInsights = await crossDomainAnalyticsService.getCrossDomainCorrelationInsights(
+      companyId,
       domainIds,
       filters
     );
@@ -429,14 +483,12 @@ export async function getCrossDomainCorrelationInsightsAction(
 export async function getCrossDomainAnalyticsHealthCheckAction() {
   try {
     const isHealthy = await crossDomainAnalyticsService.healthCheck();
-    const config = crossDomainAnalyticsService.getConfiguration();
 
     return {
       success: true,
       data: {
         healthy: isHealthy,
         service: "cross-domain-analytics",
-        configuration: config,
         timestamp: Date.now(),
       },
     };
