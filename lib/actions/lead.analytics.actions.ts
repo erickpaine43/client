@@ -18,10 +18,7 @@ import {
   getLeadTimeSeries,
   bulkUpdateLeadAnalytics,
   exportLeadAnalytics,
-  getLeadAnalyticsHealth,
-  type LeadListMetrics,
-  type LeadEngagementAnalytics,
-  type LeadSourceAnalytics
+  getLeadAnalyticsHealth
 } from './analytics/lead-analytics';
 
 // Re-export all functions for backward compatibility
@@ -30,14 +27,18 @@ export {
   getLeadTimeSeries,
   bulkUpdateLeadAnalytics,
   exportLeadAnalytics,
-  getLeadAnalyticsHealth,
-  type LeadListMetrics,
-  type LeadEngagementAnalytics,
-  type LeadSourceAnalytics
+  getLeadAnalyticsHealth
 };
 
 // Legacy imports for backward compatibility
 import { leadAnalyticsService } from "@/lib/services/analytics/LeadAnalyticsService";
+import {
+  LeadListMetrics,
+  LeadEngagementAnalytics,
+  LeadSourceAnalytics,
+  ConversionFunnelData,
+  SegmentationAnalytics
+} from "@/lib/services/analytics/LeadAnalyticsService";
 import {
   AnalyticsFilters,
   AnalyticsComputeOptions,
@@ -50,27 +51,6 @@ import {
 } from "@/types/analytics/domain-specific";
 
 // Define local types for backward compatibility
-interface ConversionFunnelData {
-  stages: Array<{
-    stage: string;
-    count: number;
-    percentage: number;
-    dropoffRate: number;
-  }>;
-  totalLeads: number;
-  conversionRate: number;
-  averageTimeToConvert: number;
-}
-
-interface SegmentationAnalytics {
-  segment: string;
-  criteria: Record<string, unknown>;
-  leadCount: number;
-  performance: PerformanceMetrics;
-  rates: CalculatedRates;
-  averageEngagementScore: number;
-  conversionRate: number;
-}
 
 /**
  * Get lead list metrics for specific leads.
@@ -78,7 +58,7 @@ interface SegmentationAnalytics {
 export async function getLeadListMetricsAction(
   leadIds: string[],
   filters?: AnalyticsFilters
-): Promise<any> {
+): Promise<LeadListMetrics> {
   try {
     return await leadAnalyticsService.getLeadListMetrics(leadIds, filters);
   } catch (error) {
@@ -93,7 +73,7 @@ export async function getLeadListMetricsAction(
 export async function getLeadEngagementAnalyticsAction(
   filters: AnalyticsFilters,
   leadIds?: string[]
-): Promise<any> {
+): Promise<LeadEngagementAnalytics> {
   try {
     return await leadAnalyticsService.getEngagementAnalytics(filters, leadIds);
   } catch (error) {
@@ -107,7 +87,7 @@ export async function getLeadEngagementAnalyticsAction(
  */
 export async function getLeadConversionFunnelsAction(
   campaignIds: string[]
-): Promise<any> {
+): Promise<ConversionFunnelData> {
   try {
     return await leadAnalyticsService.getConversionFunnels(campaignIds);
   } catch (error) {
@@ -119,7 +99,7 @@ export async function getLeadConversionFunnelsAction(
 /**
  * Get lead source analytics.
  */
-export async function getLeadSourceAnalyticsAction(): Promise<any> {
+export async function getLeadSourceAnalyticsAction(): Promise<LeadSourceAnalytics> {
   try {
     return await leadAnalyticsService.getLeadSourceAnalytics();
   } catch (error) {
@@ -131,7 +111,7 @@ export async function getLeadSourceAnalyticsAction(): Promise<any> {
 /**
  * Get lead segmentation analytics.
  */
-export async function getLeadSegmentationAnalyticsAction(): Promise<any> {
+export async function getLeadSegmentationAnalyticsAction(): Promise<SegmentationAnalytics> {
   try {
     return await leadAnalyticsService.getSegmentationAnalytics();
   } catch (error) {

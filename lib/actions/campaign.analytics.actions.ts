@@ -59,7 +59,6 @@ import {
 } from "@/types/analytics/domain-specific";
 import {
   CampaignAnalyticsRecord,
-  AggregatedCampaignMetrics,
   TimeSeriesData
 } from "@/convex/campaignAnalytics/types";
 import {
@@ -69,14 +68,6 @@ import {
 } from "@/lib/services/analytics";
 import { ConvexMigrationUtils } from "@/lib/utils/convex-migration";
 
-// Type definitions for Convex query responses
-interface CampaignPerformanceMetricsResponse {
-  campaignId: string;
-  campaignName: string;
-  status: CampaignStatus;
-  metrics: AggregatedCampaignMetrics;
-  updatedAt: number;
-}
 
 interface CampaignAnalyticsResponse {
   results: CampaignAnalyticsRecord[];
@@ -444,7 +435,7 @@ export async function migrateLegacyCampaignData(
 export async function getCampaignPerformanceMetrics(
   campaignIds?: string[],
   filters?: AnalyticsFilters,
-  companyId?: string
+  _companyId?: string
 ): Promise<CampaignAnalytics[]> {
   try {
     // Call the new standardized function
@@ -455,7 +446,7 @@ export async function getCampaignPerformanceMetrics(
     }
 
     // Transform the new response format to the old format
-    return result.data.map((item: any) => ({
+    return result.data.map((item: CampaignPerformanceMetrics) => ({
       id: item.campaignId,
       name: item.campaignName,
       campaignId: item.campaignId,
@@ -466,8 +457,8 @@ export async function getCampaignPerformanceMetrics(
       completedLeads: 0, // Not provided in new format
       sent: item.performance.sent,
       delivered: item.performance.delivered,
-      opened_tracked: item.performance.openedTracked,
-      clicked_tracked: item.performance.clickedTracked,
+      opened_tracked: item.performance.opened_tracked,
+      clicked_tracked: item.performance.clicked_tracked,
       replied: item.performance.replied,
       bounced: item.performance.bounced,
       unsubscribed: item.performance.unsubscribed,

@@ -7,9 +7,9 @@
 
 // Mock ConvexQueryHelper
 const mockConvexHelper = {
-  query: jest.fn<any>().mockResolvedValue({}),
-  mutation: jest.fn<any>().mockResolvedValue({}),
-  healthCheck: jest.fn<any>().mockResolvedValue(true),
+  query: jest.fn<(api: unknown, params: unknown, context: unknown) => Promise<unknown>>().mockResolvedValue({}),
+  mutation: jest.fn<(api: unknown, params: unknown, context: unknown) => Promise<unknown>>().mockResolvedValue({}),
+  healthCheck: jest.fn<() => Promise<unknown>>().mockResolvedValue(true),
 };
 
 jest.mock('../../../utils/convex-query-helper', () => ({
@@ -18,10 +18,12 @@ jest.mock('../../../utils/convex-query-helper', () => ({
 
 // Mock auth utilities
 jest.mock('../../core/auth', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withAuth: jest.fn().mockImplementation(async (handler: any) => {
     const context = { userId: 'test-user', timestamp: Date.now(), requestId: 'test-req' };
     return await handler(context);
   }),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withAuthAndCompany: jest.fn().mockImplementation(async (handler: any) => {
     const context = {
       userId: 'test-user',
@@ -31,6 +33,7 @@ jest.mock('../../core/auth', () => ({
     };
     return await handler(context);
   }),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withContextualRateLimit: jest.fn().mockImplementation(async (action: any, type: any, config: any, handler: any) => {
     return await handler();
   }),
@@ -44,6 +47,7 @@ jest.mock('../../core/auth', () => ({
 // Mock error utilities
 jest.mock('../../core/errors', () => ({
   createActionResult: jest.fn((data) => ({ success: true, data })),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withConvexErrorHandling: jest.fn().mockImplementation((operation: any) => operation()),
 }));
 
