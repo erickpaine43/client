@@ -504,7 +504,6 @@ export async function deleteTemplateFolder(id: string): Promise<ActionResult<voi
 
             return {
               success: true,
-              data: undefined,
             };
           } catch (dbError) {
             console.error("Database error deleting folder:", dbError);

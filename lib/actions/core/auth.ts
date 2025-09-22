@@ -11,10 +11,9 @@ import {
   getCurrentUser,
   getCurrentUserId as getAuthUserId,
   requireAuth as requireAuthUser,
-  hasPermission as checkUserPermission,
   checkRateLimit as checkBasicRateLimit
 } from '../../utils/auth';
-import { User, Permission, hasPermission, getUserPermissions, UserRole } from '../../../types/auth';
+import { Permission, UserRole, RolePermissions } from '../../../types/auth';
 import { headers } from 'next/headers';
 
 // Re-export auth utilities for consistency
@@ -197,6 +196,42 @@ export async function requireUserId(): Promise<ActionResult<string>> {
 }
 
 /**
+ * Get user profile with role and permissions from database
+ */
+async function getUserProfile(_userId: string): Promise<{
+  role: UserRole;
+  permissions: Permission[];
+  companyId: string;
+  companyName: string;
+  plan: string;
+} | null> {
+  try {
+    // In a real implementation, this would fetch from your user profile database
+    // For now, we'll use environment variables or defaults
+    const defaultRole = (process.env.DEFAULT_USER_ROLE as UserRole) || UserRole.USER;
+    const companyId = await getCurrentCompanyId();
+    
+    if (!companyId) {
+      return null;
+    }
+
+    // Get role-based permissions
+    const permissions = RolePermissions[defaultRole] || [];
+
+    return {
+      role: defaultRole,
+      permissions,
+      companyId,
+      companyName: process.env.DEFAULT_COMPANY_NAME || 'Default Company',
+      plan: process.env.DEFAULT_PLAN || 'free',
+    };
+  } catch (error) {
+    console.error('Failed to get user profile:', error);
+    return null;
+  }
+}
+
+/**
  * Check if user has required permissions
  * Integrates with the existing permission system from types/auth.ts
  */
@@ -206,43 +241,19 @@ export async function checkPermission(
   _resourceId?: string
 ): Promise<boolean> {
   try {
-    // If userId is provided, use it directly with the existing permission check
-    if (userId) {
-      return await checkUserPermission(permission.toString(), userId);
-    }
-
-    // Otherwise, get current user and check permissions using the type-safe system
-    const user = await getCurrentUser();
-    if (!user) {
+    const currentUserId = userId || await getAuthUserId();
+    if (!currentUserId) {
       return false;
     }
 
-    // Convert NileDB user to our User type for permission checking
-    // This is a simplified conversion - in production you'd want proper mapping
-    const typedUser: User = {
-      uid: user.id,
-      email: user.email,
-      displayName: user.name || user.email,
-      photoURL: user.picture,
-      token: user.id,
-      claims: {
-        name: user.name || user.email,
-        role: 'user' as UserRole, // Default role - should be fetched from user profile
-        companyId: await getCurrentCompanyId() || 'default-company',
-        companyName: 'Default Company',
-        plan: 'free',
-        permissions: getUserPermissions(null), // This would need proper implementation
-      },
-      profile: {
-        firstName: user.givenName || '',
-        lastName: user.familyName || '',
-        avatar: user.picture,
-        timezone: 'UTC',
-        language: 'en',
-      },
-    };
+    // Get user profile with role and permissions
+    const profile = await getUserProfile(currentUserId);
+    if (!profile) {
+      return false;
+    }
 
-    return hasPermission(typedUser, permission);
+    // Check if user has the specific permission
+    return profile.permissions.includes(permission);
   } catch (error) {
     console.error('Permission check failed:', error);
     return false;

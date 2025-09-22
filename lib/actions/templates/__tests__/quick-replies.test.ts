@@ -13,6 +13,7 @@ import {
 } from '../quick-replies';
 import { nile } from '@/app/api/[...nile]/nile';
 import * as auth from '@/lib/actions/core/auth';
+import { ActionContext, ActionResult } from '@/lib/actions/core/types';
 
 // Mock dependencies
 jest.mock('@/app/api/[...nile]/nile', () => ({
@@ -32,13 +33,22 @@ describe('Template Actions - Quick Reply Operations', () => {
     jest.clearAllMocks();
     
     // Mock successful authentication
-    mockAuth.withAuth = jest.fn().mockImplementation((handler: any, ...args: any[]) => { // eslint-disable-line @typescript-eslint/no-explicit-any
-      return handler({ userId: 'test-user', companyId: 'test-company', timestamp: Date.now(), requestId: 'test-req' }, ...args);
-    }) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockAuth.withAuth = (jest.fn() as any).mockImplementation((
+      handler: (context: ActionContext) => Promise<ActionResult<unknown>>
+    ) => {
+      return handler({ userId: 'test-user', companyId: 'test-company', timestamp: Date.now(), requestId: 'test-req' });
+    });
 
-    mockAuth.withContextualRateLimit = jest.fn().mockImplementation((action: any, type: any, config: any, operation: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockAuth.withContextualRateLimit = (jest.fn() as any).mockImplementation((
+      _action: string,
+      _type: string,
+      _config: unknown,
+      operation: () => Promise<ActionResult<unknown>>
+    ) => {
       return operation();
-    }) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    });
   });
 
   afterEach(() => {

@@ -1,4 +1,4 @@
-import { nile } from "@/app/api/[...nile]/nile";
+import { nile } from "../../app/api/[...nile]/nile";
 import { cookies } from "next/headers";
 
 // User type from NileDB
@@ -255,7 +255,7 @@ export async function checkRateLimit(
  */
 export function cleanupRateLimits(): void {
   const now = Date.now();
-  for (const [key, value] of rateLimitMap.entries()) {
+  for (const [key, value] of Array.from(rateLimitMap.entries())) {
     if (value.resetTime < now) {
       rateLimitMap.delete(key);
     }

@@ -10,7 +10,7 @@ import {
   getComplianceChecklist,
   exportComplianceReport,
 } from '../compliance';
-import { withErrorHandling } from '@/lib/actions/core/errors';
+import { withErrorHandling } from '../../core/errors';
 
 // Mock the core auth utilities
 jest.mock('@/lib/actions/core/auth', () => ({

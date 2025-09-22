@@ -11,10 +11,10 @@ import { z } from 'zod';
 import { ActionResult } from '../core/types';
 import { ErrorFactory, withErrorHandling } from '../core/errors';
 import { withFullAuth, RateLimits } from '../core/auth';
-import { TeamSettings, UpdateTeamSettingsForm } from '@/types/team';
+import { TeamSettings, UpdateTeamSettingsForm } from '../../../types/team';
 import { checkTeamPermission } from './permissions';
 import { logTeamActivity } from './activity';
-import { Permission } from '@/types/auth';
+import { Permission } from '../../../types/auth';
 
 // Validation schema for team settings
 const updateTeamSettingsSchema = z.object({

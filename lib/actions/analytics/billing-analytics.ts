@@ -10,16 +10,17 @@
 import { api } from '@/convex/_generated/api';
 import { createAnalyticsConvexHelper } from '@/lib/utils/convex-query-helper';
 import { ConvexHttpClient } from 'convex/browser';
-import { 
-  createActionResult, 
-  withConvexErrorHandling 
+import {
+  createActionResult,
+  withConvexErrorHandling,
+  ErrorFactory
 } from '../core/errors';
-import { 
-  withAuth, 
+import {
   withAuthAndCompany,
   withContextualRateLimit,
-  RateLimits 
+  RateLimits
 } from '../core/auth';
+import { withSecurity, SecurityConfigs } from '../core/auth-middleware';
 import type { ActionResult, ActionContext } from '../core/types';
 import type {
   AnalyticsFilters,
@@ -87,6 +88,15 @@ export async function getCurrentUsageMetrics(
     const targetCompanyId = companyId || context.companyId;
 
     return withConvexErrorHandling(async () => {
+      // Ensure company context exists
+
+      if (!context.companyId) {
+
+        return ErrorFactory.unauthorized('Company context required');
+
+      }
+
+
       const usageData = await convexHelper.query(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore - Convex generated type for this function can cause deep instantiation
@@ -115,6 +125,15 @@ export async function getBillingAnalytics(
     RateLimits.ANALYTICS_QUERY,
     () => withAuthAndCompany(async (_context: ActionContext & { companyId: string }) => {
       return withConvexErrorHandling(async () => {
+        // Ensure company context exists
+
+        if (!_context.companyId) {
+
+          return ErrorFactory.unauthorized('Company context required');
+
+        }
+
+
         const analyticsData = await convexHelper.query(
           api.billingAnalytics.getBillingAnalytics,
           {
@@ -145,6 +164,15 @@ export async function getCostAnalytics(
     RateLimits.ANALYTICS_QUERY,
     () => withAuthAndCompany(async (_context: ActionContext & { companyId: string }) => {
       return withConvexErrorHandling(async () => {
+        // Ensure company context exists
+
+        if (!_context.companyId) {
+
+          return ErrorFactory.unauthorized('Company context required');
+
+        }
+
+
         const costData = await convexHelper.query(
           api.billingAnalytics.getCostAnalytics,
           { 
@@ -170,6 +198,15 @@ export async function getPlanUtilization(): Promise<ActionResult<PlanUtilization
   return withAuthAndCompany(async (context: ActionContext & { companyId: string }) => {
     return withConvexErrorHandling(async () => {
       // Get current usage data to calculate plan utilization
+      // Ensure company context exists
+
+      if (!context.companyId) {
+
+        return ErrorFactory.unauthorized('Company context required');
+
+      }
+
+
       const currentUsage = await convexHelper.query(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore - Convex generated type for this function can cause deep instantiation
@@ -220,6 +257,15 @@ export async function getBillingTimeSeries(
     RateLimits.ANALYTICS_QUERY,
     () => withAuthAndCompany(async (_context: ActionContext & { companyId: string }) => {
       return withConvexErrorHandling(async () => {
+        // Ensure company context exists
+
+        if (!_context.companyId) {
+
+          return ErrorFactory.unauthorized('Company context required');
+
+        }
+
+
         const timeSeriesData = await convexHelper.query(
           api.billingAnalytics.getBillingTimeSeriesAnalytics,
           {
@@ -251,6 +297,15 @@ export async function updateBillingAnalytics(
     RateLimits.GENERAL_WRITE,
     () => withAuthAndCompany(async (_context: ActionContext & { companyId: string }) => {
       return withConvexErrorHandling(async () => {
+        // Ensure company context exists
+
+        if (!_context.companyId) {
+
+          return ErrorFactory.unauthorized('Company context required');
+
+        }
+
+
         const updatedData = await convexHelper.mutation(
           api.billingAnalytics.upsertBillingAnalytics,
           {
@@ -317,7 +372,10 @@ export async function getBillingAnalyticsHealth(): Promise<ActionResult<{
   dataFreshness: number;
   issues: string[];
 }>> {
-  return withAuth(async (_context: ActionContext) => {
+  return withSecurity(
+    'health_check',
+    SecurityConfigs.USER_READ,
+    async () => {
     return withConvexErrorHandling(async () => {
       // Check ConvexQueryHelper health
       const helperHealthy = await convexHelper.healthCheck();

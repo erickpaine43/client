@@ -5,10 +5,10 @@
  * including template data validation, folder validation, and ID validation.
  */
 
-import { ActionResult } from "@/lib/actions/core/types";
-import { ErrorFactory } from "@/lib/actions/core/errors";
-import { validateRequired, validateLength, validateNumber, validateEnum } from "@/lib/actions/core/validation";
-import { TemplateCategoryType, TemplateCategory } from "@/types/templates";
+import { ActionResult } from "../core/types";
+import { ErrorFactory } from "../core/errors";
+import { validateRequired, validateLength, validateNumber, validateEnum } from "../core/validation";
+import { TemplateCategoryType, TemplateCategory } from "../../../types/templates";
 
 /**
  * Validate template ID
@@ -119,7 +119,7 @@ export function validateTemplateData(data: {
   let validatedFolderId: number | undefined;
   if (data.folderId !== undefined) {
     const folderIdStr = typeof data.folderId === 'string' ? data.folderId : data.folderId.toString();
-    const folderIdValidation = validateNumber(folderIdStr, "folderId", 1);
+    const folderIdValidation = validateNumber(folderIdStr, "folderId", { min: 1 });
     if (!folderIdValidation.isValid) {
       errors.push("Folder ID must be a positive number");
     } else {
@@ -173,7 +173,7 @@ export function validateFolderData(data: {
   // Validate parent ID if provided
   let validatedParentId: number | undefined;
   if (data.parentId !== undefined) {
-    const parentIdValidation = validateNumber(data.parentId, "parentId", 1);
+    const parentIdValidation = validateNumber(data.parentId, "parentId", { min: 1 });
     if (!parentIdValidation.isValid) {
       errors.push("Parent folder ID must be a positive number");
     } else {
@@ -294,7 +294,7 @@ export function validateTemplateFilters(params: {
   // Validate folder ID
   let validatedFolderId: number | undefined;
   if (params.folderId !== undefined && params.folderId.trim() !== '') {
-    const folderIdValidation = validateNumber(params.folderId, "folderId", 1);
+    const folderIdValidation = validateNumber(params.folderId, "folderId", { min: 1 });
     if (!folderIdValidation.isValid) {
       errors.push("Folder ID must be a positive number");
     } else {
@@ -326,12 +326,12 @@ export function validateTemplateFilters(params: {
   }
 
   // Validate pagination
-  const limitValidation = validateNumber(params.limit || "20", "limit", 1, 100);
+  const limitValidation = validateNumber(params.limit || "20", "limit", { min: 1, max: 100 });
   if (!limitValidation.isValid) {
     errors.push("Limit must be between 1 and 100");
   }
 
-  const offsetValidation = validateNumber(params.offset || "0", "offset", 0);
+  const offsetValidation = validateNumber(params.offset || "0", "offset", { min: 0 });
   if (!offsetValidation.isValid) {
     errors.push("Offset must be a non-negative number");
   }

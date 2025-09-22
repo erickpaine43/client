@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import type { TeamMember, TeamInvite, TeamStats } from '@/types/team';
+import type { TeamMember, TeamInvite, TeamStats } from '../../../types/team';
 import { 
   getTeamMembers, 
   addTeamMember, 

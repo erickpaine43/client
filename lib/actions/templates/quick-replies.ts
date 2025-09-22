@@ -42,7 +42,7 @@ function mapMockToTemplate(mockTemplate: typeof initialQuickReplies[0]): Templat
  * Get quick replies for the authenticated user
  */
 export async function getQuickReplies(): Promise<ActionResult<Template[]>> {
-  return withAuth(async (_context): Promise<ActionResult<Template[]>> => {
+  return withAuth(async (_context) => {
     return withContextualRateLimit(
       'get-quick-replies',
       'user',
@@ -514,7 +514,6 @@ export async function deleteQuickReply(id: string): Promise<ActionResult<void>> 
 
             return {
               success: true,
-              data: undefined,
             };
           } catch (dbError) {
             console.error("Database error deleting quick reply:", dbError);
@@ -561,7 +560,6 @@ export async function markQuickReplyAsUsed(id: string): Promise<ActionResult<voi
 
             return {
               success: true,
-              data: undefined,
             };
           } catch (dbError) {
             console.error("Database error marking quick reply as used:", dbError);

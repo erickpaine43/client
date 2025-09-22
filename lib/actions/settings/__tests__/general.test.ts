@@ -12,7 +12,7 @@ import {
   updateCompanyInfo,
   getAllSettings,
 } from '../general';
-import { withErrorHandling } from '@/lib/actions/core/errors';
+import { withErrorHandling } from '../../core/errors';
 
 // Mock the auth utilities
 jest.mock('@/lib/utils/auth', () => ({

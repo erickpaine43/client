@@ -10,8 +10,8 @@
 import { ActionResult } from '../core/types';
 import { ErrorFactory, withErrorHandling } from '../core/errors';
 import { withFullAuth, RateLimits } from '../core/auth';
-import { Permission } from '@/types/auth';
-import { TeamActivity, TeamActivityResponse } from '@/types/team';
+import { Permission } from '../../../types/auth';
+import { TeamActivity, TeamActivityResponse } from '../../../types/team';
 import { checkTeamPermission } from './permissions';
 
 // Mock activity storage (in production, this would be a database)
@@ -215,7 +215,8 @@ export async function getActivityStats(
 
         // Activities by action type
         const activitiesByAction = recentActivities.reduce((acc, activity) => {
-          acc[activity.action] = (acc[activity.action] || 0) + 1;
+          const action = activity.action;
+          acc[action] = (acc[action] || 0) + 1;
           return acc;
         }, {} as Record<TeamActivity['action'], number>);
 

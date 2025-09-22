@@ -1,25 +1,82 @@
 'use server';
 
 import { campaignLeads, campaignsData, sequenceSteps, mockedCampaigns } from '@/lib/data/campaigns';
-import { Campaign } from '@/types';
+import { Campaign, CampaignDisplay } from '@/types';
+import { withSecurity, SecurityConfigs } from './core/auth-middleware';
+import { ActionResult, ActionContext } from './core/types';
+import { ErrorFactory } from './core/errors';
 
-export async function getCampaignLeads() {
-  // In a real implementation, this would fetch from a database
-  // For now, return the static mock data
-  return campaignLeads;
+export async function getCampaignLeads(): Promise<ActionResult<typeof campaignLeads>> {
+  return withSecurity(
+    'get_campaign_leads',
+    SecurityConfigs.COMPANY_READ,
+    async (context: ActionContext) => {
+      // Ensure company context exists
+      if (!context.companyId) {
+        return ErrorFactory.unauthorized('Company context required');
+      }
+
+      // In a real implementation, this would fetch from a database filtered by company
+      // For now, return the static mock data
+      return {
+        success: true,
+        data: campaignLeads,
+      };
+    }
+  );
 }
 
-export async function getCampaign(campaignId: string) {
-  // In a real implementation, this would fetch from a database
-  // For now, return the matching campaign from mock data
-  return campaignsData.find(campaign => campaign.id === parseInt(campaignId)) || null;
+export async function getCampaign(campaignId: string): Promise<ActionResult<CampaignDisplay | null>> {
+  return withSecurity(
+    'get_campaign',
+    SecurityConfigs.COMPANY_READ,
+    async (context: ActionContext) => {
+      // Ensure company context exists
+      if (!context.companyId) {
+        return ErrorFactory.unauthorized('Company context required');
+      }
+
+      // Validate campaign ID
+      if (!campaignId || typeof campaignId !== 'string') {
+        return ErrorFactory.validation('Valid campaign ID is required', 'campaignId');
+      }
+
+      // In a real implementation, this would fetch from a database with company isolation
+      // For now, return the matching campaign from mock data
+      const campaign = campaignsData.find(campaign => campaign.id === parseInt(campaignId)) || null;
+      
+      return {
+        success: true,
+        data: campaign,
+      };
+    }
+  );
 }
 
-export async function getUserCampaignsAction(userId?: string, companyId?: string) {
-  console.log("Fetching campaigns for user/company:", userId, companyId);
-  // In a real implementation, this would fetch campaigns for the user/company
-  // For now, return the static campaigns data
-  return campaignsData;
+export async function getUserCampaignsAction(_userId?: string, _companyId?: string): Promise<ActionResult<typeof campaignsData>> {
+  return withSecurity(
+    'get_user_campaigns',
+    SecurityConfigs.COMPANY_READ,
+    async (context: ActionContext) => {
+      // Ensure company context exists
+      if (!context.companyId) {
+        return ErrorFactory.unauthorized('Company context required');
+      }
+
+      // Use context values instead of parameters for security
+      const effectiveUserId = context.userId;
+      const effectiveCompanyId = context.companyId;
+      
+      console.log("Fetching campaigns for user/company:", effectiveUserId, effectiveCompanyId);
+      
+      // In a real implementation, this would fetch campaigns for the user/company with proper isolation
+      // For now, return the static campaigns data
+      return {
+        success: true,
+        data: campaignsData,
+      };
+    }
+  );
 }
 
 // DEPRECATED: Use CampaignAnalyticsService.getTimeSeriesData() instead

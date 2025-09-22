@@ -1,4 +1,4 @@
-import type { TeamInvite, TeamMember } from '@/types/team';
+import type { TeamInvite, TeamMember } from '../../types/team';
 
 // Mock data for team members (replace with actual database calls)
 export const mockTeamMembers: TeamMember[] = [

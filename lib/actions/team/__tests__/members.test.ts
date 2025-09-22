@@ -5,8 +5,8 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import type { ActionContext } from '../../core/types';
 import { getTeamMembers, updateTeamMember, removeTeamMember, validateTeamEmail } from '../members';
-import { mockTeamMembers, mockInvites } from '@/lib/mocks/team';
-import type { TeamRole } from '@/types/team';
+import { mockTeamMembers, mockInvites } from '../../../mocks/team';
+import type { TeamRole } from '../../../../types/team';
 
 // Mock the auth utilities
 jest.mock('../../core/auth', () => ({

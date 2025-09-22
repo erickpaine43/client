@@ -7,9 +7,9 @@
 
 "use server";
 
-import { ActionResult } from "@/lib/actions/core/types";
-import { ErrorFactory, withErrorHandling } from "@/lib/actions/core/errors";
-import { withAuth } from "@/lib/actions/core/auth";
+import { ActionResult } from "../core/types";
+import { ErrorFactory, withErrorHandling } from "../core/errors";
+import { withAuth } from "../core/auth";
 import { 
   SimpleNotificationPreferences,
   mockSimpleNotificationPreferences,

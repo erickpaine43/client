@@ -1,4 +1,4 @@
-import type { TeamPermission, TeamRole } from '@/types/team';
+import type { TeamPermission, TeamRole } from '../../types/team';
 
 export const TEAM_ERROR_CODES = {
   AUTH_REQUIRED: 'TEAM_AUTH_REQUIRED',

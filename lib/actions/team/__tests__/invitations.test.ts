@@ -6,7 +6,7 @@ import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import type { ActionContext, ActionResult } from '../../core/types';
 import { addTeamMember, resendInvite, cancelInvite, bulkInviteMembers } from '../invitations';
 import * as membersModule from '../members';
-import { mockTeamMembers, mockInvites } from '@/lib/mocks/team';
+import { mockTeamMembers, mockInvites } from '../../../mocks/team';
 
 // Mock the auth utilities
 jest.mock('../../core/auth', () => ({

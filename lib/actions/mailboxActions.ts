@@ -8,16 +8,32 @@ import type {
   MailboxPerformanceData as ServiceMailboxPerformanceData,
   WarmupAnalyticsData as ServiceWarmupAnalyticsData,
 } from "@/lib/services/analytics/MailboxAnalyticsService";
+import { withSecurity, SecurityConfigs } from './core/auth-middleware';
+import { ActionResult, ActionContext } from './core/types';
+import { ErrorFactory } from './core/errors';
 
 // Server action to fetch mailboxes
 export async function getMailboxesAction(
-  userid?: string,
-  companyid?: string
-): Promise<MailboxWarmupData[]> {
-  console.log(`Fetching mailboxes for user: ${userid}, company: ${companyid}`);
+  _userid?: string,
+  _companyid?: string
+): Promise<ActionResult<MailboxWarmupData[]>> {
+  return withSecurity(
+    'get_mailboxes',
+    SecurityConfigs.COMPANY_READ,
+    async (context: ActionContext) => {
+      // Ensure company context exists
+      if (!context.companyId) {
+        return ErrorFactory.unauthorized('Company context required');
+      }
 
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 800));
+      // Use context values instead of parameters for security
+      const effectiveUserId = context.userId;
+      const effectiveCompanyId = context.companyId;
+      
+      console.log(`Fetching mailboxes for user: ${effectiveUserId}, company: ${effectiveCompanyId}`);
+
+      // Simulate network delay
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
   // Extract unique mailboxes from inbox conversations inline to avoid server action rules
   const emailDomains = new Set();
@@ -48,7 +64,12 @@ export async function getMailboxesAction(
     });
   });
 
-  return mailboxes;
+      return {
+        success: true,
+        data: mailboxes,
+      };
+    }
+  );
 }
 
 // Server action to fetch analytics for a specific mailbox
@@ -56,21 +77,43 @@ export async function getMailboxAnalyticsAction(
   mailboxId: string,
   dateRange: string = "30d",
   _granularity: string = "day",
-  userid?: string,
-  companyid?: string
-): Promise<MailboxAnalyticsData> {
-  console.log(`Fetching analytics for mailbox: ${mailboxId}, range: ${dateRange}, user: ${userid}, company: ${companyid}`);
+  _userid?: string,
+  _companyid?: string
+): Promise<ActionResult<MailboxAnalyticsData>> {
+  return withSecurity(
+    'get_mailbox_analytics',
+    SecurityConfigs.ANALYTICS_READ,
+    async (context: ActionContext) => {
+      // Ensure company context exists
+      if (!context.companyId) {
+        return ErrorFactory.unauthorized('Company context required');
+      }
 
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, Math.random() * 1500 + 500));
+      // Validate mailbox ID
+      if (!mailboxId || typeof mailboxId !== 'string') {
+        return ErrorFactory.validation('Valid mailbox ID is required', 'mailboxId');
+      }
 
-  // Get mailboxes and find the specific one
-  const mailboxes = await getMailboxesAction(userid, companyid);
-  const mailbox = mailboxes.find((box: MailboxWarmupData) => box.id === mailboxId);
+      // Use context values instead of parameters for security
+      const effectiveUserId = context.userId;
+      const effectiveCompanyId = context.companyId;
+      
+      console.log(`Fetching analytics for mailbox: ${mailboxId}, range: ${dateRange}, user: ${effectiveUserId}, company: ${effectiveCompanyId}`);
 
-  if (!mailbox) {
-    throw new Error(`Mailbox not found: ${mailboxId}`);
-  }
+      // Simulate network delay
+      await new Promise((resolve) => setTimeout(resolve, Math.random() * 1500 + 500));
+
+      // Get mailboxes and find the specific one
+      const mailboxesResult = await getMailboxesAction(effectiveUserId, effectiveCompanyId);
+      if (!mailboxesResult.success || !mailboxesResult.data) {
+        return ErrorFactory.internal('Failed to fetch mailboxes');
+      }
+      
+      const mailbox = mailboxesResult.data.find((box: MailboxWarmupData) => box.id === mailboxId);
+
+      if (!mailbox) {
+        return ErrorFactory.notFound(`Mailbox not found: ${mailboxId}`);
+      }
 
   // Generate mock service-shaped performance and warmup data and map to legacy UI shape
   const serviceLike = {
@@ -99,14 +142,19 @@ export async function getMailboxAnalyticsAction(
   dailyStats: [],
   };
 
-  // Cast mock objects to the service types for the mapper call. This keeps the change local
-  // and satisfies the mapper's typed signature while we migrate consumers.
-  const analytics = mapServiceMailboxToLegacy(
-    serviceLike as ServiceMailboxPerformanceData,
-    warmupLike as ServiceWarmupAnalyticsData
+      // Cast mock objects to the service types for the mapper call. This keeps the change local
+      // and satisfies the mapper's typed signature while we migrate consumers.
+      const analytics = mapServiceMailboxToLegacy(
+        serviceLike as ServiceMailboxPerformanceData,
+        warmupLike as ServiceWarmupAnalyticsData
+      );
+      
+      return {
+        success: true,
+        data: analytics,
+      };
+    }
   );
-  // update warmup chart state opportunistically in callers if needed
-  return analytics;
 }
 
 // Server action to fetch analytics for multiple mailboxes
@@ -114,16 +162,38 @@ export async function getMultipleMailboxAnalyticsAction(
   mailboxIds: string[],
   dateRange: string = "30d",
   _granularity: string = "day",
-  userid?: string,
-  companyid?: string
-): Promise<Record<string, MailboxAnalyticsData>> {
-  console.log(`Fetching analytics for ${mailboxIds.length} mailboxes, user: ${userid}, company: ${companyid}`);
+  _userid?: string,
+  _companyid?: string
+): Promise<ActionResult<Record<string, MailboxAnalyticsData>>> {
+  return withSecurity(
+    'get_multiple_mailbox_analytics',
+    SecurityConfigs.BULK_OPERATION,
+    async (context: ActionContext) => {
+      // Ensure company context exists
+      if (!context.companyId) {
+        return ErrorFactory.unauthorized('Company context required');
+      }
 
-  const results: Record<string, MailboxAnalyticsData> = {};
+      // Validate mailbox IDs array
+      if (!Array.isArray(mailboxIds) || mailboxIds.length === 0) {
+        return ErrorFactory.validation('Valid mailbox IDs array is required', 'mailboxIds');
+      }
 
-  // Get mailboxes to validate ids
-  const mailboxes = await getMailboxesAction(userid, companyid);
-  const validMailboxIds = mailboxes.map((box: MailboxWarmupData) => box.id);
+      // Use context values instead of parameters for security
+      const effectiveUserId = context.userId;
+      const effectiveCompanyId = context.companyId;
+      
+      console.log(`Fetching analytics for ${mailboxIds.length} mailboxes, user: ${effectiveUserId}, company: ${effectiveCompanyId}`);
+
+      const results: Record<string, MailboxAnalyticsData> = {};
+
+      // Get mailboxes to validate ids
+      const mailboxesResult = await getMailboxesAction(effectiveUserId, effectiveCompanyId);
+      if (!mailboxesResult.success || !mailboxesResult.data) {
+        return ErrorFactory.internal('Failed to fetch mailboxes for validation');
+      }
+      
+      const validMailboxIds = mailboxesResult.data.map((box: MailboxWarmupData) => box.id);
 
   // Fetch analytics for each valid mailbox with slight delays to simulate progressive loading
   for (let i = 0; i < mailboxIds.length; i++) {
@@ -140,14 +210,21 @@ export async function getMultipleMailboxAnalyticsAction(
     // Simulate the API call with delay
     await new Promise(resolve => setTimeout(resolve, delay));
 
-    try {
-      const analytics = await getMailboxAnalyticsAction(mailboxId, dateRange, _granularity, userid, companyid);
-      results[mailboxId] = analytics;
-    } catch (error) {
-      console.error(`Failed to fetch analytics for mailbox ${mailboxId}:`, error);
-      // Continue with other mailboxes even if one fails
+      try {
+        const analyticsResult = await getMailboxAnalyticsAction(mailboxId, dateRange, _granularity, effectiveUserId, effectiveCompanyId);
+        if (analyticsResult.success && analyticsResult.data) {
+          results[mailboxId] = analyticsResult.data;
+        }
+      } catch (error) {
+        console.error(`Failed to fetch analytics for mailbox ${mailboxId}:`, error);
+        // Continue with other mailboxes even if one fails
+      }
     }
-  }
 
-  return results;
+    return {
+      success: true,
+      data: results,
+    };
+  }
+);
 }

@@ -14,7 +14,7 @@ import {
   isTeamOwner,
   isTeamAdminOrHigher,
 } from '../permissions';
-import { mockTeamMembers } from '@/lib/mocks/team';
+import { mockTeamMembers } from '../../../mocks/team';
 
 describe('Team Permissions', () => {
   beforeEach(() => {

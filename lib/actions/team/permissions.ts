@@ -7,9 +7,9 @@
 
 'use server';
 
-import { TeamPermission, TeamRole } from '@/types/team';
-import { ROLE_HIERARCHY, ROLE_PERMISSIONS } from '@/lib/constants/team';
-import { mockTeamMembers } from '@/lib/mocks/team';
+import { TeamPermission, TeamRole } from '../../../types/team';
+import { ROLE_HIERARCHY, ROLE_PERMISSIONS } from '../../constants/team';
+import { mockTeamMembers } from '../../mocks/team';
 
 /**
  * Check if a user has permission to perform an action on team members

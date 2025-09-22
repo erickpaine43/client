@@ -455,7 +455,6 @@ export async function trackTemplateUsage(
 
             return {
               success: true,
-              data: undefined,
             };
           } catch (dbError) {
             console.error("Database error tracking template usage:", dbError);

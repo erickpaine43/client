@@ -290,7 +290,6 @@ export async function updateTemplate(formData: FormData): Promise<void> {
 
             return {
               success: true,
-              data: undefined,
             };
           } catch (dbError) {
             console.error("Database error updating template:", dbError);
@@ -313,7 +312,6 @@ export async function updateTemplate(formData: FormData): Promise<void> {
 
             return {
               success: true,
-              data: undefined,
             };
           }
         });

@@ -7,12 +7,13 @@
  * for type safety and standardized error handling.
  */
 
-import { api } from '@/convex/_generated/api';
-import { createAnalyticsConvexHelper } from '@/lib/utils/convex-query-helper';
+import { api } from '../../../convex/_generated/api';
+import { createAnalyticsConvexHelper } from '../../utils/convex-query-helper';
 import { ConvexHttpClient } from 'convex/browser';
 import { 
   createActionResult, 
-  withConvexErrorHandling 
+  withConvexErrorHandling,
+  ErrorFactory
 } from '../core/errors';
 import { 
   withAuth, 
@@ -20,14 +21,23 @@ import {
   withContextualRateLimit,
   RateLimits 
 } from '../core/auth';
+import { withSecurity, SecurityConfigs } from '../core/auth-middleware';
+import {
+  validateArray,
+  validateString,
+  validateId,
+  validateSchema,
+  validateAnalyticsFilters
+} from '../core/validation';
+import { templateAnalyticsSchema } from '../core/validation-schemas';
 import type { ActionResult, ActionContext } from '../core/types';
 import type {
   AnalyticsFilters,
   PerformanceMetrics,
   TimeSeriesDataPoint,
   CalculatedRates,
-} from '@/types/analytics/core';
-import type { TemplateAnalytics } from '@/types/analytics/domain-specific';
+} from '../../../types/analytics/core';
+import type { TemplateAnalytics } from '../../../types/analytics/domain-specific';
 
 // Initialize Convex client and helper
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
@@ -106,12 +116,33 @@ export interface TemplateComparison {
 export async function getTemplatePerformanceAnalytics(
   templateIds?: string[]
 ): Promise<ActionResult<TemplatePerformanceAnalytics>> {
-  return withContextualRateLimit(
-    'template_performance_query',
-    'company',
-    RateLimits.ANALYTICS_QUERY,
-    () => withAuthAndCompany(async (context: ActionContext & { companyId: string }) => {
+  return withSecurity(
+    'get_template_performance_analytics',
+    SecurityConfigs.ANALYTICS_READ,
+    async (context: ActionContext) => {
       return withConvexErrorHandling(async () => {
+        // Validate template IDs if provided
+        if (templateIds) {
+          const validationResult = validateArray(templateIds, 'templateIds', {
+            maxLength: 100,
+            itemValidator: (item, index) => validateString(item, `templateIds[${index}]`, { minLength: 1 })
+          });
+          
+          if (!validationResult.isValid && validationResult.errors) {
+            const firstError = validationResult.errors[0];
+            return ErrorFactory.validation(
+              firstError.message,
+              firstError.field,
+              firstError.code
+            );
+          }
+        }
+
+        // Ensure company context exists
+        if (!context.companyId) {
+          return ErrorFactory.unauthorized('Company context required');
+        }
+
         const performanceData = await convexHelper.query(
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore - Convex generated type for this function can cause deep instantiation
@@ -128,7 +159,7 @@ export async function getTemplatePerformanceAnalytics(
 
         return createActionResult(performanceData as TemplatePerformanceAnalytics);
       });
-    })
+    }
   );
 }
 
@@ -144,6 +175,20 @@ export async function getTemplateAnalytics(
     RateLimits.ANALYTICS_QUERY,
     () => withAuthAndCompany(async (context: ActionContext & { companyId: string }) => {
       return withConvexErrorHandling(async () => {
+        // Validate analytics filters if provided
+        if (filters) {
+          const validationResult = validateAnalyticsFilters(filters);
+          if (!validationResult.isValid) {
+            const firstError = validationResult.errors?.[0];
+            return ErrorFactory.validation(
+              firstError?.message || 'Invalid analytics filters',
+              firstError?.field,
+              firstError?.code
+            );
+          }
+          filters = validationResult.data;
+        }
+
         const analyticsData = await convexHelper.query(
           api.templateAnalytics.getTemplateAnalyticsOverview,
           {
@@ -321,18 +366,40 @@ export async function updateTemplateAnalytics(
   templateId: string,
   data: Partial<TemplateAnalytics>
 ): Promise<ActionResult<TemplateAnalytics>> {
-  return withContextualRateLimit(
-    'template_analytics_update',
-    'company',
-    RateLimits.GENERAL_WRITE,
-    () => withAuthAndCompany(async (context: ActionContext & { companyId: string }) => {
+  return withSecurity(
+    'update_template_analytics',
+    SecurityConfigs.COMPANY_WRITE,
+    async (context: ActionContext) => {
       return withConvexErrorHandling(async () => {
+        // Validate template ID
+        const idResult = validateId(templateId, 'templateId');
+        if (!idResult.isValid && idResult.errors) {
+          const firstError = idResult.errors[0];
+          return ErrorFactory.validation(firstError.message, firstError.field, firstError.code);
+        }
+
+        // Validate update data using template analytics schema
+        const validationResult = validateSchema(data, templateAnalyticsSchema);
+        if (!validationResult.isValid) {
+          const firstError = validationResult.errors?.[0];
+          return ErrorFactory.validation(
+            firstError?.message || 'Invalid template analytics data',
+            firstError?.field,
+            firstError?.code
+          );
+        }
+
+        // Ensure company context exists
+        if (!context.companyId) {
+          return ErrorFactory.unauthorized('Company context required');
+        }
+
         const updatedData = await convexHelper.mutation(
           api.templateAnalytics.updateTemplateAnalytics,
           { 
             companyId: context.companyId,
             templateId,
-            data,
+            data: validationResult.data,
             updatedBy: context.userId,
             updatedAt: Date.now()
           },
@@ -344,7 +411,7 @@ export async function updateTemplateAnalytics(
 
         return createActionResult(updatedData as TemplateAnalytics);
       });
-    })
+    }
   );
 }
 
@@ -402,12 +469,16 @@ export async function bulkUpdateTemplateAnalytics(
     data: Partial<TemplateAnalytics>;
   }>
 ): Promise<ActionResult<{ updated: number; failed: number; errors: string[] }>> {
-  return withContextualRateLimit(
-    'template_bulk_update',
-    'company',
-    RateLimits.BULK_OPERATION,
-    () => withAuthAndCompany(async (context: ActionContext & { companyId: string }) => {
+  return withSecurity(
+    'bulk_update_template_analytics',
+    SecurityConfigs.BULK_OPERATION,
+    async (context: ActionContext) => {
       return withConvexErrorHandling(async () => {
+        // Ensure company context exists
+        if (!context.companyId) {
+          return ErrorFactory.unauthorized('Company context required');
+        }
+
         const bulkResult = await convexHelper.mutation(
           api.templateAnalytics.batchUpdateTemplateAnalytics,
           {
@@ -435,7 +506,7 @@ export async function bulkUpdateTemplateAnalytics(
 
         return createActionResult(bulkResult as { updated: number; failed: number; errors: string[] });
       });
-    })
+    }
   );
 }
 
