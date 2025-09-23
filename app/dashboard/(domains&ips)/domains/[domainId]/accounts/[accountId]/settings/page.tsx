@@ -6,7 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import EmailAccountForm from "@/components/domains/email-account-form";
 import { EmailAccountFormValues } from "@/types/forms";
-import { getAccountDetails } from "@/lib/actions/domainsActions";
+import { getAccountDetails } from "@/lib/actions/domains";
 
 // Define the type for the data EmailAccountForm expects for its initialData prop
 type EmailAccountFormInitialData = Partial<EmailAccountFormValues> & {

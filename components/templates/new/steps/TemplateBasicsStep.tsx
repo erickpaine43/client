@@ -13,7 +13,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { useAddTemplateContext } from "@/context/AddTemplateContext";
-import { getTemplateFolders } from "@/lib/actions/templateActions";
+import { getTemplateFolders } from "@/lib/actions/templates";
 import { TemplateFolder } from "@/types";
 import { useState, useEffect } from "react";
 import { X, Plus, ArrowLeft, ArrowRight } from "lucide-react";
@@ -27,7 +27,7 @@ function TemplateBasicsStep() {
   useEffect(() => {
     const fetchFolders = async () => {
       const result = await getTemplateFolders();
-      if (result.success) {
+      if (result.success && result.data) {
         setFolders(result.data);
       }
     };
@@ -41,8 +41,7 @@ function TemplateBasicsStep() {
   // Filter folders based on selected type
   const availableFolders = folders.filter(
     (folder: TemplateFolder) =>
-      folder.type ===
-      (watchType === "quick-reply" ? "quick-reply" : "template"),
+      folder.type === (watchType === "quick-reply" ? "quick-reply" : "template")
   );
 
   const handleAddTag = () => {
@@ -55,7 +54,7 @@ function TemplateBasicsStep() {
   const handleRemoveTag = (tagToRemove: string) => {
     form.setValue(
       "tags",
-      watchTags.filter((tag) => tag !== tagToRemove),
+      watchTags.filter((tag) => tag !== tagToRemove)
     );
   };
 

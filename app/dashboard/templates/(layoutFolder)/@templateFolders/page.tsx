@@ -1,5 +1,5 @@
 import Folders from "@/components/templates/Folder-Structure/Folders";
-import { getTemplateFolders } from "@/lib/actions/templateActions";
+import { getTemplateFolders } from "@/lib/actions/templates";
 import { TemplateFolder } from "@/types";
 import { FolderIcon } from "lucide-react";
 
@@ -7,12 +7,14 @@ async function TemplateFolders() {
   const result = await getTemplateFolders();
 
   if (!result.success) {
-    return <div>Error: {result.error}</div>;
+    return <div>Error: {result.error?.message || "Unknown error"}</div>;
   }
 
-  const folders = result.data.filter(
-    (folder) => folder.type === "template",
-  ) as TemplateFolder[];
+  const folders = result.data
+    ? (result.data.filter(
+        (folder) => folder.type === "template"
+      ) as TemplateFolder[])
+    : [];
   const files = folders.flatMap((folder) => folder.children);
   if (files.length === 0 && folders.length === 0) {
     return null;

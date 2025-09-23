@@ -1,5 +1,20 @@
 "use server";
 
+/**
+ * @deprecated This file is deprecated and will be removed in a future version.
+ * Please use the new standardized analytics module at lib/actions/analytics/billing-analytics.ts instead.
+ * See lib/actions/MIGRATION_GUIDE.md for migration instructions.
+ */
+
+// Log deprecation warning
+if (typeof console !== 'undefined') {
+  console.warn(
+    '🚨 DEPRECATED: lib/actions/billing.analytics.actions.ts is deprecated. ' +
+    'Please migrate to lib/actions/analytics/billing-analytics.ts for standardized analytics patterns. ' +
+    'See lib/actions/MIGRATION_GUIDE.md for migration guide.'
+  );
+}
+
 // ============================================================================
 // BILLING ANALYTICS SERVER ACTIONS - MIGRATED TO STANDARDIZED MODULE
 // ============================================================================

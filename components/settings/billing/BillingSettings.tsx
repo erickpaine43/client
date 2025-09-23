@@ -15,7 +15,7 @@ import { showBillingUpdateSuccess } from "@/components/settings/common/SettingsS
 import { useServerAction } from "@/hooks/useServerAction";
 import {
   getBillingDataForSettings as getBillingInfo,
-} from "@/lib/actions/billingActions";
+} from "@/lib/actions/billing";
 import { Loader2 } from "lucide-react";
 import type { BillingData } from "@/types/settings";
 

@@ -22,7 +22,7 @@ import { AlertTriangle, Loader2, RefreshCw, CheckCircle } from "lucide-react";
 import {
   getSimpleNotificationPreferences,
   updateSimpleNotificationPreferences,
-} from "@/lib/actions/settingsActions";
+} from "@/lib/actions/settings";
 import type { SimpleNotificationPreferences } from "@/lib/actions/settings.types";
 
 const notificationSchema = z.object({
@@ -102,7 +102,7 @@ function NotificationsSettings() {
     try {
       const result = await getSimpleNotificationPreferences();
 
-      if (result.success) {
+      if (result.success && result.data) {
         setPreferences(result.data);
 
         // Update form with server data
@@ -117,12 +117,14 @@ function NotificationsSettings() {
         setRetryCount(0); // Reset retry count on success
       } else {
         // Handle different error types
-        if (result.code === "AUTH_REQUIRED") {
+        if (result.error?.code === "AUTH_REQUIRED") {
           setError("Please log in to view notification preferences.");
-        } else if (result.code === "NETWORK_ERROR") {
+        } else if (result.error?.code === "NETWORK_ERROR") {
           setError("Network error. Please check your connection.");
         } else {
-          setError(result.error || "Failed to load notification preferences.");
+          setError(
+            result.error?.message || "Failed to load notification preferences."
+          );
         }
       }
     } catch (err) {
@@ -157,7 +159,7 @@ function NotificationsSettings() {
       try {
         const result = await updateSimpleNotificationPreferences(data);
 
-        if (result.success) {
+        if (result.success && result.data) {
           setPreferences(result.data);
 
           // Show success message
@@ -168,11 +170,11 @@ function NotificationsSettings() {
           });
         } else {
           // Handle specific error cases
-          if (result.code === "AUTH_REQUIRED") {
+          if (result.error?.code === "AUTH_REQUIRED") {
             toast.error("Authentication required", {
               description: "Please log in to update your preferences.",
             });
-          } else if (result.code === "NETWORK_ERROR") {
+          } else if (result.error?.code === "NETWORK_ERROR") {
             toast.error("Network error", {
               description: "Please check your connection and try again.",
               action: {
@@ -180,18 +182,22 @@ function NotificationsSettings() {
                 onClick: () => onSubmit(data),
               },
             });
-          } else if (result.code === "VALIDATION_FAILED" && result.field) {
+          } else if (
+            result.error?.code === "VALIDATION_FAILED" &&
+            result.error?.field
+          ) {
             // Set field-specific error
-            form.setError(result.field as keyof NotificationFormValues, {
-              message: result.error,
+            form.setError(result.error.field as keyof NotificationFormValues, {
+              message: result.error.message,
             });
             toast.error("Invalid input", {
-              description: result.error,
+              description: result.error.message,
             });
           } else {
             toast.error("Update failed", {
               description:
-                result.error || "Failed to update notification preferences.",
+                result.error?.message ||
+                "Failed to update notification preferences.",
               action: {
                 label: "Retry",
                 onClick: () => onSubmit(data),

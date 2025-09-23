@@ -16,7 +16,12 @@ export function useMailboxes() {
   useEffect(() => {
     async function fetchMailboxes() {
       try {
-        const data = await getMailboxesAction();
+        const result = await getMailboxesAction();
+        if (!result.success) {
+          throw new Error(result.error?.message || 'Failed to fetch mailboxes');
+        }
+        
+        const data = result.data || [];
         const formatted = data.map((mb) => ({
           id: mb.id,
           name: mb.email,

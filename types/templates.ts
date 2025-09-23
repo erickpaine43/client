@@ -102,3 +102,8 @@ export type TemplateFormValues = {
 export type FolderFormValues = {
   folderName: string;
 };
+
+// Quick reply type (alias for Template with quick-reply type)
+export type QuickReply = Template & {
+  type: "quick-reply";
+};

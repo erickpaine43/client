@@ -1,9 +1,10 @@
 import { TimeSeriesDataPoint } from "@/types/analytics/core";
-import { ChartDataPoint } from "@/types/analytics/ui";
+import { ChartDataPoint, AnalyticsUIFilters } from "@/types/analytics/ui";
 import { AnalyticsCalculator, PerformanceCalculator } from "@/lib/utils/analytics-calculator";
 
 /**
  * Interface for UI filter data used in chart data preparation
+ * @deprecated Use AnalyticsUIFilters from types/analytics/ui.ts instead
  */
 interface UIFilters {
   dateRange: string;
@@ -51,8 +52,9 @@ export function prepareChartDataFromTimeSeries(
 
 /**
  * Convert UI filters to data filters for service calls.
+ * Supports both legacy UIFilters and new AnalyticsUIFilters interfaces.
  */
-export function convertUIFiltersToDataFilters(filters: UIFilters) {
+export function convertUIFiltersToDataFilters(filters: UIFilters | AnalyticsUIFilters) {
   const getDaysFromRange = (dateRange: string) => {
     switch (dateRange) {
       case "7d": return 7;

@@ -53,7 +53,7 @@ import { copyText as t } from "../data/copy";
 import { CampaignResponse, CampaignStatus } from "@/types/campaign";
 import { toast } from "sonner";
 import { useSearchParams, useRouter } from "next/navigation";
-import { deleteCampaign, pauseCampaign, resumeCampaign, duplicateCampaign } from "@/lib/actions/dashboardActions";
+import { deleteCampaign, pauseCampaign, resumeCampaign, duplicateCampaign } from "@/lib/actions/dashboard";
 
 function formatRelativeTime(date: Date): string {
   const now = new Date();

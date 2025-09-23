@@ -27,7 +27,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Shield } from "lucide-react";
 import Link from "next/link";
 import { Textarea } from "@/components/ui/textarea";
-import { getDomainSettings } from "@/lib/actions/domainsActions";
+import { getDomainSettings } from "@/lib/actions/domains";
 import { notFound } from "next/navigation";
 
 export default async function DomainSettingsPage({

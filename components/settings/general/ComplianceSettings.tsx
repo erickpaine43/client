@@ -37,7 +37,7 @@ import { useServerAction } from "@/hooks/useServerAction";
 import {
   getComplianceSettings,
   updateComplianceSettings,
-} from "@/lib/actions/settingsActions";
+} from "@/lib/actions/settings";
 import { Loader2 } from "lucide-react";
 
 const complianceFormSchema = z.object({
@@ -97,7 +97,7 @@ export function ComplianceSettings({
     if (!initialData) {
       complianceAction.execute();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData]);
 
   // Update form when data is loaded
@@ -117,12 +117,15 @@ export function ComplianceSettings({
         showSaveSuccess("Compliance settings have been updated successfully.");
       } else {
         // Handle validation errors
-        if (result.field) {
-          form.setError(result.field as keyof ComplianceFormValues, {
-            message: result.error,
+        if (result.error?.field) {
+          form.setError(result.error.field as keyof ComplianceFormValues, {
+            message: result.error.message,
           });
         } else {
-          console.error("Failed to save compliance settings:", result.error);
+          console.error(
+            "Failed to save compliance settings:",
+            result.error?.message || "Unknown error"
+          );
         }
       }
     } catch (error) {
@@ -141,7 +144,7 @@ export function ComplianceSettings({
   if (complianceAction.error && !initialData) {
     return (
       <SettingsErrorState
-        error={complianceAction.error}
+        error={complianceAction.error?.message || "An error occurred"}
         errorType="network"
         onRetry={() => complianceAction.execute()}
         retryLoading={complianceAction.loading}

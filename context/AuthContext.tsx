@@ -4,10 +4,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { User, AuthContextType, UserRole } from "@/types";
 import { useSignIn, useSignUp } from "@niledatabase/react";
 import { auth } from "@niledatabase/client";
-import {
-  getUserProfile,
-  ProfileActionResponse,
-} from "@/lib/actions/profileActions";
+import { getUserProfile } from "@/lib/actions/profile";
+import { ActionResult } from "@/lib/actions/core/types";
 import { NileUser, mapNileUserToFormData } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -50,7 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (typedSession?.user) {
               console.log(
                 "[AuthContext] Session retrieved after login:",
-                typedSession?.user?.id,
+                typedSession?.user?.id
               );
               // Set basic user data from session first (fast)
               const basicUser = mapSessionToUser(typedSession);
@@ -59,7 +57,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
               // Fetch full user profile in background without blocking UI
               try {
-                const profileResponse: ProfileActionResponse<NileUser> =
+                const profileResponse: ActionResult<NileUser> =
                   await getUserProfile();
                 if (profileResponse.success && profileResponse.data) {
                   const fullUser = mapNileUserToUser(profileResponse.data);
@@ -67,7 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 } else if (profileResponse.error) {
                   console.warn(
                     "Failed to fetch full profile after login:",
-                    profileResponse.error.message,
+                    profileResponse.error.message
                   );
                 }
               } catch (profileError) {
@@ -80,8 +78,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }
         };
         getUserFromSession();
-      }
-      else {
+      } else {
         toast.error("Login failed.");
         setAuthError(new Error("Login failed."));
         setUser(null);
@@ -189,7 +186,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     password: string,
     _firstName?: string,
     _lastName?: string,
-    _companyName?: string,
+    _companyName?: string
   ): Promise<void> => {
     setAuthError(null);
     try {
@@ -227,8 +224,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const refreshUserData = async () => {
     try {
-      const profileResponse: ProfileActionResponse<NileUser> =
-        await getUserProfile();
+      const profileResponse: ActionResult<NileUser> = await getUserProfile();
       if (profileResponse.success && profileResponse.data) {
         const fullUser = mapNileUserToUser(profileResponse.data);
         setUser(fullUser);
@@ -236,7 +232,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } else if (profileResponse.error) {
         console.warn(
           "Failed to refresh user profile:",
-          profileResponse.error.message,
+          profileResponse.error.message
         );
         throw new Error(profileResponse.error.message);
       }
@@ -259,7 +255,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
           // Fetch full user profile in background without blocking UI
           try {
-            const profileResponse: ProfileActionResponse<NileUser> =
+            const profileResponse: ActionResult<NileUser> =
               await getUserProfile();
             if (profileResponse.success && profileResponse.data) {
               const fullUser = mapNileUserToUser(profileResponse.data);
@@ -268,14 +264,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             } else if (profileResponse.error) {
               console.warn(
                 "Failed to fetch full profile:",
-                profileResponse.error.message,
+                profileResponse.error.message
               );
               // Keep basic user data, don't show error to user as they can proceed
             }
           } catch (profileError) {
             console.warn(
               "Profile fetch error (continuing with basic data):",
-              profileError,
+              profileError
             );
             // Keep basic user data, don't affect loading state
           }

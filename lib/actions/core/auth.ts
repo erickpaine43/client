@@ -40,9 +40,24 @@ export async function getCurrentCompanyId(): Promise<string | null> {
 
     // Fallback to environment variable for default company
     // In production, this should be derived from the tenant context
-    return process.env.COMPANY_ID || process.env.DEFAULT_TENANT_ID || null;
+    // In development, use a default if no company context available
+    const defaultCompanyId = process.env.COMPANY_ID || process.env.DEFAULT_TENANT_ID;
+    if (defaultCompanyId) {
+      return defaultCompanyId;
+    }
+
+    // For development/demo purposes, return a default company ID
+    if (process.env.NODE_ENV === 'development') {
+      return 'dev-company-001';
+    }
+
+    return null;
   } catch (error) {
     console.error('Failed to get company ID:', error);
+    // For development, still return default
+    if (process.env.NODE_ENV === 'development') {
+      return 'dev-company-001';
+    }
     return null;
   }
 }

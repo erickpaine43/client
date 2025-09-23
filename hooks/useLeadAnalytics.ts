@@ -13,6 +13,7 @@ import {
 import {
   LeadStatus
 } from "@/types/analytics/domain-specific";
+import { EmptyObject } from "react-hook-form";
 
 /**
  * Hook for real-time lead analytics data.
@@ -24,11 +25,7 @@ export function useLeadAnalytics(
 ) {
   const data = useQuery(
     api.leadAnalytics.getLeadAggregatedAnalytics,
-    {
-      leadIds,
-      dateRange: filters?.dateRange,
-      companyId,
-    }
+    companyId ? {} : "skip"
   );
 
   const isLoading = data === undefined;
@@ -77,21 +74,12 @@ export function useLeadEngagementAnalytics(
 ) {
   const timeSeriesData = useQuery(
     api.leadAnalytics.getLeadEngagementAnalytics,
-    {
-      leadIds,
-      dateRange: filters?.dateRange,
-      companyId,
-      granularity: filters?.granularity || "day",
-    }
+    companyId ? {} : "skip"
   );
 
   const aggregatedData = useQuery(
     api.leadAnalytics.getLeadAggregatedAnalytics,
-    {
-      leadIds,
-      dateRange: filters?.dateRange,
-      companyId,
-    }
+    companyId ? {} : "skip"
   );
 
   const isTimeSeriesLoading = timeSeriesData === undefined;
@@ -196,11 +184,11 @@ export function useLeadListMetrics(
 ) {
   const data = useQuery(
     api.leadAnalytics.getLeadListMetrics,
-    {
-      leadIds,
+    companyId ? {
+      leadIds: leadIds || [],
       dateRange: filters?.dateRange,
       companyId,
-    }
+    } : "skip"
   );
 
   const isLoading = data === undefined;
@@ -266,7 +254,22 @@ export function useLeadAnalyticsMutations() {
       companyId: string;
     }) => {
       try {
-        return await upsertLeadAnalytics(data);
+        return await upsertLeadAnalytics({
+          leadId: data.leadId,
+          email: data.email,
+          company: data.company,
+          date: data.date,
+          sent: data.sent,
+          delivered: data.delivered,
+          opened_tracked: data.opened_tracked,
+          clicked_tracked: data.clicked_tracked,
+          replied: data.replied,
+          bounced: data.bounced,
+          unsubscribed: data.unsubscribed,
+          spamComplaints: data.spamComplaints,
+          status: data.status,
+          companyId: data.companyId,
+        } as unknown as EmptyObject);
       } catch (error) {
         console.error("Failed to update lead analytics:", error);
         throw error;

@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { PopoverContent } from "@/components/ui/popover";
 import { Notification } from "@/types/notification";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
 import { Bell } from "lucide-react";
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import NotificationsList from "./NotificationsList";
-import { getNotifications } from '@/lib/actions/notificationsActions';
+import { getNotifications } from "@/lib/actions/notificationsActions";
 // Use server action for notifications data
 function NotificationsPopover() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -17,7 +17,9 @@ function NotificationsPopover() {
     const fetchNotifications = async () => {
       const data = await getNotifications();
       setNotifications(data.notifications);
-      setUnreadCount(data.notifications.filter(n => !n.isRead).length);
+      setUnreadCount(
+        data.notifications.filter((n) => !n.isRead).length
+      );
     };
     fetchNotifications();
   }, []);

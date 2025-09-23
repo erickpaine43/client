@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useCampaignAnalytics } from "@/hooks/useCampaignAnalytics";
 
@@ -16,6 +16,8 @@ import {
 } from "@/components/analytics/components/SkeletonLoaders";
 import RecentReplySkeleton from "@/components/inbox/RecentReply/RecentReplySkeleton";
 import WarmupSummarySkeleton from "@/components/dashboard/summaries/WarmupSummarySkeleton";
+import type { RecentReply } from "@/types/campaign";
+import type { WarmupSummaryData } from "@/types/campaign";
 
 // Import server actions (keeping existing ones for non-analytics data)
 import {
@@ -104,15 +106,41 @@ export default function MigratedDashboardContent() {
 /**
  * Wrapper component for Recent Replies to handle async data fetching
  */
-async function RecentRepliesWrapper() {
-  const recentReplies = await getRecentReplies();
+function RecentRepliesWrapper() {
+  const [recentReplies, setRecentReplies] = useState<RecentReply[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getRecentReplies().then((data) => {
+      setRecentReplies(data);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) {
+    return <RecentReplySkeleton />;
+  }
+
   return <RecentRepliesList recentReplies={recentReplies} />;
 }
 
 /**
  * Wrapper component for Warmup Summary to handle async data fetching
  */
-async function WarmupSummaryWrapper() {
-  const warmupSummaryData = await getWarmupSummaryData();
-  return <WarmupSummary data={warmupSummaryData} />;
+function WarmupSummaryWrapper() {
+  const [warmupData, setWarmupData] = useState<WarmupSummaryData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getWarmupSummaryData().then((data) => {
+      setWarmupData(data);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading || !warmupData) {
+    return <WarmupSummarySkeleton />;
+  }
+
+  return <WarmupSummary data={warmupData} />;
 }

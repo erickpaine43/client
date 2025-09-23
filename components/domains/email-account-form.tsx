@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   VerificationStatus,
   RelayType,
@@ -40,6 +41,18 @@ import { EmailProvider } from "./components/constants";
 import { WarmupStatus } from "@/types/mailbox";
 import { useAnalytics } from "@/context/AnalyticsContext";
 
+// Type for account metrics returned by getAccountMetrics
+type AccountMetrics = {
+  bounceRate: number;
+  spamComplaints: number;
+  openRate: number;
+  replyRate: number;
+  maxBounceRateThreshold: number;
+  maxSpamComplaintRateThreshold: number;
+  minOpenRateThreshold: number;
+  minReplyRateThreshold: number;
+};
+
 export default function EmailAccountForm({
   initialData,
   onSubmit,
@@ -48,7 +61,52 @@ export default function EmailAccountForm({
 }: EmailAccountFormProps) {
   const copy = emailAccountCopy.form;
   const { getAccountMetrics } = useAnalytics();
-  const accountMetrics = getAccountMetrics();
+  const [accountMetrics, setAccountMetrics] = useState<{
+    bounceRate: number;
+    spamComplaints: number;
+    openRate: number;
+    replyRate: number;
+    maxBounceRateThreshold: number;
+    maxSpamComplaintRateThreshold: number;
+    minOpenRateThreshold: number;
+    minReplyRateThreshold: number;
+  }>({
+    bounceRate: 0,
+    spamComplaints: 0,
+    openRate: 0,
+    replyRate: 0,
+    maxBounceRateThreshold: 0.05,
+    maxSpamComplaintRateThreshold: 0.001,
+    minOpenRateThreshold: 0.2,
+    minReplyRateThreshold: 0.05,
+  });
+
+  useEffect(() => {
+    const loadAccountMetrics = async () => {
+      try {
+        const metrics = await getAccountMetrics();
+        if (metrics && typeof metrics === "object") {
+          // Cast to Record<string, unknown> to access properties safely
+          const metricsObj = metrics as Record<string, unknown>;
+          // Validate that metrics has the expected shape
+          const validatedMetrics: AccountMetrics = {
+            bounceRate: typeof metricsObj.bounceRate === "number" ? metricsObj.bounceRate : 0,
+            spamComplaints: typeof metricsObj.spamComplaints === "number" ? metricsObj.spamComplaints : 0,
+            openRate: typeof metricsObj.openRate === "number" ? metricsObj.openRate : 0,
+            replyRate: typeof metricsObj.replyRate === "number" ? metricsObj.replyRate : 0,
+            maxBounceRateThreshold: typeof metricsObj.maxBounceRateThreshold === "number" ? metricsObj.maxBounceRateThreshold : 0.05,
+            maxSpamComplaintRateThreshold: typeof metricsObj.maxSpamComplaintRateThreshold === "number" ? metricsObj.maxSpamComplaintRateThreshold : 0.001,
+            minOpenRateThreshold: typeof metricsObj.minOpenRateThreshold === "number" ? metricsObj.minOpenRateThreshold : 0.2,
+            minReplyRateThreshold: typeof metricsObj.minReplyRateThreshold === "number" ? metricsObj.minReplyRateThreshold : 0.05,
+          };
+          setAccountMetrics(validatedMetrics);
+        }
+      } catch (error) {
+        console.error("Failed to load account metrics:", error);
+      }
+    };
+    loadAccountMetrics();
+  }, [getAccountMetrics]);
 
   const form = useForm<EmailAccountFormValues>({
     // resolver: zodResolver(emailAccountFormSchema),

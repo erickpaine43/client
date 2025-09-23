@@ -1,6 +1,6 @@
 import { RecentReply } from "@/types/campaign";
 
-const RecentRepliesList = async ({ recentReplies }: { recentReplies: RecentReply[] }) => {
+const RecentRepliesList = ({ recentReplies }: { recentReplies: RecentReply[] }) => {
   if (!recentReplies || recentReplies.length === 0) {
     return <div className="p-6 text-gray-500">No recent replies found.</div>;
   }

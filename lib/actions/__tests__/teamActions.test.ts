@@ -9,7 +9,7 @@ import {
   addTeamMember, 
   updateTeamMember, 
   removeTeamMember 
-} from '../teamActions';
+} from '../team';
 
 // Mock types
 type MockTeamMember = Omit<TeamMember, 'lastActiveAt'> & {

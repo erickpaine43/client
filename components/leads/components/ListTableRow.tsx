@@ -10,6 +10,12 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "../../ui/button";
+
+// Type for performance metrics
+type PerformanceMetrics = {
+  openRate: number;
+  replyRate: number;
+};
 const getStatusColor = (status: string) => {
   switch (status) {
     case "used":
@@ -85,7 +91,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
       <TableCell>
         <span
           className={`inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
-            list.status,
+            list.status
           )}`}
         >
           {getStatusIcon(list.status)}
@@ -106,13 +112,25 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
           <div className="space-y-1">
             <div className="flex items-center space-x-2">
               <span className="text-sm font-medium text-blue-600">
-                {list.performance.openRate}%
+                {("performance" in list &&
+                list.performance &&
+                typeof list.performance === "object" &&
+                "openRate" in list.performance
+                  ? (list.performance as PerformanceMetrics).openRate
+                  : 0) || 0}
+                %
               </span>
               <span className="text-xs text-gray-500">open</span>
             </div>
             <div className="flex items-center space-x-2">
               <span className="text-sm font-medium text-green-600">
-                {list.performance.replyRate}%
+                {("performance" in list &&
+                list.performance &&
+                typeof list.performance === "object" &&
+                "replyRate" in list.performance
+                  ? (list.performance as PerformanceMetrics).replyRate
+                  : 0) || 0}
+                %
               </span>
               <span className="text-xs text-gray-500">reply</span>
             </div>

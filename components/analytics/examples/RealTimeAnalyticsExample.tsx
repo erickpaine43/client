@@ -29,7 +29,7 @@ import {
 } from "@/hooks/useCampaignAnalytics";
 
 // Imporonents
-import { RealTimeCampaignDashboard } from "../components/RealTimeCampaignDashboard";
+// import { RealTimeCampaignDashboard } from "../components/RealTimeCampaignDashboard";
 import {
   ProgressiveAnalyticsLoader,
   RealTimeUpdateSkeleton,
@@ -61,8 +61,12 @@ export function RealTimeAnalyticsExample({
   const { data: performanceData, isLoading: performanceLoading } =
     useCampaignPerformanceMetrics(campaignIds, undefined, companyId);
 
-  const { isLoading: timeSeriesLoading } =
-    useCampaignTimeSeriesData(campaignIds, undefined, "day", companyId);
+  const { isLoading: timeSeriesLoading } = useCampaignTimeSeriesData(
+    campaignIds,
+    undefined,
+    "day",
+    companyId
+  );
 
   const { data: overviewData, isLoading: overviewLoading } =
     useCampaignAnalyticsOverview(undefined, companyId);
@@ -341,10 +345,11 @@ export function RealTimeAnalyticsExample({
         </TabsList>
 
         <TabsContent value="dashboard">
-          <RealTimeCampaignDashboard
-            campaignIds={campaignIds}
-            companyId={companyId}
-          />
+          <div className="p-4 border rounded-lg">
+            <p className="text-muted-foreground">
+              RealTimeCampaignDashboard component is not available yet.
+            </p>
+          </div>
         </TabsContent>
 
         <TabsContent value="hooks" className="space-y-4">

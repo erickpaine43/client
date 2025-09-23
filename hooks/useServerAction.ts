@@ -1,6 +1,8 @@
 import { useState, useCallback } from "react";
 import { ActionResult, ActionError } from "@/lib/actions/core/types";
 
+export type { ActionResult, ActionError };
+
 export interface ServerActionState<T> {
   data: T | null;
   loading: boolean;

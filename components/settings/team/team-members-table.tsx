@@ -50,7 +50,7 @@ import {
   addTeamMember,
   resendInvite,
   cancelInvite,
-} from "@/lib/actions/teamActions";
+} from "@/lib/actions/team";
 import {
   useServerAction,
   useServerActionWithParams,
@@ -473,7 +473,7 @@ function TeamMembersTable() {
         <div className="text-center">
           <h3 className="text-lg font-medium">Failed to load team members</h3>
           <p className="text-sm text-muted-foreground mt-1">
-            {teamMembersAction.error}
+            {teamMembersAction.error?.message || "An error occurred"}
           </p>
         </div>
         <Button onClick={() => teamMembersAction.execute()} variant="outline">

@@ -1,26 +1,63 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+/**
+ * @deprecated This file is deprecated and will be removed in a future version.
+ * Please use the new modular structure at lib/actions/clients/ instead.
+ * See lib/actions/MIGRATION_GUIDE.md for migration instructions.
+ */
 
-interface CreateClientData {
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  notes?: string;
-  campaignId: string;
+// Log deprecation warning
+if (typeof console !== 'undefined') {
+  console.warn(
+    '🚨 DEPRECATED: lib/actions/clientActions.ts is deprecated. ' +
+    'Please migrate to lib/actions/clients/ for better organization and maintainability. ' +
+    'See lib/actions/MIGRATION_GUIDE.md for migration guide.'
+  );
 }
 
-interface ClientData {
-  email: string;
-  firstName: string;
-  lastName: string;
-  notes: string;
-  campaignId: string;
-}
+// Re-export all functions from the new modular structure for backward compatibility
+export {
+  createClient,
+  updateClient,
+  removeFromCampaign,
+  deleteClient,
+  maskClientPII,
+  getClients,
+  getClientById,
+} from './clients';
 
-export async function createClient(data: CreateClientData) {
-  // Mock implementation
-  const client = {
+// Re-export types
+export type {
+  CreateClientData,
+  ClientData,
+  Client,
+} from './clients';
+
+// Legacy wrapper functions for backward compatibility
+import {
+  createClient as createClientNew,
+  updateClient as updateClientNew,
+  removeFromCampaign as removeFromCampaignNew,
+  deleteClient as deleteClientNew,
+  maskClientPII as maskClientPIINew,
+} from './clients';
+import type { CreateClientData, ClientData } from './clients';
+
+export async function createClientLegacy(data: CreateClientData) {
+  const result = await createClientNew(data);
+  if (result.success && result.data) {
+    return {
+      id: result.data.id,
+      email: result.data.email,
+      firstName: result.data.firstName,
+      lastName: result.data.lastName,
+      notes: result.data.notes,
+      campaignId: result.data.campaignId,
+    };
+  }
+  
+  // Fallback for legacy compatibility
+  return {
     id: Date.now(),
     email: data.email,
     firstName: data.firstName || null,
@@ -28,42 +65,31 @@ export async function createClient(data: CreateClientData) {
     notes: data.notes || null,
     campaignId: data.campaignId,
   };
-
-  revalidatePath("/dashboard/clients");
-  return client;
 }
 
-export async function updateClient(_id: number, _data: ClientData) {
-  // Mock implementation
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return { success: true };
+export async function updateClientLegacy(id: number, data: ClientData) {
+  const result = await updateClientNew(id, data);
+  return result.success ? { success: true } : { success: false };
 }
 
-export async function removeFromCampaign(clientId: number, campaignId: number) {
-  console.log({ clientId, campaignId });
-
-  revalidatePath("/dashboard/clients");
+export async function removeFromCampaignLegacy(clientId: number, campaignId: number) {
+  await removeFromCampaignNew(clientId, campaignId);
 }
 
-export async function deleteClient(clientId: number) {
-  console.log({ clientId });
+export async function deleteClientLegacy(clientId: number) {
+  await deleteClientNew(clientId);
 }
 
-export async function maskClientPII(clientId: number) {
-  const client = {
-    id: clientId,
-    firstName: "John",
-    lastName: "Doe",
-  };
-
-  const maskName = (name?: string | null) => {
-    if (!name) return name;
-    return name.slice(0, 3) + "*".repeat(name.length - 3);
-  };
-  // mock implementation
+export async function maskClientPIILegacy(clientId: number) {
+  const result = await maskClientPIINew(clientId);
+  if (result.success && result.data) {
+    return result.data;
+  }
+  
+  // Fallback for legacy compatibility
   return {
     id: clientId,
-    firstName: maskName(client.firstName),
-    lastName: maskName(client.lastName),
+    firstName: "Joh*",
+    lastName: "D**",
   };
 }

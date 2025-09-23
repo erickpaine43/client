@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { getTemplateById, updateTemplate } from "@/lib/actions/templateActions";
+import { getTemplateById, updateTemplate } from "@/lib/actions/templates";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";

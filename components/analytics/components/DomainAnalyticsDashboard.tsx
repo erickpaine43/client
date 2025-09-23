@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { useDomainHealthMonitoring } from "../hooks/useDomainAnalytics";
 import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
 import { DomainHealthDashboardSkeleton } from "./DomainAnalyticsSkeleton";
+import { DomainAnalytics } from "@/types/analytics/domain-specific";
+import { PerformanceMetrics } from "@/types/analytics/core";
 import {
   CheckCircle,
   XCircle,
@@ -12,6 +14,32 @@ import {
   Activity,
   TrendingUp,
 } from "lucide-react";
+
+// Extended domain data type to handle legacy data structures
+type DomainData = DomainAnalytics & {
+  metrics?: PerformanceMetrics;
+  formattedMetrics?: {
+    sent?: string;
+    delivered?: string;
+  };
+  healthScore?: number;
+};
+
+// Type for authentication status data
+type AuthStatusData = {
+  domainId: string;
+  domainName: string;
+  spf: boolean;
+  dkim: boolean;
+  dmarc: boolean;
+  allAuthenticated: boolean;
+  overallStatus?: string;
+  authentication?: {
+    spf: boolean;
+    dkim: boolean;
+    dmarc: boolean;
+  };
+};
 
 /**
  * Real-time domain analytics dashboard component.
@@ -108,7 +136,12 @@ export function DomainAnalyticsDashboard({
                 <div>
                   <p className="text-sm font-medium">Avg Health Score</p>
                   <p className="text-2xl font-bold">
-                    {summary.averageHealthScore}
+                    {summary &&
+                    typeof summary === "object" &&
+                    "averageHealthScore" in summary &&
+                    typeof summary.averageHealthScore === "number"
+                      ? summary.averageHealthScore
+                      : 0}
                   </p>
                   <p className="text-xs text-muted-foreground">Out of 100</p>
                 </div>
@@ -120,12 +153,15 @@ export function DomainAnalyticsDashboard({
 
       {/* Domain Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {domains.map((domain) => {
+        {domains.map((domain: DomainData) => {
           // Migration note: consumer-side normalization. Accept either legacy
           // precomputed fields or core PerformanceMetrics on `domain.metrics`.
           // Compute healthScore and formatted rates/numbers defensively here
           // using AnalyticsCalculator to avoid relying on provider-side shape.
-          const metrics = (domain as any).metrics ?? null;
+          const metrics =
+            domain.aggregatedMetrics ||
+            domain.metrics ||
+            null;
 
           const safeMetrics = metrics
             ? {
@@ -142,7 +178,7 @@ export function DomainAnalyticsDashboard({
 
           const computedHealthScore = safeMetrics
             ? AnalyticsCalculator.calculateHealthScore(safeMetrics)
-            : Number((domain as any).healthScore ?? 0);
+            : Number(domain.healthScore ?? 0);
 
           const rates = safeMetrics
             ? AnalyticsCalculator.calculateAllRates(safeMetrics)
@@ -174,10 +210,10 @@ export function DomainAnalyticsDashboard({
           const formattedMetrics = {
             sent: safeMetrics
               ? AnalyticsCalculator.formatNumber(safeMetrics.sent)
-              : ((domain as any).formattedMetrics?.sent ?? "0"),
+              : (domain.formattedMetrics?.sent ?? "0"),
             delivered: safeMetrics
               ? AnalyticsCalculator.formatNumber(safeMetrics.delivered)
-              : ((domain as any).formattedMetrics?.delivered ?? "0"),
+              : (domain.formattedMetrics?.delivered ?? "0"),
           };
 
           return (
@@ -344,7 +380,7 @@ export function DomainAuthenticationStatus({
 
   return (
     <div className="space-y-3">
-      {authenticationStatus.map((domain) => (
+      {authenticationStatus.map((domain: AuthStatusData) => (
         <Card key={domain.domainId}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
@@ -352,16 +388,20 @@ export function DomainAuthenticationStatus({
                 <h4 className="font-medium">{domain.domainName}</h4>
                 <p className="text-sm text-muted-foreground">
                   Status:{" "}
-                  {domain.overallStatus.replace(/_/g, " ").toLowerCase()}
+                  {(domain.overallStatus || "unknown")
+                    .replace(/_/g, " ")
+                    .toLowerCase()}
                 </p>
               </div>
               <div className="flex space-x-2">
                 <Badge
                   variant={
-                    domain.authentication.spf.verified ? "default" : "outline"
+                    (domain.authentication?.spf ?? domain.spf)
+                      ? "default"
+                      : "outline"
                   }
                 >
-                  {domain.authentication.spf.verified ? (
+                  {(domain.authentication?.spf ?? domain.spf) ? (
                     <CheckCircle className="h-3 w-3 mr-1" />
                   ) : (
                     <XCircle className="h-3 w-3 mr-1" />
@@ -370,10 +410,12 @@ export function DomainAuthenticationStatus({
                 </Badge>
                 <Badge
                   variant={
-                    domain.authentication.dkim.verified ? "default" : "outline"
+                    (domain.authentication?.dkim ?? domain.dkim)
+                      ? "default"
+                      : "outline"
                   }
                 >
-                  {domain.authentication.dkim.verified ? (
+                  {(domain.authentication?.dkim ?? domain.dkim) ? (
                     <CheckCircle className="h-3 w-3 mr-1" />
                   ) : (
                     <XCircle className="h-3 w-3 mr-1" />
@@ -382,10 +424,12 @@ export function DomainAuthenticationStatus({
                 </Badge>
                 <Badge
                   variant={
-                    domain.authentication.dmarc.verified ? "default" : "outline"
+                    (domain.authentication?.dmarc ?? domain.dmarc)
+                      ? "default"
+                      : "outline"
                   }
                 >
-                  {domain.authentication.dmarc.verified ? (
+                  {(domain.authentication?.dmarc ?? domain.dmarc) ? (
                     <CheckCircle className="h-3 w-3 mr-1" />
                   ) : (
                     <XCircle className="h-3 w-3 mr-1" />

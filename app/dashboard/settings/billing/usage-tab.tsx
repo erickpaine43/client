@@ -15,7 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   getUsageWithCalculations,
   getStorageOptions,
-} from "@/lib/actions/billingActions";
+} from "@/lib/actions/billing";
 import { cn } from "@/lib/utils";
 import { Globe, HardDrive, Mail, Plus, Server, Users } from "lucide-react";
 import { useEffect, useState } from "react";

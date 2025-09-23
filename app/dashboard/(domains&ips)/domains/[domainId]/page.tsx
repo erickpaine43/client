@@ -9,7 +9,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { EmailsTable } from "@/components/domains/components/emails-table";
-import { getDomainById, getTopAccountsForDomain } from "@/lib/actions/domainsActions";
+import { getDomainById, getTopAccountsForDomain } from "@/lib/actions/domains";
 import WeeklyMetricsClient from "./weekly-metrics-client";
 import {
   ArrowLeft,

@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getLeadsLists } from "@/lib/actions/leadsActions";
+import { getLeadsLists } from "@/lib/actions/leads";
 import { LeadListData } from "@/types/clients-leads";
 import { ArrowUpDown } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -30,7 +30,13 @@ function ListsTab() {
   const [sortById, setSortById] = useState<string | null>(null);
 
   useEffect(() => {
-    getLeadsLists().then((data) => setFilteredLists(data as LeadListData[]));
+    getLeadsLists().then((result) => {
+      if (result.success && result.data) {
+        setFilteredLists(result.data as unknown as LeadListData[]);
+      } else {
+        setFilteredLists([]);
+      }
+    });
   }, []);
 
   function handleSortBy(columnId: string) {

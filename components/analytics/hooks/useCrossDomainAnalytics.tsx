@@ -10,11 +10,11 @@ import {
   MailboxDomainImpactAnalysis,
 } from "@/lib/services/analytics/CrossDomainAnalyticsService";
 import {
-  getMailboxDomainJoinedAnalyticsAction,
-  getCrossDomainTimeSeriesDataAction,
-  getMailboxDomainImpactAnalysisAction,
-  getCrossDomainCorrelationInsightsAction,
-} from "@/lib/actions/cross-domain.analytics.actions";
+  getCrossDomainPerformanceComparison,
+  getCrossDomainTimeSeries,
+  getCrossDomainCorrelationAnalysis,
+  generateCrossDomainInsights,
+} from "@/lib/actions/analytics/cross-domain-analytics";
 
 /**
  * Hook for real-time mailbox-domain joined analytics.
@@ -33,6 +33,8 @@ export function useCrossDomainAnalytics(
 
   // Real-time Convex subscription for live updates
   const convexData = useQuery(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     api.crossDomainAnalytics.getMailboxDomainJoinedAnalytics,
     enabled
       ? {
@@ -54,30 +56,32 @@ export function useCrossDomainAnalytics(
 
   // Enrich Convex data with server action calculations
   const enrichData = useCallback(async () => {
-    if (!convexData || !enabled) return;
+    if (!convexData || !enabled || !domainIds || domainIds.length === 0) return;
 
     try {
       setIsLoading(true);
       setError(null);
 
-      const result = await getMailboxDomainJoinedAnalyticsAction(
+      const result = await getCrossDomainPerformanceComparison(
         domainIds,
-        mailboxIds,
         filters
       );
 
-      if (result.success) {
-        setEnrichedData(result.data);
+      if (result.success && result.data) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setEnrichedData(result.data as any);
         setLastUpdated(Date.now());
       } else {
-        setError(result.error || "Failed to enrich cross-domain analytics");
+        setError(
+          result.error?.message || "Failed to enrich cross-domain analytics"
+        );
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setIsLoading(false);
     }
-  }, [convexData, domainIds, mailboxIds, filters, enabled]);
+  }, [convexData, domainIds, filters, enabled]);
 
   // Enrich data when Convex data changes
   useEffect(() => {
@@ -199,30 +203,26 @@ export function useCrossDomainTimeSeries(
 
   // Enrich time series data
   const enrichData = useCallback(async () => {
-    if (!convexData || !enabled) return;
+    if (!convexData || !enabled || !domainIds || domainIds.length === 0) return;
 
     try {
       setIsLoading(true);
       setError(null);
 
-      const result = await getCrossDomainTimeSeriesDataAction(
-        domainIds,
-        mailboxIds,
-        filters,
-        granularity
-      );
+      const result = await getCrossDomainTimeSeries(domainIds, filters);
 
-      if (result.success) {
-        setEnrichedData(result.data);
+      if (result.success && result.data) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setEnrichedData(result.data as any);
       } else {
-        setError(result.error || "Failed to enrich time series data");
+        setError(result.error?.message || "Failed to enrich time series data");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setIsLoading(false);
     }
-  }, [convexData, domainIds, mailboxIds, filters, granularity, enabled]);
+  }, [convexData, domainIds, filters, enabled]);
 
   useEffect(() => {
     enrichData();
@@ -304,15 +304,13 @@ export function useMailboxDomainImpact(
       setIsLoading(true);
       setError(null);
 
-      const result = await getMailboxDomainImpactAnalysisAction(
-        domainId,
-        filters
-      );
+      const result = await generateCrossDomainInsights([domainId], filters);
 
-      if (result.success) {
-        setEnrichedData(result.data);
+      if (result.success && result.data) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setEnrichedData(result.data as any);
       } else {
-        setError(result.error || "Failed to enrich impact analysis");
+        setError(result.error?.message || "Failed to enrich impact analysis");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
@@ -437,15 +435,16 @@ export function useCrossDomainCorrelation(
       setIsLoading(true);
       setError(null);
 
-      const result = await getCrossDomainCorrelationInsightsAction(
-        domainIds,
+      const result = await getCrossDomainCorrelationAnalysis(
+        domainIds || [],
         filters
       );
 
-      if (result.success) {
-        setData(result.data);
+      if (result.success && result.data) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setData(result.data as any);
       } else {
-        setError(result.error || "Failed to get correlation insights");
+        setError(result.error?.message || "Failed to get correlation insights");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");

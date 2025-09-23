@@ -1,5 +1,5 @@
 "use client";
-import { getDomainsData } from "@/lib/actions/domainsActions";
+import { getDomainsData } from "@/lib/actions/domains";
 import { cn } from "@/lib/utils";
 import { CheckCircle, Clock, Globe, Mail } from "lucide-react";
 import { useAnalytics } from "@/context/AnalyticsContext";

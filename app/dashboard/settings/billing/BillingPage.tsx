@@ -4,7 +4,7 @@ import Link from "next/link";
 import { config } from "@/lib/config";
 import {
   getBillingDataForSettings,
-} from "@/lib/actions/billingActions";
+} from "@/lib/actions/billing";
 import { useServerAction } from "@/hooks/useServerAction";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";

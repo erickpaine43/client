@@ -113,6 +113,11 @@ export class CampaignAnalyticsService extends BaseAnalyticsService {
     const startTime = Date.now();
 
     try {
+      // If no campaign IDs provided, return empty array
+      if (!campaignIds || campaignIds.length === 0) {
+        return [];
+      }
+
       // Validate campaign IDs
       validateCampaignIds(campaignIds);
 

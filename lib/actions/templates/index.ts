@@ -1,11 +1,14 @@
 /**
  * Templates module - Main entry point
- * 
+ *
  * This module provides the main template management functions including
  * getting templates, creating, updating, and deleting templates.
  */
 
 "use server";
+import 'server-only';
+
+
 
 import { Template, TemplateCategoryType } from "@/types/templates";
 import { ActionResult } from "@/lib/actions/core/types";
@@ -58,6 +61,7 @@ function mapMockToTemplate(mockTemplate: typeof initialTemplatesMock[0]): Templa
  * Get templates for the authenticated user
  */
 export async function getTemplates(): Promise<ActionResult<Template[]>> {
+  
   return withAuth(async (_context) => {
     return withContextualRateLimit(
       'get-templates',
@@ -143,6 +147,7 @@ export async function getTemplates(): Promise<ActionResult<Template[]>> {
  * Get a specific template by ID for the authenticated user
  */
 export async function getTemplateById(id: string): Promise<ActionResult<Template | null>> {
+  
   return withAuth(async (_context) => {
     return withContextualRateLimit(
       'get-template-by-id',
@@ -243,10 +248,18 @@ export async function getTemplateById(id: string): Promise<ActionResult<Template
   });
 }
 
+// Re-export template functions
+import { getTemplateFolders } from './folders';
+import { getQuickReplies, getQuickReplyById } from './quick-replies';
+
+export { getTemplateFolders };
+export { getQuickReplies, getQuickReplyById };
+
 /**
  * Update a specific template by ID for the authenticated user
  */
 export async function updateTemplate(formData: FormData): Promise<void> {
+  
   const authResult = await withAuthAndCompany(async (_context) => {
     return withContextualRateLimit(
       'update-template',
@@ -332,6 +345,7 @@ export async function updateTemplate(formData: FormData): Promise<void> {
  * Get counts for template tabs
  */
 export async function getTabCounts(): Promise<ActionResult<Record<string, number>>> {
+  
   return withAuth(async (_context) => {
     return withContextualRateLimit(
       'get-tab-counts',

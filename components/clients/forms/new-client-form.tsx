@@ -20,7 +20,7 @@ import {
   createClient,
   removeFromCampaign,
   deleteClient,
-} from "@/lib/actions/clientActions";
+} from "@/lib/actions/clients";
 
 interface ClientFormProps {
   campaignId: string;

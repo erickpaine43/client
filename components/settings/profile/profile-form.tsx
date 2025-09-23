@@ -34,10 +34,7 @@ import {
   updateUserProfile,
   type ProfileError,
 } from "@/lib/actions/profileActions";
-import {
-  getUserSettings,
-  updateUserSettings,
-} from "@/lib/actions/settingsActions";
+import { getUserSettings, updateUserSettings } from "@/lib/actions/settings";
 import {
   mapNileUserToFormData,
   type ProfileFormData,
@@ -253,8 +250,13 @@ function ProfileForm() {
       lastName: "",
       email: "",
       avatarUrl: "",
-      timezone: getStorageItem(StorageKeys.TIMEZONE) || allTimezones[0]?.value || "America/New_York",
-      sidebarView: (getStorageItem(StorageKeys.SIDEBAR_VIEW) === "collapsed" ? "collapsed" : "expanded") as "expanded" | "collapsed",
+      timezone:
+        getStorageItem(StorageKeys.TIMEZONE) ||
+        allTimezones[0]?.value ||
+        "America/New_York",
+      sidebarView: (getStorageItem(StorageKeys.SIDEBAR_VIEW) === "collapsed"
+        ? "collapsed"
+        : "expanded") as "expanded" | "collapsed",
     },
   });
 
@@ -265,28 +267,32 @@ function ProfileForm() {
     setSettingsLoading(true);
     try {
       const result = await getUserSettings();
-      
+
       if (result.success && result.data) {
-        
         // Update form with settings data
         form.setValue("timezone", result.data.timezone);
         form.setValue("sidebarView", result.data.sidebarView);
-        
+
         // Store preferences in localStorage for immediate access
         setStorageItem(StorageKeys.TIMEZONE, result.data.timezone);
-        setStorageItem(StorageKeys.SIDEBAR_VIEW, result.data.sidebarView as SidebarView);
-        
+        setStorageItem(
+          StorageKeys.SIDEBAR_VIEW,
+          result.data.sidebarView as SidebarView
+        );
+
         return true;
       } else {
         // Handle error
-        if (!result.success && result.code === "AUTH_REQUIRED") {
+        if (!result.success && result.error?.type === "auth") {
           toast.error("Authentication required", {
             description: "Please log in to access settings.",
           });
           router.push("/");
         } else {
           toast.error("Failed to load settings", {
-            description: (result as ActionResultWithError).error?.message || "Unable to retrieve your settings.",
+            description:
+              (result as ActionResultWithError).error?.message ||
+              "Unable to retrieve your settings.",
           });
         }
         return false;
@@ -322,7 +328,7 @@ function ProfileForm() {
 
       // Fetch settings from server action
       await fetchUserSettings();
-      
+
       // Then try to fetch from NileDB server action
       await retryFetchProfile();
     };
@@ -392,13 +398,17 @@ function ProfileForm() {
           timezone: data.timezone,
           sidebarView: data.sidebarView,
         });
-        
+
         if (!settingsUpdate.success) {
-          console.warn("Failed to update settings:", (settingsUpdate as ActionResultWithError).error?.message || "Unknown error");
+          console.warn(
+            "Failed to update settings:",
+            (settingsUpdate as ActionResultWithError).error?.message ||
+              "Unknown error"
+          );
           // Don't fail the whole operation if settings update fails
           // User preferences are already saved in localStorage
         }
-        
+
         return settingsUpdate;
       })();
 
@@ -417,10 +427,9 @@ function ProfileForm() {
 
       const updatePromise = updateUserProfile(profileData);
       const [profileResult] = await Promise.all([
-        Promise.race([
-          updatePromise,
-          timeoutPromise,
-        ]) as Promise<Awaited<ReturnType<typeof updateUserProfile>>>,
+        Promise.race([updatePromise, timeoutPromise]) as Promise<
+          Awaited<ReturnType<typeof updateUserProfile>>
+        >,
         settingsUpdatePromise,
       ]);
 
@@ -452,7 +461,8 @@ function ProfileForm() {
         }
 
         toast.success("Profile updated successfully", {
-          description: "Your profile information and preferences have been saved.",
+          description:
+            "Your profile information and preferences have been saved.",
         });
       } else if ((profileResult as ActionResultWithError).error) {
         const result = profileResult as ActionResultWithError;
@@ -574,8 +584,8 @@ function ProfileForm() {
             {isRetryingProfile
               ? `Loading your profile... (attempt ${retryCount}/${MAX_RETRIES})`
               : settingsLoading
-              ? "Loading your settings..."
-              : "Loading your profile..."}
+                ? "Loading your settings..."
+                : "Loading your profile..."}
           </AlertDescription>
         </Alert>
       )}
@@ -852,7 +862,13 @@ function ProfileForm() {
         <div className="flex justify-end pt-4">
           <Button
             type="submit"
-            disabled={profileLoading || settingsLoading || submitLoading || isPending || !!profileError}
+            disabled={
+              profileLoading ||
+              settingsLoading ||
+              submitLoading ||
+              isPending ||
+              !!profileError
+            }
             className="w-fit"
             onClick={form.handleSubmit(onSubmit)}
           >

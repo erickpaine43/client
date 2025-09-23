@@ -17,7 +17,7 @@ import {
   removeFromCampaign,
   deleteClient,
   maskClientPII,
-} from "@/lib/actions/clientActions";
+} from "@/lib/actions/clients";
 import { copyText as t } from "@/components/clients/data/copy";
 
 interface ClientHeaderProps {

@@ -9,7 +9,7 @@ import {
 import { EmailsTable } from "@/components/domains/components/emails-table";
 import { ArrowLeft, PlusCircle } from "lucide-react";
 import Link from "next/link";
-import { getDomainWithAccounts } from "@/lib/actions/domainsActions";
+import { getDomainWithAccounts } from "@/lib/actions/domains";
 import { notFound } from "next/navigation";
 
 export default async function DomainAccountsPage({

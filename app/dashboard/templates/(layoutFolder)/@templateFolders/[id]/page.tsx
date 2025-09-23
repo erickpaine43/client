@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getTemplates } from "@/lib/actions/templateActions";
+import { getTemplates } from "@/lib/actions/templates";
 import { cn } from "@/lib/utils";
 import { Template } from "@/types";
 import { ArrowLeft } from "lucide-react";

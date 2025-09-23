@@ -1,7 +1,7 @@
 "use client";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getCampaignLeads, getSequenceSteps } from "@/lib/actions/dashboardActions";
+import { getCampaignLeads, getSequenceSteps } from "@/lib/actions/dashboard";
 import { BarChart3, Mail, Users } from "lucide-react";
 import { useState, useEffect } from "react";
 

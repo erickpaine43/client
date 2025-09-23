@@ -1,4 +1,4 @@
-import { getMessages } from "@/lib/actions/inboxActions";
+import { getMessages, type Message } from "@/lib/actions/inbox";
 import { getRelativeTime, cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,23 +9,28 @@ export default async function ConversationMessages() {
 
   return (
     <div className="flex-1 p-6 space-y-6 overflow-y-auto bg-muted/30">
-      {messages.map((message) => (
+      {(Array.isArray(messages)
+        ? messages
+        : messages.success
+          ? messages.data || []
+          : []
+      ).map((message: Message) => (
         <div
           key={message.id}
           className={cn(
             "flex",
-            message.type === "outgoing" ? "justify-end" : "justify-start",
+            message.type === "outgoing" ? "justify-end" : "justify-start"
           )}
         >
           <div
             className={cn(
               "flex items-start space-x-3 max-w-2xl",
-              message.type === "outgoing" && "flex-row-reverse space-x-reverse",
+              message.type === "outgoing" && "flex-row-reverse space-x-reverse"
             )}
           >
             <Avatar className="h-8 w-8">
               <AvatarFallback className="text-xs">
-                {message.sender.charAt(0).toUpperCase()}
+                {message.sender?.charAt(0).toUpperCase() || "?"}
               </AvatarFallback>
             </Avatar>
 
@@ -42,7 +47,7 @@ export default async function ConversationMessages() {
                   "p-4",
                   message.type === "outgoing"
                     ? "bg-primary text-primary-foreground"
-                    : "bg-card",
+                    : "bg-card"
                 )}
               >
                 <div className="whitespace-pre-wrap text-sm leading-relaxed">

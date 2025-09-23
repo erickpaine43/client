@@ -11,7 +11,7 @@ export const campaignColumns = [
   { name: "Last Sent", key: "lastSent" },
   { name: "Actions", key: "actions" },
 ];
-async function CampaignsTable() {
+function CampaignsTable() {
   const campaigns = campaignsData;
 
   return (

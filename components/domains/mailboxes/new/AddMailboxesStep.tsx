@@ -1,6 +1,6 @@
 "use client";
 import { useAddMailboxesContext } from "@/context/AddMailboxesContext";
-import { getDomainsData } from "@/lib/actions/domainsActions";
+import { getDomainsData } from "@/lib/actions/domains";
 import { useEffect, useState } from "react";
 import AddMailboxDetails from "./AddMailboxDetails";
 import MailboxSetting from "./MailboxSetting";

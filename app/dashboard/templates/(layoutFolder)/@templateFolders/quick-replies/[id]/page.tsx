@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getQuickReplies } from "@/lib/actions/templateActions";
+import { getQuickReplies } from "@/lib/actions/templates";
 import { cn } from "@/lib/utils";
 import { Template } from "@/types";
 import { ArrowLeft } from "lucide-react";
@@ -15,10 +15,10 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
   const result = await getQuickReplies();
 
   if (!result.success) {
-    return <div>Error: {result.error}</div>;
+    return <div>Error: {result.error?.message || "Unknown error"}</div>;
   }
 
-  const quickReplies = result.data;
+  const quickReplies = result.data || [];
   const { id } = await params;
   return (
     <div className="bg-gray-50 p-2 px-4 border-r border-gray-200 w-72 space-y-5">

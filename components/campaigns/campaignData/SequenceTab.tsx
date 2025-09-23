@@ -5,7 +5,7 @@
 // missing or zero 'sent' values when computing rates to avoid NaN/Infinity.
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { getSequenceSteps } from "@/lib/actions/campaignActions";
+import { getSequenceSteps } from "@/lib/actions/dashboardActions";
 import { useState, useEffect } from "react";
 import { Clock, Mail } from "lucide-react";
 import { SequenceStep as SequenceStepType } from "@/types";

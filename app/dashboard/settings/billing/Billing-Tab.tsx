@@ -24,8 +24,8 @@ import { useEffect, useMemo } from "react";
 import {
   getBillingDataForSettings,
   updateBillingInfo,
-} from "@/lib/actions/billingActions";
-import { updateCompanyInfo, getUserSettings } from "@/lib/actions/settingsActions";
+} from "@/lib/actions/billing";
+import { updateCompanyInfo, getUserSettings } from "@/lib/actions/settings";
 import {
   useServerAction,
   useServerActionWithParams,

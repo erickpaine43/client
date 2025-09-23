@@ -13,7 +13,7 @@ import {
   SettingsErrorState,
 } from "@/components/settings/common";
 import { useServerAction, type ActionResult } from "@/hooks/useServerAction";
-import { getUserProfile } from "@/lib/actions/profileActions";
+import { getUserProfile } from "@/lib/actions/profile";
 import { mapNileUserToFormData, type NileUser } from "@/lib/utils";
 import PasswordSettingsForm from "../profile/PasswordSettingsForm";
 import {
@@ -26,13 +26,21 @@ interface AccountSettingsProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 // Wrapper to adapt ProfileActionResponse to ActionResult format expected by useServerAction
-const getUserProfileAction = async (): Promise<ActionResult<NileUser | undefined>> => {
+const getUserProfileAction = async (): Promise<
+  ActionResult<NileUser | undefined>
+> => {
   const result = await getUserProfile();
 
   if (result.success) {
     return { success: true as const, data: result.data };
   } else {
-    return { success: false, error: result.error?.message || "Failed to get user profile" };
+    return {
+      success: false,
+      error: result.error || {
+        type: "server",
+        message: "Failed to get user profile",
+      },
+    };
   }
 };
 
@@ -74,7 +82,11 @@ export default function AccountSettings({
     return (
       <div className="grid gap-6" {...props}>
         <SettingsErrorState
-          error={profileAction.error}
+          error={
+            typeof profileAction.error === "string"
+              ? profileAction.error
+              : profileAction.error?.message || "Unknown error"
+          }
           errorType="network"
           onRetry={() => profileAction.execute()}
           retryLoading={profileAction.loading}

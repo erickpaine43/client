@@ -17,7 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { addStorage, getStorageOptions } from "@/lib/actions/billingActions";
+import { addStorage, getStorageOptions } from "@/lib/actions/billing";
 import { cn } from "@/lib/utils";
 import { HardDrive, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -48,7 +48,7 @@ function AddStorageTrigger({
 
       if (result.success) {
         toast.success("Storage added successfully!", {
-          description: `${selectedAmount} GB has been added to your account for $${result.data.monthlyCost}/month.`,
+          description: `${selectedAmount} GB has been added to your account for $${result.data?.monthlyCost || 0}/month.`,
         });
 
         setOpen(false);
@@ -59,7 +59,10 @@ function AddStorageTrigger({
         }
       } else {
         toast.error("Failed to add storage", {
-          description: result.error,
+          description:
+            typeof result.error === "string"
+              ? result.error
+              : result.error?.message || "Unknown error",
         });
       }
     } catch (error) {
@@ -78,14 +81,17 @@ function AddStorageTrigger({
       setLoadingStorage(true);
       const result = await getStorageOptions();
       if (result.success) {
-        setStorageOptions(result.data);
+        setStorageOptions(result.data || []);
         // Set default selectedAmount to the first option
-        if (result.data.length > 0) {
+        if (result.data && result.data.length > 0) {
           setSelectedAmount(result.data[0].gb);
         }
       } else {
         toast.error("Failed to load storage options", {
-          description: result.error,
+          description:
+            typeof result.error === "string"
+              ? result.error
+              : result.error?.message || "Unknown error",
         });
       }
     } catch (err) {
@@ -135,31 +141,31 @@ function AddStorageTrigger({
           <div className="space-y-3">
             <Label className="text-sm font-medium">Select storage amount</Label>
             <div className="grid grid-cols-2 gap-3">
-              {loadingStorage ? (
-                Array.from({ length: 4 }).map((_, i) => (
-                  <Skeleton key={i} className="h-20 w-full" />
-                ))
-              ) : (
-                storageOptions &&
-                storageOptions.map((option) => (
-                  <Button
-                    key={option.gb}
-                    variant="outline"
-                    onClick={() => setSelectedAmount(option.gb)}
-                    className={cn(
-                      "h-auto p-4 flex-col space-y-1 transition-all",
-                      selectedAmount === option.gb
-                        ? "border-primary bg-primary/5 text-primary"
-                        : "hover:border-muted-foreground/50"
-                    )}
-                  >
-                    <div className="text-lg font-semibold">{option.gb} GB</div>
-                    <div className="text-sm text-muted-foreground">
-                      ${option.price}/month
-                    </div>
-                  </Button>
-                ))
-              )}
+              {loadingStorage
+                ? Array.from({ length: 4 }).map((_, i) => (
+                    <Skeleton key={i} className="h-20 w-full" />
+                  ))
+                : storageOptions &&
+                  storageOptions.map((option) => (
+                    <Button
+                      key={option.gb}
+                      variant="outline"
+                      onClick={() => setSelectedAmount(option.gb)}
+                      className={cn(
+                        "h-auto p-4 flex-col space-y-1 transition-all",
+                        selectedAmount === option.gb
+                          ? "border-primary bg-primary/5 text-primary"
+                          : "hover:border-muted-foreground/50"
+                      )}
+                    >
+                      <div className="text-lg font-semibold">
+                        {option.gb} GB
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        ${option.price}/month
+                      </div>
+                    </Button>
+                  ))}
             </div>
           </div>
 

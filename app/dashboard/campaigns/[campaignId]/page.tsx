@@ -5,7 +5,7 @@ import SequenceTab from "@/components/campaigns/campaignData/SequenceTab";
 import StatsTab from "@/components/campaigns/campaignData/StatsTab";
 import CampaignSKeleton from "@/components/campaigns/steps/CampaignSKeleton";
 import { TabsContent } from "@/components/ui/tabs";
-import { getCampaign } from "@/lib/actions/campaignActions";
+import { getCampaign } from "@/lib/actions/campaigns";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -24,10 +24,11 @@ export default async function CampaignDetail({
 }
 
 async function CampaignContent({ campaignId }: { campaignId: string }) {
-  const campaign = await getCampaign(campaignId);
-  if (!campaign) {
+  const campaignResult = await getCampaign(campaignId);
+  if (!campaignResult.success || !campaignResult.data) {
     notFound();
   }
+  const campaign = campaignResult.data;
   return (
     <div className="space-y-6">
       <CampaignHeader backArrow={true} campaign={campaign}>

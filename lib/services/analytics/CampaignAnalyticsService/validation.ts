@@ -18,10 +18,6 @@ export function validateCampaignIds(campaignIds?: string[]): void {
     throw new Error("Campaign IDs must be an array");
   }
 
-  if (campaignIds.length === 0) {
-    throw new Error("Campaign IDs array cannot be empty");
-  }
-
   campaignIds.forEach((id, index) => {
     if (!id || typeof id !== "string") {
       throw new Error(`Invalid campaign ID at index ${index}: must be a non-empty string`);

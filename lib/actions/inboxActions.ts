@@ -1,215 +1,189 @@
 'use server';
 
-import { conversations } from '../data/Inbox.mock';
-import { Conversation, ConversationStatusConstants } from '../../types/conversation';
+/**
+ * @deprecated This file is deprecated and will be removed in a future version.
+ * Please use the new modular structure at lib/actions/inbox/ instead.
+ * See lib/actions/MIGRATION_GUIDE.md for migration instructions.
+ */
 
-// Get filtered conversations with improved filtering
-export async function getFilteredConversations(
+// Log deprecation warning
+if (typeof console !== 'undefined') {
+  console.warn(
+    '🚨 DEPRECATED: lib/actions/inboxActions.ts is deprecated. ' +
+    'Please migrate to lib/actions/inbox/ for better organization and maintainability. ' +
+    'See lib/actions/MIGRATION_GUIDE.md for migration guide.'
+  );
+}
+
+// Re-export all functions from the new modular structure for backward compatibility
+export {
+  getFilteredConversations,
+  getAllConversations,
+  getConversationById,
+  getConversationCount,
+  updateConversationStatus,
+  updateConversationStarred,
+  updateConversationPinned,
+  updateConversationTag,
+  deleteConversation,
+  getConversationsForUI,
+  getMessages,
+  getMessagesByConversationId,
+  addMessage,
+  getMessageCount,
+} from './inbox';
+
+// Re-export types
+export type {
+  Message,
+  ConversationFilters,
+} from './inbox';
+
+// Legacy function wrapper for backward compatibility
+import { getFilteredConversations as getFilteredConversationsNew } from './inbox';
+import type { Conversation } from '../../types/conversation';
+
+export async function getFilteredConversationsLegacy(
   params: Record<string, string | string[] | undefined>
 ): Promise<Conversation[]> {
-  let filtered = [...conversations];
-
-  // Status filter
-  const status = params.filter as string;
-  if (status && status !== "all") {
-    if (status === "unread") {
-      filtered = filtered.filter((c) => c.status === ConversationStatusConstants.UNREAD);
-    } else if (status === "read") {
-      filtered = filtered.filter((c) => c.status === ConversationStatusConstants.READ);
-    } else if (status === "starred") {
-      filtered = filtered.filter((c) => c.isStarred);
-    } else if (status === "archived") {
-      filtered = filtered.filter((c) => c.status === ConversationStatusConstants.ARCHIVED);
-    }
+  const filters = {
+    filter: params.filter as string,
+    campaigns: params.campaigns as string[],
+    tags: params.tags as string[],
+    time: params.time as string,
+  };
+  
+  const result = await getFilteredConversationsNew(filters);
+  if (result.success && result.data) {
+    return result.data;
   }
-
-  // Campaign filter
-  const campaigns = params.campaigns as string[] | undefined;
-  if (campaigns && Array.isArray(campaigns) && campaigns.length > 0) {
-    filtered = filtered.filter((c) => campaigns.includes(c.campaign));
-  }
-
-  // Tag filter
-  const tags = params.tags as string[] | undefined;
-  if (tags && Array.isArray(tags) && tags.length > 0) {
-    filtered = filtered.filter((c) =>
-      tags.some(tag =>
-        tag.toLowerCase() === c.tag.toLowerCase().replace(/[_-]/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()).toLowerCase()
-      )
-    );
-  }
-
-  // Time filter - basic implementation
-  const time = params.time as string;
-  if (time && time !== "all") {
-    const now = new Date();
-    filtered = filtered.filter((c) => {
-      const convTime = new Date(c.time);
-      if (time === "today") {
-        return convTime.toDateString() === now.toDateString();
-      } else if (time === "week") {
-        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        return convTime >= weekAgo;
-      } else if (time === "month") {
-        const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        return convTime >= monthAgo;
-      }
-      return true;
-    });
-  }
-
-  return filtered;
+  
+  return [];
 }
 
-// Get all conversations
-export async function getAllConversations(): Promise<Conversation[]> {
-  return [...conversations];
+// Legacy wrapper functions for backward compatibility
+import {
+  getAllConversations as getAllConversationsNew,
+  getConversationById as getConversationByIdNew,
+  getConversationCount as getConversationCountNew,
+  updateConversationStatus as updateConversationStatusNew,
+  updateConversationStarred as updateConversationStarredNew,
+  updateConversationPinned as updateConversationPinnedNew,
+  updateConversationTag as updateConversationTagNew,
+  deleteConversation as deleteConversationNew,
+  getConversationsForUI as getConversationsForUINew,
+  getMessages as getMessagesNew,
+  getMessagesByConversationId as getMessagesByConversationIdNew,
+  addMessage as addMessageNew,
+  getMessageCount as getMessageCountNew,
+} from './inbox';
+
+export async function getAllConversationsLegacy(): Promise<Conversation[]> {
+  const result = await getAllConversationsNew();
+  return result.success && result.data ? result.data : [];
 }
 
-// Get conversation by ID
-export async function getConversationById(id: string | number): Promise<Conversation | null> {
-  const conversation = conversations.find((c) => c.id === id || c.id.toString() === id.toString());
-  return conversation || null;
+export async function getConversationByIdLegacy(id: string | number): Promise<Conversation | null> {
+  const result = await getConversationByIdNew(id);
+  return result.success && result.data ? result.data : null;
 }
 
-// Get conversation count (for headers)
-export async function getConversationCount(params: Record<string, string | string[] | undefined> = {}): Promise<number> {
-  const filtered = await getFilteredConversations(params);
-  return filtered.length;
+export async function getConversationCountLegacy(params: Record<string, string | string[] | undefined> = {}): Promise<number> {
+  const filters = {
+    filter: params.filter as string,
+    campaigns: params.campaigns as string[],
+    tags: params.tags as string[],
+    time: params.time as string,
+  };
+  const result = await getConversationCountNew(filters);
+  return result.success && result.data ? result.data : 0;
 }
 
-// Update conversation status
-export async function updateConversationStatus(
+export async function updateConversationStatusLegacy(
   id: string | number,
   status: string
 ): Promise<Conversation | null> {
-  const conversation = conversations.find((c) => c.id === id || c.id.toString() === id.toString());
-  if (!conversation) return null;
-
-  // Update the status in the mock data (in a real app, this would be a database update)
-  conversation.status = status as typeof conversation.status;
-  return conversation;
+  const result = await updateConversationStatusNew(id, status);
+  return result.success && result.data ? result.data : null;
 }
 
-// Update conversation starred status
-export async function updateConversationStarred(
+export async function updateConversationStarredLegacy(
   id: string | number,
   isStarred: boolean
 ): Promise<Conversation | null> {
-  const conversation = conversations.find((c) => c.id === id || c.id.toString() === id.toString());
-  if (!conversation) return null;
-
-  conversation.isStarred = isStarred;
-  return conversation;
+  const result = await updateConversationStarredNew(id, isStarred);
+  return result.success && result.data ? result.data : null;
 }
 
-// Update conversation pinned status
-export async function updateConversationPinned(
+export async function updateConversationPinnedLegacy(
   id: string | number,
   isPinned: boolean
 ): Promise<Conversation | null> {
-  const conversation = conversations.find((c) => c.id === id || c.id.toString() === id.toString());
-  if (!conversation) return null;
-
-  conversation.isPinned = isPinned;
-  return conversation;
+  const result = await updateConversationPinnedNew(id, isPinned);
+  return result.success && result.data ? result.data : null;
 }
 
-// Update conversation tag
-export async function updateConversationTag(
+export async function updateConversationTagLegacy(
   id: string | number,
   tag: string
 ): Promise<Conversation | null> {
-  const conversation = conversations.find((c) => c.id === id || c.id.toString() === id.toString());
-  if (!conversation) return null;
-
-  conversation.tag = tag as typeof conversation.tag;
-  return conversation;
+  const result = await updateConversationTagNew(id, tag);
+  return result.success && result.data ? result.data : null;
 }
 
-// Delete conversation (soft delete - archive)
-export async function deleteConversation(id: string | number): Promise<boolean> {
-  const conversation = conversations.find((c) => c.id === id || c.id.toString() === id.toString());
-  if (!conversation) return false;
-
-  conversation.status = ConversationStatusConstants.ARCHIVED;
-  return true;
+export async function deleteConversationLegacy(id: string | number): Promise<boolean> {
+  const result = await deleteConversationNew(id);
+  return result.success && result.data ? result.data : false;
 }
 
-// Unified helper function to get conversations for UI components
-export async function getConversationsForUI(
+export async function getConversationsForUILegacy(
   type: 'list' | 'small-list' | 'header' = 'list',
   params: Record<string, string | string[] | undefined> = {}
 ): Promise<{ conversations: Conversation[]; count?: number }> {
-  const conversations = await getFilteredConversations(params);
-
-  if (type === 'header') {
-    return { conversations, count: conversations.length };
-  }
-
-  return { conversations };
+  const filters = {
+    filter: params.filter as string,
+    campaigns: params.campaigns as string[],
+    tags: params.tags as string[],
+    time: params.time as string,
+  };
+  const result = await getConversationsForUINew(type, filters);
+  return result.success && result.data ? result.data : { conversations: [] };
 }
 
-// Get messages for a conversation/conversation-messages component
-export async function getMessages() {
-  const { messageThread } = await import('../data/messages.mock');
-  return [...messageThread] as Array<{
-    id: number;
-    type: "outgoing" | "incoming";
-    sender: string;
-    time: string;
-    content: string;
-  }>;
+export async function getMessagesLegacy() {
+  const result = await getMessagesNew();
+  return result.success && result.data ? result.data : [];
 }
 
-// Get messages for a specific conversation by ID
-export async function getMessagesByConversationId(conversationId: string | number) {
-  // For now, return the same message thread for all conversations
-  console.log(`Fetching messages for conversation ID: ${conversationId}`);
-  // In the future, this would filter messages by conversationId
-  const { messageThread } = await import('../data/messages.mock');
-  return [...messageThread] as Array<{
-    id: number;
-    type: "outgoing" | "incoming";
-    sender: string;
-    time: string;
-    content: string;
-  }>;
+export async function getMessagesByConversationIdLegacy(conversationId: string | number) {
+  const result = await getMessagesByConversationIdNew(conversationId);
+  return result.success && result.data ? result.data : [];
 }
 
-// Add a new message to a conversation
-export async function addMessage(
+export async function addMessageLegacy(
   conversationId: string | number,
   message: {
     type: "outgoing" | "incoming";
     sender: string;
     content: string;
   }
-): Promise<{
-  id: number;
-  type: "outgoing" | "incoming";
-  sender: string;
-  time: string;
-  content: string;
-}> {
-  const { messageThread } = await import('../data/messages.mock');
-
-  const newMessage = {
-    id: messageThread.length + 1,
+) {
+  const result = await addMessageNew(conversationId, message);
+  if (result.success && result.data) {
+    return result.data;
+  }
+  
+  // Fallback for legacy compatibility
+  return {
+    id: Date.now(),
     type: message.type,
     sender: message.sender,
     time: new Date().toISOString(),
     content: message.content,
   };
-
-  // In a real implementation, this would save to database
-  // For now, it just returns the new message object
-  return newMessage;
 }
 
-// Get message count for a conversation
-export async function getMessageCount(conversationId?: string | number): Promise<number> {
-  console.log(`Fetching message count for conversation ID: ${conversationId}`);
-  const { messageThread } = await import('../data/messages.mock');
-  return messageThread.length;
+export async function getMessageCountLegacy(conversationId?: string | number): Promise<number> {
+  const result = await getMessageCountNew(conversationId);
+  return result.success && result.data ? result.data : 0;
 }

@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { useState } from "react";
 import { ClientPreferencesProvider } from "@/context/ClientPreferencesContext";
+import { ConvexProvider } from "@/components/analytics/ConvexProvider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -26,7 +27,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         enableSystem
         disableTransitionOnChange
       >
-        <ClientPreferencesProvider>{children}</ClientPreferencesProvider>
+        <ConvexProvider>
+          <ClientPreferencesProvider>{children}</ClientPreferencesProvider>
+        </ConvexProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

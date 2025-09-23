@@ -25,7 +25,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getTemplateFolders } from "@/lib/actions/templateActions";
+import { getTemplateFolders } from "@/lib/actions/templates";
 import { cn } from "@/lib/utils";
 import { Copy, Edit, FolderX, MoreHorizontal, Star, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -94,14 +94,16 @@ function TemplateActions({
   useEffect(() => {
     const fetchFolders = async () => {
       const result = await getTemplateFolders();
-      if (result.success) {
+      if (result.success && result.data) {
         setAllFolders(result.data);
       }
     };
     fetchFolders();
   }, []);
 
-  const folders = allFolders.filter((folder: TemplateFolder) => folder.type === type);
+  const folders = allFolders.filter(
+    (folder: TemplateFolder) => folder.type === type
+  );
 
   // Action handlers
   const handleStar = useCallback(() => {
@@ -146,7 +148,7 @@ function TemplateActions({
       move: handleMove,
       delete: handleDelete,
     }),
-    [handleStar, handleCopy, handleEdit, handleMove, handleDelete],
+    [handleStar, handleCopy, handleEdit, handleMove, handleDelete]
   );
 
   const handleAction = useCallback(
@@ -159,7 +161,7 @@ function TemplateActions({
         actionHandlers[action]();
       }
     },
-    [actionHandlers],
+    [actionHandlers]
   );
 
   const visibleActions = ACTIONS.slice(0, numberOfShowen);

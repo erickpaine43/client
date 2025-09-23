@@ -42,12 +42,24 @@ function OverviewLineChart() {
         // Convert UI filters to data filters using utility
         const dataFilters = convertUIFiltersToDataFilters(filters);
 
+        // Type guard to ensure we have the correct service type
+        const typedCampaignService =
+          campaignService as import("@/lib/services/analytics/CampaignAnalyticsService").CampaignAnalyticsService;
+
+        // Check if the service has the getTimeSeriesData method
+        if (typeof typedCampaignService.getTimeSeriesData !== "function") {
+          console.warn(
+            "Campaign service does not have getTimeSeriesData method"
+          );
+          setChartData([]);
+          return;
+        }
+
         // Fetch time series data using the service
-        const timeSeriesData = await campaignService.getTimeSeriesData(
-          filters.selectedCampaigns.length > 0
-            ? filters.selectedCampaigns
-            : undefined,
-          dataFilters
+        const timeSeriesData = await typedCampaignService.getTimeSeriesData(
+          filters.selectedCampaigns.length > 0 ? filters.selectedCampaigns : [],
+          dataFilters,
+          filters.granularity
         );
 
         // Prepare chart data using utility

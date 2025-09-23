@@ -146,7 +146,7 @@ describe('useServerAction', () => {
       const onError = jest.fn();
       const mockAction = jest.fn<Promise<ActionResult<unknown>>, []>().mockResolvedValue({
         success: false,
-        error: 'Test error',
+        error: { type: 'server', message: 'Test error' },
       } as const);
 
       const { result } = renderHook(() => 
@@ -331,7 +331,7 @@ describe('useServerAction', () => {
       expect(result.current.data).toBeNull();
       expect(result.current.loading).toBe(false);
       expect(result.current.error).toBeNull();
-      expect(result.current.code).toBeUndefined();
+      expect(result.current.error?.code).toBeUndefined();
       expect(result.current.canRetry).toBe(true);
     });
   });

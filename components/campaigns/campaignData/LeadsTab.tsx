@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { getCampaignLeads } from "@/lib/actions/campaignActions";
+import { getCampaignLeads } from "@/lib/actions/campaigns";
 import LeadsFilter from "./LeadsFilter";
 
 const getStatusColor = (status: string) => {
@@ -18,7 +18,10 @@ const getStatusColor = (status: string) => {
 };
 
 async function LeadsTab() {
-  const campaignLeads = await getCampaignLeads();
+  const campaignLeadsResult = await getCampaignLeads();
+  const campaignLeads = campaignLeadsResult.success
+    ? campaignLeadsResult.data || []
+    : [];
 
   return (
     <div className="space-y-6">

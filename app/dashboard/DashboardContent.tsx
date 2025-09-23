@@ -7,7 +7,7 @@ import WarmupSummary from "@/components/dashboard/summaries/WarmupSummary";
 import WarmupSummarySkeleton from "@/components/dashboard/summaries/WarmupSummarySkeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Suspense } from "react";
-import { getStatsCards, getRecentReplies, getWarmupSummaryData } from "@/lib/actions/dashboardActions";
+import { getStatsCards, getRecentReplies, getWarmupSummaryData } from "@/lib/actions/dashboard";
 
 export default async function DashboardContent() {
   const statsCards = await getStatsCards();

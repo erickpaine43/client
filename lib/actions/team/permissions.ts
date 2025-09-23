@@ -135,32 +135,32 @@ export async function canModifyMember(
 /**
  * Get effective permissions for a user based on their role
  */
-export function getEffectivePermissions(role: TeamRole): TeamPermission[] {
+export async function getEffectivePermissions(role: TeamRole): Promise<TeamPermission[]> {
   return ROLE_PERMISSIONS[role] || [];
 }
 
 /**
  * Check if a role has a specific permission
  */
-export function roleHasPermission(role: TeamRole, permission: TeamPermission): boolean {
-  const permissions = getEffectivePermissions(role);
+export async function roleHasPermission(role: TeamRole, permission: TeamPermission): Promise<boolean> {
+  const permissions = await getEffectivePermissions(role);
   return permissions.includes('all') || permissions.includes(permission);
 }
 
 /**
  * Get the highest role level a user can assign
  */
-export function getMaxAssignableRole(userRole: TeamRole): TeamRole {
+export async function getMaxAssignableRole(userRole: TeamRole): Promise<TeamRole> {
   const userLevel = ROLE_HIERARCHY[userRole];
-  
+
   // Find the highest role with level <= userLevel
   const roles = Object.entries(ROLE_HIERARCHY) as [TeamRole, number][];
   const assignableRoles = roles.filter(([, level]) => level <= userLevel);
-  
+
   if (assignableRoles.length === 0) {
     return 'viewer';
   }
-  
+
   // Sort by level descending and return the highest
   assignableRoles.sort(([, a], [, b]) => b - a);
   return assignableRoles[0][0];
@@ -169,89 +169,89 @@ export function getMaxAssignableRole(userRole: TeamRole): TeamRole {
 /**
  * Validate role hierarchy for role changes
  */
-export function validateRoleChange(
+export async function validateRoleChange(
   currentUserRole: TeamRole,
   targetCurrentRole: TeamRole,
   targetNewRole: TeamRole
-): { valid: boolean; reason?: string } {
+): Promise<{ valid: boolean; reason?: string }> {
   const currentUserLevel = ROLE_HIERARCHY[currentUserRole];
   const targetCurrentLevel = ROLE_HIERARCHY[targetCurrentRole];
   const targetNewLevel = ROLE_HIERARCHY[targetNewRole];
-  
+
   // Owner can change anyone's role to anything
   if (currentUserRole === 'owner') {
     return { valid: true };
   }
-  
+
   // Cannot change owner's role unless you are owner
   if (targetCurrentRole === 'owner') {
-    return { 
-      valid: false, 
-      reason: 'Cannot change the role of the team owner' 
+    return {
+      valid: false,
+      reason: 'Cannot change the role of the team owner'
     };
   }
-  
+
   // Cannot assign a role higher than your own
   if (targetNewLevel > currentUserLevel) {
-    return { 
-      valid: false, 
-      reason: `Cannot assign a role higher than your own (${currentUserRole})` 
+    return {
+      valid: false,
+      reason: `Cannot assign a role higher than your own (${currentUserRole})`
     };
   }
-  
+
   // Cannot modify someone with higher or equal role (unless owner)
   if (targetCurrentLevel >= currentUserLevel) {
-    return { 
-      valid: false, 
-      reason: 'Cannot modify someone with equal or higher role' 
+    return {
+      valid: false,
+      reason: 'Cannot modify someone with equal or higher role'
     };
   }
-  
+
   return { valid: true };
 }
 
 /**
  * Check if team has minimum required owners
  */
-export function hasMinimumOwners(excludeMemberId?: string): boolean {
-  const owners = mockTeamMembers.filter(m => 
-    m.role === 'owner' && 
-    m.status === 'active' && 
+export async function hasMinimumOwners(excludeMemberId?: string): Promise<boolean> {
+  const owners = mockTeamMembers.filter(m =>
+    m.role === 'owner' &&
+    m.status === 'active' &&
     m.id !== excludeMemberId
   );
-  
+
   return owners.length >= 1;
 }
 
 /**
  * Get team member by user ID
  */
-export function getTeamMemberByUserId(userId: string) {
+export async function getTeamMemberByUserId(userId: string) {
   return mockTeamMembers.find(m => m.userId === userId);
 }
 
 /**
  * Get team member by member ID
  */
-export function getTeamMemberById(memberId: string) {
+export async function getTeamMemberById(memberId: string) {
   return mockTeamMembers.find(m => m.id === memberId);
 }
 
 /**
  * Check if user is team owner
  */
-export function isTeamOwner(userId: string): boolean {
-  const member = getTeamMemberByUserId(userId);
+export async function isTeamOwner(userId: string): Promise<boolean> {
+  const member = await getTeamMemberByUserId(userId);
   return member?.role === 'owner' || false;
 }
 
 /**
  * Check if user is team admin or higher
  */
-export function isTeamAdminOrHigher(userId: string): boolean {
-  const member = getTeamMemberByUserId(userId);
+export async function isTeamAdminOrHigher(userId: string): Promise<boolean> {
+  const member = await getTeamMemberByUserId(userId);
   if (!member) return false;
-  
+
   const level = ROLE_HIERARCHY[member.role];
   return level >= ROLE_HIERARCHY.admin;
 }
@@ -259,37 +259,37 @@ export function isTeamAdminOrHigher(userId: string): boolean {
 /**
  * Get all permissions for a user
  */
-export function getUserPermissions(userId: string): TeamPermission[] {
-  const member = getTeamMemberByUserId(userId);
+export async function getUserPermissions(userId: string): Promise<TeamPermission[]> {
+  const member = await getTeamMemberByUserId(userId);
   if (!member) return [];
-  
+
   return member.permissions;
 }
 
 /**
  * Check if user has any of the specified permissions
  */
-export function hasAnyPermission(userId: string, permissions: TeamPermission[]): boolean {
-  const userPermissions = getUserPermissions(userId);
-  
+export async function hasAnyPermission(userId: string, permissions: TeamPermission[]): Promise<boolean> {
+  const userPermissions = await getUserPermissions(userId);
+
   // Owner or 'all' permission grants everything
   if (userPermissions.includes('all')) {
     return true;
   }
-  
+
   return permissions.some(permission => userPermissions.includes(permission));
 }
 
 /**
  * Check if user has all of the specified permissions
  */
-export function hasAllPermissions(userId: string, permissions: TeamPermission[]): boolean {
-  const userPermissions = getUserPermissions(userId);
-  
+export async function hasAllPermissions(userId: string, permissions: TeamPermission[]): Promise<boolean> {
+  const userPermissions = await getUserPermissions(userId);
+
   // Owner or 'all' permission grants everything
   if (userPermissions.includes('all')) {
     return true;
   }
-  
+
   return permissions.every(permission => userPermissions.includes(permission));
 }

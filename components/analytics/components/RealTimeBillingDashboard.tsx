@@ -439,18 +439,85 @@ export function RealTimeBillingDashboard({
         <UsageMetricsCard usageMetrics={usageMetrics ?? null} />
 
         {/* Plan utilization */}
-        <PlanUtilizationCard planUtilization={planUtilization ?? null} />
+        <PlanUtilizationCard
+          planUtilization={
+            planUtilization
+              ? {
+                  planType:
+                    planUtilization.planType || planUtilization.planName,
+                  utilizationPercentages: {
+                    overall:
+                      ("utilizationPercentage" in planUtilization
+                        ? planUtilization.utilizationPercentage
+                        : 0) || 0,
+                  },
+                  recommendations:
+                    ("upgradeRecommendations" in planUtilization
+                      ? planUtilization.upgradeRecommendations
+                      : []) || [],
+                  isOverLimit:
+                    ("utilizationPercentage" in planUtilization
+                      ? planUtilization.utilizationPercentage
+                      : 0) > 100,
+                }
+              : null
+          }
+        />
 
         {/* Cost analytics */}
         <CostAnalyticsCard costAnalytics={costAnalytics} />
 
         {/* Usage alerts */}
-        <UsageAlertsCard limitAlerts={limitAlerts} />
+        <UsageAlertsCard
+          limitAlerts={
+            limitAlerts
+              ? {
+                  ...limitAlerts,
+                  alerts: limitAlerts.alerts.map((alert) => ({
+                    ...alert,
+                    percentage:
+                      alert.current && alert.threshold
+                        ? Math.round((alert.current / alert.threshold) * 100)
+                        : 0,
+                  })),
+                }
+              : null
+          }
+        />
       </div>
 
       {/* Time series chart */}
       {showTimeSeriesChart && (
-        <BillingTimeSeriesChart timeSeriesData={timeSeriesData} />
+        <BillingTimeSeriesChart
+          timeSeriesData={
+            timeSeriesData
+              ? timeSeriesData.map((point) => ({
+                  label: point.label || point.date,
+                  usage: {
+                    emailsSent: Number(
+                      ("emailsSent" in point
+                        ? point.emailsSent
+                        : "sent" in point
+                          ? point.sent
+                          : 0) || 0
+                    ),
+                  },
+                  costs: {
+                    currency: String(
+                      ("currency" in point ? point.currency : "USD") || "USD"
+                    ),
+                    currentPeriod: Number(
+                      ("cost" in point
+                        ? point.cost
+                        : "totalCost" in point
+                          ? point.totalCost
+                          : 0) || 0
+                    ),
+                  },
+                }))
+              : null
+          }
+        />
       )}
 
       {/* Recommendations */}

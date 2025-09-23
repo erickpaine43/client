@@ -138,7 +138,7 @@ export async function getBillingAnalytics(
           api.billingAnalytics.getBillingAnalytics,
           {
             companyId: _context.companyId,
-            filters: filters || {}
+            dateRange: filters?.dateRange
           },
           {
             serviceName: 'BillingAnalyticsActions',
@@ -177,7 +177,10 @@ export async function getCostAnalytics(
           api.billingAnalytics.getCostAnalytics,
           { 
             companyId: _context.companyId,
-            filters: filters || {}
+            dateRange: filters?.dateRange || {
+              start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+              end: new Date().toISOString().split('T')[0]
+            }
           },
           {
             serviceName: 'BillingAnalyticsActions',

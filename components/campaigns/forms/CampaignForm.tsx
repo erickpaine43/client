@@ -17,9 +17,9 @@ import { ScheduleSettings } from "../settings/ScheduleSettings";
 import { RecipientsSettings } from "../settings/RecipientsSettings";
 import { copyText as t } from "../data/copy";
 import {
-  getCampaignSendingAccountsAction,
-  getTimezonesAction,
-} from "@/lib/actions/campaignActions";
+  getCampaignSendingAccounts,
+  getTimezones,
+} from "@/lib/actions/campaigns";
 import {
   CampaignFormProps,
   CampaignFormValues,
@@ -55,7 +55,7 @@ export function CampaignForm({
     },
   ];
   const [steps, setSteps] = useState<CampaignSteps>(
-    initialData?.steps || defaultSteps,
+    initialData?.steps || defaultSteps
   );
   const [sendingAccounts, setSendingAccounts] = useState<
     { value: string; label: string }[]
@@ -63,10 +63,10 @@ export function CampaignForm({
   const [timezones, setTimezones] = useState<string[]>([]);
   const [loadingAccounts, setLoadingAccounts] = useState<boolean>(true);
   const [currentEditingStep, setCurrentEditingStep] = useState<number | null>(
-    null,
+    null
   );
   const [recipients, setRecipients] = useState<string>(
-    initialData?.clients.join("\n") ?? "",
+    initialData?.clients.join("\n") ?? ""
   );
   const emailBodyRef = useRef<HTMLTextAreaElement>(null!);
 
@@ -87,8 +87,15 @@ export function CampaignForm({
       if (!user?.claims?.companyId) return;
 
       setLoadingAccounts(true);
-      const accounts = await getCampaignSendingAccountsAction(user.claims.companyId);
-      setSendingAccounts(accounts);
+      const accounts = await getCampaignSendingAccounts(user.claims.companyId);
+      if (accounts.success && accounts.data) {
+        setSendingAccounts(
+          accounts.data.map((account) => ({
+            value: account.id || account.email,
+            label: account.email,
+          }))
+        );
+      }
       setLoadingAccounts(false);
     };
     fetchSendingAccounts();
@@ -96,15 +103,17 @@ export function CampaignForm({
 
   useEffect(() => {
     const fetchTimezones = async () => {
-      const fetchedTimezones = await getTimezonesAction();
-      setTimezones(fetchedTimezones);
+      const fetchedTimezones = await getTimezones();
+      if (fetchedTimezones.success && fetchedTimezones.data) {
+        setTimezones(fetchedTimezones.data);
+      }
     };
     fetchTimezones();
   }, []);
 
   // Handle form submission
   const handleSubmit: SubmitHandler<CampaignFormValues> = async (
-    data: CampaignFormValues,
+    data: CampaignFormValues
   ) => {
     await onSubmit(data);
   };
@@ -168,7 +177,7 @@ export function CampaignForm({
 
   const handleDayChange = (
     dayId: number,
-    evt: MouseEvent<HTMLButtonElement>,
+    evt: MouseEvent<HTMLButtonElement>
   ) => {
     evt.preventDefault();
     const newSendDays = sendDays.includes(dayId)
@@ -177,7 +186,7 @@ export function CampaignForm({
     form.setValue(
       "sendDays",
       newSendDays.sort((a: number, b: number) => a - b),
-      { shouldValidate: true },
+      { shouldValidate: true }
     );
   };
 
@@ -201,7 +210,7 @@ export function CampaignForm({
     form.setValue(
       "metrics.recipients",
       { sent: clientsData.length, total: clientsData.length },
-      { shouldValidate: true },
+      { shouldValidate: true }
     );
   };
 

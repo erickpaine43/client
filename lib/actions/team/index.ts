@@ -1,11 +1,13 @@
 /**
  * Team module - Main exports and orchestration
- * 
+ *
  * This module provides the main entry point for team-related actions,
  * orchestrating between members, invitations, permissions, and activity logging.
+ *
+ * NOTE: This file has been converted to a regular export file because
+ * Next.js 15 "use server" files can only export async functions.
+ * All actual server actions are in the respective module files.
  */
-
-'use server';
 
 // Re-export all team actions for backward compatibility
 export * from './members';

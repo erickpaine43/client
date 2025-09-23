@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAnalytics } from "@/context/AnalyticsContext";
-import { DomainWithMailboxesData } from "@/lib/actions/domainsActions";
+import { DomainWithMailboxesData } from "@/lib/actions/domains";
 import WarmupTab from "@/components/domains/components/warmup-tab";
 
 function Page() {

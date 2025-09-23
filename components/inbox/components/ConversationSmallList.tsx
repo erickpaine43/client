@@ -1,5 +1,5 @@
 import React from "react";
-import { getAllConversations } from "@/lib/actions/inboxActions";
+import { getAllConversations } from "@/lib/actions/inbox";
 import ConversationsListHeader from "./ConversationsListHeader";
 import { cn, getRelativeTime, getTagColor } from "@/lib/utils";
 import { ArrowRight, Pin, Star } from "lucide-react";
@@ -8,7 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default async function ConversationSmallList() {
-  const filteredConversations = await getAllConversations();
+  const conversationsResult = await getAllConversations();
+  const filteredConversations = conversationsResult.success
+    ? conversationsResult.data || []
+    : [];
   return (
     <div className="flex flex-col h-full">
       <ConversationsListHeader title="Conversations" />
@@ -74,7 +77,7 @@ export default async function ConversationSmallList() {
                           variant="outline"
                           className={cn(
                             "text-xs font-medium",
-                            getTagColor(conversation.tag),
+                            getTagColor(conversation.tag)
                           )}
                         >
                           {conversation.tag.replace("-", " ")}

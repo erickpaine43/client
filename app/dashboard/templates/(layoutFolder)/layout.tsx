@@ -6,7 +6,7 @@ import GalleryTab from "@/components/templates/gallery-tab";
 import MyTemplatesTab from "@/components/templates/my-templates-tab";
 import QuickRepliesTab from "@/components/templates/qucik-replies-tab";
 import { Tab } from "@/types/tab";
-import { getTabCounts } from "@/lib/actions/templateActions";
+import { getTabCounts } from "@/lib/actions/templates";
 
 // Tab definitions - UI structure
 const tabs: Tab[] = [
@@ -37,7 +37,8 @@ async function layout({
   children: React.ReactNode;
 }) {
   const tabCountsResult = await getTabCounts();
-  const tabCounts = tabCountsResult.success ? tabCountsResult.data : {};
+  const tabCounts =
+    tabCountsResult.success && tabCountsResult.data ? tabCountsResult.data : {};
 
   return (
     <div className="space-y-5 flex flex-col h-full">

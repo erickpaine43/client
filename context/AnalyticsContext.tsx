@@ -24,6 +24,7 @@ import type {
   MailboxWarmupData,
   MailboxAnalyticsData,
 } from "@/types/analytics";
+import type { DomainWithMailboxesData } from "@/lib/actions/domains/types";
 import { analyticsService } from "@/lib/services/analytics/AnalyticsService";
 import {
   mapServiceMailboxToLegacy,
@@ -60,6 +61,7 @@ interface SimplifiedAnalyticsContextState {
   bounceRate: string;
   deliveryRate: string;
   campaignPerformanceData: PerformanceMetrics[];
+  campaigns: unknown[]; // Backward compatibility for campaigns list
 
   // Backward-compatible convenience methods used by legacy components
   fetchMailboxAnalytics: (
@@ -75,6 +77,10 @@ interface SimplifiedAnalyticsContextState {
   ) => Promise<Record<string, MailboxAnalyticsData>>;
   getAccountMetrics: (accountId?: string) => Promise<unknown | null>;
   smartInsightsList: unknown[];
+
+  // Additional backward compatibility properties
+  chartData: unknown[];
+  fetchDomainsWithMailboxes: () => Promise<DomainWithMailboxesData[]>;
   // Backward-compatible direct filter accessors
   dateRange: DateRangePreset;
   setDateRange: (r: DateRangePreset) => void;
@@ -532,6 +538,7 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
         bounceRate: formattedStats.bounceRate,
         deliveryRate: formattedStats.deliveryRate,
         campaignPerformanceData: [], // TODO: Implement proper campaign data
+        campaigns: [], // TODO: Implement proper campaigns list
         // Warmup legacy state
         visibleWarmupMetrics,
         setVisibleWarmupMetrics,
@@ -662,6 +669,17 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
           }
         },
         smartInsightsList: [],
+
+        // Additional backward compatibility properties
+        chartData: [],
+        fetchDomainsWithMailboxes: async () => {
+          try {
+            // Best-effort: return empty default until a proper service call is wired
+            return [] as DomainWithMailboxesData[];
+          } catch {
+            return [] as DomainWithMailboxesData[];
+          }
+        },
 
         // Service Access
         services: analyticsService,

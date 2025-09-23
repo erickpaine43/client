@@ -10,7 +10,7 @@ import { AlertTriangle, Check, Shield, Loader2, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useServerAction } from "@/hooks/useServerAction";
-import { getSecurityRecommendations } from "@/lib/actions/settingsActions";
+import { getSecurityRecommendations } from "@/lib/actions/settings";
 
 interface SecurityRecommendation {
   id: string;
@@ -34,7 +34,7 @@ function SecurityRecommendations() {
   // Load security data on mount
   useEffect(() => {
     securityAction.execute();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleRefresh = async () => {
@@ -77,7 +77,7 @@ function SecurityRecommendations() {
         </div>
 
         <SettingsErrorState
-          error={securityAction.error}
+          error={securityAction.error?.message || "An error occurred"}
           errorType="network"
           onRetry={() => securityAction.execute()}
           retryLoading={securityAction.loading}

@@ -3,9 +3,12 @@
 import { useMemo, useCallback } from "react";
 import { CampaignAnalytics } from "@/types/analytics/domain-specific";
 import { convexCampaignAnalytics } from "@/lib/data/analytics-convex.mock";
+import {
+  updateCampaignAnalytics
+} from "@/lib/actions/analytics/campaign-analytics";
 
 // Import Convex hooks - will be mocked in tests
-import { useQuery, useMutation } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
 /**
@@ -20,9 +23,7 @@ export function useCampaignAnalytics(
   // Try to use Convex query for real-time data
   const convexData = useQuery(
     api.campaignAnalytics?.getCampaignAnalytics,
-    campaignIds && companyId 
-      ? { campaignIds, companyId }
-      : "skip"
+    campaignIds && companyId ? {} : "skip"
   );
 
   // Transform and memoize the data
@@ -396,27 +397,24 @@ export function useOptimisticCampaignAnalytics(
 ) {
   const { data: baseData, isLoading, error } = useCampaignAnalytics(campaignIds, companyId);
   
-  // Get mutation function from Convex (static import makes mocking easier in tests)
-  const convexUpdateMutation = useMutation(api.campaignAnalytics?.upsertCampaignAnalytics);
   const updateWithOptimisticUI = useCallback(async (campaignId: string, updates: Partial<CampaignAnalytics>) => {
     try {
       console.log("Optimistic update:", { campaignId, updates });
 
-      // In a real implementation, this would:
-      // 1. Immediately update local state (optimistic)
-      // 2. Call the server mutation
-      // 3. Revert on error or confirm on success
-
-  // Use convex mutation if available, otherwise use a fallback resolved promise
-  const mutationFn = convexUpdateMutation ?? (() => Promise.resolve("mock-success"));
-  await mutationFn({ campaignId, ...updates });
+      // Call the server action
+      const result = await updateCampaignAnalytics(campaignId, updates);
+      
+      if (!result.success) {
+        throw new Error(result.error?.message || 'Failed to update campaign analytics');
+      }
 
       console.log("Optimistic update completed:", { campaignId, updates });
+      return result.data;
     } catch (error) {
       console.error("Optimistic update failed:", error);
       throw error;
     }
-  }, [convexUpdateMutation]);
+  }, []);
 
   return {
     data: baseData,

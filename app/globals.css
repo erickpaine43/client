@@ -422,3 +422,23 @@ body {
 .grid-cols-responsive {
   @apply grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4;
 }
+
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.gradient-bg {
+  background: linear-gradient(-45deg, #e0f2f7, #b2ebf2, #80deea, #4dd0e1);
+  animation: gradientAnimation 15s ease infinite;
+}
+
+.bounce-animation {
+  animation: bounce 2s ease-in-out infinite;
+}

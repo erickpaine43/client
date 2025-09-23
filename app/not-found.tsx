@@ -3,31 +3,10 @@ import Link from "next/link";
 import Image from "next/image";
 
 const NotFound = () => {
-  const backgroundAnimation = `
-    @keyframes gradientAnimation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-  `;
-
-  const logoAnimation = `
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
-    }
-  `;
   return (
     <LandingLayout>
-      <style>{backgroundAnimation}</style>
-      <style>{logoAnimation}</style>
       <div
-        className="min-h-screen flex flex-col items-center justify-center text-primary-800"
-        style={{
-          background:
-            "linear-gradient(-45deg, #e0f2f7, #b2ebf2, #80deea, #4dd0e1)",
-          animation: "gradientAnimation 15s ease infinite",
-        }}
+        className="min-h-screen flex flex-col items-center justify-center text-primary-800 gradient-bg"
       >
         <div className="flex flex-col items-center text-center p-8 bg-white rounded-lg shadow-lg">
           <Image
@@ -35,10 +14,7 @@ const NotFound = () => {
             alt="Product Logo"
             width={100}
             height={100}
-            className="mb-6"
-            style={{
-              animation: "bounce 2s ease-in-out infinite",
-            }}
+            className="mb-6 bounce-animation"
           />
           <h1 className="text-6xl font-extrabold text-primary-600 mb-4">404</h1>
           <p className="text-2xl text-primary-700 mb-6">
