@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getConversationCount } from "@/lib/actions/inboxActions";
-import { RefreshCw, Settings } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 
 export default async function ConversationsListHeader({
   title = "All Conversations",
@@ -20,9 +20,6 @@ export default async function ConversationsListHeader({
         <div className="flex items-center space-x-2">
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
             <RefreshCw className="w-4 h-4" />
-          </Button>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <Settings className="w-4 h-4" />
           </Button>
         </div>
       </div>

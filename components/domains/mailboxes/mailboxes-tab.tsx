@@ -13,6 +13,7 @@ import { Loader2, Mail, Plus, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { MailboxWarmupData, ProgressiveAnalyticsState } from "@/types";
 import MailboxesFilter from "./MailboxesFilter";
+import { useAddMailboxesContext } from "@/context/AddMailboxesContext";
 
 interface MailboxesTabProps {
   mailboxes: MailboxWarmupData[];
@@ -21,7 +22,12 @@ interface MailboxesTabProps {
   error: string | null;
 }
 
-function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTabProps) {
+function MailboxesTab({
+  mailboxes,
+  analyticsState,
+  loading,
+  error,
+}: MailboxesTabProps) {
   if (loading) {
     return (
       <Card>
@@ -32,9 +38,7 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
               <h2 className="text-xl font-semibold text-gray-900">
                 All Mailboxes
               </h2>
-              <Badge className="bg-primary/20 text-primary">
-                Loading...
-              </Badge>
+              <Badge className="bg-primary/20 text-primary">Loading...</Badge>
             </div>
           </CardTitle>
         </CardHeader>
@@ -42,9 +46,7 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
               <Loader2 className="w-12 h-12 text-primary mx-auto mb-4 animate-spin" />
-              <p className="text-gray-500">
-                Loading mailboxes...
-              </p>
+              <p className="text-gray-500">Loading mailboxes...</p>
             </div>
           </div>
         </CardContent>
@@ -62,9 +64,7 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
               <h2 className="text-xl font-semibold text-gray-900">
                 All Mailboxes
               </h2>
-              <Badge className="bg-red-100 text-red-800">
-                Error
-              </Badge>
+              <Badge className="bg-red-100 text-red-800">Error</Badge>
             </div>
           </CardTitle>
         </CardHeader>
@@ -96,44 +96,35 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
           </div>
         </CardTitle>
         <div className="flex justify-end">
-          <Button asChild>
-            <Link
-              href="/dashboard/domains/mailboxes/new"
-              className="flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4 " />
-              Add Mailbox
-            </Link>
-          </Button>
+          <AddMailboxesButton />
         </div>
       </CardHeader>
       <MailboxesFilter />
       <CardContent className="p-0">
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader className="bg-gray-100 ">
-              <TableRow>
-                <TableHead>Mailbox</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Daily Limit</TableHead>
-                <TableHead>Sent</TableHead>
-                <TableHead>Last Activity</TableHead>
-                <TableHead>Progress</TableHead>
-                <TableHead>Total Warmups</TableHead>
-                <TableHead>Spam Flags</TableHead>
-                <TableHead>Replies</TableHead>
-                <TableHead>Health Score</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mailboxes.map((mailbox) => {
-                const analytics = analyticsState[mailbox.id];
-                return (
-                  <TableRow
-                    key={mailbox.id}
-                    className="hover:bg-gray-50 transition-colors group"
-                  >
+        <Table className="table">
+          <TableHeader className="bg-gray-100">
+            <TableRow>
+              <TableHead>Mailbox</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Daily Limit</TableHead>
+              <TableHead>Sent</TableHead>
+              <TableHead>Last Activity</TableHead>
+              <TableHead>Progress</TableHead>
+              <TableHead>Total Warmups</TableHead>
+              <TableHead>Spam Flags</TableHead>
+              <TableHead>Replies</TableHead>
+              <TableHead>Health Score</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {mailboxes.map((mailbox) => {
+              const analytics = analyticsState[mailbox.id];
+              return (
+                <TableRow
+                  key={mailbox.id}
+                  className="hover:bg-gray-50 transition-colors group"
+                >
                   <TableCell className="px-8 py-6">
                     <div>
                       <h3 className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors text-lg">
@@ -142,16 +133,25 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
                       <p className="text-sm text-gray-500 mt-1">
                         Date Created :{" "}
                         {Intl.DateTimeFormat("en-US").format(
-                          new Date(mailbox.createdAt || ""),
+                          new Date(mailbox.createdAt || "")
                         )}
                       </p>
                       <p className="text-xs text-gray-400 mt-1">
-                        Domain: {mailbox.domain || mailbox.email.split('@')[1]}
+                        Domain: {mailbox.domain || mailbox.email.split("@")[1]}
                       </p>
                     </div>
                   </TableCell>
                   <TableCell className="px-6 py-6">
-                    <Badge variant={mailbox.status === "active" ? "default" : mailbox.status === "warming" ? "secondary" : "outline"} className="capitalize">
+                    <Badge
+                      variant={
+                        mailbox.status === "active"
+                          ? "default"
+                          : mailbox.status === "warming"
+                            ? "secondary"
+                            : "outline"
+                      }
+                      className="capitalize"
+                    >
                       {mailbox.status}
                     </Badge>
                   </TableCell>
@@ -170,7 +170,9 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
                     <div className="space-y-1">
                       <div className="flex items-center space-x-2">
                         <span className="text-sm font-medium text-gray-900">
-                          {(analytics?.data?.totalWarmups || 0).toLocaleString()}
+                          {(
+                            analytics?.data?.totalWarmups || 0
+                          ).toLocaleString()}
                         </span>
                         <span className="text-xs text-gray-500">
                           total sent
@@ -179,13 +181,17 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
                     </div>
                   </TableCell>
                   <TableCell className="px-6 py-6 text-sm text-gray-500">
-                    {analytics?.data?.lastUpdated ? analytics.data.lastUpdated.toLocaleString() : "N/A"}
+                    {analytics?.data?.lastUpdated
+                      ? analytics.data.lastUpdated.toLocaleString()
+                      : "N/A"}
                   </TableCell>
                   <TableCell>
                     {analytics?.loading ? (
                       <div className="flex items-center space-x-2">
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">Loading...</span>
+                        <span className="text-sm text-muted-foreground">
+                          Loading...
+                        </span>
                       </div>
                     ) : analytics?.error ? (
                       <div className="flex items-center space-x-2 text-red-500">
@@ -198,10 +204,14 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
                           <div className="w-16 bg-gray-200 rounded-full h-2">
                             <div
                               className="bg-primary h-2 rounded-full transition-all duration-300"
-                              style={{ width: `${analytics.data.warmupProgress}%` }}
+                              style={{
+                                width: `${analytics.data.warmupProgress}%`,
+                              }}
                             />
                           </div>
-                          <span className="text-sm font-medium">{analytics.data.warmupProgress}%</span>
+                          <span className="text-sm font-medium">
+                            {analytics.data.warmupProgress}%
+                          </span>
                         </div>
                       </>
                     ) : (
@@ -212,7 +222,9 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
                     {analytics?.loading ? (
                       <div className="flex items-center space-x-2">
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">Loading...</span>
+                        <span className="text-sm text-muted-foreground">
+                          Loading...
+                        </span>
                       </div>
                     ) : analytics?.error ? (
                       <div className="flex items-center space-x-2 text-red-500">
@@ -229,7 +241,9 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
                     {analytics?.loading ? (
                       <div className="flex items-center space-x-2">
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">Loading...</span>
+                        <span className="text-sm text-muted-foreground">
+                          Loading...
+                        </span>
                       </div>
                     ) : analytics?.error ? (
                       <div className="flex items-center space-x-2 text-red-500">
@@ -237,7 +251,10 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
                         <span className="text-sm">Error</span>
                       </div>
                     ) : (
-                      <Badge variant="outline" className="text-red-600 border-red-300">
+                      <Badge
+                        variant="outline"
+                        className="text-red-600 border-red-300"
+                      >
                         {analytics?.data?.spamFlags || "N/A"}
                       </Badge>
                     )}
@@ -246,7 +263,9 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
                     {analytics?.loading ? (
                       <div className="flex items-center space-x-2">
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">Loading...</span>
+                        <span className="text-sm text-muted-foreground">
+                          Loading...
+                        </span>
                       </div>
                     ) : analytics?.error ? (
                       <div className="flex items-center space-x-2 text-red-500">
@@ -263,7 +282,9 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
                     {analytics?.loading ? (
                       <div className="flex items-center space-x-2">
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">Loading...</span>
+                        <span className="text-sm text-muted-foreground">
+                          Loading...
+                        </span>
                       </div>
                     ) : analytics?.error ? (
                       <div className="flex items-center space-x-2 text-red-500">
@@ -272,7 +293,9 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
                       </div>
                     ) : (
                       <div className="flex items-center space-x-2">
-                        <span className="text-sm font-medium">{analytics?.data?.healthScore || "N/A"}</span>
+                        <span className="text-sm font-medium">
+                          {analytics?.data?.healthScore || "N/A"}
+                        </span>
                         <span className="text-xs text-muted-foreground">%</span>
                       </div>
                     )}
@@ -286,11 +309,23 @@ function MailboxesTab({ mailboxes, analyticsState, loading, error }: MailboxesTa
                 </TableRow>
               );
             })}
-            </TableBody>
-          </Table>
-        </div>
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );
 }
 export default MailboxesTab;
+
+function AddMailboxesButton() {
+  const { setOpen } = useAddMailboxesContext();
+  const handleClick = () => {
+    setOpen(true);
+  };
+  return (
+    <Button onClick={handleClick}>
+      <Plus className="w-4 h-4 " />
+      Add Mailbox
+    </Button>
+  );
+}

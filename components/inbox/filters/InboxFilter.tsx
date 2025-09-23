@@ -59,7 +59,6 @@ function InboxFilter() {
     { id: "sent", label: "Sent", count: 89, icon: Send },
     { id: "archived", label: "Archived", count: 43, icon: Archive },
     { id: "trash", label: "Trash", count: 12, icon: Trash2 },
-    { id: "team", label: "Team", count: 8, icon: Users },
   ];
   useEffect(() => {
     const params = new URLSearchParams();

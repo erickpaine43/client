@@ -13,9 +13,9 @@ export default async function DashboardRootLayout({
   return (
     <ProtectedRoute>
       <AnalyticsProvider>
-        <SidebarProvider>
+        <SidebarProvider >
           <AppSideBar />
-          <SidebarInset className="bg-sidebar md:peer-data-[variant=inset]:shadow-none gap-5">
+          <SidebarInset className="w-10/12 bg-sidebar md:peer-data-[variant=inset]:shadow-none gap-5">
             <div className="bg-white rounded-lg shadow-sm">
               <Header />
             </div>

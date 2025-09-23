@@ -10,10 +10,11 @@ function page() {
             <Star className="w-8 h-8 text-gray-400" />
           </div>
           <h3 className="text-lg font-medium text-gray-900 mb-2">
-            Template Gallery
+            Coming Soon
           </h3>
           <p className="text-gray-600">
-            Browse our collection of proven email templates
+            This tab is under construction. But trust us, it’ll be worth the
+            wait.
           </p>
         </div>
       </div>

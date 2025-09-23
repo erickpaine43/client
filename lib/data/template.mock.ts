@@ -1,3 +1,8 @@
+import GalleryTab from "@/components/templates/gallery-tab";
+import MyTemplatesTab from "@/components/templates/my-templates-tab";
+import QuickRepliesTab from "@/components/templates/qucik-replies-tab";
+import { Tab, TemplateCategoryType, TemplateUsageLevel } from "@/types";
+
 // Transform userTemplates from components/templates/mocks.ts
 const transformedUserTemplates = [
   {
@@ -202,8 +207,6 @@ const transformedBuiltInTemplates = [
   },
 ];
 
-import { TemplateCategoryType, TemplateUsageLevel } from "@/types";
-
 export const initialFolders = [
   {
     id: 1,
@@ -403,4 +406,26 @@ export const initialQuickReplies = initialFolders
 export const initialTemplates = initialFolders
   .flatMap((folder) => folder.children)
   .filter((child) => child.type === "template");
+
+
+export const tabs: Tab[] = [
+  {
+    id: "quick-replies",
+    label: "Quick Replies",
+    count: initialQuickReplies.length,
+    Component: QuickRepliesTab,
+  },
+  {
+    id: "templates",
+    label: "My Templates",
+    count: initialTemplates.length,
+    Component: MyTemplatesTab,
+  },
+  {
+    id: "magic",
+    label: "Magic",
+    count: 0,
+    Component: GalleryTab,
+  },
+];
 

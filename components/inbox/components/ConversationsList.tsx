@@ -98,13 +98,6 @@ function ConversationsList({
                           >
                             <Star className="w-4 h-4" />
                           </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0"
-                          >
-                            <MoreHorizontal className="w-4 h-4" />
-                          </Button>
                         </div>
                       </div>
                     </div>

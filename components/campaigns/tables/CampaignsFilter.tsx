@@ -7,10 +7,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Calendar, CheckIcon, Search, Server } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Calendar, CheckIcon, Search, Server, X } from "lucide-react";
 import { useState } from "react";
 import DatePicker from "../../ui/custom/DatePicker";
 import { availableMailboxes } from "@/lib/data/campaigns";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 enum CampaignStatus {
   All = "all",
@@ -31,7 +40,24 @@ function CampaignsFilter() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [startDate, setStartDate] = useState<Date | undefined>(new Date());
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
-  const [mailbox, setMailbox] = useState<string | undefined>(undefined);
+  const [selectedMailboxes, setSelectedMailboxes] = useState<string[]>([]);
+  const [isMailboxOpen, setIsMailboxOpen] = useState(false);
+
+  const handleMailboxChange = (mailbox: string, checked: boolean) => {
+    if (checked) {
+      setSelectedMailboxes((prev) => [...prev, mailbox]);
+    } else {
+      setSelectedMailboxes((prev) => prev.filter((m) => m !== mailbox));
+    }
+  };
+
+  const removeMailbox = (mailbox: string) => {
+    setSelectedMailboxes((prev) => prev.filter((m) => m !== mailbox));
+  };
+
+  const clearAllMailboxes = () => {
+    setSelectedMailboxes([]);
+  };
 
   return (
     <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center bg-white p-4 rounded-lg shadow border gap-4">
@@ -121,20 +147,80 @@ function CampaignsFilter() {
             )}
           </SelectContent>
         </Select>
-        <Select value={mailbox} onValueChange={setMailbox}>
-          <SelectTrigger className="w-full sm:w-auto">
-            <Server className="w-5 h-5" />
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All MailBox</SelectItem>
-            {availableMailboxes.map((mailbox) => (
-              <SelectItem key={mailbox} value={mailbox}>
-                {mailbox}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Popover open={isMailboxOpen} onOpenChange={setIsMailboxOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="w-full sm:w-auto justify-start text-gray-500"
+            >
+              <Server className="w-4 h-4 mr-2" />
+              {selectedMailboxes.length === 0
+                ? "Select Mailboxes"
+                : `${selectedMailboxes.length} selected`}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start" className="w-80 p-0">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="font-medium">Select Mailboxes</h4>
+                {selectedMailboxes.length > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearAllMailboxes}
+                    className="h-auto p-1 text-xs"
+                  >
+                    Clear All
+                  </Button>
+                )}
+              </div>
+
+              {selectedMailboxes.length > 0 && (
+                <div className="mb-3">
+                  <div className="flex flex-wrap gap-1">
+                    {selectedMailboxes.map((mailbox) => (
+                      <div
+                        key={mailbox}
+                        className="inline-flex items-center gap-1 bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                      >
+                        {mailbox}
+                        <X
+                          className="w-3 h-3 cursor-pointer hover:text-blue-600"
+                          onClick={() => removeMailbox(mailbox)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-2 max-h-50 overflow-y-auto ">
+                {availableMailboxes.map((mailbox) => (
+                  <div
+                    key={mailbox}
+                    className={cn("flex items-center space-x-2", {
+                      "opacity-50": !selectedMailboxes.includes(mailbox),
+                    })}
+                  >
+                    <Checkbox
+                      id={mailbox}
+                      checked={selectedMailboxes.includes(mailbox)}
+                      onCheckedChange={(checked) =>
+                        handleMailboxChange(mailbox, checked as boolean)
+                      }
+                    />
+                    <Label
+                      htmlFor={mailbox}
+                      className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                    >
+                      {mailbox}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );

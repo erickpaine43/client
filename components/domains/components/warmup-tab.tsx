@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getStatusColor } from "@/lib/utils/domains";
+import { getStatusColor } from "@/lib/data/domains";
 import { cn } from "@/lib/utils";
 import {
   AlertTriangle,
@@ -29,10 +29,22 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-function WarmupTab({ domainsData, loading, error }: { domainsData: DomainWithMailboxesData[], loading: boolean, error: string | null }) {
+function WarmupTab({
+  domainsData,
+  loading,
+  error,
+}: {
+  domainsData: DomainWithMailboxesData[];
+  loading: boolean;
+  error: string | null;
+}) {
   return (
     <div className="space-y-8">
-      <WarmupMailboxesTable domainsData={domainsData} loading={loading} error={error} />
+      <WarmupMailboxesTable
+        domainsData={domainsData}
+        loading={loading}
+        error={error}
+      />
       <Card>
         <CardContent className="p-6">
           <div className="flex items-start space-x-3">
@@ -64,8 +76,15 @@ function WarmupTab({ domainsData, loading, error }: { domainsData: DomainWithMai
 
 export default WarmupTab;
 
-function WarmupMailboxesTable({ domainsData, loading, error }: { domainsData: DomainWithMailboxesData[], loading: boolean, error: string | null }) {
-
+function WarmupMailboxesTable({
+  domainsData,
+  loading,
+  error,
+}: {
+  domainsData: DomainWithMailboxesData[];
+  loading: boolean;
+  error: string | null;
+}) {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "WARMED":
@@ -136,7 +155,7 @@ function WarmupMailboxesTable({ domainsData, loading, error }: { domainsData: Do
           <Button variant="ghost" size="icon">
             <Settings className="w-4 h-4" />
           </Button>
-          <Link href="/dashboard/analytics/mailboxes">
+          <Link href="/dashboard/analytics/warmup">
             <Button variant="ghost" size="icon">
               <BarChart3 className="w-4 h-4" />
             </Button>
@@ -159,10 +178,16 @@ function WarmupMailboxesTable({ domainsData, loading, error }: { domainsData: Do
             <TableBody>
               {domainsData.map((domainData) => {
                 const { domain, aggregated } = domainData;
-                const mainStatus = aggregated.statusSummary.NOT_STARTED > 0 ? 'NOT_STARTED'
-                  : aggregated.statusSummary.WARMING > 0 ? 'WARMING'
-                    : aggregated.statusSummary.PAUSED > 0 ? 'PAUSED'
-                      : aggregated.statusSummary.WARMED > 0 ? 'WARMED' : 'NOT_STARTED';
+                const mainStatus =
+                  aggregated.statusSummary.NOT_STARTED > 0
+                    ? "NOT_STARTED"
+                    : aggregated.statusSummary.WARMING > 0
+                      ? "WARMING"
+                      : aggregated.statusSummary.PAUSED > 0
+                        ? "PAUSED"
+                        : aggregated.statusSummary.WARMED > 0
+                          ? "WARMED"
+                          : "NOT_STARTED";
 
                 return (
                   <TableRow
@@ -178,7 +203,13 @@ function WarmupMailboxesTable({ domainsData, loading, error }: { domainsData: Do
                           Status: {domain.status}
                         </p>
                         <p className="text-xs text-gray-400 mt-1">
-                          DNS: {domain.records?.spf === 'verified' ? '✅' : '❌'} SPF, {domain.records?.dkim === 'verified' ? '✅' : '❌'} DKIM, {domain.records?.dmarc === 'verified' ? '✅' : '❌'} DMARC
+                          DNS:{" "}
+                          {domain.records?.spf === "verified" ? "✅" : "❌"}{" "}
+                          SPF,{" "}
+                          {domain.records?.dkim === "verified" ? "✅" : "❌"}{" "}
+                          DKIM,{" "}
+                          {domain.records?.dmarc === "verified" ? "✅" : "❌"}{" "}
+                          DMARC
                         </p>
                       </div>
                     </TableCell>
@@ -186,7 +217,7 @@ function WarmupMailboxesTable({ domainsData, loading, error }: { domainsData: Do
                       <div className="space-y-1">
                         <span
                           className={`inline-flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm font-medium ${getStatusColor(
-                            mainStatus,
+                            mainStatus
                           )}`}
                         >
                           {getStatusIcon(mainStatus)}
@@ -203,7 +234,9 @@ function WarmupMailboxesTable({ domainsData, loading, error }: { domainsData: Do
                           </span>
                         </span>
                         <div className="text-xs text-gray-500">
-                          {aggregated.statusSummary.WARMED} Ready, {aggregated.statusSummary.WARMING} Warming, {aggregated.statusSummary.PAUSED} Paused
+                          {aggregated.statusSummary.WARMED} Ready,{" "}
+                          {aggregated.statusSummary.WARMING} Warming,{" "}
+                          {aggregated.statusSummary.PAUSED} Paused
                         </div>
                       </div>
                     </TableCell>
@@ -219,16 +252,22 @@ function WarmupMailboxesTable({ domainsData, loading, error }: { domainsData: Do
                           </TooltipTrigger>
                           <TooltipContent className="max-w-sm">
                             <div className="space-y-1 bg-gray-90">
-                              <div className="font-medium">Mailboxes in {domain.domain}:</div>
+                              <div className="font-medium">
+                                Mailboxes in {domain.domain}:
+                              </div>
                               {domainData.mailboxes.length > 0 ? (
                                 domainData.mailboxes.map((mailbox) => (
                                   <div key={mailbox.id} className="text-xs">
-                                    <span className="font-medium">{mailbox.email}</span>
+                                    <span className="font-medium">
+                                      {mailbox.email}
+                                    </span>
                                     <span> - {mailbox.warmupStatus}</span>
                                   </div>
                                 ))
                               ) : (
-                                <div className="text-xs text-muted-foreground">No mailboxes configured</div>
+                                <div className="text-xs text-muted-foreground">
+                                  No mailboxes configured
+                                </div>
                               )}
                             </div>
                           </TooltipContent>
@@ -279,7 +318,9 @@ function WarmupMailboxesTable({ domainsData, loading, error }: { domainsData: Do
                             <Settings className="w-4 h-4" />
                           </Button>
                         </Link>
-                        <Link href={`/dashboard/analytics/mailboxes?domain=${domain.domain}`}>
+                        <Link
+                          href={`/dashboard/analytics/warmup?domain=${domain.domain}`}
+                        >
                           <Button variant="ghost" size="icon">
                             <BarChart3 className="w-4 h-4" />
                           </Button>

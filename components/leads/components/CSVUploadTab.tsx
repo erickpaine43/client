@@ -25,7 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AlertCircle, Download, Loader2, Upload, X } from "lucide-react";
+import { AlertCircle, Download, Loader2, Plus, Upload, X } from "lucide-react";
 import Papa from "papaparse";
 import { useRef, useState } from "react";
 import { CSV_COLUMNS, CSVRecord } from "@/types/clients-leads";
@@ -128,13 +128,18 @@ function FilePreview({
     listName: string;
     tags: string;
     columnMapping: Record<string, string>;
+    customColumns: Array<{ key: string; label: string; required: boolean }>;
   }) => void;
 }) {
   const [columnMapping, setColumnMapping] = useState<Record<string, string>>(
-    {},
+    {}
   );
   const [listName, setListName] = useState("");
   const [tags, setTags] = useState("");
+  const [customColumns, setCustomColumns] = useState<
+    Array<{ key: string; label: string; required: boolean }>
+  >([]);
+  const [newColumnLabel, setNewColumnLabel] = useState("");
 
   // Auto-map columns on mount
   useState(() => {
@@ -146,7 +151,7 @@ function FilePreview({
         const found = headers.find(
           (h) =>
             h.toLowerCase().replace(/[^a-z0-9]/g, "_") ===
-            col.label.toLowerCase().replace(/[^a-z0-9]/g, "_"),
+            col.label.toLowerCase().replace(/[^a-z0-9]/g, "_")
         );
         if (found) mapping[col.key] = found;
       });
@@ -157,9 +162,36 @@ function FilePreview({
 
   const isValid = () => {
     const requiredMapped = CSV_COLUMNS.filter((col) => col.required).every(
-      (col) => columnMapping[col.key],
+      (col) => columnMapping[col.key]
     );
-    return requiredMapped && listName.trim();
+    const customRequiredMapped = customColumns
+      .filter((col) => col.required)
+      .every((col) => columnMapping[col.key]);
+    return requiredMapped && customRequiredMapped && listName.trim();
+  };
+
+  const addCustomColumn = () => {
+    if (!newColumnLabel.trim()) return;
+
+    const key = `custom_${Date.now()}`;
+    setCustomColumns((prev) => [
+      ...prev,
+      {
+        key,
+        label: newColumnLabel.trim(),
+        required: false,
+      },
+    ]);
+    setNewColumnLabel("");
+  };
+
+  const removeCustomColumn = (keyToRemove: string) => {
+    setCustomColumns((prev) => prev.filter((col) => col.key !== keyToRemove));
+    setColumnMapping((prev) => {
+      const updated = { ...prev };
+      delete updated[keyToRemove];
+      return updated;
+    });
   };
 
   return (
@@ -208,6 +240,74 @@ function FilePreview({
                 </Select>
               </div>
             ))}
+
+            {/* Custom Columns */}
+            {customColumns.map((col) => (
+              <div key={col.key} className="space-y-2">
+                <Label className="flex items-center justify-between">
+                  <span>
+                    {col.label}{" "}
+                    {col.required && <span className="text-red-500">*</span>}
+                    <span className="text-xs text-blue-600 ml-1">(Custom)</span>
+                  </span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeCustomColumn(col.key)}
+                    className="h-4 w-4 p-0 text-red-500 hover:text-red-700"
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                </Label>
+                <Select
+                  value={columnMapping[col.key] || ""}
+                  onValueChange={(value) =>
+                    setColumnMapping((prev) => ({ ...prev, [col.key]: value }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select column..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.keys(data[0] || {}).map((key) => (
+                      <SelectItem key={key} value={key}>
+                        {key}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            ))}
+          </div>
+
+          {/* Add Custom Column */}
+          <div className="mt-4 p-4 border border-dashed border-gray-300 rounded-lg">
+            <h5 className="font-medium text-sm mb-3 text-gray-700">
+              Add Custom Merge Tag
+            </h5>
+            <div className="flex gap-2">
+              <Input
+                placeholder="e.g., Industry, Location, Department..."
+                value={newColumnLabel}
+                onChange={(e) => setNewColumnLabel(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && addCustomColumn()}
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                onClick={addCustomColumn}
+                disabled={!newColumnLabel.trim()}
+                size="sm"
+              >
+                <Plus className="w-4 h-4 mr-1" />
+                Add
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              Custom merge tags will be available for personalization in your
+              email campaigns as {"{Custom Field Name}"}
+            </p>
           </div>
         </div>
 
@@ -260,6 +360,7 @@ function FilePreview({
                 listName: listName.trim(),
                 tags: tags.trim(),
                 columnMapping,
+                customColumns,
               })
             }
             disabled={!isValid()}
@@ -308,11 +409,11 @@ export default function CSVUploadTab() {
           if (results.errors.length > 0) {
             const criticalErrors: CSVError[] = results.errors.filter(
               (error: CSVError) =>
-                error.type === "Delimiter" || error.type === "Quotes",
+                error.type === "Delimiter" || error.type === "Quotes"
             );
             if (criticalErrors.length > 0) {
               reject(
-                new Error(`CSV parsing error: ${criticalErrors[0].message}`),
+                new Error(`CSV parsing error: ${criticalErrors[0].message}`)
               );
               return;
             }
@@ -326,8 +427,8 @@ export default function CSVUploadTab() {
           const filteredData: Record<string, string>[] = results.data.filter(
             (row: Record<string, string>) =>
               Object.values(row).some(
-                (val: string) => val && val.toString().trim(),
-              ),
+                (val: string) => val && val.toString().trim()
+              )
           );
 
           resolve(filteredData);
@@ -362,7 +463,7 @@ export default function CSVUploadTab() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to parse CSV file. Please check the format.",
+          : "Failed to parse CSV file. Please check the format."
       );
       setIsUploading(false);
       setCsvFile(null);
@@ -373,12 +474,20 @@ export default function CSVUploadTab() {
     listName,
     tags,
     columnMapping,
+    customColumns,
   }: {
     listName: string;
     tags: string;
     columnMapping: Record<string, string>;
+    customColumns: Array<{ key: string; label: string; required: boolean }>;
   }) => {
-    console.log({ listName, tags, columnMapping, data: csvData });
+    console.log({
+      listName,
+      tags,
+      columnMapping,
+      customColumns,
+      data: csvData,
+    });
     // Send to backend here
 
     // Reset after import
@@ -398,8 +507,8 @@ export default function CSVUploadTab() {
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-2">Upload Lead List</h2>
         <p className="text-muted-foreground">
-          Upload a CSV file with your leads. We&apos;ll automatically validate and
-          process them.
+          Upload a CSV file with your leads. We&apos;ll automatically validate
+          and process them.
         </p>
       </div>
 

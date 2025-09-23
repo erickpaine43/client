@@ -2,10 +2,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { getStatusColor } from "@/lib/utils/domains";
+import { getStatusColor } from "@/lib/data/domains";
 import { AlertTriangle, Check, Copy, Plus, X } from "lucide-react";
 import Link from "next/link";
 import DeleteDomainDialog from "../dialogs/DeleteDomainDialog";
+import AddDomainButton from "./add-domain-button";
 
 export const getRecordIcon = (status: string) => {
   switch (status) {
@@ -41,19 +42,10 @@ interface DomainsTabProps {
 }
 
 function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
-
   return (
     <div className="space-y-6">
       <div className="flex justify-end">
-        <Button asChild>
-          <Link
-            href="/dashboard/domains/new"
-            className="flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4 " />
-            Add Domain
-          </Link>
-        </Button>
+        <AddDomainButton/>
       </div>
       {domains.map((domain) => (
         <Card key={domain.id} className="p-6">
@@ -130,9 +122,9 @@ function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
                         DNS Setup Required
                       </h4>
                       <p className="text-sm text-orange-700 mt-1">
-                        Please add the DNS records above to your domain&apos;s DNS
-                        settings. Once added, verification typically takes 5-15
-                        minutes.
+                        Please add the DNS records above to your domain&apos;s
+                        DNS settings. Once added, verification typically takes
+                        5-15 minutes.
                       </p>
                       <Button
                         variant="ghost"

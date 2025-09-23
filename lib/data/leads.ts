@@ -21,6 +21,8 @@ export const leadLists = [
   },
 ];
 
+export type LeadList = typeof leadListsData[number];
+
 export const leadsStats = [
   {
     title: "Total Contacts",

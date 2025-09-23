@@ -1,5 +1,25 @@
 "use client";
-import { CheckCircle, Mail, Settings } from "lucide-react";
+import AddMailboxesNavigation from "@/components/domains/mailboxes/new/AddMailboxesNavigation";
+import AddMailboxesStep from "@/components/domains/mailboxes/new/AddMailboxesStep";
+import AddMailboxesStepper from "@/components/domains/mailboxes/new/AddMailboxesStepper";
+import NewMailboxHeaderDetails from "@/components/domains/mailboxes/new/NewMailboxHeaderDetails";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ArrowLeft, CheckCircle, Mail, Settings } from "lucide-react";
+import Link from "next/link";
 import { createContext, useContext, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -31,6 +51,8 @@ const steps = [
 export const AddMailboxesContext = createContext<{
   steps: typeof steps;
   currentStep: number;
+  open: boolean;
+  setOpen: (open: boolean) => void;
   setCurrentStep: (step: number) => void;
   currentStepData: (typeof steps)[0];
 } | null>(null);
@@ -51,6 +73,7 @@ export function AddMailboxesProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const [open, setOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const form = useForm<AddMailboxesFormType>({
     defaultValues: {
@@ -69,13 +92,49 @@ export function AddMailboxesProvider({
   return (
     <AddMailboxesContext.Provider
       value={{
+        open,
+        setOpen,
         steps,
         currentStep,
         setCurrentStep,
         currentStepData,
       }}
     >
-      <FormProvider {...form}>{children}</FormProvider>
+      <Dialog open={open} onOpenChange={setOpen} modal={true}>
+        <FormProvider {...form}>
+          <DialogContent className="sm:max-w-fit max-h-[90dvh] overflow-y-auto">
+            <DialogClose />
+            <DialogHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <Button variant="ghost" size="icon" asChild>
+                    <Link href="/dashboard/domains">
+                      <ArrowLeft className="w-6 h-6" />
+                    </Link>
+                  </Button>
+                  <div>
+                    <DialogTitle className="text-2xl font-bold text-gray-900">
+                      Create New Mailbox
+                    </DialogTitle>
+                    <p className="text-gray-600">
+                      Set up a mailbox to start sending cold emails
+                    </p>
+                  </div>
+                </div>
+                <NewMailboxHeaderDetails />
+              </div>
+            </DialogHeader>
+            <div>
+              <AddMailboxesStepper />
+              <AddMailboxesStep />
+            </div>
+            <DialogFooter>
+              <AddMailboxesNavigation />
+            </DialogFooter>
+          </DialogContent>
+        </FormProvider>
+      </Dialog>
+      {children}
     </AddMailboxesContext.Provider>
   );
 }
@@ -83,7 +142,7 @@ export function useAddMailboxesContext() {
   const context = useContext(AddMailboxesContext);
   if (!context) {
     throw new Error(
-      "useAddMailboxesContext must be used within AddDomainProvider",
+      "useAddMailboxesContext must be used within AddDomainProvider"
     );
   }
   return context;

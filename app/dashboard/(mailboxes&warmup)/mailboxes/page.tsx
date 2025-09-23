@@ -2,14 +2,19 @@
 
 import { useEffect, useState } from "react";
 import MailboxesTab from "@/components/domains/mailboxes/mailboxes-tab";
-import { getMailboxesAction, getMultipleMailboxAnalyticsAction } from "@/lib/actions/mailboxActions";
+import {
+  getMailboxesAction,
+  getMultipleMailboxAnalyticsAction,
+} from "@/lib/actions/mailboxActions";
 import { MailboxWarmupData, ProgressiveAnalyticsState } from "@/types";
+import { AddMailboxesProvider } from "@/context/AddMailboxesContext";
 
 function Page() {
   const [mailboxesLoading, setMailboxesLoading] = useState(true);
   const [mailboxes, setMailboxes] = useState<MailboxWarmupData[]>([]);
   const [mailboxesError, setMailboxesError] = useState<string | null>(null);
-  const [analyticsState, setAnalyticsState] = useState<ProgressiveAnalyticsState>({});
+  const [analyticsState, setAnalyticsState] =
+    useState<ProgressiveAnalyticsState>({});
 
   // Fetch mailboxes on component mount
   useEffect(() => {
@@ -45,16 +50,19 @@ function Page() {
 
         // Fetch analytics for all mailboxes
         const mailboxIds = mailboxes.map((mailbox) => mailbox.id);
-        const analyticsResults = await getMultipleMailboxAnalyticsAction(
-          mailboxIds
-        );
+        const analyticsResults =
+          await getMultipleMailboxAnalyticsAction(mailboxIds);
 
         // Update state with results
         const newState: ProgressiveAnalyticsState = {};
         mailboxes.forEach((mailbox) => {
           const analytics = analyticsResults[mailbox.id];
           if (analytics) {
-            newState[mailbox.id] = { data: analytics, loading: false, error: null };
+            newState[mailbox.id] = {
+              data: analytics,
+              loading: false,
+              error: null,
+            };
           } else {
             newState[mailbox.id] = {
               data: null,
@@ -83,12 +91,14 @@ function Page() {
   }, [mailboxes, mailboxesLoading]);
 
   return (
-    <MailboxesTab
-      mailboxes={mailboxes}
-      analyticsState={analyticsState}
-      loading={mailboxesLoading}
-      error={mailboxesError}
-    />
+    <AddMailboxesProvider>
+      <MailboxesTab
+        mailboxes={mailboxes}
+        analyticsState={analyticsState}
+        loading={mailboxesLoading}
+        error={mailboxesError}
+      />
+    </AddMailboxesProvider>
   );
 }
 
