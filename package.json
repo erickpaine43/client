@@ -22,7 +22,9 @@
     "convex:codegen": "npx convex codegen",
     "build:monitored": "node scripts/build-with-monitoring.js",
     "validate:performance": "npx tsx scripts/validate-performance.ts",
-    "docs:maintenance": "npx tsx scripts/docs-maintenance.ts"
+    "docs:maintenance": "npx tsx scripts/docs-maintenance.ts",
+    "migrate:billing": "npx tsx scripts/migrate-billing-schema.ts",
+    "migrate:billing:rollback": "npx tsx scripts/migrate-billing-schema.ts --rollback"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

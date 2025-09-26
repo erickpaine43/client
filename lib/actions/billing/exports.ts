@@ -13,10 +13,11 @@ export {
 } from './payment-methods';
 
 // Re-export invoice functions from invoices module
-export {
-  getBillingHistory,
-  downloadInvoice
-} from './invoices';
+// Note: getBillingHistory and downloadInvoice functions are not yet implemented
+// export {
+//   getBillingHistory,
+//   downloadInvoice
+// } from './invoices';
 
 // Re-export subscription functions from subscriptions module
 export {
