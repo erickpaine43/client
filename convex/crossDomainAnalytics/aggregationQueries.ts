@@ -8,7 +8,7 @@ import {
 } from "./calculations";
 
 // Import aggregation utilities
-import { aggregateMailboxMetrics } from "../utils/analytics-aggregators";
+import { aggregateMailboxMetrics } from "../utils/analyticsAggregators";
 
 import type { QueryCtx } from "../_generated/server";
 import type { EmailMetrics, MailboxAnalyticsRecord } from "./types";

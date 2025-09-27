@@ -447,7 +447,7 @@ export async function generateUsageInvoice(
     // 1. Get company billing and plan information
     const { getCompanyBilling } = await import("./company-billing");
     const { getSubscriptionPlan } = await import("./subscription-plans");
-    const { getCurrentUsageSummary } = await import("./billing-operations");
+    const { getCurrentUsageSummary } = await import("./usage-tracking");
 
     const billingResult = await getCompanyBilling(companyId);
     if (!billingResult.success) {

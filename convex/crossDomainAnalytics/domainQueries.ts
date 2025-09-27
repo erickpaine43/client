@@ -9,7 +9,7 @@ import {
 } from "./calculations";
 
 // Import aggregation utilities
-import { aggregateMailboxMetrics } from "../utils/analytics-aggregators";
+import { aggregateMailboxMetrics } from "../utils/analyticsAggregators";
 
 // Import types
 import type { MailboxAnalyticsRecord, EmailMetrics } from "./types";

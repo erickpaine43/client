@@ -29,13 +29,8 @@ export * from './billing-operations';
 export * from './usage';
 
 // Explicitly export user-facing subscription functions (not admin functions)
-export {
-  updateSubscriptionPlan,
-  updateBillingInfo,
-  cancelSubscription,
-  reactivateSubscription,
-  getBillingDataForSettings
-} from './billing-operations';
+export { cancelSubscription, reactivateSubscription, updateSubscriptionPlan } from "./subscription-handlers";
+export { updateBillingInfo, getBillingDataForSettings } from "./settings-integration";
 
 // Compatibility function for subscriptions module
 // TODO: This is a stub implementation - subscriptions.ts expects a different data structure

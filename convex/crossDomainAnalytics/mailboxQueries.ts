@@ -24,7 +24,7 @@ import {
 } from "./calculations";
 
 // Import aggregation utilities
-import { aggregateMailboxMetrics, aggregateDomainMetrics } from "../utils/analytics-aggregators";
+import { aggregateMailboxMetrics, aggregateDomainMetrics } from "../utils/analyticsAggregators";
 
 /**
  * Get comprehensive analytics that join mailbox and domain data.

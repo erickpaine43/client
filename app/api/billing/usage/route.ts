@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   getCurrentUsageSummary,
-} from "@/lib/actions/billing/billing-operations";
+} from "@/lib/actions/billing/usage-tracking";
 
 /**
  * Usage Tracking API Endpoints - Secure OLTP Operations

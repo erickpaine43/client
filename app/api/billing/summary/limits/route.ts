@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   checkPlanLimits,
-} from "@/lib/actions/billing/billing-operations";
+} from "@/lib/actions/billing/usage-tracking";
 
 /**
  * Plan Limits API Endpoint - Secure OLTP Operations
