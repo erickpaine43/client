@@ -9,7 +9,7 @@
 
 import { campaignLeads, campaignsData, mockedCampaigns } from '@/lib/data/campaigns';
 import { CampaignDisplay } from '@/types';
-import { withSecurity, SecurityConfigs } from '../core/auth-middleware';
+import { withSecurity, SecurityConfigs } from '../core/auth';
 import { ActionResult, ActionContext } from '../core/types';
 import { ErrorFactory, createActionResult } from '../core/errors';
 import { validateString, validateId } from '../core/validation';

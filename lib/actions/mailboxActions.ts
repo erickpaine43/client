@@ -8,7 +8,7 @@ import type {
   MailboxPerformanceData as ServiceMailboxPerformanceData,
   WarmupAnalyticsData as ServiceWarmupAnalyticsData,
 } from "@/lib/services/analytics/MailboxAnalyticsService";
-import { withSecurity, SecurityConfigs } from './core/auth-middleware';
+import { withSecurity, SecurityConfigs } from './core/auth';
 import { ActionResult, ActionContext } from './core/types';
 import { ErrorFactory } from './core/errors';
 
