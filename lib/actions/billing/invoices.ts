@@ -10,6 +10,7 @@ import {
   UsageType,
   InvoiceSchema,
 } from "@/types/billing";
+import { OVERAGE_PRICING } from "@/lib/constants/billing";
 
 // ============================================================================
 // INVOICE OLTP OPERATIONS
@@ -499,11 +500,11 @@ export async function generateUsageInvoice(
     // Add overage charges if applicable
     if (plan.emailsLimit !== -1 && usage!.emailsSent > plan.emailsLimit) {
       const overage = usage!.emailsSent - plan.emailsLimit;
-      const overagePrice = overage * 10; // $0.10 per email overage
+      const overagePrice = overage * OVERAGE_PRICING.EMAIL_PER_UNIT; // $0.10 per email overage
       lineItems.push({
         description: `Email overage (${overage} emails)`,
         quantity: overage,
-        unitPrice: 10,
+        unitPrice: OVERAGE_PRICING.EMAIL_PER_UNIT,
         totalPrice: overagePrice,
         usageType: UsageType.EMAILS,
         periodStart,
@@ -514,11 +515,11 @@ export async function generateUsageInvoice(
     // Add storage overage if applicable
     if (plan.storageLimit !== -1 && usage!.storageUsed > plan.storageLimit) {
       const overage = usage!.storageUsed - plan.storageLimit;
-      const overagePrice = overage * 500; // $5.00 per GB overage
+      const overagePrice = overage * OVERAGE_PRICING.STORAGE_PER_GB; // $5.00 per GB overage
       lineItems.push({
         description: `Storage overage (${overage} GB)`,
         quantity: overage,
-        unitPrice: 500,
+        unitPrice: OVERAGE_PRICING.STORAGE_PER_GB,
         totalPrice: overagePrice,
         usageType: UsageType.STORAGE,
         periodStart,
