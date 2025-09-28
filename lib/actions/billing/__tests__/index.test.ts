@@ -18,6 +18,18 @@ import { validateBillingAddress, validateSubscriptionChange } from '../validatio
 import * as billingIndex from '../index';
 import * as usageModule from '../usage';
 
+// Mock dependencies
+jest.mock('@/app/api/[...nile]/nile', () => ({
+  nile: {
+    db: {
+      query: jest.fn(),
+    },
+    users: {
+      getSelf: jest.fn(),
+    },
+  },
+}));
+
 // Mock the auth utilities
 jest.mock('../../core/auth', () => ({
   requireAuth: jest.fn(),
@@ -106,7 +118,13 @@ describe('Billing Actions', () => {
       mockValidateBillingAddress.mockReturnValue('Invalid address');
 
       const updates = {
-        billingAddress: { street: 'x' }, // Invalid short street
+        billingAddress: {
+          street: 'x', // Invalid short street
+          city: 'NY',
+          state: 'NY',
+          zipCode: '10001',
+          country: 'US'
+        },
       };
 
       await updateBillingInfo(updates);
@@ -121,8 +139,10 @@ describe('Billing Actions', () => {
       const result = await getSubscriptionPlans();
 
       expect(result.success).toBe(true);
-      expect(result.data).toEqual(subscriptionPlans);
-      expect(result.data?.length).toBeGreaterThan(0);
+      if (result.success) {
+        expect(result.data).toEqual(subscriptionPlans);
+        expect(result.data.length).toBeGreaterThan(0);
+      }
     });
 
     it('should not require authentication', async () => {
@@ -135,7 +155,9 @@ describe('Billing Actions', () => {
       const result = await getSubscriptionPlans();
 
       expect(result.success).toBe(true);
-      expect(result.data).toEqual(subscriptionPlans);
+      if (result.success) {
+        expect(result.data).toEqual(subscriptionPlans);
+      }
     });
   });
 

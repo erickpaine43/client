@@ -21,4 +21,8 @@ export const BILLING_ERROR_CODES = {
   NETWORK_ERROR: "NETWORK_ERROR",
 } as const;
 
-
+// Overage pricing constants (in cents to avoid floating point precision issues)
+export const OVERAGE_PRICING = {
+ EMAIL_PER_UNIT: 10, // $0.10 per email overage
+ STORAGE_PER_GB: 500, // $5.00 per GB storage overage
+} as const;

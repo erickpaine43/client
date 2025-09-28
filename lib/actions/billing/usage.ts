@@ -8,14 +8,8 @@
  */
 
 import { ActionResult } from '../core/types';
-import { ErrorFactory } from '../core/errors';
-import {
-  requireAuthUser,
-  getCurrentUserId,
-} from '../core/auth';
-import { RateLimiter } from '../../utils/rate-limit';
-
-const rateLimiter = new RateLimiter();
+import { ErrorFactory, withErrorHandling } from '../core/errors';
+import { withAuth, withContextualRateLimit, RateLimits } from '../core/auth';
 import { 
   mockUsageMetrics, 
   type UsageMetrics,
@@ -31,37 +25,29 @@ import {
  * Get usage metrics for the authenticated user
  */
 export async function getUsageMetrics(): Promise<ActionResult<UsageMetrics>> {
-  try {
-    await requireAuthUser();
-    const userId = await getCurrentUserId();
-    if (!userId) return ErrorFactory.authRequired();
+  return await withContextualRateLimit(
+    'billing:usage:metrics',
+    'user',
+    RateLimits.ANALYTICS_QUERY,
+    async () => {
+      return await withAuth(async (_context) => {
+        return await withErrorHandling(async () => {
+          // Simulate database fetch
+          await new Promise(resolve => setTimeout(resolve, 100));
 
-    // Rate limiting check
-    const canProceed = await rateLimiter.checkLimit(
-      `billing_${userId}`,
-      10,
-      60000
-    );
+          // In production, fetch from database
+          // const usage = await db.usageMetrics.findUnique({
+          //   where: { userId: context.userId }
+          // });
 
-    if (!canProceed) {
-      return ErrorFactory.rateLimit('Too many billing requests. Please try again later.');
+          return {
+            success: true,
+            data: mockUsageMetrics,
+          };
+        });
+      });
     }
-
-    // Simulate database fetch
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    // In production, fetch from database
-    // const usage = await db.usageMetrics.findUnique({
-    //   wherId }
-    // });
-
-    return {
-      success: true,
-      data: mockUsageMetrics,
-    };
-  } catch {
-    return ErrorFactory.internal('Failed to get usage metrics');
-  }
+  );
 }
 
 /**
@@ -74,46 +60,38 @@ export async function getUsageWithCalculations(): Promise<ActionResult<{
   projection: UsageMetrics;
   daysUntilReset: number;
 }>> {
-  try {
-    await requireAuthUser();
-    const userId = await getCurrentUserId();
-    if (!userId) return ErrorFactory.authRequired();
+  return await withContextualRateLimit(
+    'billing:usage:calculations',
+    'user',
+    RateLimits.ANALYTICS_QUERY,
+    async () => {
+      return await withAuth(async (_context) => {
+        return await withErrorHandling(async () => {
+          const usageResult = await getUsageMetrics();
+          if (!usageResult.success || !usageResult.data) {
+            return ErrorFactory.internal('Failed to get usage metrics');
+          }
 
-    // Rate limiting check
-    const canProceed = await rateLimiter.checkLimit(
-      `billing_${userId}`,
-      10,
-      60000
-    );
+          const usage = usageResult.data;
+          const percentages = calculateUsagePercentages(usage);
+          const overage = calculateOverage(usage);
+          const projection = projectMonthlyUsage(usage);
+          const daysUntilReset = getDaysUntilRenewal(usage.resetDate);
 
-    if (!canProceed) {
-      return ErrorFactory.rateLimit('Too many billing requests. Please try again later.');
+          return {
+            success: true,
+            data: {
+              usage,
+              percentages,
+              overage,
+              projection,
+              daysUntilReset,
+            },
+          };
+        });
+      });
     }
-
-    const usageResult = await getUsageMetrics();
-    if (!usageResult.success || !usageResult.data) {
-      return ErrorFactory.internal('Failed to get usage metrics');
-    }
-
-    const usage = usageResult.data;
-    const percentages = calculateUsagePercentages(usage);
-    const overage = calculateOverage(usage);
-    const projection = projectMonthlyUsage(usage);
-    const daysUntilReset = getDaysUntilRenewal(usage.resetDate);
-
-    return {
-      success: true,
-      data: {
-        usage,
-        percentages,
-        overage,
-        projection,
-        daysUntilReset,
-      },
-    };
-  } catch {
-    return ErrorFactory.internal('Failed to get usage calculations');
-  }
+  );
 }
 
 /**
@@ -123,74 +101,66 @@ export async function getUsageHistory(
   metric: keyof Pick<UsageMetrics, 'emailsSent' | 'contactsReached' | 'storageUsed'>,
   days: number = 30
 ): Promise<ActionResult<Array<{ date: string; value: number }>>> {
-  try {
-    await requireAuthUser();
-    const userId = await getCurrentUserId();
-    if (!userId) return ErrorFactory.authRequired();
+  return await withContextualRateLimit(
+    'billing:usage:history',
+    'user',
+    RateLimits.ANALYTICS_QUERY,
+    async () => {
+      return await withAuth(async (_context) => {
+        return await withErrorHandling(async () => {
+          // Validate metric
+          const validMetrics = ['emailsSent', 'contactsReached', 'storageUsed'];
+          if (!validMetrics.includes(metric)) {
+            return ErrorFactory.validation('Invalid usage metric');
+          }
 
-    // Rate limiting check
-    const canProceed = await rateLimiter.checkLimit(
-      `billing_${userId}`,
-      10,
-      60000
-    );
+          // Validate days range
+          if (days < 1 || days > 365) {
+            return ErrorFactory.validation('Days must be between 1 and 365');
+          }
 
-    if (!canProceed) {
-      return ErrorFactory.rateLimit('Too many billing requests. Please try again later.');
-    }
+          // Simulate database fetch
+          await new Promise(resolve => setTimeout(resolve, 200));
 
-    // Validate metric
-    const validMetrics = ['emailsSent', 'contactsReached', 'storageUsed'];
-    if (!validMetrics.includes(metric)) {
-      return ErrorFactory.validation('Invalid usage metric');
-    }
+          // In production, fetch historical data from database
+          // const history = await db.usageHistory.findMany({
+          //   where: {
+          //     userId: context.userId,
+          //     metric,
+          //     date: {
+          //       gte: new Date(Date.now() - days * 24 * 60 * 60 * 1000)
+          //     }
+          //   },
+          //   orderBy: { date: 'asc' }
+          // });
 
-    // Validate days range
-    if (days < 1 || days > 365) {
-      return ErrorFactory.validation('Days must be between 1 and 365');
-    }
+          // Generate mock historical data
+          const history: Array<{ date: string; value: number }> = [];
+          const currentValue = mockUsageMetrics[metric];
+          
+          for (let i = days - 1; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            
+            // Generate realistic progression
+            const progress = (days - i) / days;
+            const randomVariation = 0.8 + Math.random() * 0.4; // 80-120% variation
+            const value = Math.round(currentValue * progress * randomVariation);
+            
+            history.push({
+              date: date.toISOString().split('T')[0],
+              value: Math.max(0, value),
+            });
+          }
 
-    // Simulate database fetch
-    await new Promise(resolve => setTimeout(resolve, 200));
-
-    // In production, fetch historical data from database
-    // const history = await db.usageHistory.findMany({
-    //   where: {
-    //     userId,
-    //     metric,
-    //     date: {
-    //       gte: new Date(Date.now() - days * 24 * 60 * 60 * 1000)
-    //     }
-    //   },
-    //   orderBy: { date: 'asc' }
-    // });
-
-    // Generate mock historical data
-    const history: Array<{ date: string; value: number }> = [];
-    const currentValue = mockUsageMetrics[metric];
-    
-    for (let i = days - 1; i >= 0; i--) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      
-      // Generate realistic progression
-      const progress = (days - i) / days;
-      const randomVariation = 0.8 + Math.random() * 0.4; // 80-120% variation
-      const value = Math.round(currentValue * progress * randomVariation);
-      
-      history.push({
-        date: date.toISOString().split('T')[0],
-        value: Math.max(0, value),
+          return {
+            success: true,
+            data: history,
+          };
+        });
       });
     }
-
-    return {
-      success: true,
-      data: history,
-    };
-  } catch {
-    return ErrorFactory.internal('Failed to get usage history');
-  }
+  );
 }
 
 /**
@@ -204,21 +174,13 @@ export async function getUsageAlerts(): Promise<ActionResult<Array<{
   current: number;
   action?: string;
 }>>> {
-  try {
-    await requireAuthUser();
-    const userId = await getCurrentUserId();
-    if (!userId) return ErrorFactory.authRequired();
-
-    // Rate limiting check
-    const canProceed = await rateLimiter.checkLimit(
-      `billing_${userId}`,
-      10,
-      60000
-    );
-
-    if (!canProceed) {
-      return ErrorFactory.rateLimit('Too many billing requests. Please try again later.');
-    }
+  return await withContextualRateLimit(
+    'billing:usage:alerts',
+    'user',
+    RateLimits.ANALYTICS_QUERY,
+    async () => {
+      return await withAuth(async (_context) => {
+        return await withErrorHandling(async () => {
 
     const usageResult = await getUsageWithCalculations();
     if (!usageResult.success || !usageResult.data) {
@@ -295,71 +257,64 @@ export async function getUsageAlerts(): Promise<ActionResult<Array<{
       });
     }
 
-    return {
-      success: true,
-      data: alerts,
-    };
-  } catch {
-    return ErrorFactory.internal('Failed to get usage alerts');
-  }
+          return {
+            success: true,
+            data: alerts,
+          };
+        });
+      });
+    }
+  );
 }
 
 /**
  * Reset usage metrics (admin function for testing)
  */
 export async function resetUsageMetrics(): Promise<ActionResult<{ reset: boolean }>> {
-  try {
-    await requireAuthUser();
-    const userId = await getCurrentUserId();
-    if (!userId) return ErrorFactory.authRequired();
+  return await withContextualRateLimit(
+    'billing:usage:reset',
+    'user',
+    RateLimits.BILLING_UPDATE,
+    async () => {
+      return await withAuth(async (_context) => {
+        return await withErrorHandling(async () => {
+          // In production, this would be an admin-only function with proper permissions
+          // const hasAdminPermission = await checkPermission('admin:usage:reset', context.userId);
+          // if (!hasAdminPermission) {
+          //   return ErrorFactory.unauthorized('Admin permission required');
+          // }
 
-    // Rate limiting check
-    const canProceed = await rateLimiter.checkLimit(
-      `billing_${userId}`,
-      10,
-      60000
-    );
+          // Simulate reset operation
+          await new Promise(resolve => setTimeout(resolve, 200));
 
-    if (!canProceed) {
-      return ErrorFactory.rateLimit('Too many billing requests. Please try again later.');
+          // In production, reset usage metrics in database
+          // await db.usageMetrics.update({
+          //   where: { userId: context.userId },
+          //   data: {
+          //     emailsSent: 0,
+          //     contactsReached: 0,
+          //     campaignsActive: 0,
+          //     storageUsed: 0,
+          //     resetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+          //     periodStart: new Date(),
+          //     periodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          //   }
+          // });
+
+          // Reset mock data
+          mockUsageMetrics.emailsSent = 0;
+          mockUsageMetrics.contactsReached = 0;
+          mockUsageMetrics.campaignsActive = 0;
+          mockUsageMetrics.storageUsed = 0;
+
+          return {
+            success: true,
+            data: { reset: true },
+          };
+        });
+      });
     }
-
-    // In production, this would be an admin-only function with proper permissions
-    // const hasAdminPermission = await checkPermission('admin:usage:reset', userId);
-    // if (!hasAdminPermission) {
-    //   return ErrorFactory.unauthorized('Admin permission required');
-    // }
-
-    // Simulate reset operation
-    await new Promise(resolve => setTimeout(resolve, 200));
-
-    // In production, reset usage metrics in database
-    // await db.usageMetrics.update({
-    //   where: { userId },
-    //   data: {
-    //     emailsSent: 0,
-    //     contactsReached: 0,
-    //     campaignsActive: 0,
-    //     storageUsed: 0,
-    //     resetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-    //     periodStart: new Date(),
-    //     periodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    //   }
-    // });
-
-    // Reset mock data
-    mockUsageMetrics.emailsSent = 0;
-    mockUsageMetrics.contactsReached = 0;
-    mockUsageMetrics.campaignsActive = 0;
-    mockUsageMetrics.storageUsed = 0;
-
-    return {
-      success: true,
-      data: { reset: true },
-    };
-  } catch {
-    return ErrorFactory.internal('Failed to reset usage metrics');
-  }
+  );
 }
 
 /**
@@ -368,48 +323,40 @@ export async function resetUsageMetrics(): Promise<ActionResult<{ reset: boolean
 export async function updateUsageMetrics(
   updates: Partial<Pick<UsageMetrics, 'emailsSent' | 'contactsReached' | 'campaignsActive' | 'storageUsed'>>
 ): Promise<ActionResult<UsageMetrics>> {
-  try {
-    await requireAuthUser();
-    const userId = await getCurrentUserId();
-    if (!userId) return ErrorFactory.authRequired();
+  return await withContextualRateLimit(
+    'billing:usage:update',
+    'user',
+    RateLimits.BILLING_UPDATE,
+    async () => {
+      return await withAuth(async (_context) => {
+        return await withErrorHandling(async () => {
+          // Validate updates
+          for (const [key, value] of Object.entries(updates)) {
+            if (typeof value !== 'number' || value < 0) {
+              return ErrorFactory.validation(`Invalid value for ${key}: must be a non-negative number`);
+            }
+          }
 
-    // Rate limiting check
-    const canProceed = await rateLimiter.checkLimit(
-      `billing_${userId}`,
-      10,
-      60000
-    );
+          // Simulate database update
+          await new Promise(resolve => setTimeout(resolve, 100));
 
-    if (!canProceed) {
-      return ErrorFactory.rateLimit('Too many billing requests. Please try again later.');
+          // In production, update usage metrics in database
+          // const updatedUsage = await db.usageMetrics.update({
+          //   where: { userId: context.userId },
+          //   data: updates
+          // });
+
+          // Update mock data
+          Object.assign(mockUsageMetrics, updates);
+
+          return {
+            success: true,
+            data: mockUsageMetrics,
+          };
+        });
+      });
     }
-
-    // Validate updates
-    for (const [key, value] of Object.entries(updates)) {
-      if (typeof value !== 'number' || value < 0) {
-        return ErrorFactory.validation(`Invalid value for ${key}: must be a non-negative number`);
-      }
-    }
-
-    // Simulate database update
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    // In production, update usage metrics in database
-    // const updatedUsage = await db.usageMetrics.update({
-    //   where: { userId },
-    //   data: updates
-    // });
-
-    // Update mock data
-    Object.assign(mockUsageMetrics, updates);
-
-    return {
-      success: true,
-      data: mockUsageMetrics,
-    };
-  } catch {
-    return ErrorFactory.internal('Failed to update usage metrics');
-  }
+  );
 }
 
 /**
@@ -425,68 +372,60 @@ export async function getUsageComparison(): Promise<ActionResult<{
     storageUsed: { value: number; percentage: number };
   };
 }>> {
-  try {
-    await requireAuthUser();
-    const userId = await getCurrentUserId();
-    if (!userId) return ErrorFactory.authRequired();
+  return await withContextualRateLimit(
+    'billing:usage:comparison',
+    'user',
+    RateLimits.ANALYTICS_QUERY,
+    async () => {
+      return await withAuth(async (_context) => {
+        return await withErrorHandling(async () => {
+          // Simulate database fetch for previous period
+          await new Promise(resolve => setTimeout(resolve, 150));
 
-    // Rate limiting check
-    const canProceed = await rateLimiter.checkLimit(
-      `billing_${userId}`,
-      10,
-      60000
-    );
+          // In production, fetch previous period usage from database
+          // const previousUsage = await db.usageMetrics.findFirst({
+          //   where: {
+          //     userId: context.userId,
+          //     periodEnd: {
+          //       lt: new Date(mockUsageMetrics.periodStart)
+          //     }
+          //   },
+          //   orderBy: { periodEnd: 'desc' }
+          // });
 
-    if (!canProceed) {
-      return ErrorFactory.rateLimit('Too many billing requests. Please try again later.');
+          // Generate mock previous period data
+          const previousUsage: UsageMetrics = {
+            ...mockUsageMetrics,
+            emailsSent: Math.round(mockUsageMetrics.emailsSent * 0.8),
+            contactsReached: Math.round(mockUsageMetrics.contactsReached * 0.9),
+            campaignsActive: Math.round(mockUsageMetrics.campaignsActive * 0.7),
+            storageUsed: mockUsageMetrics.storageUsed * 0.85,
+          };
+
+          // Calculate changes
+          const calculateChange = (current: number, previous: number) => {
+            const value = current - previous;
+            const percentage = previous > 0 ? (value / previous) * 100 : 0;
+            return { value, percentage };
+          };
+
+          const changes = {
+            emailsSent: calculateChange(mockUsageMetrics.emailsSent, previousUsage.emailsSent),
+            contactsReached: calculateChange(mockUsageMetrics.contactsReached, previousUsage.contactsReached),
+            campaignsActive: calculateChange(mockUsageMetrics.campaignsActive, previousUsage.campaignsActive),
+            storageUsed: calculateChange(mockUsageMetrics.storageUsed, previousUsage.storageUsed),
+          };
+
+          return {
+            success: true,
+            data: {
+              current: mockUsageMetrics,
+              previous: previousUsage,
+              changes,
+            },
+          };
+        });
+      });
     }
-
-    // Simulate database fetch for previous period
-    await new Promise(resolve => setTimeout(resolve, 150));
-
-    // In production, fetch previous period usage from database
-    // const previousUsage = await db.usageMetrics.findFirst({
-    //   where: {
-    //     userId,
-    //     periodEnd: {
-    //       lt: new Date(mockUsageMetrics.periodStart)
-    //     }
-    //   },
-    //   orderBy: { periodEnd: 'desc' }
-    // });
-
-    // Generate mock previous period data
-    const previousUsage: UsageMetrics = {
-      ...mockUsageMetrics,
-      emailsSent: Math.round(mockUsageMetrics.emailsSent * 0.8),
-      contactsReached: Math.round(mockUsageMetrics.contactsReached * 0.9),
-      campaignsActive: Math.round(mockUsageMetrics.campaignsActive * 0.7),
-      storageUsed: mockUsageMetrics.storageUsed * 0.85,
-    };
-
-    // Calculate changes
-    const calculateChange = (current: number, previous: number) => {
-      const value = current - previous;
-      const percentage = previous > 0 ? (value / previous) * 100 : 0;
-      return { value, percentage };
-    };
-
-    const changes = {
-      emailsSent: calculateChange(mockUsageMetrics.emailsSent, previousUsage.emailsSent),
-      contactsReached: calculateChange(mockUsageMetrics.contactsReached, previousUsage.contactsReached),
-      campaignsActive: calculateChange(mockUsageMetrics.campaignsActive, previousUsage.campaignsActive),
-      storageUsed: calculateChange(mockUsageMetrics.storageUsed, previousUsage.storageUsed),
-    };
-
-    return {
-      success: true,
-      data: {
-        current: mockUsageMetrics,
-        previous: previousUsage,
-        changes,
-      },
-    };
-  } catch {
-    return ErrorFactory.internal('Failed to get usage comparison');
-  }
+  );
 }

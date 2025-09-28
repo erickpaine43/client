@@ -238,23 +238,38 @@ function BillingTab() {
             <CardTitle>Payment Method</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4">
-              <div className="flex items-center space-x-3">
-                <div className="bg-white p-2 rounded-lg border">
-                  <CreditCard className="w-5 h-5 text-gray-600" />
+            {billingData.paymentMethod ? (
+              <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center space-x-3">
+                  <div className="bg-white p-2 rounded-lg border">
+                    <CreditCard className="w-5 h-5 text-gray-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">
+                      {billingData.paymentMethod.brand} ending in{" "}
+                      {billingData.paymentMethod.lastFour}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Expires {billingData.paymentMethod.expiry}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium text-gray-900">
-                    {billingData.paymentMethod.brand} ending in{" "}
-                    {billingData.paymentMethod.lastFour}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Expires {billingData.paymentMethod.expiry}
-                  </p>
-                </div>
+                <UpdateCardDialogTrigger title="Update Card" />
               </div>
-              <UpdateCardDialogTrigger title="Update Card" />
-            </div>
+            ) : (
+              <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center space-x-3">
+                  <div className="bg-white p-2 rounded-lg border">
+                    <CreditCard className="w-5 h-5 text-gray-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">No payment method</p>
+                    <p className="text-sm text-gray-600">Add a payment method to continue</p>
+                  </div>
+                </div>
+                <UpdateCardDialogTrigger title="Add Card" />
+              </div>
+            )}
           </CardContent>
         </Card>
 

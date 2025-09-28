@@ -4,4 +4,4 @@
  */
 
 // Re-export from legacy for now (to be implemented)
-export * from '../legacy/mailboxActions';
+export * from '../mailboxActions';

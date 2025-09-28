@@ -19,9 +19,10 @@ import {
   withAuth, 
   withAuthAndCompany,
   withContextualRateLimit,
-  RateLimits 
+  RateLimits,
+  withSecurity,
+  SecurityConfigs
 } from '../core/auth';
-import { withSecurity, SecurityConfigs } from '../core/auth-middleware';
 import {
   validateArray,
   validateString,

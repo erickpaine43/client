@@ -7,7 +7,7 @@
 'use server';
 
 import { sequenceSteps } from '@/lib/data/campaigns';
-import { withSecurity, SecurityConfigs } from '../core/auth-middleware';
+import { withSecurity, SecurityConfigs } from '../core/auth';
 import { ActionResult, ActionContext } from '../core/types';
 import { ErrorFactory, createActionResult } from '../core/errors';
 import { validateString, validateId, validateNumber } from '../core/validation';

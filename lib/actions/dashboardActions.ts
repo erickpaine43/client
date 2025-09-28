@@ -53,9 +53,9 @@ export interface DashboardMockData {
 // - MailboxAnalyticsService for email status
 // - AnalyticsService.getOverviewMetrics() for KPI data
 export async function getDashboardMockDataAction(
-  companyId: string,
+  _companyId: string,
 ): Promise<DashboardMockData> {
-  console.log(`DEPRECATED: Use AnalyticsService.getOverviewMetrics() instead for company: ${companyId}`);
+  // TODO: Migrate to AnalyticsService.getOverviewMetrics()
 
   // Simulate network delay
   await new Promise((resolve) => setTimeout(resolve, 300));

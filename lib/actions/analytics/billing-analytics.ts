@@ -18,9 +18,10 @@ import {
 import {
   withAuthAndCompany,
   withContextualRateLimit,
-  RateLimits
+  RateLimits,
+  withSecurity,
+  SecurityConfigs
 } from '../core/auth';
-import { withSecurity, SecurityConfigs } from '../core/auth-middleware';
 import type { ActionResult, ActionContext } from '../core/types';
 import type {
   AnalyticsFilters,

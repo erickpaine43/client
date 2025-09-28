@@ -1,4 +1,5 @@
 import type { UsageMetrics } from "../data/billing.mock";
+import type { PaymentMethod } from "../../types/billing";
 import { getUsagePercentage } from "../data/billing.mock";
 
 // Usage calculation functions (client-side utilities)
@@ -100,4 +101,24 @@ export function projectMonthlyUsage(
     contactsReached: Math.round(usage.contactsReached * projectionMultiplier),
     // Storage and active items don't need projection as they're current state
   };
+}
+
+// Payment method sanitization for API responses
+// Removes sensitive fields like providerPaymentMethodId and createdById
+export function sanitizePaymentMethodData(paymentMethod: PaymentMethod) {
+ return {
+   id: paymentMethod.id,
+   type: paymentMethod.type,
+   provider: paymentMethod.provider,
+   lastFourDigits: paymentMethod.lastFourDigits,
+   expiryMonth: paymentMethod.expiryMonth,
+   expiryYear: paymentMethod.expiryYear,
+   cardBrand: paymentMethod.cardBrand,
+   bankName: paymentMethod.bankName,
+   accountType: paymentMethod.accountType,
+   isDefault: paymentMethod.isDefault,
+   isActive: paymentMethod.isActive,
+   createdAt: paymentMethod.createdAt,
+   updatedAt: paymentMethod.updatedAt,
+ };
 }

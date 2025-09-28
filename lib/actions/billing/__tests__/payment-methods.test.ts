@@ -1,6 +1,7 @@
 /**
  * Tests for payment method actions
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
   addPaymentMethod,
@@ -16,6 +17,22 @@ import { ErrorFactory } from '../../core/errors';
 import { validatePaymentMethod, validatePaymentMethodId } from '../validation';
 import { getBillingInfo } from '../index';
 import * as paymentMethodsModule from '../payment-methods';
+import { PaymentMethodType } from '../../../../types/billing';
+
+// Mock dependencies
+jest.mock('@/app/api/[...nile]/nile', () => ({
+  nile: {
+    db: {
+      query: jest.fn(),
+      'BEGIN': jest.fn(),
+      'COMMIT': jest.fn(),
+      'ROLLBACK': jest.fn(),
+    },
+    users: {
+      getSelf: jest.fn(),
+    },
+  },
+}));
 
 // Mock the auth utilities
 jest.mock('../../core/auth', () => ({
@@ -65,34 +82,54 @@ describe('Payment Method Actions', () => {
     });
     mockGetBillingInfo.mockResolvedValue({
       success: true,
-      data: mockBillingInfo,
-    });
+      data: {
+        paymentMethod: mockBillingInfo.paymentMethod,
+        usage: {
+          storageLimit: mockBillingInfo.usage.storageLimit,
+          storageUsed: mockBillingInfo.usage.storageUsed,
+          contactsReached: mockBillingInfo.usage.contactsReached,
+          emailsSent: mockBillingInfo.usage.emailsSent,
+        },
+        currentPlan: {
+          id: mockBillingInfo.currentPlan.id,
+          name: mockBillingInfo.currentPlan.name,
+          features: {
+            emailsPerMonth: mockBillingInfo.currentPlan.features.emailsPerMonth,
+            contacts: mockBillingInfo.currentPlan.features.contacts,
+          },
+          price: mockBillingInfo.currentPlan.price,
+        },
+        nextBillingDate: new Date(mockBillingInfo.nextBillingDate),
+      },
+    } as any);
   });
 
   describe('addPaymentMethod', () => {
     const validPaymentMethod = {
-      type: 'visa' as const,
-      last4: '4242',
+      type: PaymentMethodType.CREDIT_CARD,
+      cardNumber: '4242424242424242',
       expiryMonth: 12,
       expiryYear: 2025,
-      holderName: 'John Doe',
+      cvv: '123',
       isDefault: false,
     };
 
     it('should add payment method successfully', async () => {
-      const result = await addPaymentMethod(validPaymentMethod);
+      const result = await addPaymentMethod(validPaymentMethod, 'pm_test_provider_id');
 
       expect(result.success).toBe(true);
-      expect(result.data).toMatchObject({
-        ...validPaymentMethod,
-        id: expect.stringMatching(/^pm-\d+$/),
-      });
+      if (result.success) {
+        expect(result.data).toMatchObject({
+          ...validPaymentMethod,
+          id: expect.stringMatching(/^pm-\d+$/),
+        });
+      }
     });
 
     it('should validate payment method', async () => {
       mockValidatePaymentMethod.mockReturnValue('Invalid payment method');
 
-      await addPaymentMethod(validPaymentMethod);
+      await addPaymentMethod(validPaymentMethod, 'pm_test_provider_id');
 
       expect(mockValidatePaymentMethod).toHaveBeenCalledWith(validPaymentMethod);
       expect(mockErrorFactory.validation).toHaveBeenCalledWith('Invalid payment method');
@@ -104,7 +141,7 @@ describe('Payment Method Actions', () => {
         error: { type: 'auth', message: 'Authentication required' },
       });
 
-      const result = await addPaymentMethod(validPaymentMethod);
+      const result = await addPaymentMethod(validPaymentMethod, 'pm_test_provider_id');
 
       expect(result.success).toBe(false);
       expect(mockErrorFactory.authRequired).toHaveBeenCalled();
@@ -119,15 +156,32 @@ describe('Payment Method Actions', () => {
       mockGetBillingInfo.mockResolvedValue({
         success: true,
         data: {
-          ...mockBillingInfo,
-          paymentMethod: { ...mockBillingInfo.paymentMethod, id: 'pm-different-id' },
+          paymentMethod: { ...mockBillingInfo.paymentMethod, id: 'pm-different-id' } as any,
+          usage: {
+            storageLimit: mockBillingInfo.usage.storageLimit,
+            storageUsed: mockBillingInfo.usage.storageUsed,
+            contactsReached: mockBillingInfo.usage.contactsReached,
+            emailsSent: mockBillingInfo.usage.emailsSent,
+          },
+          currentPlan: {
+            id: mockBillingInfo.currentPlan.id,
+            name: mockBillingInfo.currentPlan.name,
+            features: {
+              emailsPerMonth: mockBillingInfo.currentPlan.features.emailsPerMonth,
+              contacts: mockBillingInfo.currentPlan.features.contacts,
+            },
+            price: mockBillingInfo.currentPlan.price,
+          },
+          nextBillingDate: new Date(mockBillingInfo.nextBillingDate),
         },
       });
 
       const result = await removePaymentMethod(paymentMethodId);
 
       expect(result.success).toBe(true);
-      expect(result.data?.removed).toBe(true);
+      if (result.success) {
+        expect(result.data.id).toBe(paymentMethodId);
+      }
     });
 
     it('should prevent removing default payment method', async () => {
@@ -135,8 +189,23 @@ describe('Payment Method Actions', () => {
       mockGetBillingInfo.mockResolvedValue({
         success: true,
         data: {
-          ...mockBillingInfo,
-          paymentMethod: { ...mockBillingInfo.paymentMethod, id: paymentMethodId },
+          paymentMethod: { ...mockBillingInfo.paymentMethod, id: paymentMethodId } as any,
+          usage: {
+            storageLimit: mockBillingInfo.usage.storageLimit,
+            storageUsed: mockBillingInfo.usage.storageUsed,
+            contactsReached: mockBillingInfo.usage.contactsReached,
+            emailsSent: mockBillingInfo.usage.emailsSent,
+          },
+          currentPlan: {
+            id: mockBillingInfo.currentPlan.id,
+            name: mockBillingInfo.currentPlan.name,
+            features: {
+              emailsPerMonth: mockBillingInfo.currentPlan.features.emailsPerMonth,
+              contacts: mockBillingInfo.currentPlan.features.contacts,
+            },
+            price: mockBillingInfo.currentPlan.price,
+          },
+          nextBillingDate: new Date(mockBillingInfo.nextBillingDate),
         },
       });
 
@@ -159,8 +228,8 @@ describe('Payment Method Actions', () => {
     it('should handle billing info fetch failure', async () => {
       mockGetBillingInfo.mockResolvedValue({
         success: false,
-        error: { type: 'server', message: 'Database error' },
-      });
+        error: 'Database error',
+      } as any);
 
       await removePaymentMethod(paymentMethodId);
 
@@ -175,7 +244,9 @@ describe('Payment Method Actions', () => {
       const result = await setDefaultPaymentMethod(paymentMethodId);
 
       expect(result.success).toBe(true);
-      expect(result.data?.updated).toBe(true);
+      if (result.success) {
+        expect(result.data.id).toBe(paymentMethodId);
+      }
     });
 
     it('should validate payment method ID', async () => {
@@ -205,14 +276,16 @@ describe('Payment Method Actions', () => {
       const result = await getPaymentMethods();
 
       expect(result.success).toBe(true);
-      expect(result.data).toEqual([mockBillingInfo.paymentMethod]);
+      if (result.success) {
+        expect(result.data).toEqual([mockBillingInfo.paymentMethod]);
+      }
     });
 
     it('should handle billing info fetch failure', async () => {
       mockGetBillingInfo.mockResolvedValue({
         success: false,
-        error: { type: 'server', message: 'Database error' },
-      });
+        error: 'Database error',
+      } as any);
 
       await getPaymentMethods();
 
@@ -255,11 +328,13 @@ describe('Payment Method Actions', () => {
       const result = await updatePaymentMethod(paymentMethodId, updates);
 
       expect(result.success).toBe(true);
-      expect(result.data).toMatchObject({
-        ...mockBillingInfo.paymentMethod,
-        id: paymentMethodId,
-        ...updates,
-      });
+      if (result.success) {
+        expect(result.data).toMatchObject({
+          ...mockBillingInfo.paymentMethod,
+          id: paymentMethodId,
+          ...updates,
+        });
+      }
     });
 
     it('should validate payment method ID', async () => {
@@ -301,10 +376,12 @@ describe('Payment Method Actions', () => {
       const result = await verifyPaymentMethod(paymentMethodId);
 
       expect(result.success).toBe(true);
-      expect(result.data).toEqual({
-        verified: true,
-        verificationAmount: 1.00,
-      });
+      if (result.success) {
+        expect(result.data).toEqual({
+          verified: true,
+          verificationAmount: 1.00,
+        });
+      }
     });
 
     it('should validate payment method ID', async () => {

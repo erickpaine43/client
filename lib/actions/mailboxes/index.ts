@@ -13,7 +13,7 @@ import 'server-only';
 import { ActionResult } from '../core/types';
 import { ErrorFactory } from '../core/errors';
 import { withAuth, withContextualRateLimit, RateLimits } from '../core/auth';
-import { getMultipleMailboxAnalyticsAction } from '../legacy/mailboxActions';
+import { getMultipleMailboxAnalyticsAction } from '../mailboxActions';
 import { MailboxWarmupData } from '@/types';
 
 /**

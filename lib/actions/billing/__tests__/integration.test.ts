@@ -8,6 +8,19 @@ import { getUsageMetrics } from '../usage';
 import { getBillingHistory } from '../invoices';
 import { applyPromoCode } from '../subscriptions';
 import { requireAuth, withContextualRateLimit } from '../../core/auth';
+import { PaymentMethodType } from '../../../../types/billing';
+
+// Mock dependencies
+jest.mock('@/app/api/[...nile]/nile', () => ({
+  nile: {
+    db: {
+      query: jest.fn(),
+    },
+    users: {
+      getSelf: jest.fn(),
+    },
+  },
+}));
 
 // Mock the auth utilities
 jest.mock('../../core/auth', () => ({
@@ -52,43 +65,55 @@ describe('Billing Module Integration', () => {
     // 1. Get billing info
     const billingResult = await getBillingInfo();
     expect(billingResult.success).toBe(true);
-    expect(billingResult.data).toBeDefined();
+    if (billingResult.success) {
+      expect(billingResult.data).toBeDefined();
+    }
 
     // 2. Get subscription plans
     const plansResult = await getSubscriptionPlans();
     expect(plansResult.success).toBe(true);
-    expect(plansResult.data?.length).toBeGreaterThan(0);
+    if (plansResult.success) {
+      expect(plansResult.data.length).toBeGreaterThan(0);
+    }
 
     // 3. Get usage metrics
     const usageResult = await getUsageMetrics();
     expect(usageResult.success).toBe(true);
-    expect(usageResult.data).toBeDefined();
+    if (usageResult.success) {
+      expect(usageResult.data).toBeDefined();
+    }
 
     // 4. Get billing history
     const historyResult = await getBillingHistory();
     expect(historyResult.success).toBe(true);
-    expect(Array.isArray(historyResult.data)).toBe(true);
+    if (historyResult.success) {
+      expect(Array.isArray(historyResult.data)).toBe(true);
+    }
 
     // 5. Get payment methods
     const paymentMethodsResult = await getPaymentMethods();
     expect(paymentMethodsResult.success).toBe(true);
-    expect(Array.isArray(paymentMethodsResult.data)).toBe(true);
+    if (paymentMethodsResult.success) {
+      expect(Array.isArray(paymentMethodsResult.data)).toBe(true);
+    }
   });
 
   it('should handle payment method operations', async () => {
     const newPaymentMethod = {
-      type: 'visa' as const,
-      last4: '4242',
+      type: PaymentMethodType.CREDIT_CARD,
+      cardNumber: '4242424242424242',
       expiryMonth: 12,
       expiryYear: 2025,
-      holderName: 'John Doe',
+      cvv: '123',
       isDefault: false,
     };
 
     // Add payment method
-    const addResult = await addPaymentMethod(newPaymentMethod);
+    const addResult = await addPaymentMethod(newPaymentMethod, 'pm_test_provider_id');
     expect(addResult.success).toBe(true);
-    expect(addResult.data?.id).toBeDefined();
+    if (addResult.success) {
+      expect(addResult.data.id).toBeDefined();
+    }
   });
 
   it('should handle billing updates', async () => {
@@ -104,13 +129,17 @@ describe('Billing Module Integration', () => {
 
     const updateResult = await updateBillingInfo(updates);
     expect(updateResult.success).toBe(true);
-    expect(updateResult.data?.billingAddress).toMatchObject(updates.billingAddress);
+    if (updateResult.success) {
+      expect(updateResult.data!.billingAddress).toMatchObject(updates.billingAddress);
+    }
   });
 
   it('should handle promo code application', async () => {
     const promoResult = await applyPromoCode('WELCOME20');
     expect(promoResult.success).toBe(true);
-    expect(promoResult.data?.discount).toBeDefined();
+    if (promoResult.success) {
+      expect(promoResult.data!.discount).toBeDefined();
+    }
   });
 
   it('should maintain consistent error handling across modules', async () => {
