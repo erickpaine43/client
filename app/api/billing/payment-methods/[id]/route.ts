@@ -4,6 +4,7 @@ import {
   setDefaultPaymentMethod,
   removePaymentMethod,
 } from "@/lib/actions/billing";
+import { sanitizePaymentMethodData } from "@/lib/utils/billingUtils";
 
 /**
  * Individual Payment Method API Endpoints - Secure OLTP Operations
@@ -48,21 +49,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     // Sanitize response data to exclude sensitive fields
-    const sanitizedData = {
-      id: result.data.id,
-      type: result.data.type,
-      provider: result.data.provider,
-      lastFourDigits: result.data.lastFourDigits,
-      expiryMonth: result.data.expiryMonth,
-      expiryYear: result.data.expiryYear,
-      cardBrand: result.data.cardBrand,
-      bankName: result.data.bankName,
-      accountType: result.data.accountType,
-      isDefault: result.data.isDefault,
-      isActive: result.data.isActive,
-      createdAt: result.data.createdAt,
-      updatedAt: result.data.updatedAt,
-    };
+    const sanitizedData = sanitizePaymentMethodData(result.data);
 
     return NextResponse.json({
       success: true,
@@ -106,21 +93,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       }
 
       // Sanitize response data
-      const sanitizedData = {
-        id: result.data.id,
-        type: result.data.type,
-        provider: result.data.provider,
-        lastFourDigits: result.data.lastFourDigits,
-        expiryMonth: result.data.expiryMonth,
-        expiryYear: result.data.expiryYear,
-        cardBrand: result.data.cardBrand,
-        bankName: result.data.bankName,
-        accountType: result.data.accountType,
-        isDefault: result.data.isDefault,
-        isActive: result.data.isActive,
-        createdAt: result.data.createdAt,
-        updatedAt: result.data.updatedAt,
-      };
+      const sanitizedData = sanitizePaymentMethodData(result.data);
 
       return NextResponse.json({
         success: true,

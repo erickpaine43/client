@@ -4,6 +4,7 @@ import {
   addPaymentMethod,
 } from "@/lib/actions/billing";
 import { PaymentMethodFormSchema } from "@/types/billing";
+import { sanitizePaymentMethodData } from "@/lib/utils/billingUtils";
 
 /**
  * Payment Methods API Endpoints - Secure OLTP Operations
@@ -33,25 +34,8 @@ export async function GET(_request: NextRequest) {
       );
     }
 
-    // Ensure no sensitive data is exposed in the response
-    const sanitizedData = result.data.map(paymentMethod => ({
-      id: paymentMethod.id,
-      type: paymentMethod.type,
-      provider: paymentMethod.provider,
-      lastFourDigits: paymentMethod.lastFourDigits,
-      expiryMonth: paymentMethod.expiryMonth,
-      expiryYear: paymentMethod.expiryYear,
-      cardBrand: paymentMethod.cardBrand,
-      bankName: paymentMethod.bankName,
-      accountType: paymentMethod.accountType,
-      isDefault: paymentMethod.isDefault,
-      isActive: paymentMethod.isActive,
-      createdAt: paymentMethod.createdAt,
-      updatedAt: paymentMethod.updatedAt,
-      // Explicitly exclude sensitive fields:
-      // - providerPaymentMethodId (tokenized ID should not be exposed)
-      // - createdById (internal audit field)
-    }));
+    // Sanitize response data to exclude sensitive fields
+    const sanitizedData = result.data.map(sanitizePaymentMethodData);
 
     return NextResponse.json({
       success: true,
@@ -117,22 +101,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Sanitize response data (same as GET)
-    const sanitizedData = {
-      id: result.data.id,
-      type: result.data.type,
-      provider: result.data.provider,
-      lastFourDigits: result.data.lastFourDigits,
-      expiryMonth: result.data.expiryMonth,
-      expiryYear: result.data.expiryYear,
-      cardBrand: result.data.cardBrand,
-      bankName: result.data.bankName,
-      accountType: result.data.accountType,
-      isDefault: result.data.isDefault,
-      isActive: result.data.isActive,
-      createdAt: result.data.createdAt,
-      updatedAt: result.data.updatedAt,
-    };
+    // Sanitize response data
+    const sanitizedData = sanitizePaymentMethodData(result.data);
 
     return NextResponse.json({
       success: true,
