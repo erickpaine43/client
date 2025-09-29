@@ -28,7 +28,18 @@
     "validate:niledb": "npx tsx scripts/validate-niledb-config.ts",
     "validate:niledb:verbose": "npx tsx scripts/validate-niledb-config.ts --verbose",
     "validate:niledb:staging": "npx tsx scripts/validate-niledb-config.ts --env=staging",
-    "validate:niledb:production": "npx tsx scripts/validate-niledb-config.ts --env=production"
+    "validate:niledb:production": "npx tsx scripts/validate-niledb-config.ts --env=production",
+    "export:old-data": "npx tsx scripts/export-old-data.ts",
+    "export:old-data:csv": "npx tsx scripts/export-old-data.ts --format=csv",
+    "migrate:to-niledb": "npx tsx scripts/migrate-to-niledb.ts",
+    "migrate:to-niledb:dry-run": "npx tsx scripts/migrate-to-niledb.ts --dry-run",
+    "migrate:to-niledb:verbose": "npx tsx scripts/migrate-to-niledb.ts --verbose",
+    "validate:migration": "npx tsx scripts/validate-migration.ts",
+    "validate:migration:verbose": "npx tsx scripts/validate-migration.ts --verbose",
+    "rollback:migration": "npx tsx scripts/rollback-migration.ts",
+    "rollback:migration:dry-run": "npx tsx scripts/rollback-migration.ts --dry-run",
+    "rollback:migration:complete": "npx tsx scripts/rollback-migration.ts --complete",
+    "test:migration": "jest scripts/__tests__/migration.test.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
