@@ -59,7 +59,13 @@ function createMockRequest(
 }
 
 function createMockContext(params: Record<string, string> = {}) {
-  return { 
+  return {
+    params: Promise.resolve(params)
+  };
+}
+
+function createMockRouteContext(params: Record<string, string> = {}) {
+  return {
     params,
     isStaff: false,
     requestId: 'test-request-id',
@@ -225,7 +231,7 @@ describe('Enhanced Tenant Access Middleware', () => {
     const request = createMockRequest();
     const context = createMockContext({ tenantId: 'tenant-123' });
 
-    const response = await middleware(request, context);
+    const response = await middleware(request, { params: Promise.resolve(context.params) });
 
     expect(handler).toHaveBeenCalled();
     expect(response.status).toBe(200);
@@ -247,7 +253,7 @@ describe('Enhanced Tenant Access Middleware', () => {
     const request = createMockRequest();
     const context = createMockContext({ tenantId: 'nonexistent-tenant' });
 
-    const response = await middleware(request, context);
+    const response = await middleware(request, { params: Promise.resolve(context.params) });
 
     expect(handler).not.toHaveBeenCalled();
     expect(response.status).toBe(403);
@@ -265,7 +271,7 @@ describe('Enhanced Tenant Access Middleware', () => {
     const request = createMockRequest();
     const context = createMockContext({ tenantId: 'invalid-uuid' });
 
-    const response = await middleware(request, context);
+    const response = await middleware(request, { params: Promise.resolve(context.params) });
 
     expect(handler).not.toHaveBeenCalled();
     expect(response.status).toBe(400);
@@ -296,7 +302,7 @@ describe('Enhanced Tenant Access Middleware', () => {
     const request = createMockRequest();
     const context = createMockContext({ tenantId: 'tenant-123' });
 
-    const response = await middleware(request, context);
+    const response = await middleware(request, { params: Promise.resolve(context.params) });
 
     expect(handler).not.toHaveBeenCalled();
     expect(response.status).toBe(401);
@@ -395,7 +401,7 @@ describe('Input Validation Middleware', () => {
     // Mock request.json()
     jest.spyOn(request, 'json').mockResolvedValue(validData);
 
-    const context = createMockContext();
+    const context = createMockRouteContext();
 
     const response = await middleware(request as unknown as EnhancedRequest, context);
 
@@ -419,9 +425,7 @@ describe('Input Validation Middleware', () => {
     
     jest.spyOn(request, 'json').mockResolvedValue(invalidData);
 
-    const context = createMockContext();
-
-    const response = await middleware(request as EnhancedRequest, context);
+    const response = await middleware(request as EnhancedRequest, createMockRouteContext());
 
     expect(handler).not.toHaveBeenCalled();
     expect(response.status).toBe(400);
@@ -445,9 +449,7 @@ describe('Input Validation Middleware', () => {
     
     jest.spyOn(request, 'formData').mockResolvedValue(formData);
 
-    const context = createMockContext();
-
-    const response = await middleware(request as EnhancedRequest, context);
+    const response = await middleware(request as EnhancedRequest, createMockRouteContext());
 
     expect(handler).toHaveBeenCalled();
     expect(response.status).toBe(200);
@@ -475,7 +477,7 @@ describe('Enhanced Route Creation', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    const response = await (route.GET as (request: NextRequest, context: { params: Record<string, string> }) => Promise<NextResponse>)(request, context);
+    const response = await (route.GET as (request: NextRequest, context: { params: Promise<Record<string, string>> }) => Promise<NextResponse>)(request, context);
     expect(response.status).toBe(200);
     expect(handlers.GET).toHaveBeenCalled();
   });
@@ -494,7 +496,7 @@ describe('Enhanced Route Creation', () => {
     const request = createMockRequest();
     const context = createMockContext();
 
-    const response = await (route.GET as (request: NextRequest, context: { params: Record<string, string> }) => Promise<NextResponse>)(request, context);
+    const response = await (route.GET as (request: NextRequest, context: { params: Promise<Record<string, string>> }) => Promise<NextResponse>)(request, context);
     expect(response.status).toBe(200);
     expect(handlers.GET).toHaveBeenCalled();
   });
@@ -526,7 +528,7 @@ describe('Enhanced Route Creation', () => {
     const request = createMockRequest();
     const context = createMockContext({ tenantId: 'tenant-123' });
 
-    const response = await (route.GET as (request: NextRequest, context: { params: Record<string, string> }) => Promise<NextResponse>)(request, context);
+    const response = await (route.GET as (request: NextRequest, context: { params: Promise<Record<string, string>> }) => Promise<NextResponse>)(request, context);
     expect(response.status).toBe(200);
     expect(handlers.GET).toHaveBeenCalled();
   });

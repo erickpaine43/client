@@ -11,8 +11,6 @@ import {
   withTenantAccess,
   withStaffAccess,
   withResourcePermission,
-  createTenantRoute,
-  createStaffRoute,
   type AuthenticatedRequest,
   type RouteContext,
 } from '../middleware';
@@ -587,28 +585,28 @@ export const getAllCompaniesHandler = withStaffAccess('admin')(
  */
 
 // Tenant-scoped company routes
-export const tenantCompanyRoutes = createTenantRoute({
+export const tenantCompanyRoutes = {
   GET: getCompaniesHandler,
   POST: createCompanyHandler,
-}, 'member'); // Minimum role required
+};
 
 // Specific company routes
-export const specificCompanyRoutes = createTenantRoute({
+export const specificCompanyRoutes = {
   GET: getCompanyHandler,
   PUT: updateCompanyHandler,
   DELETE: deleteCompanyHandler,
-}, 'member');
+};
 
 // Company user management routes
-export const companyUserRoutes = createTenantRoute({
+export const companyUserRoutes = {
   GET: getCompanyUsersHandler,
   POST: addUserToCompanyHandler,
-}, 'member');
+};
 
 // Staff-only admin routes
-export const adminCompanyRoutes = createStaffRoute({
+export const adminCompanyRoutes = {
   GET: getAllCompaniesHandler,
-}, 'admin');
+};
 
 /**
  * Usage Examples

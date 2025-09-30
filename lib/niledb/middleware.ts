@@ -19,7 +19,7 @@ export interface AuthenticatedRequest extends NextRequest {
 }
 
 export interface RouteContext {
-  params: Record<string, string>;
+  params: Awaited<Record<string, string>>;
   user?: UserWithProfile;
   tenant?: { id: string; name: string };
   isStaff: boolean;
@@ -50,8 +50,9 @@ function createExpressStyleRequest(request: NextRequest) {
  * Basic authentication middleware
  */
 export function withAuthentication(handler: AuthenticatedHandler) {
-  return async (request: NextRequest, context: { params: Record<string, string> }) => {
+  return async (request: NextRequest, { params: paramsPromise }: { params: Promise<Record<string, string>> }) => {
     try {
+      const params = await paramsPromise;
       const authService = getAuthService();
       const expressReq = createExpressStyleRequest(request);
       
@@ -61,7 +62,7 @@ export function withAuthentication(handler: AuthenticatedHandler) {
       authenticatedRequest.user = user;
       
       const routeContext: RouteContext = {
-        params: context.params,
+        params,
         user,
         isStaff: user.profile?.isPenguinMailsStaff || false,
       };
@@ -70,9 +71,9 @@ export function withAuthentication(handler: AuthenticatedHandler) {
     } catch (error) {
       if (error instanceof AuthenticationError) {
         return NextResponse.json(
-          { 
-            error: error.message, 
-            code: error.code 
+          {
+            error: error.message,
+            code: error.code
           },
           { status: error.code === 'AUTH_REQUIRED' ? 401 : 403 }
         );

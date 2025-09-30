@@ -26,7 +26,7 @@ export const GET = withTenantAccess('admin')(
   withResourcePermission('user', 'read')(async (request, context) => {
     try {
       const tenantService = getTenantService();
-      const { tenantId } = context.params;
+      const { tenantId } = await context.params;
 
       const users = await tenantService.getTenantUsers(tenantId, request.user.id);
 
@@ -57,7 +57,7 @@ export const POST = withTenantAccess('admin')(
   withResourcePermission('user', 'write')(async (request, context) => {
     try {
       const tenantService = getTenantService();
-      const { tenantId } = context.params;
+      const { tenantId } = await context.params;
 
       // Parse and validate request body
       const body = await request.json();

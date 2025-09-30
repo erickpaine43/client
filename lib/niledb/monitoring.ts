@@ -22,8 +22,11 @@ export interface SystemMetrics {
 export interface PerformanceMetrics {
   averageResponseTime: number;
   requestsPerMinute: number;
+  totalRequests: number;
   slowRequests: number;
   activeConnections: number;
+  cpuUsage: number;
+  uptime: number;
   memoryUsage: {
     used: number;
     total: number;
@@ -48,6 +51,7 @@ export interface DatabaseMetrics {
 
 export interface ErrorMetrics {
   totalErrors: number;
+  errorRate: number;
   errorsByType: Record<string, number>;
   errorsByEndpoint: Record<string, number>;
   recentErrors: Array<{
@@ -58,6 +62,18 @@ export interface ErrorMetrics {
     userId?: string;
     tenantId?: string;
   }>;
+}
+
+export interface Alert {
+  ruleId: string;
+  severity: string;
+  timestamp: string;
+  metricsSnapshot: {
+    healthStatus: string;
+    averageResponseTime: number;
+    totalErrors: number;
+    memoryPercentage: number;
+  };
 }
 
 export interface UsageMetrics {
@@ -90,6 +106,18 @@ export class MonitoringManager {
 
   constructor() {
     this.initializeDefaultAlerts();
+  }
+
+  clearMetrics(): void {
+    this.metrics = [];
+  }
+
+  clearAlertRules(): void {
+    this.alertRules.clear();
+  }
+
+  async getSystemHealth(): Promise<HealthCheckResult> {
+    return performHealthCheck();
   }
 
   /**
@@ -144,27 +172,31 @@ export class MonitoringManager {
    * Get metrics summary for a time period
    */
   getMetricsSummary(periodMs: number = 60 * 60 * 1000): {
+    timeWindow: number;
     averageResponseTime: number;
     totalRequests: number;
     errorRate: number;
     healthStatus: string;
     period: string;
+    peakMemoryUsage: number;
   } {
     const cutoff = Date.now() - periodMs;
     const recentMetrics = this.metrics.filter(
       m => new Date(m.timestamp).getTime() > cutoff
     );
-
+  
     if (recentMetrics.length === 0) {
       return {
+        timeWindow: periodMs,
         averageResponseTime: 0,
         totalRequests: 0,
         errorRate: 0,
         healthStatus: 'unknown',
         period: `${periodMs / 1000}s`,
+        peakMemoryUsage: 0,
       };
     }
-
+  
     const totalResponseTime = recentMetrics.reduce(
       (sum, m) => sum + m.performance.averageResponseTime, 0
     );
@@ -174,17 +206,21 @@ export class MonitoringManager {
     const totalErrors = recentMetrics.reduce(
       (sum, m) => sum + m.errors.totalErrors, 0
     );
-
+  
     const healthStatuses = recentMetrics.map(m => m.health.status);
     const healthyCount = healthStatuses.filter(s => s === 'healthy').length;
     const healthStatus = healthyCount / healthStatuses.length > 0.8 ? 'healthy' : 'degraded';
-
+  
+    const peakMemory = recentMetrics.length > 0 ? Math.max(...recentMetrics.map(m => m.performance.memoryUsage.percentage)) : 0;
+  
     return {
+      timeWindow: periodMs,
       averageResponseTime: totalResponseTime / recentMetrics.length,
       totalRequests,
       errorRate: totalRequests > 0 ? (totalErrors / totalRequests) * 100 : 0,
       healthStatus,
       period: `${periodMs / 1000}s`,
+      peakMemoryUsage: peakMemory,
     };
   }
 
@@ -193,6 +229,13 @@ export class MonitoringManager {
    */
   addAlertRule(rule: AlertRule): void {
     this.alertRules.set(rule.id, rule);
+  }
+  
+  updateAlertRule(ruleId: string, updates: Partial<AlertRule>): void {
+    const rule = this.alertRules.get(ruleId);
+    if (rule) {
+      Object.assign(rule, updates);
+    }
   }
 
   /**
@@ -260,8 +303,11 @@ export class MonitoringManager {
     return {
       averageResponseTime: this.calculateAverageResponseTime(),
       requestsPerMinute: this.calculateRequestsPerMinute(),
+      totalRequests: this.calculateTotalRequests(),
       slowRequests: this.calculateSlowRequests(),
       activeConnections: 0, // Would need to implement connection tracking
+      cpuUsage: process.cpuUsage ? (process.cpuUsage().user / 10000000) : 0,
+      uptime: process.uptime(),
       memoryUsage: {
         used: memoryUsage.heapUsed,
         total: memoryUsage.heapTotal,
@@ -309,20 +355,35 @@ export class MonitoringManager {
     
     const errorsByType: Record<string, number> = {};
     const errorsByEndpoint: Record<string, number> = {};
-
+  
     recentErrors.forEach(error => {
       errorsByType[error.type] = (errorsByType[error.type] || 0) + 1;
       if (error.endpoint) {
         errorsByEndpoint[error.endpoint] = (errorsByEndpoint[error.endpoint] || 0) + 1;
       }
     });
-
+  
+    const errorRate = this.calculateErrorRate();
+  
     return {
       totalErrors: this.errorLog.length,
+      errorRate,
       errorsByType,
       errorsByEndpoint,
       recentErrors: recentErrors.slice(-10),
     };
+  }
+  
+  private calculateErrorRate(): number {
+    const recentMetrics = this.getRecentMetrics(10);
+    if (recentMetrics.length === 0) return 0;
+  
+    const totalRequests = recentMetrics.reduce(
+      (sum, m) => sum + m.performance.requestsPerMinute, 0
+    );
+    const totalErrors = this.errorLog.length;
+  
+    return totalRequests > 0 ? totalErrors / totalRequests : 0;
   }
 
   private async collectUsageMetrics(): Promise<UsageMetrics> {
@@ -388,6 +449,13 @@ export class MonitoringManager {
     );
   }
 
+  private calculateTotalRequests(): number {
+    const recentMetrics = this.getRecentMetrics(60); // Last hour
+    return recentMetrics.reduce(
+      (sum, m) => sum + m.performance.requestsPerMinute * 60, 0
+    );
+  }
+
   private initializeDefaultAlerts(): void {
     // High error rate alert
     this.addAlertRule({
@@ -434,12 +502,13 @@ export class MonitoringManager {
     });
   }
 
-  private async checkAlerts(metrics: SystemMetrics): Promise<void> {
+  public async checkAlerts(metrics: SystemMetrics): Promise<Alert[]> {
     const now = Date.now();
-
+    const triggered: Alert[] = [];
+  
     for (const rule of this.alertRules.values()) {
       if (!rule.enabled) continue;
-
+  
       // Check cooldown
       if (rule.lastTriggered) {
         const lastTriggeredTime = new Date(rule.lastTriggered).getTime();
@@ -447,10 +516,22 @@ export class MonitoringManager {
           continue;
         }
       }
-
+  
       // Check condition
       try {
         if (rule.condition(metrics)) {
+          const alert: Alert = {
+            ruleId: rule.id,
+            severity: rule.severity,
+            timestamp: new Date().toISOString(),
+            metricsSnapshot: {
+              healthStatus: metrics.health.status,
+              averageResponseTime: metrics.performance.averageResponseTime,
+              totalErrors: metrics.errors.totalErrors,
+              memoryPercentage: metrics.performance.memoryUsage.percentage,
+            },
+          };
+          triggered.push(alert);
           await this.triggerAlert(rule, metrics);
           rule.lastTriggered = new Date().toISOString();
         }
@@ -458,6 +539,8 @@ export class MonitoringManager {
         console.error(`Alert rule ${rule.id} failed:`, error);
       }
     }
+  
+    return triggered;
   }
 
   private async triggerAlert(rule: AlertRule, metrics: SystemMetrics): Promise<void> {

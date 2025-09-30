@@ -15,6 +15,8 @@ import { withTenantAccess } from '@/lib/niledb/middleware';
  */
 export const GET = withTenantAccess('member')(async (request, context) => {
   try {
+    const { tenantId } = await context.params;
+
     return NextResponse.json({
       message: 'Tenant access successful',
       user: {
@@ -23,7 +25,7 @@ export const GET = withTenantAccess('member')(async (request, context) => {
         name: request.user.name,
       },
       tenant: context.tenant,
-      tenantId: context.params.tenantId,
+      tenantId,
       isStaff: context.isStaff,
       timestamp: new Date().toISOString(),
     });

@@ -43,7 +43,7 @@ export interface RequestContext {
 }
 
 export interface RouteContext {
-  params: Record<string, string>;
+  params: Awaited<Record<string, string>>;
   user?: UserWithProfile;
   tenant?: { id: string; name: string };
   isStaff: boolean;
@@ -210,11 +210,13 @@ export function withEnhancedAuthentication(
   return function(handler: EnhancedHandler) {
     const rateLimiter = options.rateLimit ? new RateLimiter(options.rateLimit) : null;
 
-    return async (request: NextRequest, context: { params: Record<string, string> }) => {
+    return async (request: NextRequest, { params: paramsPromise }: { params: Promise<Record<string, string>> }) => {
       const requestContext = createRequestContext(request, 'authentication');
       const startTime = Date.now();
 
       try {
+        const params = await paramsPromise;
+
         // Rate limiting
         if (rateLimiter) {
           const rateCheck = rateLimiter.check(request);
@@ -255,7 +257,7 @@ export function withEnhancedAuthentication(
         };
 
         const routeContext: RouteContext = {
-          params: context.params,
+          params,
           user,
           isStaff: user.profile?.isPenguinMailsStaff || false,
           requestId: requestContext.requestId,
@@ -663,7 +665,8 @@ export function createEnhancedRoute(handlers: {
   const route: Record<string, unknown> = {};
 
   Object.entries(handlers).forEach(([method, handler]) => {
-    let wrappedHandler = handler;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let wrappedHandler: any = handler;
 
     // Apply audit logging
     if (options.auditLog) {

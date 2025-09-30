@@ -10,6 +10,8 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 
 // Types for enhanced auth functionality
+
+type ErrorType = 'authentication' | 'validation' | 'network' | 'unknown';
 interface TenantAccessResult {
   hasAccess: boolean;
   role?: 'member' | 'admin' | 'owner';
@@ -281,11 +283,15 @@ export const useStaffAccess = () => {
  * Hook for error recovery and user-friendly error handling
  */
 export const useErrorRecovery = () => {
-  const { error, clearError, refreshUserData } = useAuth();
+  const { error: authError, clearError, refreshUserData } = useAuth();
+  const [localError, setLocalError] = useState<Error | null>(null);
+  const [errorType, setErrorType] = useState<ErrorType | null>(null);
   const [recovering, setRecovering] = useState(false);
 
+  const currentError = localError || authError;
+
   const recoverFromError = useCallback(async () => {
-    if (!error) return;
+    if (!currentError) return;
 
     setRecovering(true);
     
@@ -303,38 +309,63 @@ export const useErrorRecovery = () => {
     } finally {
       setRecovering(false);
     }
-  }, [error, clearError, refreshUserData]);
+  }, [currentError, clearError, refreshUserData]);
 
-  const getErrorMessage = useCallback((error: Error | null): string => {
-    if (!error) return '';
+  const classifyError = useCallback((err: Error, type: ErrorType): ErrorType => {
+    // Override with provided type, or classify based on message
+    if (type) return type;
+    if (err.message.includes('auth') || err.message.includes('login')) return 'authentication';
+    if (err.message.includes('valid') || err.message.includes('required')) return 'validation';
+    if (err.message.includes('network') || err.message.includes('connect')) return 'network';
+    return 'unknown';
+  }, []);
+
+  const reportError = useCallback((err: Error, type: ErrorType = 'unknown') => {
+    setLocalError(err);
+    setErrorType(classifyError(err, type));
+    toast.error(`Error: ${err.message}`);
+  }, [classifyError]);
+
+  const clearErrorHandler = useCallback(() => {
+    setLocalError(null);
+    setErrorType(null);
+    clearError();
+  }, [clearError]);
+
+  const getErrorMessage = useCallback((err: Error | null): string => {
+    if (!err) return '';
+
+    const message = err.message;
 
     // Handle specific error types with user-friendly messages
-    if (error.message.includes('Authentication required')) {
+    if (message.includes('Authentication required')) {
       return 'Please sign in to continue';
     }
     
-    if (error.message.includes('Session expired')) {
+    if (message.includes('Session expired')) {
       return 'Your session has expired. Please sign in again.';
     }
     
-    if (error.message.includes('Access denied')) {
+    if (message.includes('Access denied')) {
       return 'You do not have permission to access this resource';
     }
     
-    if (error.message.includes('Network')) {
+    if (message.includes('Network')) {
       return 'Network connection issue. Please check your internet connection.';
     }
     
-    return error.message || 'An unexpected error occurred';
+    return message || 'An unexpected error occurred';
   }, []);
 
   return {
-    error,
-    errorMessage: getErrorMessage(error),
+    error: currentError,
+    errorType,
+    errorMessage: getErrorMessage(currentError),
     recovering,
-    canRecover: !!error,
+    canRecover: !!currentError,
     recoverFromError,
-    clearError,
+    clearError: clearErrorHandler,
+    reportError,
   };
 };
 

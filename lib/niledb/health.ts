@@ -15,6 +15,8 @@ export interface HealthCheckResult {
     database: HealthCheck;
     api: HealthCheck;
     authentication: HealthCheck;
+    tenantService: HealthCheck;
+    companyService: HealthCheck;
   };
   metadata: {
     environment: string;
@@ -114,6 +116,8 @@ export const performHealthCheck = async (): Promise<HealthCheckResult> => {
       database: { status: 'pass' },
       api: { status: 'pass' },
       authentication: { status: 'pass' },
+      tenantService: { status: 'pass' },
+      companyService: { status: 'pass' },
     },
     metadata: {
       environment: process.env.NODE_ENV || 'development',
@@ -204,6 +208,48 @@ export const performHealthCheck = async (): Promise<HealthCheckResult> => {
     result.checks.authentication = {
       status: 'pass',
       details: { note: 'No active session (expected)' },
+    };
+  }
+
+  // Tenant Service Health Check
+  try {
+    const tenantStartTime = Date.now();
+    const config = getNileConfig();
+    const nile = Nile(config);
+
+    // Test tenant query
+    await nile.db.query('SELECT 1 FROM public.tenants LIMIT 1');
+    const tenantResponseTime = Date.now() - tenantStartTime;
+
+    result.checks.tenantService = {
+      status: 'pass',
+      responseTime: tenantResponseTime,
+    };
+  } catch (error) {
+    result.checks.tenantService = {
+      status: 'fail',
+      error: error instanceof Error ? error.message : 'Unknown tenant service error',
+    };
+  }
+
+  // Company Service Health Check
+  try {
+    const companyStartTime = Date.now();
+    const config = getNileConfig();
+    const nile = Nile(config);
+
+    // Test company query
+    await nile.db.query('SELECT 1 FROM public.companies LIMIT 1');
+    const companyResponseTime = Date.now() - companyStartTime;
+
+    result.checks.companyService = {
+      status: 'pass',
+      responseTime: companyResponseTime,
+    };
+  } catch (error) {
+    result.checks.companyService = {
+      status: 'fail',
+      error: error instanceof Error ? error.message : 'Unknown company service error',
     };
   }
 

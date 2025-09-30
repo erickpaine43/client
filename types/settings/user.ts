@@ -11,6 +11,7 @@ export interface UserProfileData {
   username: string;
   role: string;
   avatarUrl?: string;
+  isPenguinMailsStaff?: boolean;
 }
 
 // User Settings (Server-side persistent data)

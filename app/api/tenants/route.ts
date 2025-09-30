@@ -25,6 +25,7 @@ const CreateTenantSchema = z.object({
 export const POST = withAuthentication(async (request, _context) => {
   try {
     const tenantService = getTenantService();
+
     const body = await request.json();
 
     // Validate request body

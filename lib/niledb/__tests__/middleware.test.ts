@@ -79,7 +79,7 @@ describe('Authentication Middleware', () => {
       const authenticatedHandler = withAuthentication(mockHandler);
     
       const request = (mockNextRequest() as unknown) as NextRequest;
-      const context = { params: { id: '123' } };
+      const context = { params: Promise.resolve({ id: '123' }) };
     
       const response = await authenticatedHandler(request, context);
       expect(response.status).toBe(200);
@@ -104,7 +104,7 @@ describe('Authentication Middleware', () => {
       const authenticatedHandler = withAuthentication(mockHandler);
     
       const request = (mockNextRequest() as unknown) as NextRequest;
-      const context = { params: {} };
+      const context = { params: Promise.resolve({}) };
     
       const response = await authenticatedHandler(request, context);
 
@@ -123,7 +123,7 @@ describe('Authentication Middleware', () => {
       const authenticatedHandler = withAuthentication(mockHandler);
     
       const request = (mockNextRequest() as unknown) as NextRequest;
-      const context = { params: {} };
+      const context = { params: Promise.resolve({}) };
     
       const response = await authenticatedHandler(request, context);
 
@@ -146,7 +146,7 @@ describe('Authentication Middleware', () => {
       const staffHandler = withStaffAccess('admin')(mockHandler);
     
       const request = (mockNextRequest() as unknown) as NextRequest;
-      const context = { params: {} };
+      const context = { params: Promise.resolve({}) };
     
       const response = await staffHandler(request, context);
       expect(response.status).toBe(200);
@@ -171,7 +171,7 @@ describe('Authentication Middleware', () => {
       const staffHandler = withStaffAccess('admin')(mockHandler);
     
       const request = (mockNextRequest() as unknown) as NextRequest;
-      const context = { params: {} };
+      const context = { params: Promise.resolve({}) };
     
       const response = await staffHandler(request, context);
 
@@ -197,7 +197,7 @@ describe('Authentication Middleware', () => {
       const staffHandler = withStaffAccess()(mockHandler);
     
       const request = (mockNextRequest() as unknown) as NextRequest;
-      const context = { params: {} };
+      const context = { params: Promise.resolve({}) };
     
       const response = await staffHandler(request, context);
 
@@ -241,7 +241,7 @@ describe('Authentication Middleware', () => {
       const tenantHandler = withTenantAccess('member')(mockHandler);
     
       const request = (mockNextRequest() as unknown) as NextRequest;
-      const context = { params: { tenantId: 'tenant-123' } };
+      const context = { params: Promise.resolve({ tenantId: 'tenant-123' }) };
     
       const response = await tenantHandler(request, context);
       expect(response.status).toBe(200);
@@ -272,7 +272,7 @@ describe('Authentication Middleware', () => {
       const tenantHandler = withTenantAccess()(mockHandler);
     
       const request = (mockNextRequest() as unknown) as NextRequest;
-      const context = { params: {} }; // No tenantId
+      const context = { params: Promise.resolve({}) }; // No tenantId
     
       const response = await tenantHandler(request, context);
 
@@ -305,7 +305,7 @@ describe('Authentication Middleware', () => {
       const tenantHandler = withTenantAccess()(mockHandler);
     
       const request = (mockNextRequest() as unknown) as NextRequest;
-      const context = { params: { tenantId: 'non-existent-tenant' } };
+      const context = { params: Promise.resolve({ tenantId: 'non-existent-tenant' }) };
     
       const response = await tenantHandler(request, context);
 
@@ -331,8 +331,8 @@ describe('Authentication Middleware', () => {
         GET: getHandler,
         POST: postHandler,
       }) as {
-        GET: (req: NextRequest, ctx: { params: Record<string, string> & { user?: UserWithProfile; tenant?: { id: string; name: string }; isStaff: boolean; } }) => Promise<NextResponse>;
-        POST: (req: NextRequest, ctx: { params: Record<string, string> & { user?: UserWithProfile; tenant?: { id: string; name: string }; isStaff: boolean; } }) => Promise<NextResponse>;
+        GET: (req: NextRequest, ctx: { params: Promise<Record<string, string>> }) => Promise<NextResponse>;
+        POST: (req: NextRequest, ctx: { params: Promise<Record<string, string>> }) => Promise<NextResponse>;
       };
 
       expect(route.GET).toBeDefined();
@@ -340,13 +340,13 @@ describe('Authentication Middleware', () => {
 
       // Test GET handler
       const request = (mockNextRequest() as unknown) as NextRequest;
-      const context = { params: {} };
+      const context = { params: Promise.resolve({}) };
 
-      const getResponse = await ((route.GET as unknown) as (req: NextRequest, ctx: { params: Record<string, string> }) => Promise<NextResponse>)(request, context);
+      const getResponse = await ((route.GET as unknown) as (req: NextRequest, ctx: { params: Promise<Record<string, string>> }) => Promise<NextResponse>)(request, context);
       expect(getResponse.status).toBe(200);
       expect(getHandler).toHaveBeenCalled();
 
-      const postResponse = await ((route.POST as unknown) as (req: NextRequest, ctx: { params: Record<string, string> }) => Promise<NextResponse>)(request, context);
+      const postResponse = await ((route.POST as unknown) as (req: NextRequest, ctx: { params: Promise<Record<string, string>> }) => Promise<NextResponse>)(request, context);
       expect(postResponse.status).toBe(200);
       expect(postHandler).toHaveBeenCalled();
     });
@@ -388,15 +388,15 @@ describe('Authentication Middleware', () => {
       const route = createTenantRoute({
         GET: getHandler,
       }, 'member') as {
-        GET: (req: NextRequest, ctx: { params: Record<string, string> & { user?: UserWithProfile; tenant?: { id: string; name: string }; isStaff: boolean; } }) => Promise<NextResponse>;
+        GET: (req: NextRequest, ctx: { params: Promise<Record<string, string>> }) => Promise<NextResponse>;
       };
     
       expect(route.GET).toBeDefined();
     
       const request = (mockNextRequest() as unknown) as NextRequest;
-      const context = { params: { tenantId: 'tenant-123' } };
+      const context = { params: Promise.resolve({ tenantId: 'tenant-123' }) };
 
-      const response = await ((route.GET as unknown) as (req: NextRequest, ctx: { params: Record<string, string> & { tenantId: string } }) => Promise<NextResponse>)(request, context);
+      const response = await ((route.GET as unknown) as (req: NextRequest, ctx: { params: Promise<Record<string, string>> }) => Promise<NextResponse>)(request, context);
       expect(response.status).toBe(200);
       expect(getHandler).toHaveBeenCalled();
     });
@@ -417,15 +417,15 @@ describe('Authentication Middleware', () => {
       const route = createStaffRoute({
         GET: getHandler,
       }, 'admin') as {
-        GET: (req: NextRequest, ctx: { params: Record<string, string> & { user?: UserWithProfile; tenant?: { id: string; name: string }; isStaff: boolean; } }) => Promise<NextResponse>;
+        GET: (req: NextRequest, ctx: { params: Promise<Record<string, string>> }) => Promise<NextResponse>;
       };
     
       expect(route.GET).toBeDefined();
     
       const request = (mockNextRequest() as unknown) as NextRequest;
-      const context = { params: {} };
+      const context = { params: Promise.resolve({}) };
 
-      const response = await ((route.GET as unknown) as (req: NextRequest, ctx: { params: Record<string, string> }) => Promise<NextResponse>)(request, context);
+      const response = await ((route.GET as unknown) as (req: NextRequest, ctx: { params: Promise<Record<string, string>> }) => Promise<NextResponse>)(request, context);
       expect(response.status).toBe(200);
       expect(getHandler).toHaveBeenCalled();
     });
@@ -439,7 +439,7 @@ describe('Authentication Middleware', () => {
       const authenticatedHandler = withAuthentication(mockHandler);
     
       const request = (mockNextRequest() as unknown) as NextRequest;
-      const context = { params: {} };
+      const context = { params: Promise.resolve({}) };
     
       const response = await authenticatedHandler(request, context);
 
@@ -460,7 +460,7 @@ describe('Authentication Middleware', () => {
       const authenticatedHandler = withAuthentication(mockHandler);
     
       const request = (mockNextRequest() as unknown) as NextRequest;
-      const context = { params: {} };
+      const context = { params: Promise.resolve({}) };
 
       // Should propagate handler errors
       await expect(authenticatedHandler(request, context)).rejects.toThrow('Handler error');

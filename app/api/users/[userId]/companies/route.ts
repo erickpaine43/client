@@ -19,7 +19,7 @@ export const GET = withAuthentication(async (request, context) => {
   try {
     const companyService = getCompanyService();
     const authService = getAuthService();
-    const { userId } = context.params;
+    const { userId } = await context.params;
 
     // Handle 'me' parameter for current user
     const targetUserId = userId === 'me' ? request.user.id : userId;

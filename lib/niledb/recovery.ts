@@ -40,6 +40,7 @@ export interface RecoveryOperation {
 export interface SystemBackup {
   id: string;
   timestamp: string;
+  status: 'pending' | 'completed' | 'failed';
   tables: string[];
   recordCounts: Record<string, number>;
   checksums: Record<string, string>;
@@ -257,6 +258,7 @@ export class RecoveryManager {
       const backup: SystemBackup = {
         id,
         timestamp: new Date().toISOString(),
+        status: 'pending' as const,
         tables: [],
         recordCounts: {},
         checksums: {},
@@ -301,12 +303,13 @@ export class RecoveryManager {
         await nile.db.query(
           `
           INSERT INTO public.system_backups (
-            id, timestamp, tables, record_counts, checksums, metadata
-          ) VALUES ($1, $2, $3, $4, $5, $6)
+            id, timestamp, status, tables, record_counts, checksums, metadata
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7)
         `,
           [
             backup.id,
             backup.timestamp,
+            backup.status,
             JSON.stringify(backup.tables),
             JSON.stringify(backup.recordCounts),
             JSON.stringify(backup.checksums),
@@ -315,11 +318,40 @@ export class RecoveryManager {
         );
       });
 
+      backup.status = 'completed';
+
       return backup;
 
     } catch (error) {
       logError(error, { operation: 'create_backup', backupId: id });
       throw new MigrationError('Failed to create system backup');
+    }
+  }
+
+  /**
+   * Validate a system backup
+   */
+  async validateBackup(backupId: string): Promise<{ isValid: boolean; details?: string }> {
+    try {
+      const result = await withoutTenantContext(async (nile) => {
+        return await nile.db.query('SELECT * FROM public.system_backups WHERE id = $1', [backupId]);
+      });
+
+      if (result.rows.length === 0) {
+        return { isValid: false, details: 'Backup not found' };
+      }
+
+      const backupData = result.rows[0];
+      if (backupData.status !== 'completed') {
+        return { isValid: false, details: `Backup status is ${backupData.status}` };
+      }
+
+      // Additional validation could check checksums against current data
+      // For now, assume valid if backup exists and is completed
+      return { isValid: true };
+    } catch (error) {
+      logError(error, { operation: 'validate_backup', backupId });
+      return { isValid: false, details: error instanceof Error ? error.message : 'Unknown validation error' };
     }
   }
 
