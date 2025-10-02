@@ -66,7 +66,12 @@
     "test:critical": "npx tsx lib/niledb/__tests__/run-comprehensive-tests.ts --suites=unit-auth,unit-tenant,unit-company,migration-validation,api-integration,comprehensive-integration,end-to-end --fail-fast",
     "test:quick": "npx tsx lib/niledb/__tests__/run-comprehensive-tests.ts --suites=unit-auth,unit-tenant,unit-company --parallel",
     "test:setup": "echo 'Setting up test environment...'",
-    "test:cleanup": "echo 'Cleaning up test environment...'"
+    "test:cleanup": "echo 'Cleaning up test environment...'",
+    "analyze:types": "npx tsx scripts/analysis/type-comparison.ts",
+    "generate:recommendations": "npx tsx scripts/analysis/schema-diffing.ts",
+    "apply:optimizations": "psql $DATABASE_URL -f migration-data/optimization-migrations/005-01-remove-duplicate-fields.sql && psql $DATABASE_URL -f migration-data/optimization-migrations/005-02-add-missing-relationships.sql && psql $DATABASE_URL -f migration-data/optimization-migrations/005-03-fix-type-inconsistencies.sql",
+    "validate:optimizations": "npx tsx scripts/validate-migration.ts --optimizations",
+    "benchmark:performance": "npx tsx scripts/validate-performance.ts --benchmark"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

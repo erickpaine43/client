@@ -16,15 +16,16 @@ async function createMonitoringSchema() {
       // Create recovery_points table
       await nile.db.query(`
         CREATE TABLE IF NOT EXISTS public.recovery_points (
-          id VARCHAR(255) PRIMARY KEY,
+          id VARCHAR(255) NOT NULL,
+          tenant_id UUID NOT NULL REFERENCES public.tenants(id),
           timestamp TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
           operation VARCHAR(255) NOT NULL,
-          tenant_id UUID REFERENCES public.tenants(id),
           metadata JSONB DEFAULT '{}',
           checksum VARCHAR(255),
           created TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
           updated TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          deleted TIMESTAMPTZ
+          deleted TIMESTAMPTZ,
+          PRIMARY KEY (id, tenant_id)
         );
       `);
 
@@ -46,7 +47,8 @@ async function createMonitoringSchema() {
       // Create error_logs table for centralized error tracking
       await nile.db.query(`
         CREATE TABLE IF NOT EXISTS public.error_logs (
-          id SERIAL PRIMARY KEY,
+          id UUID NOT NULL DEFAULT gen_random_uuid(),
+          tenant_id UUID NOT NULL REFERENCES public.tenants(id),
           timestamp TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
           error_type VARCHAR(255) NOT NULL,
           error_code VARCHAR(255),
@@ -54,30 +56,31 @@ async function createMonitoringSchema() {
           stack_trace TEXT,
           context JSONB DEFAULT '{}',
           user_id UUID,
-          tenant_id UUID REFERENCES public.tenants(id),
           request_id VARCHAR(255),
           endpoint VARCHAR(255),
           severity VARCHAR(50) DEFAULT 'error',
           resolved BOOLEAN DEFAULT FALSE,
-          created TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+          created TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          PRIMARY KEY (id, tenant_id)
         );
       `);
 
       // Create performance_metrics table
       await nile.db.query(`
         CREATE TABLE IF NOT EXISTS public.performance_metrics (
-          id SERIAL PRIMARY KEY,
+          id UUID NOT NULL DEFAULT gen_random_uuid(),
+          tenant_id UUID NOT NULL REFERENCES public.tenants(id),
           timestamp TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
           request_id VARCHAR(255),
           operation VARCHAR(255) NOT NULL,
           duration_ms INTEGER NOT NULL,
           status_code INTEGER,
           user_id UUID,
-          tenant_id UUID REFERENCES public.tenants(id),
           endpoint VARCHAR(255),
           method VARCHAR(10),
           error_message TEXT,
-          created TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+          created TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          PRIMARY KEY (id, tenant_id)
         );
       `);
 

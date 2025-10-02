@@ -6,7 +6,6 @@
  */
 
 import { getMigrationClient } from '../config';
-import { Tenant } from '../types';
 
 export async function createTenantSchema(): Promise<void> {
   const nile = getMigrationClient();

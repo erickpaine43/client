@@ -1,0 +1,61 @@
+{
+  "timestamp": 1759424204489,
+  "sessionDuration": 9295,
+  "compilation": {
+    "summary": "Compilation Performance Summary:\n- TypeScript: 0ms avg (0 runs, 0.0% success)\n- ESLint: 7188ms avg (1 runs, 100.0% success)\n- Build: 0ms avg (0 runs, 0.0% success)\n- Tests: 0ms avg (0 runs, 0.0% success)\n- Total Compilation Time: 7188ms\n- Overall Success Rate: 100.0%",
+    "details": {
+      "tscStats": {
+        "avgTime": 0,
+        "successRate": 0,
+        "count": 0
+      },
+      "eslintStats": {
+        "avgTime": 7188,
+        "successRate": 100,
+        "count": 1
+      },
+      "buildStats": {
+        "avgTime": 0,
+        "successRate": 0,
+        "count": 0
+      },
+      "testStats": {
+        "avgTime": 0,
+        "successRate": 0,
+        "count": 0
+      },
+      "totalCompilationTime": 7188,
+      "compilationSuccessRate": 100
+    },
+    "recommendations": [
+      "ESLint is slow. Consider using eslint cache or reducing the number of rules."
+    ]
+  },
+  "convexHelperImpact": {
+    "queryPerformance": {
+      "avgTime": 0,
+      "count": 0,
+      "successRate": 0
+    },
+    "mutationPerformance": {
+      "avgTime": 0,
+      "count": 0,
+      "successRate": 0
+    },
+    "overallImpact": "minimal"
+  },
+  "overallPerformance": {
+    "totalOperations": 0,
+    "successRate": 0,
+    "averageExecutionTime": 0,
+    "p95ExecutionTime": 0
+  },
+  "alerts": [
+    "⚠️ ESLint execution is slow: 7188ms"
+  ],
+  "recommendations": [
+    "ESLint is slow. Consider using eslint cache or reducing the number of rules.",
+    "Review ConvexQueryHelper error handling - query success rate is below 95%",
+    "Review ConvexQueryHelper error handling - mutation success rate is below 95%"
+  ]
+}
