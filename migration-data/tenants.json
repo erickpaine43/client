@@ -1,0 +1,26 @@
+[
+  {
+    "id": "tenant_001",
+    "name": "PenguinMails",
+    "created_at": "2024-01-01T00:00:00.000Z",
+    "updated_at": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "tenant_002",
+    "name": "Acme Corporation",
+    "created_at": "2024-01-02T00:00:00.000Z",
+    "updated_at": "2024-01-02T00:00:00.000Z"
+  },
+  {
+    "id": "tenant_003",
+    "name": "TechStart Inc",
+    "created_at": "2024-01-03T00:00:00.000Z",
+    "updated_at": "2024-01-03T00:00:00.000Z"
+  },
+  {
+    "id": "tenant_004",
+    "name": "TestCorp LLC",
+    "created_at": "2024-01-04T00:00:00.000Z",
+    "updated_at": "2024-01-04T00:00:00.000Z"
+  }
+]

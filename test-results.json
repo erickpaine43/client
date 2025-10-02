@@ -1,0 +1,22 @@
+{
+  "summary": {
+    "totalSuites": 1,
+    "passedSuites": 0,
+    "failedSuites": 1,
+    "totalTests": 0,
+    "passedTests": -1,
+    "failedTests": 1,
+    "totalDuration": 258,
+    "timestamp": "2025-09-30T14:38:58.101Z"
+  },
+  "results": [
+    {
+      "suite": "unit-auth",
+      "passed": false,
+      "duration": 197,
+      "tests": 0,
+      "failures": 1,
+      "error": "Command failed: npx jest --testPathPattern=\"lib/niledb/__tests__/auth.test.ts\" --verbose --no-cache --forceExit --silent\ntestPathPattern:\n\n  Option \"testPathPattern\" was replaced by \"--testPathPatterns\". \"--testPathPatterns\" is only available as a command-line option.\n  \n  Please update your configuration.\n\n  CLI Options Documentation:\n  https://jestjs.io/docs/cli\n\n"
+    }
+  ]
+}

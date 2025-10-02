@@ -271,7 +271,7 @@ class ComprehensiveTestRunner {
   private buildJestCommand(suite: TestSuite): string {
     const baseCommand = 'npx jest';
     const options = [
-      `--testPathPattern="${suite.testFile}"`,
+      `--testPathPatterns="${suite.testFile}"`,
       '--verbose',
       '--no-cache',
       '--forceExit',

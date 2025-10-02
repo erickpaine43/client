@@ -33,6 +33,7 @@ async function createUserProfilesTable(): Promise<SchemaCreationResult> {
         role text DEFAULT 'user',
         is_penguinmails_staff boolean DEFAULT false,
         preferences jsonb DEFAULT '{}',
+        last_login_at timestamp without time zone,
         created timestamp without time zone NOT NULL DEFAULT LOCALTIMESTAMP,
         updated timestamp without time zone NOT NULL DEFAULT LOCALTIMESTAMP,
         deleted timestamp without time zone NULL,
@@ -41,6 +42,12 @@ async function createUserProfilesTable(): Promise<SchemaCreationResult> {
       );
     `);
     
+    // Add missing columns if they don't exist
+    await nile.db.query(`
+      ALTER TABLE user_profiles
+      ADD COLUMN IF NOT EXISTS last_login_at timestamp without time zone;
+    `);
+
     // Create indexes
     await nile.db.query(`
       CREATE INDEX IF NOT EXISTS idx_user_profiles_user_id ON user_profiles(user_id);

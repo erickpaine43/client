@@ -1,0 +1,53 @@
+[
+  {
+    "id": "company_001",
+    "tenant_id": "tenant_001",
+    "name": "PenguinMails Internal",
+    "email": "internal@penguinmails.com",
+    "settings": {
+      "internal": true,
+      "features": [
+        "admin_panel",
+        "analytics"
+      ]
+    },
+    "created_at": "2024-01-01T00:00:00.000Z",
+    "updated_at": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "company_002",
+    "tenant_id": "tenant_002",
+    "name": "Acme Corporation",
+    "email": "contact@acme.com",
+    "settings": {
+      "industry": "manufacturing",
+      "employees": 500
+    },
+    "created_at": "2024-01-02T00:00:00.000Z",
+    "updated_at": "2024-01-02T00:00:00.000Z"
+  },
+  {
+    "id": "company_003",
+    "tenant_id": "tenant_003",
+    "name": "TechStart Inc",
+    "email": "hello@techstart.com",
+    "settings": {
+      "industry": "technology",
+      "stage": "startup"
+    },
+    "created_at": "2024-01-03T00:00:00.000Z",
+    "updated_at": "2024-01-03T00:00:00.000Z"
+  },
+  {
+    "id": "company_004",
+    "tenant_id": "tenant_004",
+    "name": "TestCorp LLC",
+    "email": "info@testcorp.com",
+    "settings": {
+      "industry": "consulting",
+      "size": "small"
+    },
+    "created_at": "2024-01-04T00:00:00.000Z",
+    "updated_at": "2024-01-04T00:00:00.000Z"
+  }
+]
