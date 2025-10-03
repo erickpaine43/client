@@ -10,6 +10,9 @@ import { MailboxWarmupData } from "@/types";
 import { mapRawToLegacyMailboxData } from "@/lib/utils/analytics-mappers";
 // Migration note: Using local alias for mailbox analytics state, all mailbox analytics set via mapper.
 
+// Force dynamic rendering to prevent SSR issues
+export const dynamic = 'force-dynamic';
+
 type LocalProgressiveAnalyticsState = Record<
   string,
   {

@@ -307,7 +307,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("SignIn error:", error);
       setAuthError(error);
     },
-    callbackUrl: window.location.origin + "/dashboard",
+    callbackUrl: typeof window !== 'undefined' ? window.location.origin + "/dashboard" : "/dashboard",
   });
 
   const signUpHook = useSignUp({

@@ -625,6 +625,14 @@ export class TenantService {
   }
 
   /**
+   * Validate UUID format
+   */
+  private validateUuid(id: string): boolean {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(id);
+  }
+
+  /**
    * Validate user access to tenant with role requirement
    */
   async validateTenantAccess(
@@ -633,6 +641,14 @@ export class TenantService {
     requiredRole?: 'member' | 'admin' | 'owner'
   ): Promise<boolean> {
     try {
+      // Validate UUID format
+      if (!this.validateUuid(userId)) {
+        throw new TenantError('user_id must be an uuid: invalid id: ' + userId);
+      }
+      if (!this.validateUuid(tenantId)) {
+        throw new TenantError('tenant_id must be an uuid: invalid id: ' + tenantId);
+      }
+
       // Check if user is staff (staff can access any tenant)
       const isStaff = await this.authService.isStaffUser(userId);
       if (isStaff) {
@@ -681,7 +697,10 @@ export class TenantService {
       return false;
     } catch (error) {
       console.error('Failed to validate tenant access:', error);
-      return false;
+      if (error instanceof TenantError && error.message.includes('must be an uuid')) {
+        throw error; // Re-throw UUID validation errors
+      }
+      return false; // Return false for other errors (like database errors)
     }
   }
 

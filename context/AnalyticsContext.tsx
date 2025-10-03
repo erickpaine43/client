@@ -154,8 +154,8 @@ function InternalAnalyticsProvider({
 
   // Backward-compatible method shims (lightweight wrappers)
   const fetchMailboxAnalytics = useCallback(async (mailboxId: string) => {
-    if (!analyticsService) {
-      console.warn("AnalyticsService not available for fetchMailboxAnalytics");
+    if (!analyticsService || typeof window === 'undefined') {
+      console.warn("AnalyticsService not available for fetchMailboxAnalytics (SSR or service unavailable)");
       return null;
     }
     try {
@@ -202,9 +202,9 @@ function InternalAnalyticsProvider({
       _userid?: string,
       _companyid?: string
     ) => {
-      if (!analyticsService) {
+      if (!analyticsService || typeof window === 'undefined') {
         console.warn(
-          "AnalyticsService not available for fetchMultipleMailboxAnalytics"
+          "AnalyticsService not available for fetchMultipleMailboxAnalytics (SSR or service unavailable)"
         );
         return {} as Record<string, MailboxAnalyticsData>;
       }
@@ -249,8 +249,8 @@ function InternalAnalyticsProvider({
   }, []);
 
   const getAccountMetrics = useCallback(async (accountId?: string) => {
-    if (!analyticsService) {
-      console.warn("AnalyticsService not available for getAccountMetrics");
+    if (!analyticsService || typeof window === 'undefined') {
+      console.warn("AnalyticsService not available for getAccountMetrics (SSR or service unavailable)");
       return null;
     }
     try {
@@ -348,7 +348,7 @@ function InternalAnalyticsProvider({
         warmupMetrics,
 
         // Service Access
-        services: analyticsService,
+        services: analyticsService || undefined,
       }}
     >
       {children}
@@ -358,8 +358,14 @@ function InternalAnalyticsProvider({
 
 /**
  * Main Analytics Provider that wraps all sub-providers.
+ * Temporarily disabled during SSR to prevent build issues.
  */
 function AnalyticsProvider({ children }: { children: React.ReactNode }) {
+  // Temporarily disable analytics provider during SSR to prevent build issues
+  if (typeof window === 'undefined') {
+    return <>{children}</>;
+  }
+
   return (
     <FiltersProvider>
       <LoadingProvider>
@@ -390,7 +396,7 @@ function useDomainAnalytics(domain: AnalyticsDomain) {
   const { loading, error, executeWithErrorHandling } = useDomainLoading(domain);
 
   return {
-    service: services ? services[domain as keyof typeof services] : null,
+    service: (services && typeof window !== 'undefined') ? services[domain as keyof typeof services] : null,
     loading,
     error,
     executeWithErrorHandling,

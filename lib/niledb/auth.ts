@@ -100,6 +100,14 @@ export class AuthService {
   }
 
   /**
+   * Validate UUID format
+   */
+  private validateUuid(id: string): boolean {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(id);
+  }
+
+  /**
    * Get current session from request
    */
   async getSession(_request?: ExpressRequest): Promise<NileSession | null> {
@@ -131,10 +139,15 @@ export class AuthService {
    */
   async getUserWithProfile(userId: string): Promise<UserWithProfile | null> {
     try {
+      // Validate UUID format
+      if (!this.validateUuid(userId)) {
+        throw new AuthenticationError('Invalid UUID format: ' + userId);
+      }
+
       const result = await withoutTenantContext(async (nile) => {
         return await nile.db.query(
           `
-          SELECT 
+          SELECT
             u.id,
             u.email,
             u.name,
@@ -152,11 +165,11 @@ export class AuthService {
             up.updated as profile_updated,
             ARRAY_AGG(DISTINCT tu.tenant_id) FILTER (WHERE tu.tenant_id IS NOT NULL) as tenant_ids
           FROM users.users u
-          LEFT JOIN public.user_profiles up ON u.id = up.user_id AND up.deleted IS NULL
-          LEFT JOIN users.tenant_users tu ON u.id = tu.user_id AND tu.deleted IS NULL
-          WHERE u.id = $1 AND u.deleted IS NULL
-          GROUP BY u.id, u.email, u.name, u.given_name, u.family_name, u.picture, 
-                   u.created, u.updated, u.email_verified, up.role, up.is_penguinmails_staff, 
+          LEFT JOIN public.user_profiles up ON u.id::uuid = up.user_id::uuid AND up.deleted IS NULL
+          LEFT JOIN users.tenant_users tu ON u.id::uuid = tu.user_id::uuid AND tu.deleted IS NULL
+          WHERE u.id::uuid = $1::uuid AND u.deleted IS NULL
+          GROUP BY u.id, u.email, u.name, u.given_name, u.family_name, u.picture,
+                   u.created, u.updated, u.email_verified, up.role, up.is_penguinmails_staff,
                    up.preferences, up.last_login_at, up.created, up.updated
         `,
           [userId]
@@ -198,6 +211,9 @@ export class AuthService {
       return user;
     } catch (error) {
       console.error('Failed to get user with profile:', error);
+      if (error instanceof AuthenticationError && error.message.includes('Invalid UUID format')) {
+        throw error; // Re-throw UUID validation errors
+      }
       throw new AuthenticationError('Failed to retrieve user profile');
     }
   }
@@ -284,6 +300,11 @@ export class AuthService {
    */
   async isStaffUser(userId: string): Promise<boolean> {
     try {
+      // Validate UUID format
+      if (!this.validateUuid(userId)) {
+        throw new AuthenticationError('Invalid UUID format: ' + userId);
+      }
+
       const result = await withoutTenantContext(async (nile) => {
         return await nile.db.query(
           `
@@ -299,7 +320,10 @@ export class AuthService {
       return result.rows.length > 0;
     } catch (error) {
       console.error('Failed to check staff status:', error);
-      return false;
+      if (error instanceof AuthenticationError && error.message.includes('Invalid UUID format')) {
+        throw error; // Re-throw UUID validation errors
+      }
+      return false; // Return false for other errors (like database errors)
     }
   }
 

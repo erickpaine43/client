@@ -2,7 +2,7 @@ import Header from "@/components/layout/components/DashboardHeader";
 import AppSideBar from "@/components/layout/components/Sidebar";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AnalyticsProvider } from "@/context/AnalyticsContext";
+import { ClientAnalyticsProvider } from "@/components/analytics/AnalyticsProviderClient";
 import React from "react";
 
 export default async function DashboardRootLayout({
@@ -12,7 +12,7 @@ export default async function DashboardRootLayout({
 }) {
   return (
     <ProtectedRoute>
-      <AnalyticsProvider>
+      <ClientAnalyticsProvider>
         <SidebarProvider >
           <AppSideBar />
           <SidebarInset className="w-10/12 bg-sidebar md:peer-data-[variant=inset]:shadow-none gap-5">
@@ -24,7 +24,7 @@ export default async function DashboardRootLayout({
             </main>
           </SidebarInset>
         </SidebarProvider>
-      </AnalyticsProvider>
+      </ClientAnalyticsProvider>
     </ProtectedRoute>
   );
 }

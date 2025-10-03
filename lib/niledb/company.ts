@@ -119,6 +119,14 @@ export class CompanyService {
   }
 
   /**
+   * Validate UUID format
+   */
+  private validateUuid(id: string): boolean {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(id);
+  }
+
+  /**
    * Get all companies for a tenant (tenant-scoped)
    */
   async getCompaniesForTenant(
@@ -176,6 +184,14 @@ export class CompanyService {
     requestingUserId?: string
   ): Promise<Company | null> {
     try {
+      // Validate UUID format
+      if (!this.validateUuid(tenantId)) {
+        throw new CompanyValidationError('tenant_id must be a valid UUID', 'tenantId');
+      }
+      if (!this.validateUuid(companyId)) {
+        throw new CompanyValidationError('company_id must be a valid UUID', 'companyId');
+      }
+
       // Validate user has access if specified
       if (requestingUserId) {
         const hasAccess = await this.validateCompanyAccess(
@@ -896,7 +912,12 @@ export class CompanyService {
       return userLevel >= requiredLevel;
     } catch (error) {
       console.error('Failed to validate company access:', error);
-      return false;
+      if ((error instanceof CompanyError && error.message.includes('must be a valid UUID')) ||
+          (error instanceof Error && (error.message.includes('must be an uuid') ||
+                                     error.message.includes('Invalid UUID format')))) {
+        throw error; // Re-throw UUID validation errors
+      }
+      return false; // Return false for other errors (like database errors)
     }
   }
 

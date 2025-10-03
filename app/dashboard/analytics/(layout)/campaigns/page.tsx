@@ -1,37 +1,18 @@
 "use client";
-import AnalyticsNavLinks from "@/components/analytics/nav/AnalyticsNavLinks";
-import AnalyticsStatistics from "@/components/analytics/components/analytics-statistics";
-import CampaignPerformanceTable from "@/components/campaigns/analytics/CampaignPerformanceTable";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAnalytics } from "@/context/AnalyticsContext";
+import nextDynamic from "next/dynamic";
 
-function Page() {
-  const { totalSent, openRate, replyRate, clickRate, campaignPerformanceData } =
-    useAnalytics();
+// Dynamically import the entire page component to prevent SSR issues
+const AnalyticsCampaignsPage = nextDynamic(
+  () => import("./AnalyticsCampaignsPageContent"),
+  {
+    ssr: false,
+    loading: () => <div>Loading analytics...</div>
+  }
+);
 
-  return (
-    <div className="space-y-10">
-      <div className="grid grid-cols-responsive gap-4">
-        <AnalyticsStatistics
-          totalSent={totalSent}
-          openRate={openRate}
-          replyRate={replyRate}
-          clickRate={clickRate}
-        />
-      </div>
-      <AnalyticsNavLinks />
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">
-            Campaign Performance Comparison
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CampaignPerformanceTable data={campaignPerformanceData} />
-        </CardContent>
-      </Card>
-    </div>
-  );
+// Force dynamic rendering to prevent SSR issues
+export const dynamic = 'force-dynamic';
+
+export default function Page() {
+  return <AnalyticsCampaignsPage />;
 }
-
-export default Page;

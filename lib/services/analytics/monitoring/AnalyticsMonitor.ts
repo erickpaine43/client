@@ -144,8 +144,10 @@ export class AnalyticsMonitor {
   };
 
   private constructor() {
-    // Initialize monitoring
-    this.startPeriodicCleanup();
+    // Initialize monitoring - only start cleanup if not in SSR
+    if (typeof window !== 'undefined') {
+      this.startPeriodicCleanup();
+    }
     console.log("AnalyticsMonitor initialized");
   }
 
@@ -153,6 +155,19 @@ export class AnalyticsMonitor {
    * Get singleton instance.
    */
   static getInstance(): AnalyticsMonitor {
+    // Return a no-op proxy during SSR to prevent browser API usage
+    if (typeof window === 'undefined') {
+      return new Proxy({}, {
+        get: (target, prop) => {
+          // Return no-op methods for any property access
+          if (typeof prop === 'string' && prop !== 'constructor') {
+            return () => {}; // Return no-op function
+          }
+          return undefined;
+        }
+      }) as AnalyticsMonitor;
+    }
+
     if (!this.instance) {
       this.instance = new AnalyticsMonitor();
     }
@@ -733,5 +748,7 @@ export class AnalyticsMonitor {
   }
 }
 
-// Export singleton instance
-export const analyticsMonitor = AnalyticsMonitor.getInstance();
+// Export singleton instance - lazy initialization to prevent SSR issues
+export const analyticsMonitor = (() => {
+  return AnalyticsMonitor.getInstance();
+})();

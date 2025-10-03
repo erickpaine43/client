@@ -1,13 +1,22 @@
 "use client";
 
-import { AnalyticsProvider } from "@/context/AnalyticsContext";
+import dynamic from "next/dynamic";
 
-interface AnalyticsProviderClientProps {
+// Dynamically import the real provider with SSR disabled
+const AnalyticsProvider = dynamic(
+  () => import("@/context/AnalyticsContext").then(mod => ({ default: mod.AnalyticsProvider })),
+  {
+    ssr: false,
+    loading: () => null
+  }
+);
+
+interface ClientAnalyticsProviderProps {
   children: React.ReactNode;
 }
 
-function AnalyticsProviderClient({ children }: AnalyticsProviderClientProps) {
+export function ClientAnalyticsProvider({ children }: ClientAnalyticsProviderProps) {
   return <AnalyticsProvider>{children}</AnalyticsProvider>;
 }
 
-export default AnalyticsProviderClient;
+export default ClientAnalyticsProvider;
