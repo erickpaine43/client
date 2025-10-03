@@ -1,27 +1,22 @@
-# NileDB Migration Guide
+# NileDB Database Setup Guide
 
-This guide provides comprehensive instructions for migrating data from the old Drizzle-based backend system to NileDB's native multi-tenant architecture.
+This guide explains how to set up and work with the NileDB database in the current system. The system uses NileDB's native multi-tenant architecture with automatic user management and tenant isolation.
 
 ## Overview
 
-The migration process transforms the existing custom user management, tenant relationships, and business logic to work with NileDB's built-in features while preserving all functionality and data integrity.
+The system is now fully integrated with NileDB, utilizing:
 
-### Migration Architecture
-
-```
-Old System (Drizzle)          →          New System (NileDB)
-├── Custom users table        →          users.users (NileDB managed)
-├── Custom tenants            →          public.tenants (NileDB managed)
-├── Custom companies          →          public.companies (tenant-scoped)
-├── Custom user_companies     →          public.user_companies (enhanced)
-└── Custom middleware         →          NileDB native features
-```
+- **users.users** - User accounts managed by NileDB
+- **public.tenants** - Tenant entities managed by NileDB
+- **public.companies** - Company entities scoped to tenants
+- **public.user_companies** - User-company relationships
+- **user_profiles** - Extended user data (roles, preferences)
 
 ## Prerequisites
 
-### 1. Environment Setup
+### Environment Setup
 
-Ensure all required environment variables are configured:
+Configure the required NileDB environment variables:
 
 ```bash
 # Required NileDB configuration
@@ -35,239 +30,142 @@ NODE_ENV=development
 NILEDB_DEBUG=true
 ```
 
-### 2. Validate Configuration
+### Database Initialization
 
-Run the configuration validation script:
-
-```bash
-npx tsx scripts/validate-niledb-config.ts --verbose
-```
-
-### 3. Backup Existing Data
-
-Create a backup of your current system before migration:
+The database schema is automatically created through the migration scripts. To set up a fresh database:
 
 ```bash
-# Export old system data
-npx tsx scripts/export-old-data.ts --output=./migration-backup --verbose
+# Run the migration system
+npm run migration:run
 
-# Verify backup
-ls -la migration-backup/
+# Validate the setup
+npm run migration:validate
 ```
 
-## Migration Process
+## Database Architecture
 
-### Step 1: Data Export
+### User Management
 
-Export data from the old system:
+Users are managed by NileDB's built-in authentication:
+
+- **users.users**: Core user data (email, name, etc.)
+- **user_profiles**: Extended profile data (roles, staff status)
+
+### Tenant Isolation
+
+Tenants provide automatic data isolation:
+
+- **public.tenants**: Tenant definitions
+- **Tenant-scoped tables**: Companies, relationships automatically isolated
+
+### Company Management
+
+Companies are scoped to tenants:
+
+- **public.companies**: Company entities per tenant
+- **public.user_companies**: User-company relationships with roles
+
+## Working with the Database
+
+### Using the Services
+
+The system provides TypeScript services for database operations:
+
+```typescript
+import { getAuthService } from '@/lib/niledb/auth';
+import { getTenantService } from '@/lib/niledb/tenant';
+import { getCompanyService } from '@/lib/niledb/company';
+
+// Authenticate users
+const authService = getAuthService();
+const user = await authService.getCurrentUser();
+
+// Work with tenants
+const tenantService = getTenantService();
+await tenantService.withTenantContext(tenantId, async (nile) => {
+  // Tenant-scoped operations
+});
+
+// Manage companies
+const companyService = getCompanyService();
+const companies = await companyService.getUserCompanies(userId);
+```
+
+### Migration System
+
+The migration scripts handle schema and data setup:
 
 ```bash
-# Export all data to JSON files
-npx tsx scripts/export-old-data.ts --output=./migration-data --verbose
+# Run all migrations
+npm run migration:run
 
-# Optional: Export as CSV for analysis
-npx tsx scripts/export-old-data.ts --format=csv --output=./migration-data
+# Validate current state
+npm run migration:validate
+
+# Rollback if needed
+npm run migration:rollback
 ```
 
-**Output Files:**
+### Testing
 
-- `complete-export.json` - All data in single file
-- `users.json` - User records
-- `tenants.json` - Tenant records
-- `companies.json` - Company records
-- `user-companies.json` - Relationship records
-- `metadata.json` - Export metadata
-
-### Step 2: Dry Run Migration
-
-Test the migration process without making changes:
+Run the database test suite:
 
 ```bash
-# Simulate complete migration
-npx tsx scripts/migrate-to-niledb.ts --dry-run --verbose
+# Run migration tests
+npm test scripts/__tests__/migration.test.ts
 
-# Review the analysis output
+# Run integration tests
+npm run test:integration
 ```
 
-**Dry Run Output:**
+## Data Structure
 
-- Users to migrate count and details
-- Tenants to migrate count and details
-- Companies to migrate count and details
-- User-company relationships to migrate
-- No actual changes made to database
+### User Data
 
-### Step 3: Execute Migration
+- **users.users**: Core user information managed by NileDB
+- **user_profiles**: Extended user data including roles and staff status
 
-Run the actual migration:
+### Tenant Data
 
-```bash
-# Full migration with verbose output
-npx tsx scripts/migrate-to-niledb.ts --verbose
+- **public.tenants**: Tenant definitions and metadata
+- **users.tenant_users**: Automatic user-tenant relationships
 
-# Monitor progress and check for errors
-```
+### Company Data
 
-**Migration Steps:**
+- **public.companies**: Company entities scoped to specific tenants
+- **public.user_companies**: User-company relationships with access roles
 
-1. **User Migration** - Create users in `users.users` table
-2. **Profile Creation** - Create user profiles with roles and staff flags
-3. **Tenant Migration** - Create tenants in `public.tenants` table
-4. **Company Migration** - Create companies in tenant-scoped tables
-5. **Relationship Migration** - Create user-company relationships
-6. **Validation** - Verify all data and access controls
-
-### Step 4: Validate Migration
-
-Verify the migration was successful:
-
-```bash
-# Run comprehensive validation
-npx tsx scripts/validate-migration.ts --verbose
-
-# Check specific areas if needed
-npx tsx scripts/validate-migration.ts
-```
-
-**Validation Checks:**
-
-- ✅ User migration and profile creation
-- ✅ Tenant migration and access control
-- ✅ Company migration and tenant isolation
-- ✅ User-company relationships and permissions
-- ✅ Cross-schema query functionality
-- ✅ Staff access and privilege escalation
-- ✅ Data integrity and referential consistency
-
-## Migration Scripts Reference
-
-### Main Migration Script
-
-```bash
-npx tsx scripts/migrate-to-niledb.ts [options]
-
-Options:
-  --dry-run              Simulate migration without changes
-  --rollback             Remove all migrated data
-  --verbose, -v          Enable detailed output
-  --skip-validation      Skip prerequisite validation
-  --data-source=<path>   Use custom data source
-```
-
-### Validation Script
-
-```bash
-npx tsx scripts/validate-migration.ts [options]
-
-Options:
-  --verbose, -v    Show detailed validation information
-  --fix            Attempt to fix issues found
-```
-
-### Rollback Script
-
-```bash
-npx tsx scripts/rollback-migration.ts [options]
-
-Options:
-  --complete              Complete rollback (all data)
-  --selective=<entities>  Rollback specific entities
-  --dry-run              Simulate rollback
-  --preserve-staff       Keep staff users (default: true)
-  --backup               Create backup before rollback
-```
-
-### Data Export Script
-
-```bash
-npx tsx scripts/export-old-data.ts [options]
-
-Options:
-  --output=<path>     Output directory
-  --format=<format>   json or csv format
-  --verbose, -v       Detailed output
-```
-
-## Data Mapping
-
-### User Data Mapping
-
-| Old System                    | NileDB                                | Notes                |
-| ----------------------------- | ------------------------------------- | -------------------- |
-| `users.id`                    | `users.users.id`                      | Preserved            |
-| `users.email`                 | `users.users.email`                   | Direct mapping       |
-| `users.name`                  | `users.users.name`                    | Direct mapping       |
-| `users.role`                  | `user_profiles.role`                  | Moved to profile     |
-| `users.is_penguinmails_staff` | `user_profiles.is_penguinmails_staff` | Staff identification |
-
-### Tenant Data Mapping
-
-| Old System                | NileDB               | Notes          |
-| ------------------------- | -------------------- | -------------- |
-| Custom tenant logic       | `public.tenants`     | NileDB managed |
-| User-tenant relationships | `users.tenant_users` | NileDB managed |
-| Tenant context            | Automatic            | NileDB native  |
-
-### Company Data Mapping
-
-| Old System         | NileDB                    | Notes                        |
-| ------------------ | ------------------------- | ---------------------------- |
-| `companies.*`      | `public.companies.*`      | Tenant-scoped                |
-| `user_companies.*` | `public.user_companies.*` | Enhanced with tenant context |
-| Role hierarchy     | Preserved                 | member → admin → owner       |
-
-## Access Control Migration
+## Access Control
 
 ### Authentication
 
-**Before (Custom):**
-
-```javascript
-// Custom user sync middleware
-app.use(userSyncMiddleware);
-```
-
-**After (NileDB):**
+Users authenticate through NileDB's built-in system:
 
 ```typescript
-// Native NileDB authentication
+// Get current user
 const user = await authService.getCurrentUser();
+
+// Get user with profile data
 const userWithProfile = await authService.getUserWithProfile(userId);
 ```
 
-### Tenant Access
+### Tenant Context
 
-**Before (Custom):**
-
-```javascript
-// Custom tenant context
-req.tenantId = extractTenantId(req);
-```
-
-**After (NileDB):**
+All operations respect tenant isolation:
 
 ```typescript
-// Native tenant context
+// Execute operations within tenant context
 await tenantService.withTenantContext(tenantId, async (nile) => {
-  // Tenant-scoped operations
+  // All queries in this block are tenant-scoped
 });
 ```
 
 ### Company Access
 
-**Before (Custom):**
-
-```javascript
-// Custom access control
-if (!hasCompanyAccess(userId, companyId)) {
-  throw new Error("Access denied");
-}
-```
-
-**After (NileDB):**
+Access control is handled through role-based permissions:
 
 ```typescript
-// Integrated access control
+// Validate company access
 const hasAccess = await companyService.validateCompanyAccess(
   userId,
   tenantId,
@@ -276,54 +174,55 @@ const hasAccess = await companyService.validateCompanyAccess(
 );
 ```
 
-## Testing Strategy
+## Testing
 
 ### Unit Tests
 
-Run the migration test suite:
+Run the database test suite:
 
 ```bash
 # Run all migration tests
 npm test scripts/__tests__/migration.test.ts
 
-# Run specific test categories
-npm test -- --testNamePattern="User Migration"
-npm test -- --testNamePattern="Tenant Migration"
-npm test -- --testNamePattern="Company Migration"
+# Run integration tests
+npm run test:integration
+
+# Run performance tests
+npm run test:performance
 ```
 
 ### Integration Testing
 
-Test complete workflows:
+Test database operations:
 
 ```bash
-# Test complete migration workflow
-npx tsx scripts/migrate-to-niledb.ts --dry-run
-npx tsx scripts/migrate-to-niledb.ts
-npx tsx scripts/validate-migration.ts
-npx tsx scripts/rollback-migration.ts --dry-run
+# Test migration system
+npm run migration:run
+npm run migration:validate
+
+# Test application with database
+npm run test:e2e
 ```
 
 ### Performance Testing
 
-Validate performance with larger datasets:
+Monitor database performance:
 
 ```bash
-# Test with performance monitoring
-npx tsx scripts/validate-niledb-config.ts --verbose
+# Health checks
+curl http://localhost:3000/api/health/niledb
+
+# Performance benchmarks
+npm run benchmark:performance
 ```
 
 ## Troubleshooting
 
 ### Common Issues
 
-#### 1. Environment Configuration
+#### Environment Configuration
 
 **Problem:** Missing environment variables
-
-```
-❌ Missing required environment variables: NILEDB_USER, NILEDB_PASSWORD
-```
 
 **Solution:**
 
@@ -331,186 +230,137 @@ npx tsx scripts/validate-niledb-config.ts --verbose
 # Check .env file
 cat .env
 
-# Validate configuration
-npx tsx scripts/validate-niledb-config.ts
+# Test connection
+npm run migration:validate
 ```
 
-#### 2. Database Connection
+#### Database Connection
 
 **Problem:** Connection failures
-
-```
-❌ Database connection failed: Connection timeout
-```
 
 **Solution:**
 
 ```bash
-# Test connection
-npx tsx scripts/validate-niledb-config.ts --verbose
+# Validate configuration
+npm run migration:validate
 
 # Check network and credentials
 ```
 
-#### 3. Migration Conflicts
+#### Access Control Issues
 
-**Problem:** Data already exists
-
-```
-⏭️ User admin@penguinmails.com already exists
-```
+**Problem:** Permission errors
 
 **Solution:**
 
 ```bash
-# Check existing data
-npx tsx scripts/validate-migration.ts
+# Verify user roles and permissions
+npm run test:integration
 
-# Clean rollback if needed
-npx tsx scripts/rollback-migration.ts --complete
-```
-
-#### 4. Access Control Issues
-
-**Problem:** Permission denied errors
-
-```
-❌ Insufficient permissions to access tenant
-```
-
-**Solution:**
-
-```bash
-# Verify staff user setup
-npx tsx scripts/validate-migration.ts --verbose
-
-# Check user profiles and roles
+# Check tenant context
 ```
 
 ### Recovery Procedures
 
-#### Partial Migration Failure
+#### Database Reset
+
+If you need to reset the database:
 
 ```bash
-# 1. Check what was migrated
-npx tsx scripts/validate-migration.ts
+# Rollback all changes
+npm run migration:rollback
 
-# 2. Rollback problematic parts
-npx tsx scripts/rollback-migration.ts --selective=companies,relationships
-
-# 3. Fix issues and re-run
-npx tsx scripts/migrate-to-niledb.ts
+# Re-run migrations
+npm run migration:run
 ```
 
-#### Complete Migration Failure
+#### Data Issues
+
+For data-related problems:
 
 ```bash
-# 1. Complete rollback
-npx tsx scripts/rollback-migration.ts --complete --backup
+# Validate data integrity
+npm run migration:validate
 
-# 2. Restore from backup if needed
-# (restore procedures depend on backup system)
-
-# 3. Fix issues and retry
-npx tsx scripts/migrate-to-niledb.ts --dry-run
+# Check application logs for specific errors
 ```
 
-## Post-Migration Tasks
+## Development Workflow
 
-### 1. Update Application Code
+### Setting Up Database
 
-Replace old authentication and database code:
+For new development environments:
 
 ```typescript
-// Old: Custom auth middleware
-import { userSyncMiddleware } from "./middleware/userSync";
+// The migration system handles setup automatically
+import { getAuthService } from './lib/niledb/auth';
 
-// New: NileDB services
-import { getAuthService } from "./lib/niledb/auth";
-import { getTenantService } from "./lib/niledb/tenant";
-import { getCompanyService } from "./lib/niledb/company";
+// Services are ready to use after migration
+const authService = getAuthService();
 ```
 
-### 2. Update API Routes
+### Adding New Features
 
-Convert Express routes to Next.js API routes using NileDB middleware patterns.
+When adding database features:
 
-### 3. Test Application
+1. Update schema in migration scripts
+2. Test with migration system
+3. Update TypeScript services
+4. Add integration tests
 
-Thoroughly test all functionality:
+### Monitoring
 
-- User authentication and profiles
-- Tenant switching and isolation
-- Company management and access control
-- Cross-tenant admin operations
-- Staff user privileges
-
-### 4. Monitor Performance
-
-Use NileDB's built-in monitoring and the health check system:
+Regular health checks:
 
 ```bash
-# Regular health checks
-npx tsx scripts/validate-niledb-config.ts
+# Database health
+npm run migration:validate
 
-# Performance monitoring
-curl http://localhost:3000/api/health/niledb
+# Application health
+curl http://localhost:3000/api/health
 ```
 
 ## Best Practices
 
-### 1. Migration Safety
+### Database Operations
 
-- Always run dry-run first
-- Create backups before migration
-- Test in development environment
-- Validate each step thoroughly
-- Have rollback plan ready
+- Always use tenant context for multi-tenant operations
+- Leverage NileDB's automatic isolation features
+- Validate data integrity in tests
+- Monitor query performance regularly
 
-### 2. Data Integrity
+### Development Workflow
 
-- Preserve all existing relationships
-- Maintain role hierarchies
-- Keep audit trails
-- Validate cross-schema queries
-- Test access control thoroughly
+- Run migrations before starting development
+- Test database operations thoroughly
+- Use the provided TypeScript services
+- Follow tenant isolation patterns
 
-### 3. Performance Optimization
+### Security
 
-- Use tenant context appropriately
-- Leverage NileDB's automatic isolation
-- Optimize cross-schema queries
-- Monitor query performance
-- Use proper indexing strategies
-
-### 4. Security Considerations
-
-- Preserve staff user privileges
 - Maintain role-based access control
-- Use secure session management
-- Validate all access patterns
-- Test privilege escalation
+- Validate user permissions in services
+- Use secure authentication flows
+- Test privilege escalation scenarios
 
 ## Support and Resources
 
 ### Documentation References
 
 - [NileDB Documentation](https://docs.thenile.dev)
-- [AuthService Documentation](../lib/niledb/auth.ts)
-- [TenantService Documentation](../lib/niledb/tenant.ts)
-- [CompanyService Documentation](../lib/niledb/company.ts)
+- [AuthService Documentation](./lib/niledb/auth.ts)
+- [TenantService Documentation](./lib/niledb/tenant.ts)
+- [CompanyService Documentation](./lib/niledb/company.ts)
 
-### Migration Scripts
+### Database Scripts
 
-- `scripts/migrate-to-niledb.ts` - Main migration script
-- `scripts/validate-migration.ts` - Validation and testing
-- `scripts/rollback-migration.ts` - Rollback capabilities
-- `scripts/export-old-data.ts` - Data export utilities
+- `scripts/migration/` - Database setup and migration system
+- `scripts/__tests__/migration.test.ts` - Test suite
 
-### Testing Files
+### Testing
 
-- `scripts/__tests__/migration.test.ts` - Comprehensive test suite
-- Test data and fixtures included
-- Integration and unit test coverage
+- Integration tests for database operations
+- Performance benchmarks
+- Health check endpoints
 
-This migration guide provides a complete roadmap for successfully migrating from the old Drizzle-based system to NileDB while preserving all functionality and ensuring data integrity.
+This guide explains how to work with the current NileDB setup for development and production use.
