@@ -1,8 +1,10 @@
 /**
  * NileDB Authentication Service
- * 
+ *
  * Provides authentication functionality using NileDB's native features including
  * session management, user profile integration, and staff user identification.
+ *
+ * @see {@link ../../docs/niledb-setup.md} for database setup and configuration details
  */
 
 import type { Server } from '@niledatabase/server';

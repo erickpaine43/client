@@ -1,9 +1,11 @@
 /**
  * NileDB Tenant Management Service
- * 
+ *
  * Provides comprehensive tenant management functionality using NileDB's native
  * multi-tenant architecture with automatic tenant isolation and cross-schema
  * relationship management.
+ *
+ * @see {@link ../../docs/niledb-setup.md} for database setup and configuration details
  */
 
 import type { Server } from '@niledatabase/server';

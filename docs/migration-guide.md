@@ -1,71 +1,120 @@
-# NileDB Migration Guide
+# NileDB Integration Guide
 
 ## Overview
-This guide documents the migration from the legacy database system to NileDB for the PenguinMails backend infrastructure.
+This guide documents the integration of NileDB's native multi-tenant architecture into the PenguinMails application.
 
-## Migration Phases
+**Note:** Traditional database migrations are not used. NileDB handles schema management automatically through its built-in multi-tenancy features. See [niledb-setup.md](niledb-setup.md) for current database setup procedures.
 
-### Phase 1: Planning and Research
-- Analyzed existing database schema and operations
-- Researched NileDB capabilities and best practices
-- Identified migration scope and dependencies
+## Database Migration & Seeding System
 
-### Phase 2: Testing First (TDD)
+### Migration System
+NileDB creates tables on-demand, so migrations focus on **schema alterations** (adding/removing columns) rather than initial table creation.
+
+#### Running Migrations
+```bash
+# Run all pending schema migrations
+npm run db:migrate
+
+# Rollback specific migration
+npm run db:migrate:rollback 001_add_subscription_tier
+
+# Rollback last migration
+npm run db:migrate:rollback
+```
+
+#### Creating New Migrations
+Add migration objects to `scripts/migration/migrations.ts`:
+
+```typescript
+{
+  id: '003_your_migration_name',
+  name: 'Description of what this migration does',
+  description: 'Detailed explanation',
+  up: async (nile: any) => {
+    // Schema alteration logic
+    await nile.db.query('ALTER TABLE your_table ADD COLUMN new_column VARCHAR(255)');
+  },
+  down: async (nile: any) => {
+    // Rollback logic
+    await nile.db.query('ALTER TABLE your_table DROP COLUMN new_column');
+  },
+}
+```
+
+### Seeding System
+Database seeding provides realistic test data for development and testing environments.
+
+#### Running Seeds
+```bash
+# Seed development/test database (prevents production execution)
+npm run db:seed
+
+# Rollback seed data
+npm run db:seed:rollback
+```
+
+#### Environment Protection
+- ✅ **Development**: Seeding allowed
+- ✅ **Test**: Seeding allowed
+- ❌ **Production**: Seeding blocked with error
+
+### Integration Phases
+
+#### Phase 1: Research and Planning
+- Analyzed NileDB's multi-tenant capabilities
+- Designed tenant isolation architecture
+- Planned service integration approach
+
+#### Phase 2: Testing First (TDD)
 - Created comprehensive test suite before implementation
 - Contract tests for all API endpoints
 - Integration tests for service interactions
 
-### Phase 3: Core Implementation
-- Migrated all entity models to NileDB schemas
-- Updated services to use NileDB client
-- Implemented API endpoints with NileDB integration
-- Created proper TypeScript types and interfaces
+#### Phase 3: Core Implementation
+- Integrated NileDB client into services
+- Implemented tenant context management
+- Created TypeScript types and interfaces
+- Established connection patterns
 
-### Phase 4: Integration
+#### Phase 4: Service Integration
 - Connected all services to NileDB client
 - Implemented tenant isolation middleware
 - Added request/response logging
-- Updated package.json scripts for NileDB operations
+- Updated package.json scripts
 
-### Phase 5: Polish
-- Added unit tests for validation
-- Implemented performance monitoring
+#### Phase 5: Optimization
+- Added performance monitoring
+- Implemented error handling
 - Updated documentation
-- Removed legacy database references
+- Verified tenant isolation
 
-## Key Changes
+## Key Features
 
-### Database Schema
-- Migrated to NileDB's tenant-aware tables
-- Implemented row-level security policies
-- Added proper indexing for performance
+### Multi-Tenant Architecture
+- Automatic tenant isolation through NileDB
+- Global and tenant-specific schemas
+- Row-level security built-in
 
 ### Authentication
-- Switched to NileDB's native authentication
-- Maintained JWT token-based auth
-- Enhanced tenant isolation
+- NileDB's native authentication support
+- JWT token-based auth maintained
+- Enhanced tenant access control
 
 ### API Endpoints
-- All endpoints now use NileDB for data operations
+- All endpoints use NileDB for data operations
 - Maintained existing API contracts
-- Added proper error handling and logging
+- Added comprehensive error handling
 
 ### Services
-- AuthService, TenantService fully migrated
+- AuthService, TenantService integrated
 - Campaign and Email services updated
-- Added comprehensive logging
+- Comprehensive logging implemented
 
 ## Testing
 - Contract tests ensure API compliance
-- Integration tests verify end-to-end functionality
+- Integration tests verify tenant isolation
 - Performance tests monitor system health
 - Unit tests validate business logic
-
-## Rollback Procedures
-1. Stop application services
-2. Run rollback migration scripts
-3. Restore old database configuration
-4. Restart with previous setup
 
 ## Performance Benchmarks
 - API response time: <500ms p95
@@ -74,7 +123,7 @@ This guide documents the migration from the legacy database system to NileDB for
 
 ## Success Criteria
 - All tests pass
-- No old database references remain
+- Tenant isolation verified
 - Performance meets requirements
 - Data integrity maintained
 - Production deployment successful

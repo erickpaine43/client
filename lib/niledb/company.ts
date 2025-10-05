@@ -1,9 +1,11 @@
 /**
  * NileDB Company Management Service
- * 
+ *
  * Provides comprehensive company management functionality using NileDB's native
  * multi-tenant architecture with integration to TenantService and AuthService.
  * Preserves all existing business logic while adapting to NileDB patterns.
+ *
+ * @see {@link ../../docs/niledb-setup.md} for database setup and configuration details
  */
 
 import type { Server } from '@niledatabase/server';

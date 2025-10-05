@@ -3,29 +3,24 @@
 /**
  * Migration Runner
  *
- * Orchestrates the complete migration process: schema creation, seeding, and validation.
+ * Executes database schema migrations (adding/removing columns) in proper order.
+ * Note: NileDB creates tables on-demand, so this focuses on schema alterations.
  */
 
-import { createAllSchemas } from './schema';
-import { seedAllData } from './seed';
+import { runSchemaMigrations } from './migrations';
 import { runValidationSuite } from './validation';
 
 export async function runMigrations(): Promise<void> {
   console.log('🚀 Starting database migration process...\n');
 
   try {
-    // Phase 1: Create schemas
-    console.log('📋 Phase 1: Creating database schemas...');
-    await createAllSchemas();
-    console.log('✅ Schema creation completed\n');
+    // Phase 1: Run schema migrations
+    console.log('📋 Phase 1: Running schema migrations...');
+    await runSchemaMigrations();
+    console.log('✅ Schema migrations completed\n');
 
-    // Phase 2: Seed data
-    console.log('🌱 Phase 2: Seeding sample data...');
-    await seedAllData();
-    console.log('✅ Data seeding completed\n');
-
-    // Phase 3: Validation
-    console.log('🔍 Phase 3: Running validation checks...');
+    // Phase 2: Validation
+    console.log('🔍 Phase 2: Running validation checks...');
     const validationResult = await runValidationSuite();
 
     if (validationResult.overallSuccess) {
@@ -47,21 +42,13 @@ export async function rollbackMigrations(): Promise<void> {
   console.log('🔄 Starting migration rollback...\n');
 
   try {
-    // Import rollback functions
-    const { rollbackAllData } = await import('./seed');
-    const { dropAllSchemas } = await import('./schema');
+    // Note: Schema migrations don't have rollback in this version
+    // For seed rollback, use: npm run db:seed:rollback
 
-    // Phase 1: Rollback data
-    console.log('🗑️ Phase 1: Rolling back seeded data...');
-    await rollbackAllData();
-    console.log('✅ Data rollback completed\n');
+    console.log('⚠️  Schema migrations do not support rollback in this version.');
+    console.log('💡 For seed data rollback, run: npm run db:seed:rollback');
 
-    // Phase 2: Drop schemas
-    console.log('💥 Phase 2: Dropping database schemas...');
-    await dropAllSchemas();
-    console.log('✅ Schema rollback completed\n');
-
-    console.log('🎉 Rollback process completed successfully!');
+    console.log('🎉 Rollback process completed (no-op)!');
   } catch (error) {
     console.error('💥 Rollback process failed:', error);
     throw error;
