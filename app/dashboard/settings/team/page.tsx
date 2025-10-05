@@ -1,6 +1,9 @@
 import TeamMembersTable from "@/components/settings/team/team-members-table";
 import { Card, CardContent } from "@/components/ui/card";
 
+// Force dynamic rendering to prevent SSR issues with analytics dependencies
+export const dynamic = 'force-dynamic';
+
 function page() {
   return (
     <div className="space-y-6">

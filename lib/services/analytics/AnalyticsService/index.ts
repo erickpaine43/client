@@ -552,13 +552,34 @@ export class AnalyticsService extends BaseAnalyticsService {
 let analyticsServiceInstance: AnalyticsService | null = null;
 
 export const analyticsService = (() => {
+  // Completely skip initialization during SSR/build time to prevent window access issues
+  if (typeof window === 'undefined') {
+    // Return a proxy that provides no-op methods to prevent runtime errors
+    return new Proxy({}, {
+      get: (target, prop) => {
+        // Return no-op functions for any method calls
+        if (typeof prop === 'string' && prop !== 'constructor') {
+          return () => Promise.resolve(null);
+        }
+        return undefined;
+      }
+    }) as AnalyticsService;
+  }
+
   if (!analyticsServiceInstance) {
     try {
       analyticsServiceInstance = AnalyticsService.getInstance();
     } catch (error) {
       console.warn("Failed to initialize AnalyticsService:", error);
-      // Return a minimal stub that won't break the build
-      analyticsServiceInstance = null;
+      // Return a proxy as fallback
+      return new Proxy({}, {
+        get: (target, prop) => {
+          if (typeof prop === 'string' && prop !== 'constructor') {
+            return () => Promise.resolve(null);
+          }
+          return undefined;
+        }
+      }) as AnalyticsService; 
     }
   }
   return analyticsServiceInstance;

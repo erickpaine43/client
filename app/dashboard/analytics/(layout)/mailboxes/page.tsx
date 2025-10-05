@@ -1,26 +1,18 @@
 "use client";
-import AnalyticsNavLinks from "@/components/analytics/nav/AnalyticsNavLinks";
-import AnalyticsStatistics from "@/components/analytics/components/analytics-statistics";
-import { useAnalytics } from "@/context/AnalyticsContext";
-import EmailMailboxesTable from "@/components/analytics/warmup/email-mailboxes-table";
+import nextDynamic from "next/dynamic";
 
-function Page() {
-  const { totalSent, openRate, replyRate, clickRate } = useAnalytics();
+// Dynamically import the entire page component to prevent SSR issues
+const AnalyticsMailboxesPage = nextDynamic(
+  () => import("./AnalyticsMailboxesPageContent"),
+  {
+    ssr: false,
+    loading: () => <div>Loading analytics...</div>
+  }
+);
 
-  return (
-    <div className="space-y-10">
-      <div className="grid grid-cols-responsive gap-4">
-        <AnalyticsStatistics
-          totalSent={totalSent}
-          openRate={openRate}
-          replyRate={replyRate}
-          clickRate={clickRate}
-        />
-      </div>
-      <AnalyticsNavLinks />
-      <EmailMailboxesTable />
-    </div>
-  );
+// Force dynamic rendering to prevent SSR issues
+export const dynamic = 'force-dynamic';
+
+export default function Page() {
+  return <AnalyticsMailboxesPage />;
 }
-
-export default Page;

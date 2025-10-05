@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
 import { AuthProvider } from "@/context/AuthContext";
 import { Providers } from "@/components/common/providers";
+import EnhancedErrorBoundary from "@/components/auth/EnhancedErrorBoundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,14 +43,16 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased flex flex-col",
-          `${geistSans.variable} ${geistMono.variable} antialiased`,
+          `${geistSans.variable} ${geistMono.variable} antialiased`
         )}
       >
         <Providers>
-          <AuthProvider>
-            {children}
-            <Toaster />
-          </AuthProvider>
+          <EnhancedErrorBoundary enableRecovery={true} showDetails={false}>
+            <AuthProvider>
+              {children}
+              <Toaster />
+            </AuthProvider>
+          </EnhancedErrorBoundary>
         </Providers>
       </body>
     </html>

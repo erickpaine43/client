@@ -3,6 +3,9 @@
 // Import the migrated analytics dashboard
 import MigratedAnalyticsDashboard from "@/components/analytics/dashboard/AnalyticsDashboardMigrated";
 
+// Force dynamic rendering to prevent SSR issues
+export const dynamic = 'force-dynamic';
+
 /**
  * Updated Analytics Page using migrated components with:
  * - Standardized field names (opened_tracked, clicked_tracked, etc.)

@@ -2,9 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useCampaignAnalytics } from "@/hooks/useCampaignAnalytics";
-
-// Import migrated components
+import { CampaignAnalytics } from "@/types/analytics/domain-specific";
 import MigratedKpiCards from "@/components/dashboard/cards/MigratedKpiCards";
 import QuickActions from "@/components/dashboard/actions/QuickActions";
 import RecentRepliesList from "@/components/inbox/RecentReply/RecentReplyList";
@@ -31,12 +29,16 @@ import {
  * Uses standardized field names and Convex subscriptions for real-time updates.
  */
 export default function MigratedDashboardContent() {
-  // Real-time campaign analytics with Convex subscriptions
-  const {
-    data: campaignAnalytics,
-    isLoading: analyticsLoading,
-    error: analyticsError,
-  } = useCampaignAnalytics();
+  // Temporarily disable analytics to fix SSR issue
+  // const {
+  //   data: campaignAnalytics,
+  //   isLoading: analyticsLoading,
+  //   error: analyticsError,
+  // } = useCampaignAnalytics();
+
+  const campaignAnalytics: CampaignAnalytics[] = []; // Empty array for now
+  const analyticsLoading = false;
+  const analyticsError = null;
 
   return (
     <div className="mx-auto space-y-8">

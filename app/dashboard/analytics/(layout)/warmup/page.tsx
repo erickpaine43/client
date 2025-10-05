@@ -1,17 +1,18 @@
 "use client";
+import nextDynamic from "next/dynamic";
 
-import AnalyticsNavLinks from "@/components/analytics/nav/AnalyticsNavLinks";
-import EmailMailboxesTable from "@/components/analytics/warmup/email-mailboxes-table";
-import WarmupAnalyticsFilter from "@/components/analytics/warmup/warmup-analytics-filter";
-import WarmUpLineChart from "@/components/analytics/warmup/warmup-line-chart";
-function page() {
-  return (
-    <div className="space-y-10">
-      <AnalyticsNavLinks />
-      <WarmupAnalyticsFilter />
-      <WarmUpLineChart />
-      <EmailMailboxesTable />
-    </div>
-  );
+// Dynamically import the entire page component to prevent SSR issues
+const AnalyticsWarmupPage = nextDynamic(
+  () => import("./AnalyticsWarmupPageContent"),
+  {
+    ssr: false,
+    loading: () => <div>Loading analytics...</div>
+  }
+);
+
+// Force dynamic rendering to prevent SSR issues
+export const dynamic = 'force-dynamic';
+
+export default function Page() {
+  return <AnalyticsWarmupPage />;
 }
-export default page;

@@ -22,3 +22,6 @@ async function page() {
   return <DomainsTab domains={transformedDomains} dnsRecords={dnsRecords} />;
 }
 export default page;
+
+// Force dynamic rendering to prevent SSR issues
+export const dynamic = 'force-dynamic';

@@ -105,3 +105,6 @@ export default function LoginPage() {
     </LandingLayout>
   );
 }
+
+// Force dynamic rendering to prevent SSR issues
+export const dynamic = 'force-dynamic';

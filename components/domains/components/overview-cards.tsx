@@ -12,7 +12,12 @@ function OverviewCards() {
   const [domains, setDomains] = useState<Domain[]>([]);
   const { fetchMailboxes } = useAnalytics();
 
+  // Skip analytics calls during SSR
+  const isSSR = typeof window === 'undefined';
+
   useEffect(() => {
+    if (isSSR) return; // Skip during SSR
+
     const getMailboxes = async () => {
       try {
         const data = await fetchMailboxes();
@@ -22,7 +27,7 @@ function OverviewCards() {
       }
     };
     getMailboxes();
-  }, [fetchMailboxes]);
+  }, [fetchMailboxes, isSSR]);
 
   useEffect(() => {
     const getDomains = async () => {

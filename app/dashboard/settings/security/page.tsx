@@ -14,6 +14,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+// Force dynamic rendering to prevent SSR issues
+export const dynamic = 'force-dynamic';
+
 function page() {
   return (
     <div className="space-y-6">

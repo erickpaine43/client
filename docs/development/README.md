@@ -90,6 +90,50 @@ describe("Analytics Integration", () => {
 - [Billing Testing](../../lib/actions/billing/testing.md)
 - [Component Testing Patterns](../../components/analytics/README.md#testing)
 
+## Architectural Decisions and Patterns
+
+### Key Architectural Refactoring Patterns
+
+#### Component Refactoring (Billing Dashboard Example)
+- **Large Component Reduction**: Successfully reduced `RealTimeBillingDashboard.tsx` from 975 to 208 lines (78% reduction)
+- **Modular Extraction**: Extracted 9 sub-components into dedicated files with single responsibilities
+- **Hook Extraction**: Moved complex state management logic to custom hooks (`useBillingRefresh`)
+- **Benefits**: Improved maintainability, testability, reusability, and performance through smaller bundle sizes
+
+#### Performance Monitor Refactoring
+- **Monolithic Reduction**: Reduced `RuntimePerformanceMonitor` from 1066 to 369 lines (65% reduction)
+- **Modular Architecture**: Extracted utilities for statistics, validation, measurement, and reporting
+- **Composable Pattern**: Created reusable utility functions that can be combined flexibly
+- **Backward Compatibility**: Maintained existing API while providing new modular approach
+
+### Security Architecture Patterns
+
+#### OLTP-First Security Boundaries
+- **Database-Level Isolation**: Use Row-Level Security (RLS) for tenant isolation
+- **PCI Compliance**: Implement payment tokenization with external processors
+- **Sensitive Data Protection**: Store only last 4 digits and tokenized IDs for payment methods
+- **Audit Trail**: Complete financial audit trail with `created_by_id` and operation logging
+- **Data Boundary Enforcement**: Never store sensitive data (PII, payment info, credentials) in analytics layer
+
+### Performance Optimization Patterns
+
+#### Analytics Performance Optimization
+- **Progressive Filtering**: Load OLTP data first (fast), then apply basic filters, load analytics separately
+- **Redis Caching Strategy**: 5-15 minute TTL based on data freshness requirements
+- **Composite Cache Keys**: Include filter combinations and date ranges in cache keys
+- **Parallel Processing**: Process OLTP and Convex data simultaneously for mixed calculations
+
+#### Caching TTL Strategy
+```typescript
+const cacheTTLs = {
+  performance: 5 * 60,    // 5 minutes - frequently changing data
+  usage: 10 * 60,         // 10 minutes - moderate change frequency
+  effectiveness: 15 * 60, // 15 minutes - slower changing metrics
+  overview: 5 * 60,       // 5 minutes - dashboard data
+  timeSeries: 10 * 60,    // 10 minutes - chart data
+};
+```
+
 ## Common Development Patterns
 
 ### Service Layer Pattern

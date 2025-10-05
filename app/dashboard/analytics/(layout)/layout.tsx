@@ -1,5 +1,16 @@
-import AnalyticsHeaderActions from "@/components/analytics/actions/AnalyticsHeaderActions";
-import AnalyticsProviderClient from "@/components/analytics/AnalyticsProviderClient";
+"use client";
+import dynamic from "next/dynamic";
+
+// Dynamically import all analytics components to prevent SSR issues
+const AnalyticsHeaderActions = dynamic(
+  () => import("@/components/analytics/actions/AnalyticsHeaderActions"),
+  { ssr: false, loading: () => null }
+);
+
+const AnalyticsProviderClient = dynamic(
+  () => import("@/components/analytics/AnalyticsProviderClient"),
+  { ssr: false, loading: () => <div>Loading...</div> }
+);
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
