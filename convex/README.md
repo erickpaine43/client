@@ -1,262 +1,248 @@
-# Campaign Analytics Convex Functions
+# Convex Admin Functions
 
-This directory contains Convex functions for campaign analytics, implementing the standardized analytics architecture with real-time capabilities.
+This directory contains Convex functions for admin operations, implementing audit logging, session management, and system monitoring with real-time capabilities.
 
 ## 📁 File Structure
 
 ```
 convex/
-├── schema.ts                    # Convex schema with analytics tables
-├── campaignAnalytics.ts         # Campaign analytics queries and mutations
-├── sequenceStepAnalytics.ts     # Sequence step analytics functions
-├── analytics.ts                 # Comprehensive analytics API
-├── crossDomainAnalytics.ts       # Cross-domain analytics functions
+├── schema.ts                    # Convex schema with admin tables
+├── adminAudit.ts                # Admin audit logging and session management
+├── adminEvents.ts               # System events and monitoring
 ├── index.ts                     # API exports and documentation
 └── README.md                    # This file
 ```
 
+## 🎯 Purpose & Architecture
+
+### Admin Data Separation Strategy
+
+Convex is used specifically for **admin operations** to ensure:
+- **Cross-tenant admin access** without compromising business data isolation
+- **Audit compliance** with detailed admin action tracking
+- **Session management** for secure admin authentication
+- **Performance isolation** - admin operations don't impact user-facing performance
+- **Security boundaries** - admin data has different access patterns than business data
+
+### Integration with NileDB
+
+- **Business Data**: Stored in NileDB (users, companies, campaigns, billing, etc.)
+- **Admin Metadata**: Stored in Convex (audit logs, sessions, system events)
+- **Admin User Data**: Stored in NileDB user_profiles (isPenguinmailsStaff, roles, status)
+
 ## 🚀 Key Features
 
-### ✅ Standardized Data Structure
+### ✅ Comprehensive Audit Logging
 
-- Uses standardized field names (`opened_tracked`, `clicked_tracked`, etc.)
-- Implements `PerformanceMetrics` interface from `types/analytics/core.ts`
-- Compatible with `AnalyticsCalculator` utility for rate calculations
+- Complete admin action tracking (user changes, company updates, billing modifications)
+- Automatic session management with activity monitoring
+- Security event logging with configurable severity levels
+- Cross-tenant audit trails for compliance
 
-### ✅ Real-time Analytics
+### ✅ Real-time Admin Monitoring
 
-- Convex subscriptions for live data updates
-- Server-side heavy computations with client-side real-time updates
-- Optimized for dashboard and analytics components
+- Live admin session tracking
+- Real-time security alerts
+- System event monitoring with severity filtering
+- Performance isolation for admin operations
 
-### ✅ Flexible Querying
+### ✅ Secure Admin Authentication
 
-- Support for date range filtering
-- Campaign ID filtering
-- Time series data with configurable granularity (day/week/month)
-- Aggregated analytics across multiple campaigns
+- Session-based admin authentication
+- Automatic session expiration and cleanup
+- Failed attempt logging and monitoring
+- Integration with NileDB user profiles for role verification
 
-### ✅ Data Integrity
+## 📊 Core Admin Functions
 
-- Built-in validation functions
-- Constraint checking (delivered ≤ sent, etc.)
-- Test functions for development and debugging
+### Admin Audit Logging (`adminAudit.ts`)
 
-## 📊 Core Functions
-
-### Campaign Analytics (`campaignAnalytics.ts`)
-
-#### Queries
+#### Session Management
 
 ```typescript
-// Get raw campaign analytics data
-getCampaignAnalytics(campaignIds?, dateRange?, companyId)
+// Create admin session
+createAdminSession(adminUserId, sessionToken, ipAddress, userAgent, deviceInfo?)
 
-// Get aggregated metrics by campaign
-getCampaignAggregatedAnalytics(campaignIds?, dateRange?, companyId)
+// Update session activity
+updateAdminSessionActivity(sessionId, ipAddress, userAgent)
 
-// Get time series data for charts
-getCampaignTimeSeriesAnalytics(campaignIds?, dateRange, companyId, granularity?)
-
-// Get performance metrics for specific campaigns
-getCampaignPerformanceMetrics(campaignIds, dateRange?, companyId)
+// End admin session
+endAdminSession(sessionId, adminUserId, ipAddress, userAgent)
 ```
 
-#### Mutations
+#### Audit Logging
 
 ```typescript
-// Insert or update campaign analytics
-upsertCampaignAnalytics(campaignData)
+// Log admin action
+logAdminAction(adminUserId, action, resourceType, resourceId, changes, metadata)
 
-// Bulk insert campaign analytics
-batchInsertCampaignAnalytics(records[])
+// Get recent admin activity
+getRecentAdminActivity(limit?)
 
-// Delete campaign analytics
-deleteCampaignAnalytics(campaignId, date?, companyId)
+// Get admin activity for specific user
+getAdminUserActivity(adminUserId, limit?)
+
+// Get admin activity for specific resource
+getResourceAdminActivity(resourceType, resourceId, limit?)
+
+// Get admin activity by tenant
+getTenantAdminActivity(tenantId, limit?)
 ```
 
-### Sequence Analytics (`sequenceStepAnalytics.ts`)
+### System Events (`adminEvents.ts`)
 
-#### Queries
+#### Event Management
 
 ```typescript
-// Get sequence step analytics
-getSequenceStepAnalytics(campaignIds?, stepIds?, dateRange?, companyId)
+// Log system event
+logSystemEvent(eventType, severity, message, details?, adminUserId?, tenantId?)
 
-// Get campaign sequence analytics (aggregated by step)
-getCampaignSequenceAnalytics(campaignId, dateRange?, companyId)
+// Log security alert
+logSecurityAlert(message, details, adminUserId?, tenantId?)
 
-// Get sequence step comparison
-getSequenceStepComparison(campaignId, dateRange?, companyId)
-
-// Get sequence funnel analytics
-getSequenceFunnelAnalytics(campaignId, dateRange?, companyId)
+// Log configuration change
+logConfigChange(message, details, adminUserId)
 ```
 
-### Comprehensive Analytics (`analytics.ts`)
-
-#### High-Level Queries
+#### Event Monitoring
 
 ```typescript
-// Get complete campaign analytics with optional sequence data
-getComprehensiveCampaignAnalytics(campaignIds?, dateRange?, companyId, options?)
+// Get system events with filters
+getSystemEvents(eventType?, severity?, resolved?, limit?)
 
-// Get analytics overview for dashboard
-getAnalyticsOverview(dateRange?, companyId)
+// Get recent security alerts
+getRecentSecurityAlerts(limit?)
 
-// Compare performance between campaigns
-getCampaignComparison(campaignIds, dateRange?, companyId, metrics?)
+// Get unresolved critical events
+getUnresolvedCriticalEvents()
 
-// Get filtered analytics data with complex filtering
-getFilteredAnalyticsData(filters, companyId, computeOptions?)
+// Get system health summary
+getSystemHealthSummary()
+
+// Resolve system event
+resolveSystemEvent(eventId, resolution, resolvedBy)
+
+// Clean up old resolved events
+cleanupOldEvents()
 ```
 
 ## 🔧 Usage Examples
 
-### Basic Campaign Analytics
+### Admin Session Management
 
 ```typescript
 import { api } from "./convex/_generated/api";
 
-// Get analytics for specific campaigns
-const analytics = await convex.query(
-  api.campaignAnalytics.getCampaignAggregatedAnalytics,
-  {
-    campaignIds: ["campaign-1", "campaign-2"],
-    dateRange: { start: "2024-11-01", end: "2024-12-01" },
-    companyId: "company-123",
+// Create admin session when user logs in
+const sessionId = await convex.mutation(api.adminAudit.createAdminSession, {
+  adminUserId: "user-123",
+  sessionToken: "session-token-abc",
+  ipAddress: "192.168.1.100",
+  userAgent: "Mozilla/5.0...",
+  deviceInfo: {
+    browser: "Chrome",
+    os: "macOS",
+    device: "Desktop"
   }
-);
+});
 
-// Calculate rates using AnalyticsCalculator
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+// Update session activity
+await convex.mutation(api.adminAudit.updateAdminSessionActivity, {
+  sessionId,
+  ipAddress: "192.168.1.100",
+  userAgent: "Mozilla/5.0..."
+});
 
-analytics.forEach((campaign) => {
-  const rates = AnalyticsCalculator.calculateAllRates(
-    campaign.aggregatedMetrics
-  );
-  console.log(
-    `${campaign.campaignName} open rate: ${AnalyticsCalculator.formatRateAsPercentage(rates.openRate)}`
-  );
+// End session when user logs out
+await convex.mutation(api.adminAudit.endAdminSession, {
+  sessionId,
+  adminUserId: "user-123",
+  ipAddress: "192.168.1.100",
+  userAgent: "Mozilla/5.0..."
 });
 ```
 
-### Time Series Data for Charts
+### Admin Audit Logging
 
 ```typescript
-// Get time series data for charts
-const timeSeriesData = await convex.query(
-  api.campaignAnalytics.getCampaignTimeSeriesAnalytics,
-  {
-    campaignIds: ["campaign-1"],
-    dateRange: { start: "2024-11-01", end: "2024-12-01" },
-    companyId: "company-123",
-    granularity: "day", // or "week", "month"
-  }
-);
-
-// Use with chart libraries
-const chartData = timeSeriesData.map((point) => ({
-  date: point.label,
-  sent: point.metrics.sent,
-  opened: point.metrics.opened_tracked,
-  clicked: point.metrics.clicked_tracked,
-}));
-```
-
-### Dashboard Overview
-
-```typescript
-// Get overview metrics for dashboard
-const overview = await convex.query(api.analytics.getAnalyticsOverview, {
-  companyId: "company-123",
-  dateRange: { start: "2024-11-01", end: "2024-12-01" },
+// Log admin action (user status change)
+await convex.mutation(api.adminAudit.logAdminAction, {
+  adminUserId: "admin-123",
+  action: "user_status_change",
+  resourceType: "user",
+  resourceId: "user-456",
+  tenantId: "tenant-789",
+  oldValues: { status: "active" },
+  newValues: { status: "suspended" },
+  ipAddress: "192.168.1.100",
+  userAgent: "Mozilla/5.0...",
+  notes: "User suspended for policy violation",
+  metadata: { reason: "spam_complaints", duration: "7_days" }
 });
 
-console.log(`Total campaigns: ${overview.overview.totalCampaigns}`);
-console.log(`Active campaigns: ${overview.overview.activeCampaigns}`);
-console.log(`Total emails sent: ${overview.overview.totalSent}`);
+// Get recent admin activity
+const recentActivity = await convex.query(api.adminAudit.getRecentAdminActivity, {
+  limit: 50
+});
 
-// Top performing campaigns
-overview.topPerformingCampaigns.forEach((campaign) => {
-  console.log(
-    `${campaign.campaignName}: ${AnalyticsCalculator.formatRateAsPercentage(campaign.replyRate)} reply rate`
-  );
+recentActivity.forEach(activity => {
+  console.log(`${activity.adminUserId} performed ${activity.action} on ${activity.resourceType} ${activity.resourceId}`);
 });
 ```
 
-### Sequence Analytics
+### System Event Monitoring
 
 ```typescript
-// Get sequence funnel analytics
-const funnelData = await convex.query(
-  api.sequenceStepAnalytics.getSequenceFunnelAnalytics,
-  {
-    campaignId: "campaign-1",
-    companyId: "company-123",
-  }
-);
-
-console.log(
-  `Overall conversion: ${AnalyticsCalculator.formatRateAsPercentage(funnelData.overallConversion)}`
-);
-
-funnelData.funnelSteps.forEach((step) => {
-  console.log(
-    `Step ${step.stepIndex + 1}: ${step.subject} - ${step.sent} sent`
-  );
-});
-```
-
-### Updating Analytics Data
-
-```typescript
-// Update campaign analytics
-await convex.mutation(api.campaignAnalytics.upsertCampaignAnalytics, {
-  campaignId: "campaign-1",
-  campaignName: "Q1 Outreach",
-  date: "2024-12-01",
-  companyId: "company-123",
-  sent: 100,
-  delivered: 95,
-  opened_tracked: 30,
-  clicked_tracked: 8,
-  replied: 5,
-  bounced: 5,
-  unsubscribed: 2,
-  spamComplaints: 1,
-  status: "ACTIVE",
-  leadCount: 100,
-  activeLeads: 80,
-  completedLeads: 20,
-});
-```
-
-### Bulk Operations
-
-```typescript
-// Bulk insert campaign analytics
-const records = [
-  {
-    /* campaign 1 data */
+// Log security alert
+await convex.mutation(api.adminEvents.logSecurityAlert, {
+  message: "Multiple failed login attempts",
+  details: {
+    ipAddress: "192.168.1.100",
+    failedAttempts: 5,
+    targetUser: "user-123"
   },
-  {
-    /* campaign 2 data */
-  },
-  // ... more records
-];
+  adminUserId: "admin-123",
+  tenantId: "tenant-789"
+});
 
-const insertedIds = await convex.mutation(
-  api.campaignAnalytics.batchInsertCampaignAnalytics,
-  {
-    records,
-  }
-);
+// Get system health summary
+const healthSummary = await convex.query(api.adminEvents.getSystemHealthSummary);
 
-console.log(`Inserted ${insertedIds.length} records`);
+console.log(`System Health:`);
+console.log(`- Total Events (24h): ${healthSummary.total}`);
+console.log(`- Critical Events: ${healthSummary.critical}`);
+console.log(`- Unresolved Issues: ${healthSummary.unresolved}`);
+
+// Get unresolved critical events
+const criticalEvents = await convex.query(api.adminEvents.getUnresolvedCriticalEvents);
+
+criticalEvents.forEach(event => {
+  console.log(`🚨 CRITICAL: ${event.message} (${event.eventType})`);
+});
 ```
 
-## 🔄 Real-time Subscriptions
+### Admin Dashboard Data
+
+```typescript
+// Get active admin sessions
+const activeSessions = await convex.query(api.adminAudit.getActiveAdminSessions);
+
+console.log(`Active admin sessions: ${activeSessions.length}`);
+activeSessions.forEach(session => {
+  console.log(`- ${session.adminUserId} from ${session.ipAddress} (${session.deviceInfo?.browser})`);
+});
+
+// Get recent security alerts
+const securityAlerts = await convex.query(api.adminEvents.getRecentSecurityAlerts, {
+  limit: 10
+});
+
+securityAlerts.forEach(alert => {
+  console.log(`🔐 ALERT: ${alert.message} (${alert.timestamp})`);
+});
+```
+
+## 🔄 Real-time Admin Monitoring
 
 ### React Hook Example
 
@@ -264,31 +250,53 @@ console.log(`Inserted ${insertedIds.length} records`);
 import { useQuery } from "convex/react";
 import { api } from "./convex/_generated/api";
 
-function CampaignAnalyticsDashboard({ campaignIds, companyId }) {
-  // This will automatically update when data changes
-  const analytics = useQuery(api.campaignAnalytics.getCampaignAggregatedAnalytics, {
-    campaignIds,
-    companyId,
+function AdminDashboard() {
+  // Real-time active admin sessions
+  const activeSessions = useQuery(api.adminAudit.getActiveAdminSessions);
+
+  // Real-time system health
+  const systemHealth = useQuery(api.adminEvents.getSystemHealthSummary);
+
+  // Real-time recent admin activity
+  const recentActivity = useQuery(api.adminAudit.getRecentAdminActivity, {
+    limit: 20
   });
 
-  if (!analytics) return <div>Loading...</div>;
+  if (!activeSessions || !systemHealth || !recentActivity) {
+    return <div>Loading admin dashboard...</div>;
+  }
 
   return (
-    <div>
-      {analytics.map(campaign => (
-        <div key={campaign.campaignId}>
-          <h3>{campaign.campaignName}</h3>
-          <p>Sent: {campaign.aggregatedMetrics.sent}</p>
-          <p>Delivered: {campaign.aggregatedMetrics.delivered}</p>
-          {/* Rates calculated client-side */}
-          <p>Open Rate: {AnalyticsCalculator.formatRateAsPercentage(
-            AnalyticsCalculator.calculateOpenRate(
-              campaign.aggregatedMetrics.opened_tracked,
-              campaign.aggregatedMetrics.delivered
-            )
-          )}</p>
-        </div>
-      ))}
+    <div className="admin-dashboard">
+      <div className="health-summary">
+        <h3>System Health (24h)</h3>
+        <p>Total Events: {systemHealth.total}</p>
+        <p>Critical Issues: {systemHealth.critical}</p>
+        <p>Unresolved: {systemHealth.unresolved}</p>
+      </div>
+
+      <div className="active-sessions">
+        <h3>Active Admin Sessions ({activeSessions.length})</h3>
+        {activeSessions.map(session => (
+          <div key={session._id} className="session-item">
+            <span>{session.adminUserId}</span>
+            <span>{session.ipAddress}</span>
+            <span>{session.deviceInfo?.browser}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="recent-activity">
+        <h3>Recent Admin Activity</h3>
+        {recentActivity.map(activity => (
+          <div key={activity._id} className="activity-item">
+            <span>{activity.adminUserId}</span>
+            <span>{activity.action}</span>
+            <span>{activity.resourceType}: {activity.resourceId}</span>
+            <span>{new Date(activity.timestamp).toLocaleString()}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -298,80 +306,147 @@ function CampaignAnalyticsDashboard({ campaignIds, companyId }) {
 
 ### Indexing Strategy
 
-- All tables have optimized indexes for common query patterns
-- `by_company_date` for time-based queries
-- `by_campaign` and `by_campaign_date` for campaign-specific queries
-- `by_step` and `by_step_date` for sequence analytics
+- **Audit Logs**: `adminUserId`, `resourceType_tenantId`, `timestamp` for efficient admin activity queries
+- **Sessions**: `adminUserId`, `isActive`, `expiresAt` for session management and cleanup
+- **System Events**: `eventType`, `severity`, `timestamp` for monitoring and alerting
 
-### Caching Integration
+### Security-First Design
 
-- Functions are designed to work with Upstash Redis caching
-- Use structured cache keys: `analytics:domain:operation:filters`
-- Server actions should implement caching layer on top of these functions
+- All admin operations require proper authentication
+- Audit logging captures all admin actions for compliance
+- Session management with automatic expiration
+- Cross-tenant operations while maintaining data security
 
 ### Query Optimization
 
-- Use specific date ranges to limit data retrieval
-- Filter by campaign IDs when possible
-- Use aggregated functions instead of raw data when appropriate
-- Implement pagination for large datasets
+- Use specific filters to limit audit log retrieval
+- Implement pagination for large activity datasets
+- Real-time subscriptions for live admin monitoring
+- Efficient cleanup processes for old audit data
 
-## 🔗 Integration with Analytics Calculator
+## 🔐 Security Features
 
-All functions return raw performance metrics that should be used with `AnalyticsCalculator`:
+### Audit Trail Compliance
 
 ```typescript
-import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
+// Every admin action is automatically logged
+await convex.mutation(api.adminAudit.logAdminAction, {
+  adminUserId: "admin-123",
+  action: "user_status_change",
+  resourceType: "user",
+  resourceId: "user-456",
+  oldValues: { status: "active" },
+  newValues: { status: "suspended" },
+  ipAddress: request.ip,
+  userAgent: request.headers.get("user-agent"),
+  notes: "Security violation suspension",
+  metadata: { violation_type: "policy_breached", severity: "high" }
+});
+```
 
-// Get raw metrics from Convex
-const campaign = await convex.query(
-  api.campaignAnalytics.getCampaignPerformanceMetrics,
-  {
-    campaignIds: ["campaign-1"],
-    companyId: "company-123",
-  }
-);
+### Session Security
 
-// Calculate rates using standardized utility
-const rates = AnalyticsCalculator.calculateAllRates(campaign[0]);
-const healthScore = AnalyticsCalculator.calculateHealthScore(campaign[0]);
+```typescript
+// Automatic session management
+const sessionId = await convex.mutation(api.adminAudit.createAdminSession, {
+  adminUserId: userId,
+  sessionToken: generateSecureToken(),
+  ipAddress: getClientIP(request),
+  userAgent: request.headers.get("user-agent"),
+  deviceInfo: detectDeviceInfo(request)
+});
 
-// Format for display
-const displayOpenRate = AnalyticsCalculator.formatRateAsPercentage(
-  rates.openRate
-);
+// Sessions auto-expire and are tracked
+setInterval(() => {
+  convex.mutation(api.adminAudit.updateAdminSessionActivity, {
+    sessionId,
+    ipAddress: getClientIP(request),
+    userAgent: request.headers.get("user-agent")
+  });
+}, 5 * 60 * 1000); // Every 5 minutes
 ```
 
 ## 🚨 Important Notes
 
-1. **No Stored Rates**: All rate calculations are done client-side using `AnalyticsCalculator`
-2. **Standardized Fields**: Use `opened_tracked`, `clicked_tracked`, etc. (not `opens`, `clicks`)
-3. **Data Validation**: Always validate data integrity using the provided validation functions
-4. **Real-time Updates**: Functions automatically trigger UI updates via Convex subscriptions
-5. **Company Scoping**: All queries require `companyId` for proper data isolation
+1. **Admin Authentication Required**: All functions require valid admin session
+2. **Comprehensive Audit Logging**: Every admin action is automatically logged
+3. **Cross-Tenant Operations**: Admin functions can access data across all tenants
+4. **Real-time Monitoring**: Live updates for security events and admin activity
+5. **Data Retention**: Audit logs kept for 7 years per compliance requirements
+6. **Session Management**: Automatic cleanup of expired admin sessions
+7. **Security First**: All operations validate permissions and log activities
 
-## 🔄 Migration from Legacy Data
+## 🔄 Admin System Integration
 
-When migrating from legacy analytics data:
+### Integration with NileDB Admin Users
 
-1. Use `ConvexMigrationUtils` from `lib/utils/convex-migration.ts`
-2. Map old field names to standardized names
-3. Validate migrated data using `validateDataIntegrity`
-4. Test migrated data thoroughly before production use
+Admin functions work alongside NileDB's user management:
 
 ```typescript
-import { ConvexMigrationUtils } from "@/lib/utils/convex-migration";
-
-// Migrate legacy data
-const migratedData = ConvexMigrationUtils.batchMigrate(
-  legacyData,
-  ConvexMigrationUtils.migrateCampaignData
+// Admin verification flow
+// 1. Check if user has admin privileges in NileDB
+const userData = await nileDb.query(
+  "SELECT profile FROM users WHERE id = $1",
+  [userId]
 );
 
-// Insert migrated data
-await convex.mutation(api.campaignAnalytics.batchInsertCampaignAnalytics, {
-  records: migratedData,
+if (!userData.profile?.isPenguinmailsStaff) {
+  throw new Error("Admin access required");
+}
+
+// 2. Use Convex for admin operations
+await convex.mutation(api.adminAudit.createAdminSession, {
+  adminUserId: userId,
+  // ... session data
 });
 ```
 
-This implementation provides a solid foundation for campaign analytics with Convex, supporting real-time updates, standardized data structures, and comprehensive querying capabilities.
+### Cross-System Admin Authentication
+
+```typescript
+// Complete admin auth flow
+import { verifyAdminAccess } from "@/lib/auth/adminAuth";
+
+const adminResult = await verifyAdminAccess(userId);
+
+if (adminResult.isAuthorized) {
+  // Create Convex admin session
+  const sessionId = await convex.mutation(api.adminAudit.createAdminSession, {
+    adminUserId: userId,
+    sessionToken: generateSecureToken(),
+    ipAddress: request.ip,
+    userAgent: request.headers.get("user-agent")
+  });
+
+  return { sessionId, role: adminResult.role };
+}
+```
+
+## 🛡️ Compliance & Security
+
+### Audit Compliance
+
+- **GDPR Ready**: Admin actions logged with user consent tracking
+- **7-Year Retention**: Audit logs retained for compliance requirements
+- **Complete Trail**: Every admin action tracked with full context
+
+### Security Monitoring
+
+```typescript
+// Automatic security event logging
+if (suspiciousActivity) {
+  await convex.mutation(api.adminEvents.logSecurityAlert, {
+    message: "Suspicious admin activity detected",
+    details: {
+      activity: suspiciousActivity,
+      riskLevel: "high",
+      userId: adminUserId,
+      ipAddress: request.ip
+    },
+    adminUserId: adminUserId,
+    tenantId: affectedTenant
+  });
+}
+```
+
+This implementation provides a comprehensive admin operations platform with Convex, supporting audit compliance, security monitoring, session management, and cross-tenant administrative capabilities.
