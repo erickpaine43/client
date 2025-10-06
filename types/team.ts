@@ -79,50 +79,11 @@ export interface TeamActivity {
   userAgent?: string;
 }
 
-// Team settings
-export interface TeamSettings {
-  teamId: string;
-  teamName: string;
-  teamSlug?: string;
-  teamLogo?: string;
-  allowMemberInvites: boolean;
-  requireTwoFactorAuth: boolean;
-  defaultRole: TeamRole;
-  autoApproveMembers: boolean;
-  notifyOnNewMember: boolean;
-  notifyOnMemberRemoval: boolean;
-  ssoEnabled?: boolean;
-  ssoProvider?: 'google' | 'microsoft' | 'okta' | 'saml';
-  allowedEmailDomains?: string[];
-  ipWhitelist?: string[];
-  sessionTimeout?: number; // in minutes
-  passwordPolicy?: {
-    minLength: number;
-    requireUppercase: boolean;
-    requireLowercase: boolean;
-    requireNumbers: boolean;
-    requireSpecialChars: boolean;
-    expiryDays?: number;
-  };
-}
+// Teams are logical groupings, not database entities
+// Team-related settings moved to CompanySettings
 
-// Team
-export interface Team {
-  id: string;
-  name: string;
-  slug?: string;
-  logo?: string;
-  description?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  ownerId: string;
-  plan?: 'free' | 'starter' | 'professional' | 'enterprise';
-  billingEmail?: string;
-  memberCount: number;
-  memberLimit: number;
-  settings: TeamSettings;
-  metadata?: Record<string, unknown>;
-}
+// Teams are logical groupings within companies
+// No Team entity - teams are user filters by role/company
 
 // Team stats
 export interface TeamStats {
