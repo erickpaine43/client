@@ -31,10 +31,13 @@ update_secret() {
   firebase apphosting:secrets:grantaccess --backend "$BACKEND_ID" "$secret_name"
 }
 
+# APP
+update_secret "$NEXT_PUBLIC_APP_URL" "next-public-app-url"
+
 # STRIPE
-update_secret "$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY" "stripe-publishable-key"
-update_secret "$STRIPE_SECRET_KEY" "stripe-secret-key"
-update_secret "$STRIPE_WEBHOOK_SIGNING_SECRET" "stripe-webhook-signing-secret"
+# update_secret "$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY" "stripe-publishable-key"
+# update_secret "$STRIPE_SECRET_KEY" "stripe-secret-key"
+# update_secret "$STRIPE_WEBHOOK_SIGNING_SECRET" "stripe-webhook-signing-secret"
 
 # NILEDB
 update_secret "$NILEDB_USER" "niledb-user"
