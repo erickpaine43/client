@@ -24,6 +24,7 @@ import {
   getStorageItem,
   StorageKeys,
   type SidebarView,
+  type Language,
 } from "@/lib/utils/clientStorage";
 
 // Profile form schema
@@ -34,6 +35,7 @@ const profileSchema = z.object({
   email: z.string().email("Invalid email address"),
   avatarUrl: z.string().optional(),
   timezone: z.string().min(1, "Timezone is required"),
+  language: z.string().min(1, "Language is required"),
   sidebarView: z.enum(["collapsed", "expanded"]),
 });
 
@@ -77,6 +79,7 @@ export function useProfileForm() {
         getStorageItem(StorageKeys.TIMEZONE) ||
         allTimezones[0]?.value ||
         "America/New_York",
+      language: getStorageItem(StorageKeys.LANGUAGE) || "en",
       sidebarView: (getStorageItem(StorageKeys.SIDEBAR_VIEW) === "collapsed"
         ? "collapsed"
         : "expanded") as "expanded" | "collapsed",
@@ -217,10 +220,12 @@ export function useProfileForm() {
       if (result.success && result.data) {
         // Update form with settings data
         form.setValue("timezone", result.data.timezone);
+        form.setValue("language", getStorageItem(StorageKeys.LANGUAGE) || "en");
         form.setValue("sidebarView", result.data.sidebarView);
 
         // Store preferences in localStorage for immediate access
         setStorageItem(StorageKeys.TIMEZONE, result.data.timezone);
+        // Language is stored in localStorage, not in server settings
         setStorageItem(
           StorageKeys.SIDEBAR_VIEW,
           result.data.sidebarView as SidebarView
@@ -329,6 +334,7 @@ export function useProfileForm() {
 
     // Store UI preferences immediately in localStorage for optimistic update
     setStorageItem(StorageKeys.TIMEZONE, data.timezone);
+    setStorageItem(StorageKeys.LANGUAGE, data.language as Language);
     setStorageItem(StorageKeys.SIDEBAR_VIEW, data.sidebarView as SidebarView);
 
     // Add timeout to the update request
@@ -364,6 +370,8 @@ export function useProfileForm() {
         firstName: data.firstName,
         lastName: data.lastName,
         avatarUrl: data.avatarUrl,
+        timezone: data.timezone,
+        language: data.language,
       };
 
       // Create a timeout wrapper for the profile update
@@ -402,6 +410,8 @@ export function useProfileForm() {
               firstName: updatedFormData.firstName,
               lastName: updatedFormData.lastName,
               avatar: updatedFormData.avatarUrl,
+              timezone: data.timezone || 'UTC',
+              language: 'en',
             },
           });
         }

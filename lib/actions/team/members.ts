@@ -11,11 +11,12 @@ import { z } from 'zod';
 import { ActionResult } from '../core/types';
 import { ErrorFactory, withErrorHandling } from '../core/errors';
 import { withFullAuth, RateLimits } from '../core/auth';
-import { TeamMember, TeamPermission, TeamMembersResponse, TeamStats } from '../../../types/team';
+import { TeamMember, TeamRole, TeamPermission, TeamMembersResponse, TeamStats, TeamMemberStatus } from '../../../types/team';
 import { ROLE_HIERARCHY, ROLE_PERMISSIONS } from '../../constants/team';
 import { mockTeamMembers, mockInvites } from '../../mocks/team';
 import { checkTeamPermission } from './permissions';
 import { logTeamActivity } from './activity';
+import { getTenantService } from '../../niledb/tenant';
 
 // Validation schemas
 const updateTeamMemberSchema = z.object({
@@ -46,14 +47,52 @@ export async function getTeamMembers(
           return ErrorFactory.unauthorized('You do not have permission to view team members');
         }
 
-        // Simulate async database call
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Get current user's tenants to find the tenant ID
+        const tenantService = getTenantService();
+        const userTenants = await tenantService.getUserTenants(context.userId!);
 
-        // Get team members
-        const members = [...mockTeamMembers];
+        if (userTenants.length === 0) {
+          return ErrorFactory.notFound('No tenant found for user');
+        }
 
-        // Get invites if requested
-        const invites = includeInvites ? [...mockInvites] : undefined;
+        // Use the first tenant (in a real app, this might be selected from UI)
+        const tenantId = userTenants[0].tenant.id;
+
+        // Call the API endpoint
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/tenants/${tenantId}/users`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            // Auth headers should be handled by the auth system
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: 'Unknown error' })) as { message?: string };
+          return ErrorFactory.internal(errorData.message || 'Failed to fetch team members');
+        }
+
+        const apiResponse: { users: unknown[]; count: number; tenantId: string; timestamp: string } = await response.json();
+
+        // Transform API response to match expected format
+        const members: TeamMember[] = apiResponse.users.map((user: unknown) => {
+          const userObj = user as { userId: string; email: string; roles?: string[]; created: string };
+          return {
+            id: userObj.userId,
+            userId: userObj.userId,
+            teamId: tenantId,
+            email: userObj.email,
+            name: userObj.email, // API might not return name, use email as fallback
+            role: (userObj.roles?.[0] || 'member') as TeamRole, // Take first role
+            status: 'active' as TeamMemberStatus, // Assume active unless specified
+            permissions: [], // Would need to be determined based on role
+            joinedAt: new Date(userObj.created),
+            lastActiveAt: new Date(), // Would need actual last active data
+          };
+        });
+
+        // For now, no invites in the new API
+        const invites = includeInvites ? [] : undefined;
 
         // Calculate stats
         const stats: TeamStats = {

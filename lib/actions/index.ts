@@ -118,7 +118,6 @@ export type {
   TeamMember,
   TeamInvite,
   TeamActivity,
-  TeamSettings,
 } from '../../types/team';
 
 export type {

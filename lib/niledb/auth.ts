@@ -367,6 +367,48 @@ export class AuthService {
   }
 
   /**
+   * Sign up a new user
+   */
+  async signUp({
+    email,
+    password,
+    name,
+    givenName,
+    familyName,
+  }: {
+    email: string;
+    password: string;
+    name?: string;
+    givenName?: string;
+    familyName?: string;
+  }): Promise<NileSessionUser> {
+    try {
+      const result = await this.nile.auth.signUp({
+        email,
+        password,
+        ...(name && { name }),
+        ...(givenName && { given_name: givenName }),
+        ...(familyName && { family_name: familyName }),
+      });
+
+      // Extract user from response
+      if (result && typeof result === 'object' && 'user' in result) {
+        return result.user as NileSessionUser;
+      }
+
+      // Fallback for different response formats
+      if (result && typeof result === 'object' && 'id' in result) {
+        return result as NileSessionUser;
+      }
+
+      throw new AuthenticationError('Invalid signup response format');
+    } catch (error) {
+      console.error('Failed to sign up user:', error);
+      throw new AuthenticationError('Failed to sign up user');
+    }
+  }
+
+  /**
    * Validate session and return user with profile
    */
   async validateSession(request?: ExpressRequest): Promise<UserWithProfile> {

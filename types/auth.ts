@@ -66,27 +66,73 @@ export const ClaimsSchema = z.object({
 export type Claims = z.infer<typeof ClaimsSchema>;
 
 export const UserSchema = z.object({
-  uid: z.string(),
+  id: z.string(),
+  tenantId: z.string(),
+  teamId: z.string().optional(),
   email: z.string().email(),
   displayName: z.string(),
   photoURL: z.string().url().optional(),
-  token: z.string(),
-  claims: ClaimsSchema,
-  profile: z
-    .object({
-      firstName: z.string().optional(),
-      lastName: z.string().optional(),
-      avatar: z.string().optional(),
-      timezone: z.string().optional(),
-      language: z.string().optional(),
-      lastLogin: z.date().optional(),
-      createdAt: z.date().optional(),
-      updatedAt: z.date().optional(),
-    })
-    .optional(),
+  claims: z.object({
+    role: z.nativeEnum(UserRole),
+    tenantId: z.string(),
+    companyId: z.string().optional(),
+    permissions: z.array(z.nativeEnum(Permission)).optional(),
+  }),
+  profile: z.object({
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    avatar: z.string().optional(),
+    timezone: z.string(),
+    language: z.string(),
+    lastLogin: z.date().optional(),
+    createdAt: z.date().optional(),
+    updatedAt: z.date().optional(),
+  }),
 });
 
 export type User = z.infer<typeof UserSchema>;
+
+// Consolidated User Types (for type consolidation)
+export interface Tenant {
+  id: string; // NileDB tenant ID
+  name: string;
+  created: string;
+  updated?: string;
+}
+
+export interface UserClaims {
+  role: UserRole;
+  tenantId: string;
+  companyId?: string; // Optional company link
+  permissions?: Permission[]; // Optional for backward compatibility
+  name?: string; // Legacy support - deprecated, use profile.displayName
+  companyName?: string; // Legacy support - deprecated, use separate company lookup
+  plan?: string; // Legacy support - deprecated, moved to tenant-level billing
+}
+
+export interface UserProfile {
+  firstName?: string;
+  lastName?: string;
+  avatar?: string;
+  timezone: string;
+  language: string;
+  lastLogin?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ConsolidatedUser {
+  id: string; // Standardized to string
+  tenantId: string; // Belongs to tenant
+  teamId?: string; // Optional team membership
+  email: string;
+  displayName: string;
+  photoURL?: string;
+  claims: UserClaims;
+  profile: UserProfile;
+  uid?: string; // Legacy support - deprecated, use id
+  token?: string; // Legacy support - deprecated, use separate token management
+}
 
 export interface AuthContextType {
   user: User | null;
@@ -101,9 +147,77 @@ export interface AuthContextType {
     companyName?: string,
   ) => Promise<void>;
   logout: () => Promise<void>;
-  updateUser: (user: Partial<User>) => void;
+  updateUser: (userUpdate: Partial<User>) => void;
   refreshUserData: () => Promise<void>;
   refreshToken?: () => Promise<void>;
+}
+
+// NileDB Integration Types
+export interface NileDBUser {
+  id: string;
+  email: string;
+  name?: string;
+  givenName?: string;
+  familyName?: string;
+  picture?: string;
+  created?: string;
+  updated?: string;
+  emailVerified?: boolean;
+  profile?: {
+    userId: string;
+    role: "user" | "admin" | "super_admin";
+    isPenguinMailsStaff: boolean;
+    preferences: Record<string, unknown>;
+    lastLoginAt?: Date;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  tenants?: string[];
+}
+
+// Mapping Functions
+export function mapNileDBUserToConsolidatedUser(nileUser: NileDBUser, tenantId?: string): ConsolidatedUser {
+  const displayName = nileUser.name || nileUser.email.split('@')[0];
+
+  // Map role from profile
+  let role = UserRole.USER;
+  if (nileUser.profile?.role === "super_admin") {
+    role = UserRole.SUPER_ADMIN;
+  } else if (nileUser.profile?.role === "admin") {
+    role = UserRole.ADMIN;
+  }
+
+  return {
+    id: nileUser.id,
+    tenantId: tenantId || nileUser.tenants?.[0] || '',
+    email: nileUser.email,
+    displayName,
+    photoURL: nileUser.picture,
+    claims: {
+      role,
+      tenantId: tenantId || nileUser.tenants?.[0] || '',
+      permissions: [], // To be populated based on role
+    },
+    profile: {
+      firstName: nileUser.givenName,
+      lastName: nileUser.familyName,
+      avatar: nileUser.picture,
+      timezone: (nileUser.profile?.preferences?.timezone as string) || "UTC",
+      language: (nileUser.profile?.preferences?.language as string) || "en",
+      lastLogin: nileUser.profile?.lastLoginAt,
+      createdAt: nileUser.created ? new Date(nileUser.created) : nileUser.profile?.createdAt,
+      updatedAt: nileUser.updated ? new Date(nileUser.updated) : nileUser.profile?.updatedAt,
+    },
+  };
+}
+
+export function mapTenantInfoToTenant(tenantInfo: { id: string; name: string; created: string; updated?: string }): Tenant {
+  return {
+    id: tenantInfo.id,
+    name: tenantInfo.name,
+    created: tenantInfo.created,
+    updated: tenantInfo.updated,
+  };
 }
 
 // Session Management Types

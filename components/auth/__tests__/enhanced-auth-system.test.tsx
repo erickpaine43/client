@@ -157,7 +157,7 @@ describe("Enhanced Authentication System", () => {
         expect(result.current.user).toBeDefined();
       });
 
-      expect(result.current.user?.uid).toBe("user-123");
+      expect(result.current.user?.id).toBe("user-123");
       expect(result.current.isStaff).toBe(false);
       expect(result.current.userTenants).toBeDefined();
       expect(result.current.userCompanies).toBeDefined();
@@ -186,7 +186,7 @@ describe("Enhanced Authentication System", () => {
         expect(result.current.user).toBeDefined();
       });
 
-      expect(result.current.user?.uid).toBe("staff-123");
+      expect(result.current.user?.id).toBe("staff-123");
       expect(result.current.isStaff).toBe(true);
       expect(result.current.isStaff).toBe(true);
     });
@@ -799,7 +799,7 @@ describe("Enhanced Authentication System", () => {
       });
 
       // User should be authenticated
-      expect(result.current.user?.uid).toBe("user-123");
+      expect(result.current.user?.id).toBe("user-123");
       expect(result.current.loading).toBe(false);
       expect(result.current.error).toBeNull();
 

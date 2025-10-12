@@ -7,7 +7,15 @@ import {
   useState,
   useCallback,
 } from "react";
-import { User, AuthContextType, UserRole } from "@/types";
+import {
+  User,
+  AuthContextType,
+  UserRole,
+  NileDBUser,
+  Tenant,
+  mapTenantInfoToTenant,
+} from "@/types";
+import { CompanyInfo } from "@/types/company";
 import { useSignIn, useSignUp } from "@niledatabase/react";
 import { auth } from "@niledatabase/client";
 import { toast } from "sonner";
@@ -16,49 +24,10 @@ import {
   InvalidCredentialsError,
 } from "@/lib/niledb/errors";
 
-// Enhanced interfaces for NileDB integration
-interface NileDBUser {
-  id: string;
-  email: string;
-  name?: string;
-  givenName?: string;
-  familyName?: string;
-  picture?: string;
-  created?: string;
-  updated?: string;
-  emailVerified?: boolean;
-  profile?: {
-    userId: string;
-    role: "user" | "admin" | "super_admin";
-    isPenguinMailsStaff: boolean;
-    preferences: Record<string, unknown>;
-    lastLoginAt?: Date;
-    createdAt: Date;
-    updatedAt: Date;
-  };
-  tenants?: string[];
-}
-
-interface TenantInfo {
-  id: string;
-  name: string;
-  created: string;
-  updated?: string;
-}
-
-interface CompanyInfo {
-  id: string;
-  tenantId: string;
-  name: string;
-  email?: string;
-  role: "member" | "admin" | "owner";
-  permissions?: Record<string, unknown>;
-}
-
 interface EnhancedAuthContextType extends AuthContextType {
   // Enhanced user data
   nileUser: NileDBUser | null;
-  userTenants: TenantInfo[];
+  userTenants: Tenant[];
   userCompanies: CompanyInfo[];
   isStaff: boolean;
 
@@ -117,7 +86,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authError, setAuthError] = useState<Error | null>(null);
 
   // Enhanced state
-  const [userTenants, setUserTenants] = useState<TenantInfo[]>([]);
+  const [userTenants, setUserTenants] = useState<Tenant[]>([]);
   const [userCompanies, setUserCompanies] = useState<CompanyInfo[]>([]);
   const [isStaff, setIsStaff] = useState(false);
   const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
@@ -155,7 +124,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  const fetchUserTenants = useCallback(async (): Promise<TenantInfo[]> => {
+  const fetchUserTenants = useCallback(async (): Promise<Tenant[]> => {
     try {
       const response = await fetch("/api/user/tenants", {
         method: "GET",
@@ -169,8 +138,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw new Error(`Tenants fetch failed: ${response.status}`);
       }
 
-      const data = (await response.json()) as { tenants: TenantInfo[] };
-      return data.tenants || [];
+      const data = (await response.json()) as {
+        tenants: {
+          id: string;
+          name: string;
+          created: string;
+          updated?: string;
+        }[];
+      };
+      return data.tenants?.map(mapTenantInfoToTenant) || [];
     } catch (error) {
       console.error("Failed to fetch user tenants:", error);
       return [];
@@ -307,7 +283,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("SignIn error:", error);
       setAuthError(error);
     },
-    callbackUrl: typeof window !== 'undefined' ? window.location.origin + "/dashboard" : "/dashboard",
+    callbackUrl:
+      typeof window !== "undefined"
+        ? window.location.origin + "/dashboard"
+        : "/dashboard",
   });
 
   const signUpHook = useSignUp({
@@ -348,32 +327,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       );
 
       return {
-        uid: nileUser.id,
+        id: nileUser.id,
+        tenantId: selectedTenantId || nileUser.tenants?.[0] || "",
         email: nileUser.email,
         displayName,
         photoURL: nileUser.picture,
-        token: nileUser.id,
+        uid: nileUser.id, // Legacy support
+        token: nileUser.id, // Legacy support
         claims: {
-          name: displayName,
           role,
-          companyId: selectedCompany?.id || "no-company",
-          companyName: selectedCompany?.name || "No Company Selected",
-          plan: "free", // TODO: Get from tenant billing info
+          tenantId: selectedTenantId || nileUser.tenants?.[0] || "",
+          companyId: selectedCompany?.id,
+          permissions: [], // TODO: Get from role permissions
         },
         profile: {
-          firstName: nileUser.givenName || "",
-          lastName: nileUser.familyName || "",
-          avatar: nileUser.picture,
           timezone:
             (nileUser.profile?.preferences?.timezone as string) || "UTC",
           language: (nileUser.profile?.preferences?.language as string) || "en",
+          firstName: nileUser.givenName,
+          lastName: nileUser.familyName,
+          avatar: nileUser.picture,
           lastLogin: nileUser.profile?.lastLoginAt,
           createdAt: nileUser.created ? new Date(nileUser.created) : undefined,
           updatedAt: nileUser.updated ? new Date(nileUser.updated) : undefined,
         },
       };
     },
-    [userCompanies, selectedCompanyId]
+    [userCompanies, selectedTenantId, selectedCompanyId]
   );
 
   const login = async (email: string, password: string): Promise<void> => {

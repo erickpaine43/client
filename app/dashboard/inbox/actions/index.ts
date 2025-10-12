@@ -143,7 +143,7 @@ export async function markEmailAsStarredAction(
   idToken = "",
 ) {
   try {
-    console.log({ id, starred, idToken });
+    console.log("User idToken:", idToken);
     const email = inboxMockEmails[0];
 
     return email;

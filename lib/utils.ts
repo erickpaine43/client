@@ -191,6 +191,8 @@ export interface ProfileFormData {
   name: string;
   email: string;
   avatarUrl: string;
+  timezone: string;
+  language: string;
 }
 
 // Mapping functions
@@ -200,6 +202,8 @@ export const mapNileUserToFormData = (user: NileUser): ProfileFormData => ({
   name: user.name || "",
   email: user.email,
   avatarUrl: user.picture || "",
+  timezone: "UTC", // Default timezone
+  language: "en", // Default language
 });
 
 export const mapFormDataToNileUpdate = (formData: Partial<ProfileFormData>) => {

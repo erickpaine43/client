@@ -99,3 +99,25 @@ export type {
 
 // Export team management related types
 export * from "./team";
+
+// Export company related types
+export * from "./company";
+
+// Export consolidated auth types
+export type {
+  Tenant,
+  ConsolidatedUser as User, // Consolidated User as main User type
+  UserClaims,
+  UserProfile,
+  NileDBUser,
+} from "./auth";
+
+export {
+  mapNileDBUserToConsolidatedUser,
+  mapTenantInfoToTenant,
+} from "./auth";
+
+// Keep legacy types with prefix for backward compatibility
+export type {
+  User as LegacyUser, // Legacy User type for migration
+} from "./auth";

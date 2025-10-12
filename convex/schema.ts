@@ -295,4 +295,93 @@ export default defineSchema({
     .index("by_company_date", ["companyId", "date"])
     .index("by_campaign_date", ["campaignId", "date"])
     .index("by_step_date", ["stepId", "date"]),
+
+  // ============================================================================
+  // ADMIN ANALYTICS TABLES
+  // These tables track admin user actions, sessions, and system events
+  // for auditing and security purposes.
+  // ============================================================================
+  // Admin Audit Log - tracks all admin actions
+  admin_audit_log: defineTable({
+    adminUserId: v.string(), // Staff user ID from NileDB
+    action: v.union(
+      v.literal("user_status_change"),
+      v.literal("company_status_change"),
+      v.literal("billing_update"),
+      v.literal("system_config"),
+      v.literal("role_assignment"),
+      v.literal("permission_grant"),
+      v.literal("session_start"),
+      v.literal("session_end")
+    ),
+    resourceType: v.union(
+      v.literal("user"),
+      v.literal("company"),
+      v.literal("tenant"),
+      v.literal("subscription"),
+      v.literal("payment"),
+      v.literal("role"),
+      v.literal("permission"),
+      v.literal("admin_session")
+    ),
+    resourceId: v.string(),
+    tenantId: v.optional(v.string()), // Context tenant (when applicable)
+    oldValues: v.optional(v.any()), // Previous state (JSON)
+    newValues: v.optional(v.any()), // New state (JSON)
+    ipAddress: v.string(),
+    userAgent: v.string(),
+    timestamp: v.number(), // Convex Date
+    notes: v.optional(v.string()), // Optional admin notes
+    metadata: v.optional(v.record(v.string(), v.any())), // Additional context
+  })
+    .index("adminUserId", ["adminUserId"])
+    .index("resourceType_tenantId", ["resourceType", "tenantId"])
+    .index("timestamp", ["timestamp"]),
+
+  // Admin Sessions - tracks active admin sessions
+  admin_sessions: defineTable({
+    adminUserId: v.string(), // Staff user ID from NileDB
+    sessionToken: v.string(), // Unique session identifier
+    ipAddress: v.string(),
+    userAgent: v.string(),
+    startedAt: v.number(), // Convex Date
+    lastActivity: v.number(), // Convex Date
+    expiresAt: v.number(), // Convex Date
+    isActive: v.boolean(),
+    deviceInfo: v.optional(v.object({
+      browser: v.string(),
+      os: v.string(),
+      device: v.string(),
+    })),
+  })
+    .index("adminUserId", ["adminUserId"])
+    .index("isActive", ["isActive"])
+    .index("expiresAt", ["expiresAt"]),
+
+  // Admin System Events - system-wide admin events
+  admin_system_events: defineTable({
+    eventType: v.union(
+      v.literal("system_startup"),
+      v.literal("system_shutdown"),
+      v.literal("config_change"),
+      v.literal("security_alert"),
+      v.literal("performance_issue")
+    ),
+    severity: v.union(
+      v.literal("info"),
+      v.literal("warning"),
+      v.literal("error"),
+      v.literal("critical")
+    ),
+    message: v.string(),
+    details: v.optional(v.record(v.string(), v.any())),
+    adminUserId: v.optional(v.string()), // If triggered by admin action
+    tenantId: v.optional(v.string()), // If tenant-specific
+    timestamp: v.number(),
+    resolvedAt: v.optional(v.number()),
+    resolution: v.optional(v.string()),
+  })
+    .index("eventType", ["eventType"])
+    .index("severity", ["severity"])
+    .index("timestamp", ["timestamp"]),
 });

@@ -23,7 +23,6 @@ import {
   softDeleteEmailAction,
 } from "@/app/dashboard/inbox/actions";
 import { redirect } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 
 type IdType = string | number | undefined;
 export function InboxColumnAction({
@@ -36,11 +35,10 @@ export function InboxColumnAction({
   id?: string | number;
 }) {
   const emailId = row?.original?.id || id;
-  const { user } = useAuth();
 
   const markAsReadMutation = async (id: IdType) => {
     try {
-      await markEmailAsReadAction(id, user?.token);
+      await markEmailAsReadAction(id);
 
       showCustomToast({
         title: "Email marked as read",
@@ -59,7 +57,7 @@ export function InboxColumnAction({
   };
   const deleteEmailMutation = async (id: IdType) => {
     try {
-      await softDeleteEmailAction(id, user?.token);
+      await softDeleteEmailAction(id);
       showCustomToast({
         title: "Email deleted",
         description: `Email has been deleted`,
@@ -77,7 +75,7 @@ export function InboxColumnAction({
   };
   const hideEmailMutation = async (id: IdType) => {
     try {
-      await hideEmailAction(id, user?.token);
+      await hideEmailAction(id);
       showCustomToast({
         title: "Email hidden",
         description: `Email has been hidden`,
