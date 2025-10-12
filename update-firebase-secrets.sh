@@ -46,7 +46,8 @@ update_secret "$NILEDB_API_URL" "niledb-api-url"
 update_secret "$NILEDB_POSTGRES_URL" "niledb-postgres-url"
 
 # CONVEX
-update_secret "$CONVEX_DEPLOY_KEY" "convex-deploy-key"
+update_secret "$CONVEX_DEPLOYMENT" "convex-deployment"
+update_secret "$NEXT_PUBLIC_CONVEX_URL" "next-public-convex-url"
 
 # UPSTASH REDIS
 update_secret "$UPSTASH_REDIS_REST_URL" "upstash-redis-rest-url"

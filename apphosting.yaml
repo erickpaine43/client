@@ -23,14 +23,12 @@ env:
     secret: niledb-postgres-url
   - variable: NEXT_PUBLIC_CONVEX_URL
     secret: next-public-convex-url
-  - variable: CONVEX_DEPLOY_KEY
-    secret: convex-deploy-key
+  - variable: CONVEX_DEPLOYMENT
+    secret: convex-deployment
   - variable: UPSTASH_REDIS_REST_URL
     secret: upstash-redis-rest-url
   - variable: UPSTASH_REDIS_REST_TOKEN
     secret: upstash-redis-rest-token
-    availability:
-      - RUNTIME
   # - variable: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
   #   secret: stripe-publishable-key
   # - variable: STRIPE_SECRET_KEY
