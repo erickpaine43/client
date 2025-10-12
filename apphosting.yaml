@@ -31,12 +31,12 @@ env:
     secret: upstash-redis-rest-token
     availability:
       - RUNTIME
-  - variable: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-    secret: stripe-publishable-key
-  - variable: STRIPE_SECRET_KEY
-    secret: stripe-secret-key
-  - variable: STRIPE_WEBHOOK_SIGNING_SECRET
-    secret: stripe-webhook-signing-secret
+  # - variable: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+  #   secret: stripe-publishable-key
+  # - variable: STRIPE_SECRET_KEY
+  #   secret: stripe-secret-key
+  # - variable: STRIPE_WEBHOOK_SIGNING_SECRET
+  #   secret: stripe-webhook-signing-secret
 
   # Grant access to secrets in Cloud Secret Manager.
   # See https://firebase.google.com/docs/app-hosting/configure#secret-parameters
