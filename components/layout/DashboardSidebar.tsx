@@ -153,7 +153,7 @@ export function DashboardSidebar() {
                   {user?.displayName} {user?.claims?.role}
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">
-                  {user?.claims?.plan} Account
+                  Free Account
                 </div>
               </div>
             )}

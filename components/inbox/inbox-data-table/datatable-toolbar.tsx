@@ -9,7 +9,6 @@ import { Mail, Search, User } from "lucide-react";
 import { DataTableViewOptions } from "./datatable-view-options";
 import { getUniqueFiltersAction } from "@/app/dashboard/inbox/actions";
 import { ModalFilter } from "./modal-filter";
-import { useAuth } from "@/context/AuthContext";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -38,16 +37,15 @@ export function DataTableToolbar<TData>({
     from: string[];
     campaign: string[];
   }>({ email: [], from: [], campaign: [] });
-  const { user } = useAuth();
 
   React.useEffect(() => {
     const fetchFilters = async () => {
-      const filters = await getUniqueFiltersAction(user?.token);
+      const filters = await getUniqueFiltersAction();
       setFilterOptions(filters);
     };
 
     fetchFilters();
-  }, [user?.token]);
+  }, []);
 
   const from = filterOptions.from.map((fromValue) => ({
     label: fromValue,

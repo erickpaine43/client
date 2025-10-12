@@ -12,6 +12,7 @@ export interface CompanySettings {
 
   // UI/Dashboard settings
   notifyOnNewMember: boolean;
+  requireTwoFactorAuth?: boolean; // Legacy support - deprecated, use tenant-level settings
 }
 
 // Consolidated Company (Client/Workspace record)
@@ -20,8 +21,15 @@ export interface Company {
   tenantId: string; // Links to Tenant (agency)
   name: string; // Client company name
   email?: string; // Client contact email
-  // billingEmail and address moved to tenant_config (agency-level billing)
-  // settings moved to tenant_config (agency-wide policies)
+  billingEmail?: string; // Legacy support - deprecated, moved to tenant_config
+  address?: { // Legacy support - deprecated, moved to tenant_config
+    street?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+    country?: string;
+  };
+  settings?: CompanySettings; // Legacy support - deprecated, moved to tenant_config
 }
 
 // Legacy Company Info (for mapping)

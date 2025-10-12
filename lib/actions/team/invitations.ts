@@ -12,31 +12,33 @@ import { ActionResult } from '../core/types';
 import { ErrorFactory, withErrorHandling } from '../core/errors';
 import { withFullAuth, RateLimits } from '../core/auth';
 import { TeamInvite, TeamRole, BulkInviteResult } from '../../../types/team';
-import { ROLE_HIERARCHY } from '../../constants/team';
-import { mockTeamMembers, mockInvites } from '../../mocks/team';
+import { mockInvites } from '../../mocks/team';
 import { checkTeamPermission } from './permissions';
 import { logTeamActivity } from './activity';
 import { validateTeamEmail } from './members';
+import { getTenantService } from '../../niledb/tenant';
 
 // Validation schemas
 const addTeamMemberSchema = z.object({
   email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
   role: z.enum(['owner', 'admin', 'member', 'viewer']),
   name: z.string().min(1, 'Name is required').optional(),
-  sendInvite: z.boolean().default(true),
+  givenName: z.string().optional(),
+  familyName: z.string().optional(),
 });
 
 /**
- * Add a new team member or send invite
+ * Add a new team member by creating their account directly
  */
 export async function addTeamMember(
   data: z.infer<typeof addTeamMemberSchema>
-): Promise<ActionResult<TeamInvite>> {
+): Promise<ActionResult<{ userId: string; email: string; role: TeamRole }>> {
   return await withFullAuth(
     {
       permission: undefined,
       rateLimit: {
-        action: 'team:invite',
+        action: 'team:member:add',
         type: 'user',
         config: RateLimits.TEAM_INVITE,
       },
@@ -51,38 +53,7 @@ export async function addTeamMember(
           );
         }
 
-        const { email, role, sendInvite } = validationResult.data;
-
-        // Check if member already exists
-        const existingMember = mockTeamMembers.find(m => m.email === email);
-        if (existingMember) {
-          return ErrorFactory.conflict('A team member with this email already exists');
-        }
-
-        // Check if invite already exists
-        const existingInvite = mockInvites.find(i => i.email === email && i.status === 'pending');
-        if (existingInvite) {
-          return ErrorFactory.conflict('An invitation has already been sent to this email');
-        }
-
-        // Check team member limit
-        const memberCount = mockTeamMembers.length + mockInvites.filter(i => i.status === 'pending').length;
-        if (memberCount >= 10) { // Example limit
-          return ErrorFactory.conflict('Team member limit reached. Please upgrade your plan.');
-        }
-
-        // Check if user can assign this role
-        const currentMember = mockTeamMembers.find(m => m.userId === context.userId);
-        if (currentMember && currentMember.role !== 'owner') {
-          const currentLevel = ROLE_HIERARCHY[currentMember.role];
-          const newRoleLevel = ROLE_HIERARCHY[role];
-
-          if (newRoleLevel > currentLevel) {
-            return ErrorFactory.unauthorized(
-              `You cannot assign a role higher than your own (${currentMember.role})`
-            );
-          }
-        }
+        const { email, password, role, name, givenName, familyName } = validationResult.data;
 
         // Check permission
         const hasAccess = await checkTeamPermission(context.userId!, 'members:write');
@@ -90,38 +61,63 @@ export async function addTeamMember(
           return ErrorFactory.unauthorized('You do not have permission to add team members');
         }
 
-        // Simulate async database call
-        await new Promise(resolve => setTimeout(resolve, 200));
+        // Get current user's tenants to find the tenant ID
+        const tenantService = getTenantService();
+        const userTenants = await tenantService.getUserTenants(context.userId!);
 
-        // Create invite
-        const newInvite: TeamInvite = {
-          id: `invite-${Date.now()}`,
-          teamId: 'team-1',
-          email,
-          role,
-          invitedBy: context.userId!,
-          invitedAt: new Date(),
-          expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
-          status: 'pending',
-        };
-
-        // Add to mock data
-        mockInvites.push(newInvite);
-
-        // TODO: Send invite email if sendInvite is true
-        if (sendInvite) {
-          // await sendTeamInviteEmail(email, newInvite);
+        if (userTenants.length === 0) {
+          return ErrorFactory.notFound('No tenant found for user');
         }
+
+        // Use the first tenant (in a real app, this might be selected from UI)
+        const tenantId = userTenants[0].tenant.id;
+
+        // Check if user can assign this role
+        const hasTenantAccess = await tenantService.validateTenantAccess(context.userId!, tenantId);
+        if (!hasTenantAccess) {
+          return ErrorFactory.unauthorized('You do not have access to this tenant');
+        }
+
+        // For now, assume users can assign roles within tenant access
+        // TODO: Implement proper role hierarchy checking when tenant service provides user role
+
+        // Call the signup API endpoint
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/tenants/${tenantId}/signup-user`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            // Auth headers should be handled by the auth system
+          },
+          body: JSON.stringify({
+            email,
+            password,
+            name,
+            givenName,
+            familyName,
+            roles: [role],
+          }),
+        });
+
+        if (!response.ok) {
+           const errorData = await response.json().catch(() => ({ message: 'Unknown error' })) as { message?: string };
+           return ErrorFactory.internal(errorData.message || 'Failed to create user account');
+         }
+
+        const apiResponse: { userId: string; email: string; tenantId: string; roles: string[]; timestamp: string } = await response.json();
 
         // Log activity
         await logTeamActivity({
           action: 'member:invited',
           performedBy: context.userId!,
-          targetUser: email,
-          metadata: { role },
+          targetUser: apiResponse.userId,
+          metadata: { role, email: apiResponse.email },
         });
 
-        return newInvite;
+        return {
+          userId: apiResponse.userId,
+          email: apiResponse.email,
+          role,
+        };
       });
     }
   );
@@ -253,7 +249,7 @@ export async function bulkInviteMembers(
           const validation = await validateTeamEmail(email);
 
           if (validation.success && validation.data?.valid) {
-            const result = await addTeamMember({ email, role, sendInvite: true });
+            const result = await addTeamMember({ email, password: 'tempPassword123!', role });
 
             if (result.success) {
               successful.push(email);

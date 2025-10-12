@@ -85,6 +85,22 @@ export interface TeamActivity {
 // Teams are logical groupings within companies
 // No Team entity - teams are user filters by role/company
 
+// Team entity for logical grouping (not stored in database)
+export interface Team {
+  id: string; // Logical ID for grouping
+  tenantId: string; // Belongs to tenant
+  name: string; // Display name for grouping
+  ownerId: string; // Owner user ID
+  memberCount: number; // Calculated member count
+  settings: {
+    allowMemberInvites: boolean;
+    requireTwoFactorAuth?: boolean;
+    defaultRole: TeamRole;
+    autoApproveMembers: boolean;
+    notifyOnNewMember: boolean;
+  };
+}
+
 // Team stats
 export interface TeamStats {
   totalMembers: number;

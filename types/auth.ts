@@ -104,7 +104,10 @@ export interface UserClaims {
   role: UserRole;
   tenantId: string;
   companyId?: string; // Optional company link
-  permissions: Permission[];
+  permissions?: Permission[]; // Optional for backward compatibility
+  name?: string; // Legacy support - deprecated, use profile.displayName
+  companyName?: string; // Legacy support - deprecated, use separate company lookup
+  plan?: string; // Legacy support - deprecated, moved to tenant-level billing
 }
 
 export interface UserProfile {
@@ -127,6 +130,8 @@ export interface ConsolidatedUser {
   photoURL?: string;
   claims: UserClaims;
   profile: UserProfile;
+  uid?: string; // Legacy support - deprecated, use id
+  token?: string; // Legacy support - deprecated, use separate token management
 }
 
 export interface AuthContextType {
@@ -142,7 +147,7 @@ export interface AuthContextType {
     companyName?: string,
   ) => Promise<void>;
   logout: () => Promise<void>;
-  updateUser: (user: Partial<User>) => void;
+  updateUser: (userUpdate: Partial<User>) => void;
   refreshUserData: () => Promise<void>;
   refreshToken?: () => Promise<void>;
 }

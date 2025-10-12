@@ -150,7 +150,7 @@ function EditMemberDialog({
 interface AddMemberDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAdd: (email: string, role: TeamRole) => void;
+  onAdd: (data: { email: string; password: string; role: TeamRole; name?: string; givenName?: string; familyName?: string }) => void;
   loading: boolean;
 }
 
@@ -161,22 +161,38 @@ function AddMemberDialog({
   loading,
 }: AddMemberDialogProps) {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [givenName, setGivenName] = useState("");
+  const [familyName, setFamilyName] = useState("");
   const [role, setRole] = useState<TeamRole>("member");
 
   const handleAdd = () => {
-    if (!email.trim()) return;
-    onAdd(email.trim(), role);
+    if (!email.trim() || !password.trim()) return;
+    onAdd({
+      email: email.trim(),
+      password: password.trim(),
+      role,
+      name: name.trim() || undefined,
+      givenName: givenName.trim() || undefined,
+      familyName: familyName.trim() || undefined,
+    });
+    // Reset form
     setEmail("");
+    setPassword("");
+    setName("");
+    setGivenName("");
+    setFamilyName("");
     setRole("member");
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Add Team Member</DialogTitle>
           <DialogDescription>
-            Send an invitation to a new team member
+            Create a new user account and add them to the team
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
@@ -189,6 +205,45 @@ function AddMemberDialog({
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter email address"
             />
+          </div>
+          <div>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password"
+            />
+          </div>
+          <div>
+            <Label htmlFor="name">Full Name (optional)</Label>
+            <Input
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter full name"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <Label htmlFor="givenName">First Name (optional)</Label>
+              <Input
+                id="givenName"
+                value={givenName}
+                onChange={(e) => setGivenName(e.target.value)}
+                placeholder="First name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="familyName">Last Name (optional)</Label>
+              <Input
+                id="familyName"
+                value={familyName}
+                onChange={(e) => setFamilyName(e.target.value)}
+                placeholder="Last name"
+              />
+            </div>
           </div>
           <div>
             <Label htmlFor="role">Role</Label>
@@ -211,9 +266,9 @@ function AddMemberDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleAdd} disabled={loading || !email.trim()}>
+          <Button onClick={handleAdd} disabled={loading || !email.trim() || !password.trim()}>
             {loading && <RefreshCw className="w-4 h-4 mr-2 animate-spin" />}
-            Send Invitation
+            Create Account
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -287,13 +342,13 @@ function TeamMembersTable() {
   );
 
   const addMemberAction = useServerActionWithParams(
-    ({ email, role }: { email: string; role: TeamRole }) =>
-      addTeamMember({ email, role, sendInvite: true }),
+    (data: { email: string; password: string; role: TeamRole; name?: string; givenName?: string; familyName?: string }) =>
+      addTeamMember(data),
     {
       onSuccess: () => {
         toast({
           title: "Success",
-          description: "Invitation sent successfully",
+          description: "User account created and added to team successfully",
         });
         setShowAddDialog(false);
         teamMembersAction.execute();
@@ -432,8 +487,8 @@ function TeamMembersTable() {
     }
   };
 
-  const handleAddMember = (email: string, role: TeamRole) => {
-    addMemberAction.execute({ email, role });
+  const handleAddMember = (data: { email: string; password: string; role: TeamRole; name?: string; givenName?: string; familyName?: string }) => {
+    addMemberAction.execute(data);
   };
 
   const handleResendInvite = (invite: TeamInvite) => {

@@ -18,6 +18,7 @@ interface ProfileFormValues {
   email: string;
   avatarUrl?: string;
   timezone: string;
+  language: string;
   sidebarView: "collapsed" | "expanded";
 }
 

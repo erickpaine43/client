@@ -7,7 +7,14 @@ import {
   useState,
   useCallback,
 } from "react";
-import { User, AuthContextType, UserRole, NileDBUser, Tenant, mapNileDBUserToConsolidatedUser, mapTenantInfoToTenant } from "@/types";
+import {
+  User,
+  AuthContextType,
+  UserRole,
+  NileDBUser,
+  Tenant,
+  mapTenantInfoToTenant,
+} from "@/types";
 import { CompanyInfo } from "@/types/company";
 import { useSignIn, useSignUp } from "@niledatabase/react";
 import { auth } from "@niledatabase/client";
@@ -131,7 +138,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw new Error(`Tenants fetch failed: ${response.status}`);
       }
 
-      const data = (await response.json()) as { tenants: { id: string; name: string; created: string; updated?: string }[] };
+      const data = (await response.json()) as {
+        tenants: {
+          id: string;
+          name: string;
+          created: string;
+          updated?: string;
+        }[];
+      };
       return data.tenants?.map(mapTenantInfoToTenant) || [];
     } catch (error) {
       console.error("Failed to fetch user tenants:", error);
@@ -269,7 +283,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("SignIn error:", error);
       setAuthError(error);
     },
-    callbackUrl: typeof window !== 'undefined' ? window.location.origin + "/dashboard" : "/dashboard",
+    callbackUrl:
+      typeof window !== "undefined"
+        ? window.location.origin + "/dashboard"
+        : "/dashboard",
   });
 
   const signUpHook = useSignUp({
@@ -310,32 +327,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       );
 
       return {
-        uid: nileUser.id,
+        id: nileUser.id,
+        tenantId: selectedTenantId || nileUser.tenants?.[0] || "",
         email: nileUser.email,
         displayName,
         photoURL: nileUser.picture,
-        token: nileUser.id,
+        uid: nileUser.id, // Legacy support
+        token: nileUser.id, // Legacy support
         claims: {
-          name: displayName,
           role,
-          companyId: selectedCompany?.id || "no-company",
-          companyName: selectedCompany?.name || "No Company Selected",
-          plan: "free", // TODO: Get from tenant billing info
+          tenantId: selectedTenantId || nileUser.tenants?.[0] || "",
+          companyId: selectedCompany?.id,
+          permissions: [], // TODO: Get from role permissions
         },
         profile: {
-          firstName: nileUser.givenName || "",
-          lastName: nileUser.familyName || "",
-          avatar: nileUser.picture,
           timezone:
             (nileUser.profile?.preferences?.timezone as string) || "UTC",
           language: (nileUser.profile?.preferences?.language as string) || "en",
+          firstName: nileUser.givenName,
+          lastName: nileUser.familyName,
+          avatar: nileUser.picture,
           lastLogin: nileUser.profile?.lastLoginAt,
-          createdAt: nileUser.created ? new Date(nileUser.created) : undefined,
-          updatedAt: nileUser.updated ? new Date(nileUser.updated) : undefined,
+          createdAt: nileUser.created ? new Date(nileUser.created) : new Date(),
+          updatedAt: nileUser.updated ? new Date(nileUser.updated) : new Date(),
         },
       };
     },
-    [userCompanies, selectedCompanyId]
+    [userCompanies, selectedTenantId, selectedCompanyId]
   );
 
   const login = async (email: string, password: string): Promise<void> => {

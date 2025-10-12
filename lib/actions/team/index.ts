@@ -21,7 +21,6 @@ export type {
   TeamMember,
   TeamInvite,
   TeamActivity,
-  TeamSettings,
   TeamRole,
   TeamPermission,
   TeamMemberStatus,

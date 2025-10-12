@@ -25,6 +25,7 @@ interface ProfileFormValues {
   email: string;
   avatarUrl?: string;
   timezone: string;
+  language: string;
   sidebarView: "collapsed" | "expanded";
 }
 
@@ -77,6 +78,45 @@ export default function PreferencesForm({
                       {tz.label}
                     </SelectItem>
                   ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
+
+      {/* Language */}
+      {profileLoading ? (
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-16" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+      ) : (
+        <FormField
+          control={control}
+          name="language"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Language</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                disabled={profileLoading || submitLoading}
+              >
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select language" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="es">Spanish</SelectItem>
+                  <SelectItem value="fr">French</SelectItem>
+                  <SelectItem value="de">German</SelectItem>
+                  <SelectItem value="pt">Portuguese</SelectItem>
+                  <SelectItem value="ja">Japanese</SelectItem>
+                  <SelectItem value="zh">Chinese</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />

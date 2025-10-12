@@ -10,13 +10,9 @@ import { InboxColumnAction } from "./inbox-column-action";
 import { showCustomToast } from "@/components/ui/custom/custom-toast";
 import { redirect } from "next/navigation";
 
-const markEmailAsStarredMutarion = async (
-  id: number,
-  starred: boolean,
-  user: User | null,
-) => {
+const markEmailAsStarredMutarion = async (id: number, starred: boolean) => {
   try {
-    const response = await markEmailAsStarredAction(id, starred, user?.token);
+    const response = await markEmailAsStarredAction(id, starred);
     if (!response) {
       throw new Error("Failed to update email starred status");
     }
@@ -32,7 +28,7 @@ const markEmailAsStarredMutarion = async (
   } catch (error) {
     toast.warning(
       "Error marking email as starred: " +
-        (error instanceof Error ? error.message : "Unknown error"),
+        (error instanceof Error ? error.message : "Unknown error")
     );
     throw error;
   }
@@ -40,7 +36,7 @@ const markEmailAsStarredMutarion = async (
 
 export const inboxColumns = (
   refetch: () => void,
-  user: User | null,
+  user: User | null
 ): ColumnDef<Email>[] => [
   {
     accessorKey: "starred",
