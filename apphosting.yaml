@@ -1,0 +1,44 @@
+# Settings for Backend (on Cloud Run).
+# See https://firebase.google.com/docs/app-hosting/configure#cloud-run
+runConfig:
+  minInstances: 0
+  # maxInstances: 100
+  # concurrency: 80
+  # cpu: 1
+  # memoryMiB: 512
+
+# Environment variables and secrets.
+env:
+  # Configure environment variables.
+  # See https://firebase.google.com/docs/app-hosting/configure#user-defined-environment
+  - variable: NEXT_PUBLIC_APP_URL
+    secret: next-public-app-url
+  - variable: NILEDB_USER
+    secret: niledb-user
+  - variable: NILEDB_PASSWORD
+    secret: niledb-password
+  - variable: NILEDB_API_URL
+    secret: niledb-api-url
+  - variable: NILEDB_POSTGRES_URL
+    secret: niledb-postgres-url
+  - variable: NEXT_PUBLIC_CONVEX_URL
+    secret: next-public-convex-url
+  - variable: CONVEX_DEPLOY_KEY
+    secret: convex-deploy-key
+  - variable: UPSTASH_REDIS_REST_URL
+    secret: upstash-redis-rest-url
+  - variable: UPSTASH_REDIS_REST_TOKEN
+    secret: upstash-redis-rest-token
+    availability:
+      - RUNTIME
+  - variable: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+    secret: stripe-publishable-key
+  - variable: STRIPE_SECRET_KEY
+    secret: stripe-secret-key
+  - variable: STRIPE_WEBHOOK_SIGNING_SECRET
+    secret: stripe-webhook-signing-secret
+
+  # Grant access to secrets in Cloud Secret Manager.
+  # See https://firebase.google.com/docs/app-hosting/configure#secret-parameters
+  # - variable: MY_SECRET
+  #   secret: mySecretRef
