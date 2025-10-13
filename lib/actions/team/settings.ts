@@ -363,7 +363,7 @@ async function createTenantInvitation(data: {
  */
 async function updateUserInTenant(
   updates: z.infer<typeof updateTeamMemberSchema>,
-  tenantId: string
+  _tenantId: string
 ): Promise<TeamMember> {
   // TODO: NileDB update
   // UPDATE user_profiles SET ... WHERE user_id = $1 AND tenant_id = $2
@@ -371,8 +371,8 @@ async function updateUserInTenant(
     userId: updates.userId,
     email: 'member@agency.com',
     name: updates.name || 'Updated Member',
-    role: (updates.role as any) || 'user',
-    status: (updates.status as any) || 'active',
+    role: updates.role || 'user',
+    status: updates.status || 'active',
     isPenguinmailsStaff: false,
     createdAt: new Date('2024-01-01'),
     lastLoginAt: new Date(),
@@ -382,10 +382,10 @@ async function updateUserInTenant(
 /**
  * Get tenant member
  */
-async function getTenantMember(userId: string, tenantId: string): Promise<TeamMember | null> {
+async function getTenantMember(_userId: string, _tenantId: string): Promise<TeamMember | null> {
   // TODO: NileDB query
   return {
-    userId,
+    userId: _userId,
     email: 'member@agency.com',
     name: 'Team Member',
     role: 'user',
@@ -399,7 +399,7 @@ async function getTenantMember(userId: string, tenantId: string): Promise<TeamMe
 /**
  * Count tenant owners
  */
-async function countTenantOwners(tenantId: string): Promise<number> {
+async function countTenantOwners(_tenantId: string): Promise<number> {
   // TODO: NileDB query
   // SELECT COUNT(*) FROM user_profiles WHERE tenant_id = $1 AND role = 'owner'
   return 1;
@@ -408,7 +408,7 @@ async function countTenantOwners(tenantId: string): Promise<number> {
 /**
  * Permanently remove user from tenant
  */
-async function permanentlyRemoveUserFromTenant(userId: string, tenantId: string): Promise<void> {
+async function permanentlyRemoveUserFromTenant(_userId: string, _tenantId: string): Promise<void> {
   // TODO: NileDB deletion
   // DELETE FROM user_profiles WHERE user_id = $1 AND tenant_id = $2
   console.log('Permanently removing user from tenant');
@@ -418,11 +418,11 @@ async function permanentlyRemoveUserFromTenant(userId: string, tenantId: string)
  * Update user status in tenant
  */
 async function updateUserStatusInTenant(
-  userId: string,
-  tenantId: string,
-  status: 'active' | 'paused' | 'suspended' | 'banned'
+  _userId: string,
+  _tenantId: string,
+  _status: 'active' | 'paused' | 'suspended' | 'banned'
 ): Promise<void> {
   // TODO: NileDB update
   // UPDATE user_profiles SET status = $3 WHERE user_id = $1 AND tenant_id = $2
-  console.log('Updating user status to:', status);
+  console.log('Updating user status to:', _status);
 }

@@ -1,43 +1,49 @@
 /**
  * Admin User Management API Routes
- * 
+ *
  * GET /api/admin/users - List all users with pagination (staff only)
- * 
+ *
  * These routes provide cross-tenant user administration for staff users.
  */
 
 import { NextResponse } from 'next/server';
 import { withStaffAccess } from '@/lib/niledb/middleware';
 import { withoutTenantContext } from '@/lib/niledb/client';
+import { transformUsersForAdminResponse } from '@/lib/admin/transformers';
+import { logDashboardAccess, logFilterApplied, extractClientIP, extractUserAgent } from '@/lib/admin/audit';
 
-interface AdminUserRow {
-  id: string;
-  email: string;
-  name: string;
-  given_name: string;
-  family_name: string;
-  picture: string;
-  created: string;
-  updated: string;
-  email_verified: boolean;
-  role: string;
-  is_penguinmails_staff: boolean;
-  tenant_count: string;
-  company_count: string;
-}
+// Note: AdminUserRow interface is defined but not used in final implementation
+// Kept for potential future use with different data transformation approach
 
 /**
  * GET /api/admin/users
  * List all users with pagination (staff only)
  */
-export const GET = withStaffAccess('admin')(async (request, _context) => {
+export const GET = withStaffAccess('admin')(async (request, context) => {
   try {
+    // Debug logging
+    console.log('Admin API: Request received')
+    console.log('Admin API: Context user:', context.user?.id, context.user?.email)
+    console.log('Admin API: Context isStaff:', context.isStaff)
+    console.log('Admin API: User profile:', context.user?.profile)
+
     const url = new URL(request.url);
     const limit = Math.min(parseInt(url.searchParams.get('limit') || '50'), 100);
     const offset = Math.max(parseInt(url.searchParams.get('offset') || '0'), 0);
     const search = url.searchParams.get('search');
     const role = url.searchParams.get('role');
     const staffOnly = url.searchParams.get('staff_only') === 'true';
+
+    // Audit logging for dashboard access
+    const adminUserId = context.user?.id;
+    const ipAddress = extractClientIP(request);
+    const userAgent = extractUserAgent(request);
+
+    console.log('Admin API: About to log dashboard access for user:', adminUserId)
+
+    if (adminUserId) {
+      await logDashboardAccess(adminUserId, ipAddress, userAgent);
+    }
 
     // Build query with optional filters
     let query = `
@@ -96,29 +102,14 @@ export const GET = withStaffAccess('admin')(async (request, _context) => {
     queryParams.push(limit, offset);
 
     // Execute query using withoutTenantContext for cross-tenant access
-    const users = await withoutTenantContext(async (nile) => {
+    const rawUsers = await withoutTenantContext(async (nile) => {
       const result = await nile.db.query(query, queryParams);
-
-      return result.rows.map((row: AdminUserRow) => ({
-        id: row.id,
-        email: row.email,
-        name: row.name,
-        givenName: row.given_name,
-        familyName: row.family_name,
-        picture: row.picture,
-        created: row.created,
-        updated: row.updated,
-        emailVerified: row.email_verified,
-        role: row.role || 'user',
-        isPenguinMailsStaff: row.is_penguinmails_staff || false,
-        tenantCount: parseInt(row.tenant_count || '0'),
-        companyCount: parseInt(row.company_count || '0'),
-      }));
+      return result.rows;
     });
 
     // Get total count for pagination
     let countQuery = `
-      SELECT COUNT(DISTINCT u.id) as total 
+      SELECT COUNT(DISTINCT u.id) as total
       FROM users.users u
       LEFT JOIN public.user_profiles up ON u.id = up.user_id AND up.deleted IS NULL
       WHERE 1=1
@@ -150,22 +141,27 @@ export const GET = withStaffAccess('admin')(async (request, _context) => {
       return parseInt(result.rows[0]?.total || '0');
     });
 
-    return NextResponse.json({
-      users,
-      count: users.length,
-      total: totalCount,
-      pagination: {
-        limit,
-        offset,
-        hasMore: (offset + users.length) < totalCount,
-      },
-      filters: {
-        search: search || null,
-        role: role || null,
-        staffOnly,
-      },
-      timestamp: new Date().toISOString(),
-    });
+    // Audit logging for filter application
+    if (adminUserId && (search || role || staffOnly)) {
+      await logFilterApplied(
+        adminUserId,
+        { search, role, staffOnly },
+        totalCount,
+        ipAddress,
+        userAgent
+      );
+    }
+
+    // Transform response with privacy masking
+    const response = transformUsersForAdminResponse(
+      rawUsers,
+      totalCount,
+      offset,
+      limit,
+      { search: search || undefined, role: role || undefined, staffOnly }
+    );
+
+    return NextResponse.json(response);
   } catch (error) {
     console.error('Failed to get users:', error);
     return NextResponse.json(

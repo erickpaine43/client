@@ -3,7 +3,7 @@
  * These tests verify the consolidated User type matches the specification
  */
 
-import { User, UserClaims, UserProfile, Permission } from '../auth';
+import { User, UserClaims, UserProfile, Permission, UserRole } from '../auth';
 
 // Test consolidated User interface structure
 describe('Consolidated User Interface', () => {
@@ -92,7 +92,7 @@ describe('Consolidated User Interface', () => {
 describe('UserClaims Interface', () => {
   it('should have required role and tenantId', () => {
     const claims: UserClaims = {
-      role: 'user' as any, // Will be UserRole enum
+      role: UserRole.USER,
       tenantId: 'tenant-123',
       permissions: [],
     };
@@ -104,7 +104,7 @@ describe('UserClaims Interface', () => {
 
   it('should support optional companyId', () => {
     const claimsWithCompany: UserClaims = {
-      role: 'user' as any,
+      role: UserRole.USER,
       tenantId: 'tenant-123',
       companyId: 'company-456',
       permissions: [],
@@ -113,7 +113,7 @@ describe('UserClaims Interface', () => {
     expect(claimsWithCompany.companyId).toBeDefined();
 
     const claimsWithoutCompany: UserClaims = {
-      role: 'user' as any,
+      role: UserRole.USER,
       tenantId: 'tenant-123',
       permissions: [],
     };
@@ -165,7 +165,7 @@ describe('Type Safety Assertions', () => {
       displayName: 'Test User',
       photoURL: 'https://example.com/photo.jpg',
       claims: {
-        role: 'user' as any,
+        role: UserRole.USER,
         tenantId: 'tenant-456',
         companyId: 'company-789',
         permissions: [Permission.VIEW_USERS],
@@ -193,7 +193,7 @@ describe('Type Safety Assertions', () => {
         displayName: 'Test User',
         claims: {} as UserClaims,
         profile: {} as UserProfile,
-      } as User;
+      };
 
       return invalidUser;
     }).not.toThrow();
