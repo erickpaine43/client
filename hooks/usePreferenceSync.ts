@@ -49,16 +49,28 @@ export function usePreferenceSync(
       // Sync server preferences to client storage
       const success = syncServerToClient(serverPrefs);
 
-      if (success && clientPrefs) {
-        // Update merged preferences
-        const merged = mergePreferences(serverPrefs, {
-          theme: clientPrefs.sidebarView === "expanded" ? "system" : "system", // This would come from actual client prefs
-          sidebarView: (clientPrefs.sidebarView || "expanded") as any,
-          sidebarCollapsed: clientPrefs.sidebarCollapsed || false,
-          tableDensity: (clientPrefs.tableDensity || "comfortable") as any,
-        });
+      if (success) {
+        if (clientPrefs) {
+          // Update merged preferences
+          const merged = mergePreferences(serverPrefs, {
+            theme: clientPrefs.sidebarView === "expanded" ? "system" : "system", // This would come from actual client prefs
+            sidebarView: (clientPrefs.sidebarView || "expanded") as any,
+            sidebarCollapsed: clientPrefs.sidebarCollapsed || false,
+            tableDensity: (clientPrefs.tableDensity || "comfortable") as any,
+          });
 
-        setSyncedPreferences(merged);
+          setSyncedPreferences(merged);
+        } else {
+          // If clientPrefs is not available, set merged preferences with safe defaults
+          const merged = mergePreferences(serverPrefs, {
+            theme: "system",
+            sidebarView: "expanded",
+            sidebarCollapsed: false,
+            tableDensity: "comfortable",
+          });
+
+          setSyncedPreferences(merged);
+        }
       }
 
       return success;

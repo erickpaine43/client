@@ -13,12 +13,27 @@ import {
   type BillingAddress,
 } from "../settings";
 
+// Define CompanyInfo interface for tests
+interface TestCompanyInfo {
+  name: string;
+  industry: string;
+  size: string;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+  vatId?: string;
+}
+
 // Define UserSettings locally for tests since it's not exported
 interface UserSettings {
   id: string;
   userId: string;
   timezone: string;
-  companyInfo: any;
+  companyInfo: TestCompanyInfo;
   createdAt: Date;
   updatedAt: Date;
 }

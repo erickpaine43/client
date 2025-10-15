@@ -11,7 +11,10 @@ export async function GET(request: NextRequest) {
     // - Query user_preferences table
     // - Return formatted response
 
-    throw new Error('User preferences API not implemented');
+    return NextResponse.json(
+      { error: 'User preferences API not implemented' },
+      { status: 501 }
+    );
   } catch (error: any) {
     console.error('Error fetching user preferences:', error);
     return NextResponse.json(
@@ -34,7 +37,10 @@ export async function POST(request: NextRequest) {
     // - Upsert user_preferences table
     // - Return updated preferences
 
-    throw new Error('User preferences API not implemented');
+    return NextResponse.json(
+      { error: 'User preferences API not implemented' },
+      { status: 501 }
+    );
   } catch (error: any) {
     if (error.name === 'ZodError') {
       return NextResponse.json(

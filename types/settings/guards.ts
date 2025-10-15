@@ -24,7 +24,7 @@ interface UserSettings {
   id: string;
   userId: string;
   timezone: string;
-  companyInfo: any;
+  companyInfo: CompanyInfo;
   createdAt: Date;
   updatedAt: Date;
 }

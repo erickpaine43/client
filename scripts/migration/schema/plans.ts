@@ -34,8 +34,7 @@ CREATE TABLE IF NOT EXISTS plans (
 
     -- Constraints
     CHECK (slug ~ '^[a-z0-9-]+$'),
-    CHECK (char_length(name) >= 2),
-    CHECK (price_yearly >= price_monthly * 12) -- Yearly should be at least monthly * 12
+    CHECK (char_length(name) >= 2)
 );
 `;
 

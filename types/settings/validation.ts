@@ -1,9 +1,16 @@
+// Define a type for companyInfo
+interface CompanyInfo {
+  name: string;
+  industry: string;
+  size: string;
+}
+
 // Define UserSettings locally for validation since it's not exported from user.ts
 interface UserSettings {
   id?: string;
   userId: string;
   timezone: string;
-  companyInfo: any;
+  companyInfo: CompanyInfo;
   createdAt?: Date;
   updatedAt?: Date;
 }

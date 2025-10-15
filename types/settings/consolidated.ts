@@ -80,7 +80,7 @@ export interface SettingsData {
 
 // All Settings Combined
 export interface AllSettings {
-  user: any; // Temporarily using any to avoid import issues
+  user: UserPreferences;
   notifications: NotificationPreferences;
   billing: BillingInfo;
   security: SecuritySettingsEntity;

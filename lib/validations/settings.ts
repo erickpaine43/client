@@ -43,8 +43,8 @@ export const planSchema = z.object({
   priceYearly: z.number().int().min(0), // in cents
   features: z.array(z.string()),
   isActive: z.boolean(),
-}).refine((data) => data.priceYearly >= data.priceMonthly * 12, {
-  message: 'Yearly price must be at least monthly price * 12',
+}).refine((data) => data.priceYearly <= data.priceMonthly * 12, {
+  message: 'Yearly price should not exceed monthly price * 12 (annual discount allowed)',
   path: ['priceYearly'],
 });
 
