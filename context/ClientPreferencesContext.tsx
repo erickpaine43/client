@@ -43,12 +43,13 @@ export function ClientPreferencesProvider({ children }: ClientPreferencesProvide
       setIsLoading(true);
       setError(null);
 
-      // TODO: Implement API call to fetch user preferences
-      // const response = await fetch('/api/settings/user');
-      // const data = await response.json();
-      // setPreferences(data);
-
-      throw new Error('User preferences API not integrated');
+      // Implement API call to fetch user preferences
+      const response = await fetch('/api/settings/user');
+      if (!response.ok) {
+        throw new Error('Failed to fetch user preferences');
+      }
+      const data = await response.json() as UserPreferencesResponse;
+      setPreferences(data);
     } catch (err: any) {
       setError(err.message || 'Failed to load preferences');
       console.error('Error loading preferences:', err);
