@@ -21,6 +21,7 @@ new_version="$1"
 validate_semver "$new_version"
 
 # Ensure the version file exists and create backup
+trap 'rm -f "${VERSION_FILE}.backup"' EXIT
 touch "$VERSION_FILE"
 cp "$VERSION_FILE" "${VERSION_FILE}.backup" 2>/dev/null || true
 
@@ -37,9 +38,6 @@ if [ "$written_version" != "$new_version" ]; then
   fi
   exit 1
 fi
-
-# Clean up backup
-rm -f "${VERSION_FILE}.backup"
 
 echo "✅ Version successfully updated to: $new_version"
 echo "   Modified file: $(pwd)/$VERSION_FILE"

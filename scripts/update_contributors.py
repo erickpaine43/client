@@ -31,7 +31,7 @@ def main():
         # Build the HTML table for contributors
         html_lines = [
             "<h2>Contributors</h2>",
-            "<table border='1' cellspacing='0' cellpadding='5'>",
+            '<table style="border-collapse: collapse; border: 1px solid #ddd;">',
             "  <thead>",
             "    <tr><th>Avatar</th><th>Username</th><th>Insights</th></tr>",
             "  </thead>",
@@ -39,6 +39,9 @@ def main():
         ]
 
         repo_name = os.getenv("GITHUB_REPOSITORY")
+        if not repo_name:
+            print("Error: GITHUB_REPOSITORY environment variable not set.", file=sys.stderr)
+            sys.exit(1)
 
         bots_to_exclude = {"actions-user", "github-actions[bot]", "GitHub Action"}
 
