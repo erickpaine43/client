@@ -50,7 +50,8 @@
     "test:system": "npm run test:performance && npm run test:integration && npm run test:e2e",
     "test:all": "npm run test:services && npm run test:api-routes && npm run test:ui-components && npm run test:system",
     "test:critical": "npx tsx lib/niledb/__tests__/run-comprehensive-tests.ts --suites=unit-auth,unit-tenant,unit-company,migration-validation,api-integration,comprehensive-integration,end-to-end --fail-fast",
-    "test:quick": "npx tsx lib/niledb/__tests__/run-comprehensive-tests.ts --suites=unit-auth,unit-tenant,unit-company --parallel"
+    "test:quick": "npx tsx lib/niledb/__tests__/run-comprehensive-tests.ts --suites=unit-auth,unit-tenant,unit-company --parallel",
+    "type-analysis": "npx tsx scripts/type-analysis/cli/analyze-types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

@@ -115,6 +115,7 @@ npm run typecheck        # Run TypeScript compiler
 # Deployment
 npm run preview          # Preview Cloudflare deployment locally
 npm run deploy           # Deploy to Cloudflare Workers
+npm run type-analysis     # Analyze TypeScript types and generate reports
 npm run docs:maintenance # Validate documentation
 ```
 
@@ -229,6 +230,43 @@ For complete setup instructions, see [`docs/infrastructure/cloudflare.md`](./doc
 
 ### Getting Help
 
+### TypeScript Type Analysis
+
+The project includes a comprehensive TypeScript type analysis tool for identifying repeated types and categorizing them by architectural layers (Backend/DB vs Frontend/UI). This helps maintain clean type organization and prevents architectural drift.
+
+#### Usage
+
+```bash
+# Analyze types in the current project
+npm run type-analysis
+
+# Analyze specific directory
+npm run type-analysis -- --directory ./src/types
+
+# Generate JSON output
+npm run type-analysis -- --format json --output ./types.json
+
+# Verbose output with detailed logging
+npm run type-analysis -- --verbose
+```
+
+#### Features
+
+- **Type Categorization**: Automatically categorizes types into Backend/DB, Frontend/UI, and Shared/Common layers
+- **Conflict Detection**: Identifies exact duplicates, semantic conflicts, and naming conflicts
+- **Markdown Reports**: Generates detailed reports with recommendations for consolidation
+- **Performance Optimized**: Analyzes large codebases in under 5 seconds
+- **CLI Interface**: Flexible command-line interface with multiple output formats
+
+#### Report Structure
+
+The generated report includes:
+- **Summary Statistics**: Total types, conflicts, and category breakdowns
+- **Type Categories**: Detailed breakdown by architectural layer
+- **Conflict Analysis**: Specific conflicts with resolution strategies
+- **Recommendations**: Actionable suggestions for type consolidation
+
+For more information, see the [Type Analysis Documentation](./docs/development/type-analysis.md).
 - **Documentation**: Comprehensive guides in [`docs/`](./docs/) directory
 - **Troubleshooting**: Common issues in [`docs/development/troubleshooting.md`](./docs/development/troubleshooting.md)
 - **Architecture**: System design in [`docs/analytics/README.md`](./docs/analytics/README.md)
