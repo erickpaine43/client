@@ -7,7 +7,18 @@
 
 // Re-export types from their source files
 export type { UserSettings, CompanyInfo, BillingAddress } from "../../data/settings.mock";
-export type { GeneralSettings, SecuritySettings } from "../../../types/settings";
+export type { SecuritySettings } from "../../../types/settings";
+
+// Define GeneralSettings locally since it's not exported
+export interface GeneralSettings {
+  profile: {
+    name: string;
+    email: string;
+    company: string;
+  };
+  preferences: any;
+  appearance: any;
+}
 
 // Helper type for deep partial
 export type DeepPartial<T> = {

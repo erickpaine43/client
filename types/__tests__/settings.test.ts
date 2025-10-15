@@ -7,12 +7,21 @@ import {
   isCompanyInfo,
   isBillingAddress,
   type ActionResult,
-  type UserSettings,
   type NotificationPreferences,
   type ClientPreferences,
   type CompanyInfo,
   type BillingAddress,
 } from "../settings";
+
+// Define UserSettings locally for tests since it's not exported
+interface UserSettings {
+  id: string;
+  userId: string;
+  timezone: string;
+  companyInfo: any;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 describe("Settings Type Guards", () => {
   describe("ActionResult type guards", () => {

@@ -42,5 +42,8 @@ export interface UserPreferencesResponse {
   pushNotifications: boolean;
   weeklyReports: boolean;
   marketingEmails: boolean;
+  sidebarCollapsed?: boolean;
+  tableDensity?: string;
+  sidebarView?: string;
   updatedAt: string;
 }

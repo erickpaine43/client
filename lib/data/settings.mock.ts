@@ -1,9 +1,11 @@
 import type {
   UserPreferences,
-  AppearanceSettings,
-  GeneralSettings,
   SecuritySettings,
 } from "../../types/settings";
+
+import type {
+  AppearanceSettingsEntity as AppearanceSettings,
+} from "../../types/settings/appearance";
 
 // Company Information Types
 export interface CompanyInfo {
@@ -116,35 +118,35 @@ export const mockUserSettings: UserSettings = {
   updatedAt: new Date("2024-12-20T15:30:00Z"),
 };
 
-// Mock user preferences
+// Mock user preferences - using UserPreferencesResponse for mock data
 export const mockUserPreferences: UserPreferences = {
+  id: "mock-pref-1",
+  userId: "mock-user-1",
   theme: "light",
   language: "en",
   timezone: "America/New_York",
-  dateFormat: "MM/DD/YYYY",
-  emailFrequency: "daily",
-  dashboardLayout: "comfortable",
-  chartColors: "default",
+  emailNotifications: true,
+  pushNotifications: false,
+  weeklyReports: true,
+  marketingEmails: false,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
 };
 
 // Mock appearance settings
 export const mockAppearanceSettings: AppearanceSettings = {
+  id: "mock-appearance-1",
+  userId: "mock-user-1",
   theme: "light",
   primaryColor: "#0066CC",
   sidebarCollapsed: false,
   itemsPerPage: 25,
+  compactMode: false,
+  createdAt: new Date(),
+  updatedAt: new Date(),
 };
 
-// Mock general settings
-export const mockGeneralSettings: GeneralSettings = {
-  profile: {
-    name: "John Doe",
-    email: "john.doe@acmecorp.com",
-    company: "Acme Corporation",
-  },
-  preferences: mockUserPreferences,
-  appearance: mockAppearanceSettings,
-};
+// Mock general settings (temporarily removed due to type conflicts)
 
 // Mock security settings
 export const mockSecuritySettings: SecuritySettings = {

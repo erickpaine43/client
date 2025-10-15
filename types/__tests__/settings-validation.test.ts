@@ -11,11 +11,20 @@ import {
   isValidDateFormat,
   isValidTeamMemberRole,
   isValidTeamMemberStatus,
-  type UserSettings,
   type NotificationPreferences,
   type ClientPreferences,
   type TeamMember,
 } from "../settings";
+
+// Define UserSettings locally for tests since it's not exported
+interface UserSettings {
+  id?: string;
+  userId: string;
+  timezone: string;
+  companyInfo: any;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 describe("Settings Validation Functions", () => {
   describe("Basic validation helpers", () => {

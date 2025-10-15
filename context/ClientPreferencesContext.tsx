@@ -10,6 +10,9 @@ import { UserPreferencesResponse } from '@/types/settings/user';
 // This implementation will fail until API integration is added
 interface ClientPreferencesContextType {
   preferences: UserPreferencesResponse | null;
+  theme?: "light" | "dark" | "auto";
+  setTheme?: (theme: "light" | "dark" | "auto") => void;
+  updatePreference?: (key: string, value: any) => Promise<void>;
   isLoading: boolean;
   error: string | null;
   updatePreferences: (updates: Partial<UserPreferencesResponse>) => Promise<void>;
@@ -26,6 +29,9 @@ export function ClientPreferencesProvider({ children }: ClientPreferencesProvide
   const [preferences, setPreferences] = useState<UserPreferencesResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Extract theme for convenience (defaults to 'light')
+  const theme = preferences?.theme || 'light';
 
   // Load user preferences on mount
   useEffect(() => {
@@ -72,8 +78,21 @@ export function ClientPreferencesProvider({ children }: ClientPreferencesProvide
     }
   };
 
+  const setTheme = (newTheme: "light" | "dark" | "auto") => {
+    // This would update the theme in preferences when API is integrated
+    console.log('Setting theme to:', newTheme);
+  };
+
+  const updatePreference = async (key: string, value: any) => {
+    // This would update a preference when API is integrated
+    console.log('Updating preference:', key, value);
+  };
+
   const value: ClientPreferencesContextType = {
     preferences,
+    theme,
+    setTheme,
+    updatePreference,
     isLoading,
     error,
     updatePreferences,

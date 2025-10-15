@@ -8,17 +8,46 @@
 "use server";
 
 import { nile } from "../../../app/api/[...nile]/nile";
-import { mockUserSettings, mockGeneralSettings } from "../../data/settings.mock";
+import { mockUserSettings } from "../../data/settings.mock";
 import { ActionResult } from "../core/types";
 import { ErrorFactory, withErrorHandling } from "../core/errors";
 import { withAuth } from "../core/auth";
-import { 
+import {
   UserSettings,
   CompanyInfo,
-  GeneralSettings,
   DeepPartial,
   ERROR_CODES
 } from './types';
+
+// Define a local GeneralSettings type for this file since it's not exported elsewhere
+interface GeneralSettings {
+  profile: {
+    name: string;
+    email: string;
+    company: string;
+  };
+  preferences: any;
+  appearance: any;
+}
+
+// Define mockGeneralSettings locally since it's no longer exported
+const mockGeneralSettings: GeneralSettings = {
+  profile: {
+    name: "John Doe",
+    email: "john.doe@acmecorp.com",
+    company: "Acme Corporation",
+  },
+  preferences: {
+    theme: "light",
+    language: "en",
+    timezone: "America/New_York",
+  },
+  appearance: {
+    theme: "light",
+    sidebarCollapsed: false,
+    tableDensity: "comfortable",
+  },
+};
 import { validateUserSettings, validateCompanyInfo, isValidTimezone } from './validation';
 
 /**

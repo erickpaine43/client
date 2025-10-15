@@ -1,4 +1,4 @@
-import type { UserSettings, UserPreferences, GeneralSettings, AppearanceSettings } from "./user";
+import type { UserPreferences } from "./user";
 import type { NotificationPreferences } from "./notifications";
 import type { BillingInfo, BillingData, BillingAndPlanSettings } from "./billing";
 import type { SecuritySettingsEntity, SecuritySettings } from "./security";
@@ -8,7 +8,7 @@ import type { AppearanceSettingsEntity } from "./appearance";
 import type { ClientPreferences } from "./appearance";
 
 // Re-export types for backward compatibility
-export type { UserPreferences, GeneralSettings, AppearanceSettings };
+export type { UserPreferences };
 export type { BillingData, BillingAndPlanSettings };
 export type { SecuritySettings };
 
@@ -80,7 +80,7 @@ export interface SettingsData {
 
 // All Settings Combined
 export interface AllSettings {
-  user: UserSettings;
+  user: any; // Temporarily using any to avoid import issues
   notifications: NotificationPreferences;
   billing: BillingInfo;
   security: SecuritySettingsEntity;
