@@ -23,11 +23,10 @@ def main():
         else:
             content = ""
 
-        # Always update contributors list on PR merge, don't skip based on individual author
-        # The original logic was preventing updates when contributors were already listed
-
-        # Always update the full contributors list on PR merge
-        # This ensures the list stays current with all repository contributors
+        # (Optional) Check if the PR author is already in readme.md
+        if pr_author and f'">{pr_author}</a>' in content:
+            print(f"User {pr_author} is already in README.md. No changes made.")
+            sys.exit(0)
 
         # Build the HTML table for contributors
         html_lines = [
@@ -61,10 +60,13 @@ def main():
         html_lines.append("</table>")
         new_section = "\n".join(html_lines)
 
-        # Always update the contributors section (remove the comparison check)
+        # If the contributors section already exists, compare it with the new section
         if start_marker in content and end_marker in content:
             before, current_section_with_markers = content.split(start_marker, 1)
-            _, after = current_section_with_markers.split(end_marker, 1)
+            current_section, after = current_section_with_markers.split(end_marker, 1)
+            if new_section.strip() == current_section.strip():
+                print("No changes detected in the contributors list. README.md will not be updated.")
+                sys.exit(0)
             updated_content = f"{before}{start_marker}\n{new_section}\n{end_marker}{after}"
         else:
             updated_content = f"{content.rstrip()}\n\n{start_marker}\n{new_section}\n{end_marker}\n"
