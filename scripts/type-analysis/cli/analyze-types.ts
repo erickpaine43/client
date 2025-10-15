@@ -3,6 +3,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import { TypeParser } from '../services/TypeParser';
 import { TypeCategorizer } from '../services/TypeCategorizer';
 import { ConflictDetector } from '../services/ConflictDetector';
@@ -135,56 +137,63 @@ class TypeAnalysisCLI {
 
 // CLI entry point
 if (require.main === module) {
-  const args = process.argv.slice(2);
-  const options: AnalysisOptions = {};
+  (async () => {
+    const argv = await yargs(hideBin(process.argv))
+      .usage('Usage: $0 [options]')
+      .options({
+        directory: {
+          alias: 'd',
+          describe: 'Directory to analyze',
+          type: 'string',
+          default: './types'
+        },
+        output: {
+          alias: 'o',
+          describe: 'Output file path',
+          type: 'string',
+          default: './type-analysis-report.md'
+        },
+        'include-deps': {
+          describe: 'Include external dependencies in analysis',
+          type: 'boolean',
+          default: false
+        },
+        format: {
+          alias: 'f',
+          describe: 'Output format: markdown or json',
+          choices: ['markdown', 'json'],
+          type: 'string',
+          default: 'markdown'
+        },
+        verbose: {
+          alias: 'v',
+          describe: 'Enable verbose logging',
+          type: 'boolean',
+          default: false
+        },
+        help: {
+          alias: 'h',
+          describe: 'Show help message',
+          type: 'boolean'
+        }
+      })
+      .example('$0', 'Run analysis with default settings')
+      .example('$0 --directory ./src --output ./reports/types.md --verbose', 'Analyze src directory with verbose output')
+      .example('$0 --format json --output stdout', 'Output JSON to stdout')
+      .argv;
 
-  // Simple argument parsing
-  for (let i = 0; i < args.length; i++) {
-    switch (args[i]) {
-      case '--directory':
-      case '-d':
-        options.directory = args[++i];
-        break;
-      case '--output':
-      case '-o':
-        options.output = args[++i];
-        break;
-      case '--include-deps':
-        options.includeDeps = true;
-        break;
-      case '--format':
-      case '-f':
-        options.format = args[++i] as 'markdown' | 'json';
-        break;
-      case '--verbose':
-      case '-v':
-        options.verbose = true;
-        break;
-      case '--help':
-      case '-h':
-        console.log(`
-Usage: analyze-types [options]
+    const options: AnalysisOptions = {
+      directory: argv.directory,
+      output: argv.output,
+      includeDeps: argv['include-deps'],
+      format: argv.format as 'markdown' | 'json',
+      verbose: argv.verbose
+    };
 
-Options:
-  -d, --directory <dir>    Directory to analyze (default: ./types)
-  -o, --output <file>      Output file path (default: ./type-analysis-report.md)
-  --include-deps           Include external dependencies in analysis
-  -f, --format <format>    Output format: markdown or json (default: markdown)
-  -v, --verbose            Enable verbose logging
-  -h, --help               Show this help message
-
-Examples:
-  analyze-types
-  analyze-types --directory ./src --output ./reports/types.md --verbose
-  analyze-types --format json --output stdout
-        `);
-        process.exit(0);
-    }
-  }
-
-  const cli = new TypeAnalysisCLI(options);
-  cli.run().catch(error => {
-    console.error('Fatal error:', error);
-    process.exit(1);
-  });
+    const cli = new TypeAnalysisCLI(options);
+    await cli.run().catch(error => {
+      console.error('Fatal error:', error);
+      process.exit(1);
+    });
+  })();
 }

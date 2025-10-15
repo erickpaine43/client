@@ -111,7 +111,7 @@ describe('TypeCategorizer', () => {
       expect(category).toBe('Shared/Common');
     });
 
-    it('should categorize utility types as Shared/Common', () => {
+    it('should categorize utility types as Backend/DB when they contain api', () => {
       const typeDef: TypeDefinition = {
         name: 'ApiResponse',
         filePath: 'types/common.ts',
@@ -125,7 +125,7 @@ describe('TypeCategorizer', () => {
 
       const category = categorizer.categorizeType(typeDef);
 
-      expect(category).toBe('Shared/Common');
+      expect(category).toBe('Backend/DB');
     });
 
     it('should handle unknown patterns as Shared/Common', () => {

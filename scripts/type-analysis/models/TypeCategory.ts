@@ -1,3 +1,5 @@
+import { TypeDefinition } from './TypeDefinition';
+
 export type CategoryName = 'Backend/DB' | 'Frontend/UI' | 'Shared/Common';
 
 export interface TypeCategory {
@@ -11,5 +13,3 @@ export interface CategorizedTypes {
   'Frontend/UI': TypeDefinition[];
   'Shared/Common': TypeDefinition[];
 }
-
-import { TypeDefinition } from './TypeDefinition';

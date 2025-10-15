@@ -35,8 +35,8 @@ export class TypeCategorizer {
     const name = typeDef.name.toLowerCase();
     const filePath = typeDef.filePath.toLowerCase();
 
-    // API response types
-    if (name.includes('response') || name.includes('request')) {
+    // API response/request/error types
+    if (name.includes('response') || name.includes('request') || name.includes('error')) {
       return true;
     }
 
@@ -104,14 +104,9 @@ export class TypeCategorizer {
       return true;
     }
 
-    // Utility types - exclude API types that are backend (but only if they match exact names)
-    if (name === 'apiresponse' || name === 'apierror') {
-      return false; // These are backend types
-    }
-
-    // If name contains 'api' but not exactly 'apiresponse' or 'apierror', check context
+    // If name contains 'api' but not response/request/error, check context
     if (name.includes('api') && filePath.includes('/types/') && !filePath.includes('/api/')) {
-      return true; // ApiResponse in types/common.ts would be shared
+      return false; // ApiResponse in types/common.ts should be Backend/DB if it contains 'api'
     }
 
     // Common directories

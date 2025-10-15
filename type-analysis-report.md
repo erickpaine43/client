@@ -3,63 +3,105 @@
 ## Summary
 
 - **Total Types**: 5787
-- **Duplicated Types**: 0
+- **Duplicated Types**: 37
 - **Layer Conflicts**: 560
 
 | Category | Count | Description |
 |----------|-------|-------------|
-| Backend/DB | 181 | Types related to database schemas, API responses, and backend data structures |
-| Frontend/UI | 326 | Types for UI components, form data, and user interface state management |
-| Shared/Common | 5280 | Common domain entities, validation schemas, and shared utility types |
+| Backend/DB | 295 | Types related to database schemas, API responses, and backend data structures |
+| Frontend/UI | 320 | Types for UI components, form data, and user interface state management |
+| Shared/Common | 5172 | Common domain entities, validation schemas, and shared utility types |
 
 ## Type Categories
 
-### Backend/DB (181 types)
+### Backend/DB (295 types)
 
 Types related to database schemas, API responses, and backend data structures
 
 | Type Name | File | Line |
 |-----------|------|------|
+| Error | lib.es5.d.ts | 1075 |
+| ErrorConstructor | lib.es5.d.ts | 1081 |
+| EvalError | lib.es5.d.ts | 1089 |
+| EvalErrorConstructor | lib.es5.d.ts | 1092 |
+| RangeError | lib.es5.d.ts | 1100 |
+| RangeErrorConstructor | lib.es5.d.ts | 1103 |
+| ReferenceError | lib.es5.d.ts | 1111 |
+| ReferenceErrorConstructor | lib.es5.d.ts | 1114 |
+| SyntaxError | lib.es5.d.ts | 1122 |
+| SyntaxErrorConstructor | lib.es5.d.ts | 1125 |
+| TypeError | lib.es5.d.ts | 1133 |
+| TypeErrorConstructor | lib.es5.d.ts | 1136 |
+| URIError | lib.es5.d.ts | 1144 |
+| URIErrorConstructor | lib.es5.d.ts | 1147 |
+| AddressErrors | lib.dom.d.ts | 29 |
 | CredentialRequestOptions | lib.dom.d.ts | 467 |
+| ErrorEventInit | lib.dom.d.ts | 653 |
 | IdleRequestOptions | lib.dom.d.ts | 842 |
+| PayerErrors | lib.dom.d.ts | 1332 |
 | PaymentRequestUpdateEventInit | lib.dom.d.ts | 1392 |
+| PaymentValidationErrors | lib.dom.d.ts | 1402 |
 | PublicKeyCredentialEntity | lib.dom.d.ts | 1561 |
 | PublicKeyCredentialRequestOptions | lib.dom.d.ts | 1570 |
 | PublicKeyCredentialRequestOptionsJSON | lib.dom.d.ts | 1579 |
 | PublicKeyCredentialRpEntity | lib.dom.d.ts | 1589 |
 | PublicKeyCredentialUserEntity | lib.dom.d.ts | 1593 |
 | PublicKeyCredentialUserEntityJSON | lib.dom.d.ts | 1598 |
+| RTCErrorEventInit | lib.dom.d.ts | 1689 |
+| RTCErrorInit | lib.dom.d.ts | 1693 |
+| RTCPeerConnectionIceErrorEventInit | lib.dom.d.ts | 1843 |
 | RequestInit | lib.dom.d.ts | 2039 |
 | ResponseInit | lib.dom.d.ts | 2073 |
+| SpeechSynthesisErrorEventInit | lib.dom.d.ts | 2167 |
+| WebTransportErrorOptions | lib.dom.d.ts | 2503 |
 | AuthenticatorAssertionResponse | lib.dom.d.ts | 4033 |
 | AuthenticatorAttestationResponse | lib.dom.d.ts | 4065 |
 | AuthenticatorResponse | lib.dom.d.ts | 4109 |
+| ErrorEvent | lib.dom.d.ts | 11304 |
+| GPUError | lib.dom.d.ts | 12306 |
+| GeolocationPositionError | lib.dom.d.ts | 12607 |
 | HTMLModElement | lib.dom.d.ts | 15737 |
 | IDBOpenDBRequestEventMap | lib.dom.d.ts | 18387 |
 | IDBOpenDBRequest | lib.dom.d.ts | 18397 |
 | IDBRequestEventMap | lib.dom.d.ts | 18413 |
 | IDBRequest | lib.dom.d.ts | 18423 |
+| MediaError | lib.dom.d.ts | 19848 |
+| OverconstrainedError | lib.dom.d.ts | 22478 |
 | PaymentRequestEventMap | lib.dom.d.ts | 22859 |
 | PaymentRequest | lib.dom.d.ts | 22871 |
 | PaymentRequestUpdateEvent | lib.dom.d.ts | 22948 |
 | PaymentResponseEventMap | lib.dom.d.ts | 22962 |
 | PaymentResponse | lib.dom.d.ts | 22972 |
+| RTCError | lib.dom.d.ts | 24743 |
+| RTCErrorEvent | lib.dom.d.ts | 24786 |
+| RTCPeerConnectionIceErrorEvent | lib.dom.d.ts | 25200 |
 | ReadableStreamBYOBRequest | lib.dom.d.ts | 25885 |
 | Request | lib.dom.d.ts | 26120 |
 | Response | lib.dom.d.ts | 26316 |
+| SpeechSynthesisErrorEvent | lib.dom.d.ts | 31112 |
+| WebTransportError | lib.dom.d.ts | 36280 |
 | XMLHttpRequestEventMap | lib.dom.d.ts | 37122 |
 | XMLHttpRequest | lib.dom.d.ts | 37131 |
 | XMLHttpRequestEventTargetEventMap | lib.dom.d.ts | 37264 |
 | XMLHttpRequestEventTarget | lib.dom.d.ts | 37279 |
 | XMLHttpRequestUpload | lib.dom.d.ts | 37303 |
+| DecodeErrorCallback | lib.dom.d.ts | 37969 |
+| ErrorCallback | lib.dom.d.ts | 37985 |
 | FrameRequestCallback | lib.dom.d.ts | 38001 |
 | IdleRequestCallback | lib.dom.d.ts | 38009 |
+| OnErrorEventHandlerNonNull | lib.dom.d.ts | 38037 |
+| PositionErrorCallback | lib.dom.d.ts | 38049 |
+| RTCPeerConnectionErrorCallback | lib.dom.d.ts | 38057 |
 | VideoFrameRequestCallback | lib.dom.d.ts | 38121 |
+| WebCodecsErrorCallback | lib.dom.d.ts | 38133 |
+| OnErrorEventHandler | lib.dom.d.ts | 39216 |
 | RequestInfo | lib.dom.d.ts | 39228 |
 | XMLHttpRequestBodyInit | lib.dom.d.ts | 39235 |
 | DistanceModelType | lib.dom.d.ts | 39286 |
+| EndOfStreamError | lib.dom.d.ts | 39291 |
 | IDBRequestReadyState | lib.dom.d.ts | 39308 |
 | PanningModelType | lib.dom.d.ts | 39345 |
+| RTCErrorDetailType | lib.dom.d.ts | 39363 |
 | RequestCache | lib.dom.d.ts | 39391 |
 | RequestCredentials | lib.dom.d.ts | 39392 |
 | RequestDestination | lib.dom.d.ts | 39393 |
@@ -67,15 +109,31 @@ Types related to database schemas, API responses, and backend data structures
 | RequestPriority | lib.dom.d.ts | 39395 |
 | RequestRedirect | lib.dom.d.ts | 39396 |
 | ResponseType | lib.dom.d.ts | 39400 |
+| SpeechSynthesisErrorCode | lib.dom.d.ts | 39411 |
+| WebTransportErrorSource | lib.dom.d.ts | 39426 |
 | XMLHttpRequestResponseType | lib.dom.d.ts | 39429 |
+| SuppressedError | lib.esnext.disposable.d.ts | 43 |
+| SuppressedErrorConstructor | lib.esnext.disposable.d.ts | 48 |
 | StandardSchemaV1 | standard-schema.d.cts | 2 |
 | Identity | util.d.cts | 44 |
 | SchemaClass | util.d.cts | 77 |
+| SafeParseError | util.d.cts | 104 |
 | $ZodStandardSchema | schemas.d.cts | 84 |
 | OptionalOutSchema | schemas.d.cts | 533 |
 | OptionalInSchema | schemas.d.cts | 538 |
 | SchemaPartInternals | schemas.d.cts | 1010 |
 | SchemaPart | schemas.d.cts | 1013 |
+| $ZodErrorMap | errors.d.cts | 116 |
+| $ZodError | errors.d.cts | 121 |
+| $ZodRealError | errors.d.cts | 132 |
+| $ZodFlattenedError | errors.d.cts | 135 |
+| _FlattenedError | errors.d.cts | 136 |
+| _ZodFormattedError | errors.d.cts | 144 |
+| $ZodFormattedError | errors.d.cts | 151 |
+| $ZodErrorTree | errors.d.cts | 156 |
+| $ZodAsyncError | core.d.cts | 26 |
+| $ZodEncodeError | core.d.cts | 29 |
+| $ZodErrorClass | parse.d.cts | 5 |
 | JSONSchemaMeta | registries.d.cts | 24 |
 | Schema | json-schema.d.cts | 1 |
 | _JSONSchema | json-schema.d.cts | 2 |
@@ -92,10 +150,14 @@ Types related to database schemas, API responses, and backend data structures
 | JSONSchemaGenerator | to-json-schema.d.cts | 63 |
 | ToJSONSchemaParams | to-json-schema.d.cts | 79 |
 | RegistryToJSONSchemaParams | to-json-schema.d.cts | 81 |
+| ZodError | errors.d.cts | 6 |
+| ZodSafeParseError | parse.d.cts | 9 |
 | _ZodJSONSchema | schemas.d.cts | 656 |
 | _ZodJSONSchemaInternals | schemas.d.cts | 664 |
 | ZodJSONSchemaInternals | schemas.d.cts | 665 |
 | ZodJSONSchema | schemas.d.cts | 669 |
+| inferFlattenedErrors | compat.d.cts | 25 |
+| inferFormattedError | compat.d.cts | 27 |
 | HTMLModElement | global.d.ts | 59 |
 | CampaignResponse | campaign.ts | 57 |
 | MailboxCreationRequest | mailbox.ts | 47 |
@@ -103,7 +165,22 @@ Types related to database schemas, API responses, and backend data structures
 | LoginResponse | auth.ts | 285 |
 | RegisterRequest | auth.ts | 296 |
 | PasswordResetRequest | auth.ts | 304 |
+| AuthError | auth.ts | 418 |
+| AuthErrorCode | auth.ts | 439 |
 | ConfigSchema | index.d.ts | 22 |
+| ResolverError | resolvers.d.ts | 8 |
+| SubmitErrorHandler | form.d.ts | 39 |
+| UseFormClearErrors | form.d.ts | 429 |
+| UseFormSetError | form.d.ts | 481 |
+| MultipleFieldErrors | errors.d.ts | 5 |
+| FieldError | errors.d.ts | 10 |
+| ErrorOption | errors.d.ts | 17 |
+| FieldErrorsImpl | errors.d.ts | 25 |
+| GlobalError | errors.d.ts | 28 |
+| FieldErrors | errors.d.ts | 32 |
+| InternalFieldErrors | errors.d.ts | 35 |
+| SerializedError | index.d.ts | 1240 |
+| GetSerializedErrorType | index.d.ts | 1297 |
 | EntityId | index.d.ts | 1811 |
 | EntityState | index.d.ts | 1830 |
 | EntityAdapterOptions | index.d.ts | 1837 |
@@ -112,6 +189,18 @@ Types related to database schemas, API responses, and backend data structures
 | EntitySelectors | index.d.ts | 1874 |
 | EntityStateFactory | index.d.ts | 1884 |
 | EntityAdapter | index.d.ts | 1891 |
+| TaskAbortError | index.d.ts | 2069 |
+| ListenerErrorInfo | index.d.ts | 2300 |
+| ListenerErrorHandler | index.d.ts | 2312 |
+| ErrorBarDataItem | ErrorBar.d.ts | 10 |
+| ErrorBarDirection | ErrorBar.d.ts | 25 |
+| ErrorBarDataPointFormatter | ErrorBar.d.ts | 26 |
+| ErrorBarProps | ErrorBar.d.ts | 30 |
+| ErrorBar | ErrorBar.d.ts | 45 |
+| ErrorBarsSettings | errorBarSlice.d.ts | 9 |
+| ErrorBarsState | errorBarSlice.d.ts | 21 |
+| AppliedChartDataWithErrorDomain | axisSelectors.d.ts | 93 |
+| ErrorValue | axisSelectors.d.ts | 115 |
 | EntityFilterProps | ui.ts | 200 |
 | EntityFilterProps | analytics.ts | 597 |
 | TeamMembersResponse | team.ts | 161 |
@@ -120,6 +209,7 @@ Types related to database schemas, API responses, and backend data structures
 | PaginatedResponse | common.ts | 27 |
 | ApiResponse | common.ts | 35 |
 | BaseEntity | base.ts | 9 |
+| FieldValidationError | base.ts | 74 |
 | UserSettingsResponse | user.ts | 83 |
 | BillingInfoResponse | billing.ts | 147 |
 | SecuritySettingsEntity | security.ts | 27 |
@@ -132,6 +222,8 @@ Types related to database schemas, API responses, and backend data structures
 | AppearanceSettingsResponse | appearance.ts | 60 |
 | TrackingSettingsResponse | tracking.ts | 59 |
 | ComplianceSettingsResponse | tracking.ts | 60 |
+| SettingsValidationError | navigation.ts | 30 |
+| SettingsApiError | navigation.ts | 37 |
 | WarmupResponse | accounts.ts | 84 |
 | AdminUsersResponse | admin.ts | 76 |
 | UsageLimitAlertsResponse | billing.ts | 134 |
@@ -143,13 +235,24 @@ Types related to database schemas, API responses, and backend data structures
 | PaymentMethodListResponse | billing.ts | 335 |
 | InvoiceListResponse | billing.ts | 336 |
 | SubscriptionPlanListResponse | billing.ts | 337 |
+| FormFieldError | forms.ts | 247 |
 | TSEntityName | index.d.ts | 1830 |
+| ParseError | babel-parser.d.ts | 221 |
 | ScaleIdentity | index.d.ts | 786 |
+| TypeBoxError | error.d.ts | 2 |
+| TemplateLiteralParserError | parse.d.ts | 2 |
+| TemplateLiteralFiniteError | finite.d.ts | 11 |
+| TemplateLiteralGenerateError | generate.d.ts | 9 |
+| TemplateLiteralPatternError | pattern.d.ts | 3 |
 | FromSchema | indexed.d.ts | 31 |
 | FromSchemaType | mapped.d.ts | 35 |
 | SchemaOptions | schema.d.ts | 2 |
 | TSchema | schema.d.ts | 23 |
 | TAnySchema | anyschema.d.ts | 33 |
+| TypeGuardUnknownTypeError | type.d.ts | 43 |
+| ExtendsResolverError | extends-check.d.ts | 3 |
+| ExpectedAssertionsErrors | index.d.ts | 89 |
+| JestAssertionError | index.d.ts | 167 |
 | RequestInfo | fetch.d.ts | 12 |
 | RequestCache | fetch.d.ts | 91 |
 | RequestCredentials | fetch.d.ts | 99 |
@@ -163,13 +266,19 @@ Types related to database schemas, API responses, and backend data structures
 | ResponseType | fetch.d.ts | 183 |
 | ResponseRedirectStatus | fetch.d.ts | 191 |
 | Response | fetch.d.ts | 193 |
+| ErrorEventInit | websocket.d.ts | 125 |
+| ErrorEvent | websocket.d.ts | 133 |
 | _Request | globals.d.ts | 6 |
 | _Response | globals.d.ts | 7 |
 | _RequestInit | globals.d.ts | 11 |
 | _ResponseInit | globals.d.ts | 13 |
 | _ReadableStreamBYOBRequest | web.d.ts | 17 |
+| ParserError | error-codes.d.ts | 2 |
+| ParserErrorHandler | error-codes.d.ts | 5 |
 | EntityErrorProducer | decode.d.ts | 17 |
 | EntityDecoder | decode.d.ts | 25 |
+| ErrorCallback | utils.d.ts | 13 |
+| ParameterError | validators.d.ts | 23 |
 | JSONSchema4TypeName | index.d.ts | 8 |
 | JSONSchema4Type | index.d.ts | 21 |
 | JSONSchema4Object | index.d.ts | 30 |
@@ -190,6 +299,7 @@ Types related to database schemas, API responses, and backend data structures
 | JSONSchema7Version | index.d.ts | 601 |
 | JSONSchema7Definition | index.d.ts | 607 |
 | JSONSchema7 | index.d.ts | 608 |
+| ValidationError | index.d.ts | 722 |
 | Request | index.d.ts | 8 |
 | RequestInit | index.d.ts | 30 |
 | RequestContext | index.d.ts | 48 |
@@ -197,12 +307,16 @@ Types related to database schemas, API responses, and backend data structures
 | RequestRedirect | index.d.ts | 83 |
 | RequestCredentials | index.d.ts | 84 |
 | RequestCache | index.d.ts | 86 |
+| SystemError | index.d.ts | 141 |
+| AbortError | index.d.ts | 145 |
+| FetchError | index.d.ts | 151 |
 | Response | index.d.ts | 159 |
 | ResponseType | index.d.ts | 173 |
 | ResponseInit | index.d.ts | 181 |
 | RequestInfo | index.d.ts | 203 |
+| ParseError | index.d.ts | 428 |
 
-### Frontend/UI (326 types)
+### Frontend/UI (320 types)
 
 Types for UI components, form data, and user interface state management
 
@@ -337,11 +451,7 @@ Types for UI components, form data, and user interface state management
 | ScatterProps | Scatter.d.ts | 30 |
 | BaseScatterSvgProps | Scatter.d.ts | 55 |
 | Props | Scatter.d.ts | 56 |
-| ErrorBarDataPointFormatter | ErrorBar.d.ts | 26 |
-| ErrorBarProps | ErrorBar.d.ts | 30 |
 | Props | ErrorBar.d.ts | 44 |
-| ErrorBarsSettings | errorBarSlice.d.ts | 9 |
-| ErrorBarsState | errorBarSlice.d.ts | 21 |
 | LegendSettings | legendSlice.d.ts | 4 |
 | LegendState | legendSlice.d.ts | 17 |
 | ChartOptions | optionsSlice.d.ts | 13 |
@@ -370,8 +480,6 @@ Types for UI components, form data, and user interface state management
 | XorYorZType | axisSelectors.d.ts | 17 |
 | XorYType | axisSelectors.d.ts | 22 |
 | AxisWithTicksSettings | axisSelectors.d.ts | 23 |
-| AppliedChartDataWithErrorDomain | axisSelectors.d.ts | 93 |
-| ErrorValue | axisSelectors.d.ts | 115 |
 | AxisRange | axisSelectors.d.ts | 282 |
 | AxisOffsetSteps | axisSelectors.d.ts | 344 |
 | BaseAxisWithScale | axisSelectors.d.ts | 415 |
@@ -535,7 +643,7 @@ Types for UI components, form data, and user interface state management
 | FormData | index.d.ts | 30 |
 | InputBuffer | index.d.ts | 6 |
 
-### Shared/Common (5280 types)
+### Shared/Common (5172 types)
 
 Common domain entities, validation schemas, and shared utility types
 
@@ -572,20 +680,6 @@ Common domain entities, validation schemas, and shared utility types
 | RegExpExecArray | lib.es5.d.ts | 978 |
 | RegExp | lib.es5.d.ts | 993 |
 | RegExpConstructor | lib.es5.d.ts | 1025 |
-| Error | lib.es5.d.ts | 1075 |
-| ErrorConstructor | lib.es5.d.ts | 1081 |
-| EvalError | lib.es5.d.ts | 1089 |
-| EvalErrorConstructor | lib.es5.d.ts | 1092 |
-| RangeError | lib.es5.d.ts | 1100 |
-| RangeErrorConstructor | lib.es5.d.ts | 1103 |
-| ReferenceError | lib.es5.d.ts | 1111 |
-| ReferenceErrorConstructor | lib.es5.d.ts | 1114 |
-| SyntaxError | lib.es5.d.ts | 1122 |
-| SyntaxErrorConstructor | lib.es5.d.ts | 1125 |
-| TypeError | lib.es5.d.ts | 1133 |
-| TypeErrorConstructor | lib.es5.d.ts | 1136 |
-| URIError | lib.es5.d.ts | 1144 |
-| URIErrorConstructor | lib.es5.d.ts | 1147 |
 | JSON | lib.es5.d.ts | 1155 |
 | ReadonlyArray | lib.es5.d.ts | 1191 |
 | ConcatArray | lib.es5.d.ts | 1318 |
@@ -647,7 +741,6 @@ Common domain entities, validation schemas, and shared utility types
 | Number | lib.es5.d.ts | 4572 |
 | Date | lib.es5.d.ts | 4581 |
 | AddEventListenerOptions | lib.dom.d.ts | 23 |
-| AddressErrors | lib.dom.d.ts | 29 |
 | AesCbcParams | lib.dom.d.ts | 42 |
 | AesCtrParams | lib.dom.d.ts | 46 |
 | AesDerivedKeyParams | lib.dom.d.ts | 51 |
@@ -743,7 +836,6 @@ Common domain entities, validation schemas, and shared utility types
 | EncodedAudioChunkMetadata | lib.dom.d.ts | 638 |
 | EncodedVideoChunkInit | lib.dom.d.ts | 642 |
 | EncodedVideoChunkMetadata | lib.dom.d.ts | 649 |
-| ErrorEventInit | lib.dom.d.ts | 653 |
 | EventInit | lib.dom.d.ts | 661 |
 | EventListenerOptions | lib.dom.d.ts | 667 |
 | EventModifierInit | lib.dom.d.ts | 671 |
@@ -843,7 +935,6 @@ Common domain entities, validation schemas, and shared utility types
 | PageSwapEventInit | lib.dom.d.ts | 1306 |
 | PageTransitionEventInit | lib.dom.d.ts | 1311 |
 | PannerOptions | lib.dom.d.ts | 1315 |
-| PayerErrors | lib.dom.d.ts | 1332 |
 | PaymentCurrencyAmount | lib.dom.d.ts | 1338 |
 | PaymentDetailsBase | lib.dom.d.ts | 1343 |
 | PaymentDetailsInit | lib.dom.d.ts | 1349 |
@@ -854,7 +945,6 @@ Common domain entities, validation schemas, and shared utility types
 | PaymentMethodData | lib.dom.d.ts | 1379 |
 | PaymentOptions | lib.dom.d.ts | 1384 |
 | PaymentShippingOption | lib.dom.d.ts | 1395 |
-| PaymentValidationErrors | lib.dom.d.ts | 1402 |
 | Pbkdf2Params | lib.dom.d.ts | 1408 |
 | PerformanceMarkOptions | lib.dom.d.ts | 1414 |
 | PerformanceMeasureOptions | lib.dom.d.ts | 1419 |
@@ -893,8 +983,6 @@ Common domain entities, validation schemas, and shared utility types
 | RTCEncodedAudioFrameMetadata | lib.dom.d.ts | 1667 |
 | RTCEncodedFrameMetadata | lib.dom.d.ts | 1671 |
 | RTCEncodedVideoFrameMetadata | lib.dom.d.ts | 1679 |
-| RTCErrorEventInit | lib.dom.d.ts | 1689 |
-| RTCErrorInit | lib.dom.d.ts | 1693 |
 | RTCIceCandidateInit | lib.dom.d.ts | 1702 |
 | RTCIceCandidatePairStats | lib.dom.d.ts | 1709 |
 | RTCIceServer | lib.dom.d.ts | 1734 |
@@ -904,7 +992,6 @@ Common domain entities, validation schemas, and shared utility types
 | RTCOfferAnswerOptions | lib.dom.d.ts | 1803 |
 | RTCOfferOptions | lib.dom.d.ts | 1806 |
 | RTCOutboundRtpStreamStats | lib.dom.d.ts | 1812 |
-| RTCPeerConnectionIceErrorEventInit | lib.dom.d.ts | 1843 |
 | RTCPeerConnectionIceEventInit | lib.dom.d.ts | 1851 |
 | RTCReceivedRtpStreamStats | lib.dom.d.ts | 1855 |
 | RTCRtcpParameters | lib.dom.d.ts | 1861 |
@@ -951,7 +1038,6 @@ Common domain entities, validation schemas, and shared utility types
 | SecurityPolicyViolationEventInit | lib.dom.d.ts | 2136 |
 | ShadowRootInit | lib.dom.d.ts | 2151 |
 | ShareData | lib.dom.d.ts | 2160 |
-| SpeechSynthesisErrorEventInit | lib.dom.d.ts | 2167 |
 | SpeechSynthesisEventInit | lib.dom.d.ts | 2171 |
 | StartViewTransitionOptions | lib.dom.d.ts | 2179 |
 | StaticRangeInit | lib.dom.d.ts | 2184 |
@@ -995,7 +1081,6 @@ Common domain entities, validation schemas, and shared utility types
 | WebGLContextAttributes | lib.dom.d.ts | 2482 |
 | WebGLContextEventInit | lib.dom.d.ts | 2494 |
 | WebTransportCloseInfo | lib.dom.d.ts | 2498 |
-| WebTransportErrorOptions | lib.dom.d.ts | 2503 |
 | WebTransportHash | lib.dom.d.ts | 2508 |
 | WebTransportOptions | lib.dom.d.ts | 2513 |
 | WebTransportSendOptions | lib.dom.d.ts | 2520 |
@@ -1213,7 +1298,6 @@ Common domain entities, validation schemas, and shared utility types
 | ElementInternals | lib.dom.d.ts | 11139 |
 | EncodedAudioChunk | lib.dom.d.ts | 11218 |
 | EncodedVideoChunk | lib.dom.d.ts | 11261 |
-| ErrorEvent | lib.dom.d.ts | 11304 |
 | Event | lib.dom.d.ts | 11347 |
 | EventCounts | lib.dom.d.ts | 11480 |
 | EventListener | lib.dom.d.ts | 11489 |
@@ -1242,7 +1326,6 @@ Common domain entities, validation schemas, and shared utility types
 | FontFaceSetLoadEvent | lib.dom.d.ts | 12195 |
 | FontFaceSource | lib.dom.d.ts | 12209 |
 | FragmentDirective | lib.dom.d.ts | 12292 |
-| GPUError | lib.dom.d.ts | 12306 |
 | GainNode | lib.dom.d.ts | 12320 |
 | Gamepad | lib.dom.d.ts | 12339 |
 | GamepadEvent | lib.dom.d.ts | 12431 |
@@ -1251,7 +1334,6 @@ Common domain entities, validation schemas, and shared utility types
 | Geolocation | lib.dom.d.ts | 12482 |
 | GeolocationCoordinates | lib.dom.d.ts | 12514 |
 | GeolocationPosition | lib.dom.d.ts | 12576 |
-| GeolocationPositionError | lib.dom.d.ts | 12607 |
 | GlobalEventHandlersEventMap | lib.dom.d.ts | 12633 |
 | GlobalEventHandlers | lib.dom.d.ts | 12741 |
 | HTMLAllCollection | lib.dom.d.ts | 12977 |
@@ -1390,7 +1472,6 @@ Common domain entities, validation schemas, and shared utility types
 | MediaDevices | lib.dom.d.ts | 19761 |
 | MediaElementAudioSourceNode | lib.dom.d.ts | 19804 |
 | MediaEncryptedEvent | lib.dom.d.ts | 19823 |
-| MediaError | lib.dom.d.ts | 19848 |
 | MediaKeyMessageEvent | lib.dom.d.ts | 19882 |
 | MediaKeySessionEventMap | lib.dom.d.ts | 19902 |
 | MediaKeySession | lib.dom.d.ts | 19913 |
@@ -1469,7 +1550,6 @@ Common domain entities, validation schemas, and shared utility types
 | OffscreenCanvas | lib.dom.d.ts | 22367 |
 | OffscreenCanvasRenderingContext2D | lib.dom.d.ts | 22422 |
 | OscillatorNode | lib.dom.d.ts | 22437 |
-| OverconstrainedError | lib.dom.d.ts | 22478 |
 | PageRevealEvent | lib.dom.d.ts | 22497 |
 | PageSwapEvent | lib.dom.d.ts | 22516 |
 | PageTransitionEvent | lib.dom.d.ts | 22541 |
@@ -1522,15 +1602,12 @@ Common domain entities, validation schemas, and shared utility types
 | RTCDtlsTransport | lib.dom.d.ts | 24650 |
 | RTCEncodedAudioFrame | lib.dom.d.ts | 24683 |
 | RTCEncodedVideoFrame | lib.dom.d.ts | 24710 |
-| RTCError | lib.dom.d.ts | 24743 |
-| RTCErrorEvent | lib.dom.d.ts | 24786 |
 | RTCIceCandidate | lib.dom.d.ts | 24805 |
 | RTCIceCandidatePair | lib.dom.d.ts | 24904 |
 | RTCIceTransportEventMap | lib.dom.d.ts | 24911 |
 | RTCIceTransport | lib.dom.d.ts | 24922 |
 | RTCPeerConnectionEventMap | lib.dom.d.ts | 24958 |
 | RTCPeerConnection | lib.dom.d.ts | 24975 |
-| RTCPeerConnectionIceErrorEvent | lib.dom.d.ts | 25200 |
 | RTCPeerConnectionIceEvent | lib.dom.d.ts | 25223 |
 | RTCRtpReceiver | lib.dom.d.ts | 25242 |
 | RTCRtpScriptTransform | lib.dom.d.ts | 25309 |
@@ -1682,7 +1759,6 @@ Common domain entities, validation schemas, and shared utility types
 | SpeechRecognitionResultList | lib.dom.d.ts | 31015 |
 | SpeechSynthesisEventMap | lib.dom.d.ts | 31036 |
 | SpeechSynthesis | lib.dom.d.ts | 31045 |
-| SpeechSynthesisErrorEvent | lib.dom.d.ts | 31112 |
 | SpeechSynthesisEvent | lib.dom.d.ts | 31131 |
 | SpeechSynthesisUtteranceEventMap | lib.dom.d.ts | 31169 |
 | SpeechSynthesisUtterance | lib.dom.d.ts | 31184 |
@@ -1788,7 +1864,6 @@ Common domain entities, validation schemas, and shared utility types
 | WebTransport | lib.dom.d.ts | 36140 |
 | WebTransportBidirectionalStream | lib.dom.d.ts | 36202 |
 | WebTransportDatagramDuplexStream | lib.dom.d.ts | 36228 |
-| WebTransportError | lib.dom.d.ts | 36280 |
 | WheelEvent | lib.dom.d.ts | 36305 |
 | WindowEventMap | lib.dom.d.ts | 36343 |
 | Window | lib.dom.d.ts | 36358 |
@@ -1814,11 +1889,9 @@ Common domain entities, validation schemas, and shared utility types
 | AudioDataOutputCallback | lib.dom.d.ts | 37957 |
 | BlobCallback | lib.dom.d.ts | 37961 |
 | CustomElementConstructor | lib.dom.d.ts | 37965 |
-| DecodeErrorCallback | lib.dom.d.ts | 37969 |
 | DecodeSuccessCallback | lib.dom.d.ts | 37973 |
 | EncodedAudioChunkOutputCallback | lib.dom.d.ts | 37977 |
 | EncodedVideoChunkOutputCallback | lib.dom.d.ts | 37981 |
-| ErrorCallback | lib.dom.d.ts | 37985 |
 | FileCallback | lib.dom.d.ts | 37989 |
 | FileSystemEntriesCallback | lib.dom.d.ts | 37993 |
 | FileSystemEntryCallback | lib.dom.d.ts | 37997 |
@@ -1829,12 +1902,9 @@ Common domain entities, validation schemas, and shared utility types
 | MutationCallback | lib.dom.d.ts | 38025 |
 | NotificationPermissionCallback | lib.dom.d.ts | 38029 |
 | OnBeforeUnloadEventHandlerNonNull | lib.dom.d.ts | 38033 |
-| OnErrorEventHandlerNonNull | lib.dom.d.ts | 38037 |
 | PerformanceObserverCallback | lib.dom.d.ts | 38041 |
 | PositionCallback | lib.dom.d.ts | 38045 |
-| PositionErrorCallback | lib.dom.d.ts | 38049 |
 | QueuingStrategySize | lib.dom.d.ts | 38053 |
-| RTCPeerConnectionErrorCallback | lib.dom.d.ts | 38057 |
 | RTCSessionDescriptionCallback | lib.dom.d.ts | 38061 |
 | RemotePlaybackAvailabilityCallback | lib.dom.d.ts | 38065 |
 | ReportingObserverCallback | lib.dom.d.ts | 38069 |
@@ -1852,7 +1922,6 @@ Common domain entities, validation schemas, and shared utility types
 | VideoFrameOutputCallback | lib.dom.d.ts | 38117 |
 | ViewTransitionUpdateCallback | lib.dom.d.ts | 38125 |
 | VoidFunction | lib.dom.d.ts | 38129 |
-| WebCodecsErrorCallback | lib.dom.d.ts | 38133 |
 | HTMLElementTagNameMap | lib.dom.d.ts | 38137 |
 | HTMLElementDeprecatedTagNameMap | lib.dom.d.ts | 38252 |
 | SVGElementTagNameMap | lib.dom.d.ts | 38284 |
@@ -1914,7 +1983,6 @@ Common domain entities, validation schemas, and shared utility types
 | NamedCurve | lib.dom.d.ts | 39213 |
 | OffscreenRenderingContext | lib.dom.d.ts | 39214 |
 | OnBeforeUnloadEventHandler | lib.dom.d.ts | 39215 |
-| OnErrorEventHandler | lib.dom.d.ts | 39216 |
 | OptionalPostfixToken | lib.dom.d.ts | 39217 |
 | OptionalPrefixToken | lib.dom.d.ts | 39218 |
 | PerformanceEntryList | lib.dom.d.ts | 39219 |
@@ -1986,7 +2054,6 @@ Common domain entities, validation schemas, and shared utility types
 | DocumentVisibilityState | lib.dom.d.ts | 39288 |
 | EncodedAudioChunkType | lib.dom.d.ts | 39289 |
 | EncodedVideoChunkType | lib.dom.d.ts | 39290 |
-| EndOfStreamError | lib.dom.d.ts | 39291 |
 | EndingType | lib.dom.d.ts | 39292 |
 | FileSystemHandleKind | lib.dom.d.ts | 39293 |
 | FillLightMode | lib.dom.d.ts | 39294 |
@@ -2056,7 +2123,6 @@ Common domain entities, validation schemas, and shared utility types
 | RTCDtlsRole | lib.dom.d.ts | 39360 |
 | RTCDtlsTransportState | lib.dom.d.ts | 39361 |
 | RTCEncodedVideoFrameType | lib.dom.d.ts | 39362 |
-| RTCErrorDetailType | lib.dom.d.ts | 39363 |
 | RTCIceCandidateType | lib.dom.d.ts | 39364 |
 | RTCIceConnectionState | lib.dom.d.ts | 39366 |
 | RTCIceGathererState | lib.dom.d.ts | 39367 |
@@ -2096,7 +2162,6 @@ Common domain entities, validation schemas, and shared utility types
 | ServiceWorkerUpdateViaCache | lib.dom.d.ts | 39408 |
 | ShadowRootMode | lib.dom.d.ts | 39409 |
 | SlotAssignmentMode | lib.dom.d.ts | 39410 |
-| SpeechSynthesisErrorCode | lib.dom.d.ts | 39411 |
 | TextTrackKind | lib.dom.d.ts | 39412 |
 | TextTrackMode | lib.dom.d.ts | 39413 |
 | TouchType | lib.dom.d.ts | 39414 |
@@ -2111,7 +2176,6 @@ Common domain entities, validation schemas, and shared utility types
 | WakeLockType | lib.dom.d.ts | 39423 |
 | WebGLPowerPreference | lib.dom.d.ts | 39424 |
 | WebTransportCongestionControl | lib.dom.d.ts | 39425 |
-| WebTransportErrorSource | lib.dom.d.ts | 39426 |
 | WorkerType | lib.dom.d.ts | 39427 |
 | WriteCommandType | lib.dom.d.ts | 39428 |
 | AudioParam | lib.dom.iterable.d.ts | 23 |
@@ -2390,8 +2454,6 @@ Common domain entities, validation schemas, and shared utility types
 | SymbolConstructor | lib.esnext.disposable.d.ts | 23 |
 | Disposable | lib.esnext.disposable.d.ts | 35 |
 | AsyncDisposable | lib.esnext.disposable.d.ts | 39 |
-| SuppressedError | lib.esnext.disposable.d.ts | 43 |
-| SuppressedErrorConstructor | lib.esnext.disposable.d.ts | 48 |
 | DisposableStack | lib.esnext.disposable.d.ts | 55 |
 | DisposableStackConstructor | lib.esnext.disposable.d.ts | 116 |
 | AsyncDisposableStack | lib.esnext.disposable.d.ts | 122 |
@@ -2472,7 +2534,6 @@ Common domain entities, validation schemas, and shared utility types
 | Numeric | util.d.cts | 97 |
 | SafeParseResult | util.d.cts | 98 |
 | SafeParseSuccess | util.d.cts | 99 |
-| SafeParseError | util.d.cts | 104 |
 | PropValues | util.d.cts | 109 |
 | PrimitiveSet | util.d.cts | 110 |
 | EmptyToNever | util.d.cts | 151 |
@@ -2830,23 +2891,12 @@ Common domain entities, validation schemas, and shared utility types
 | $ZodInternalIssue | errors.d.cts | 106 |
 | RawIssue | errors.d.cts | 107 |
 | $ZodRawIssue | errors.d.cts | 115 |
-| $ZodErrorMap | errors.d.cts | 116 |
-| $ZodError | errors.d.cts | 121 |
-| $ZodRealError | errors.d.cts | 132 |
-| $ZodFlattenedError | errors.d.cts | 135 |
-| _FlattenedError | errors.d.cts | 136 |
-| _ZodFormattedError | errors.d.cts | 144 |
-| $ZodFormattedError | errors.d.cts | 151 |
-| $ZodErrorTree | errors.d.cts | 156 |
 | ZodTrait | core.d.cts | 4 |
 | $constructor | core.d.cts | 10 |
 | $brand | core.d.cts | 20 |
 | $ZodBranded | core.d.cts | 25 |
-| $ZodAsyncError | core.d.cts | 26 |
-| $ZodEncodeError | core.d.cts | 29 |
 | output | core.d.cts | 37 |
 | $ZodConfig | core.d.cts | 43 |
-| $ZodErrorClass | parse.d.cts | 5 |
 | $Parse | parse.d.cts | 8 |
 | $ParseAsync | parse.d.cts | 14 |
 | $SafeParse | parse.d.cts | 20 |
@@ -2995,11 +3045,9 @@ Common domain entities, validation schemas, and shared utility types
 | EmitParams | to-json-schema.d.cts | 33 |
 | Seen | to-json-schema.d.cts | 48 |
 | ZodIssue | errors.d.cts | 4 |
-| ZodError | errors.d.cts | 6 |
 | IssueData | errors.d.cts | 30 |
 | ZodSafeParseResult | parse.d.cts | 3 |
 | ZodSafeParseSuccess | parse.d.cts | 4 |
-| ZodSafeParseError | parse.d.cts | 9 |
 | ZodType | schemas.d.cts | 4 |
 | _ZodType | schemas.d.cts | 76 |
 | _ZodString | schemas.d.cts | 79 |
@@ -3078,8 +3126,6 @@ Common domain entities, validation schemas, and shared utility types
 | ZodFunction | schemas.d.cts | 616 |
 | ZodCustom | schemas.d.cts | 645 |
 | ZodInstanceOfParams | schemas.d.cts | 652 |
-| inferFlattenedErrors | compat.d.cts | 25 |
-| inferFormattedError | compat.d.cts | 27 |
 | BRAND | compat.d.cts | 29 |
 | ZodRawShape | compat.d.cts | 47 |
 | ZodFirstPartyTypeKind | compat.d.cts | 49 |
@@ -3443,8 +3489,6 @@ Common domain entities, validation schemas, and shared utility types
 | PasswordReset | auth.ts | 312 |
 | AuthStatus | auth.ts | 316 |
 | AuthState | auth.ts | 330 |
-| AuthError | auth.ts | 418 |
-| AuthErrorCode | auth.ts | 439 |
 | Tab | tab.ts | 3 |
 | ClassPropKey | types.d.ts | 17 |
 | ClassValue | types.d.ts | 18 |
@@ -3520,7 +3564,6 @@ Common domain entities, validation schemas, and shared utility types
 | UseFieldArrayReplace | fieldArray.d.ts | 183 |
 | UseFieldArrayReturn | fieldArray.d.ts | 184 |
 | ResolverSuccess | resolvers.d.ts | 4 |
-| ResolverError | resolvers.d.ts | 8 |
 | ResolverResult | resolvers.d.ts | 12 |
 | ResolverOptions | resolvers.d.ts | 13 |
 | Resolver | resolvers.d.ts | 19 |
@@ -3533,7 +3576,6 @@ Common domain entities, validation schemas, and shared utility types
 | CriteriaMode | form.d.ts | 30 |
 | SubmitHandler | form.d.ts | 31 |
 | FormSubmitHandler | form.d.ts | 32 |
-| SubmitErrorHandler | form.d.ts | 39 |
 | SetValueConfig | form.d.ts | 40 |
 | TriggerConfig | form.d.ts | 45 |
 | ResetFieldConfig | form.d.ts | 48 |
@@ -3552,9 +3594,7 @@ Common domain entities, validation schemas, and shared utility types
 | UseFormSubscribe | form.d.ts | 306 |
 | UseFormWatch | form.d.ts | 316 |
 | UseFormTrigger | form.d.ts | 412 |
-| UseFormClearErrors | form.d.ts | 429 |
 | UseFormSetValue | form.d.ts | 459 |
-| UseFormSetError | form.d.ts | 481 |
 | UseFormUnregister | form.d.ts | 502 |
 | UseFormHandleSubmit | form.d.ts | 526 |
 | UseFormResetField | form.d.ts | 542 |
@@ -3597,14 +3637,7 @@ Common domain entities, validation schemas, and shared utility types
 | Field | fields.d.ts | 20 |
 | FieldRefs | fields.d.ts | 28 |
 | Message | errors.d.ts | 4 |
-| MultipleFieldErrors | errors.d.ts | 5 |
-| FieldError | errors.d.ts | 10 |
-| ErrorOption | errors.d.ts | 17 |
 | DeepRequired | errors.d.ts | 22 |
-| FieldErrorsImpl | errors.d.ts | 25 |
-| GlobalError | errors.d.ts | 28 |
-| FieldErrors | errors.d.ts | 32 |
-| InternalFieldErrors | errors.d.ts | 35 |
 | ValidationValue | validator.d.ts | 5 |
 | ValidationRule | validator.d.ts | 6 |
 | ValidationValueMessage | validator.d.ts | 7 |
@@ -3851,7 +3884,6 @@ Common domain entities, validation schemas, and shared utility types
 | CombinedSliceReducer | index.d.ts | 1024 |
 | InitialState | index.d.ts | 1224 |
 | BaseThunkAPI | index.d.ts | 1227 |
-| SerializedError | index.d.ts | 1240 |
 | RejectWithValue | index.d.ts | 1246 |
 | FulfillWithMeta | index.d.ts | 1252 |
 | AsyncThunkConfig | index.d.ts | 1265 |
@@ -3863,7 +3895,6 @@ Common domain entities, validation schemas, and shared utility types
 | GetPendingMeta | index.d.ts | 1288 |
 | GetFulfilledMeta | index.d.ts | 1291 |
 | GetRejectedMeta | index.d.ts | 1294 |
-| GetSerializedErrorType | index.d.ts | 1297 |
 | MaybePromise | index.d.ts | 1300 |
 | AsyncThunkPayloadCreatorReturnValue | index.d.ts | 1307 |
 | AsyncThunkPayloadCreator | index.d.ts | 1314 |
@@ -3924,7 +3955,6 @@ Common domain entities, validation schemas, and shared utility types
 | UnknownAsyncThunkAction | index.d.ts | 2028 |
 | AnyAsyncThunk | index.d.ts | 2029 |
 | ActionsFromAsyncThunk | index.d.ts | 2040 |
-| TaskAbortError | index.d.ts | 2069 |
 | TypedActionCreatorWithMatchFunction | index.d.ts | 2080 |
 | AnyListenerPredicate | index.d.ts | 2084 |
 | ListenerPredicate | index.d.ts | 2086 |
@@ -3942,8 +3972,6 @@ Common domain entities, validation schemas, and shared utility types
 | ForkOptions | index.d.ts | 2165 |
 | ListenerEffectAPI | index.d.ts | 2173 |
 | ListenerEffect | index.d.ts | 2295 |
-| ListenerErrorInfo | index.d.ts | 2300 |
-| ListenerErrorHandler | index.d.ts | 2312 |
 | CreateListenerMiddlewareOptions | index.d.ts | 2316 |
 | ListenerMiddleware | index.d.ts | 2324 |
 | ListenerMiddlewareInstance | index.d.ts | 2328 |
@@ -3994,9 +4022,6 @@ Common domain entities, validation schemas, and shared utility types
 | ScatterPointNode | Scatter.d.ts | 12 |
 | ScatterPointItem | Scatter.d.ts | 17 |
 | ScatterCustomizedShape | Scatter.d.ts | 26 |
-| ErrorBarDataItem | ErrorBar.d.ts | 10 |
-| ErrorBarDirection | ErrorBar.d.ts | 25 |
-| ErrorBar | ErrorBar.d.ts | 45 |
 | IfOverflow | IfOverflow.d.ts | 1 |
 | Sign | getTicks.d.ts | 3 |
 | GridLineType | CartesianGrid.d.ts | 18 |
@@ -4240,7 +4265,6 @@ Common domain entities, validation schemas, and shared utility types
 | ActionResult | base.ts | 16 |
 | CompanyInfo | base.ts | 19 |
 | BillingAddress | base.ts | 28 |
-| FieldValidationError | base.ts | 74 |
 | SettingsValidationResult | base.ts | 80 |
 | DeepPartial | base.ts | 87 |
 | UserProfileData | user.ts | 8 |
@@ -4285,8 +4309,6 @@ Common domain entities, validation schemas, and shared utility types
 | TrackingFormValues | tracking.ts | 53 |
 | SettingsTab | navigation.ts | 6 |
 | SettingsNavItem | navigation.ts | 17 |
-| SettingsValidationError | navigation.ts | 30 |
-| SettingsApiError | navigation.ts | 37 |
 | SettingsData | consolidated.ts | 20 |
 | AllSettings | consolidated.ts | 82 |
 | EmailAccount | accounts.ts | 1 |
@@ -4368,7 +4390,6 @@ Common domain entities, validation schemas, and shared utility types
 | EmailAccountFormValues | forms.ts | 242 |
 | ProfileFormValues | forms.ts | 243 |
 | PasswordSettingsFormValues | forms.ts | 244 |
-| FormFieldError | forms.ts | 247 |
 | FormValidationResult | forms.ts | 253 |
 | FieldValidationType | forms.ts | 259 |
 | EmailsType | inbox.ts | 77 |
@@ -4750,7 +4771,6 @@ Common domain entities, validation schemas, and shared utility types
 | SourceType | babel-parser.d.ts | 101 |
 | Options | babel-parser.d.ts | 102 |
 | ParserOptions | babel-parser.d.ts | 220 |
-| ParseError | babel-parser.d.ts | 221 |
 | ParseResult | babel-parser.d.ts | 225 |
 | TemplateBuilderOptions | index.d.ts | 4 |
 | TemplateBuilder | index.d.ts | 45 |
@@ -5091,7 +5111,6 @@ Common domain entities, validation schemas, and shared utility types
 | TRefUnsafe | ref.d.ts | 10 |
 | TupleStatic | tuple.d.ts | 4 |
 | TTuple | tuple.d.ts | 5 |
-| TypeBoxError | error.d.ts | 2 |
 | StringFormatOption | string.d.ts | 3 |
 | StringContentEncodingOption | string.d.ts | 4 |
 | StringOptions | string.d.ts | 5 |
@@ -5103,16 +5122,13 @@ Common domain entities, validation schemas, and shared utility types
 | TInteger | integer.d.ts | 10 |
 | BigIntOptions | bigint.d.ts | 3 |
 | TBigInt | bigint.d.ts | 10 |
-| TemplateLiteralParserError | parse.d.ts | 2 |
 | Expression | parse.d.ts | 4 |
 | ExpressionConst | parse.d.ts | 5 |
 | ExpressionAnd | parse.d.ts | 9 |
 | ExpressionOr | parse.d.ts | 13 |
-| TemplateLiteralFiniteError | finite.d.ts | 11 |
 | TFromTemplateLiteralKind | finite.d.ts | 13 |
 | TFromTemplateLiteralKinds | finite.d.ts | 14 |
 | TIsTemplateLiteralFinite | finite.d.ts | 16 |
-| TemplateLiteralGenerateError | generate.d.ts | 9 |
 | TStringReduceUnary | generate.d.ts | 11 |
 | TStringReduceBinary | generate.d.ts | 12 |
 | TStringReduceMany | generate.d.ts | 13 |
@@ -5125,7 +5141,6 @@ Common domain entities, validation schemas, and shared utility types
 | FromTerminal | syntax.d.ts | 14 |
 | FromString | syntax.d.ts | 15 |
 | TTemplateLiteralSyntax | syntax.d.ts | 17 |
-| TemplateLiteralPatternError | pattern.d.ts | 3 |
 | TemplateLiteralStaticKind | template-literal.d.ts | 15 |
 | TemplateLiteralStatic | template-literal.d.ts | 18 |
 | TTemplateLiteralKind | template-literal.d.ts | 19 |
@@ -5383,7 +5398,6 @@ Common domain entities, validation schemas, and shared utility types
 | TVoid | void.d.ts | 3 |
 | TKind | schema.d.ts | 20 |
 | TArgument | argument.d.ts | 3 |
-| TypeGuardUnknownTypeError | type.d.ts | 43 |
 | FormatRegistryValidationFunction | format.d.ts | 1 |
 | TypeRegistryValidationFunction | type.d.ts | 1 |
 | TCompositeKeys | composite.d.ts | 9 |
@@ -5404,7 +5418,6 @@ Common domain entities, validation schemas, and shared utility types
 | TFromProperties | exclude-from-mapped-result.d.ts | 5 |
 | TFromMappedResult | exclude-from-mapped-result.d.ts | 8 |
 | TExcludeFromMappedResult | exclude-from-mapped-result.d.ts | 9 |
-| ExtendsResolverError | extends-check.d.ts | 3 |
 | ExtendsResult | extends-check.d.ts | 5 |
 | TFromProperties | extends-from-mapped-result.d.ts | 5 |
 | TFromMappedResult | extends-from-mapped-result.d.ts | 8 |
@@ -5526,11 +5539,9 @@ Common domain entities, validation schemas, and shared utility types
 | DeepAsymmetricMatcher | index.d.ts | 66 |
 | Expect | index.d.ts | 74 |
 | ExpectationResult | index.d.ts | 85 |
-| ExpectedAssertionsErrors | index.d.ts | 89 |
 | FunctionParameters | index.d.ts | 113 |
 | FunctionParametersInternal | index.d.ts | 123 |
 | Inverse | index.d.ts | 160 |
-| JestAssertionError | index.d.ts | 167 |
 | MatcherContext | index.d.ts | 173 |
 | MatcherFunction | index.d.ts | 175 |
 | MatcherFunctionWithContext | index.d.ts | 178 |
@@ -5620,8 +5631,6 @@ Common domain entities, validation schemas, and shared utility types
 | CloseEvent | websocket.d.ts | 83 |
 | MessageEventInit | websocket.d.ts | 94 |
 | MessageEvent | websocket.d.ts | 102 |
-| ErrorEventInit | websocket.d.ts | 125 |
-| ErrorEvent | websocket.d.ts | 133 |
 | WebSocketInit | websocket.d.ts | 146 |
 | EventSourceEventMap | eventsource.d.ts | 10 |
 | EventSource | eventsource.d.ts | 16 |
@@ -5688,8 +5697,6 @@ Common domain entities, validation schemas, and shared utility types
 | EOFToken | token.d.ts | 76 |
 | CharacterToken | token.d.ts | 79 |
 | Token | token.d.ts | 83 |
-| ParserError | error-codes.d.ts | 2 |
-| ParserErrorHandler | error-codes.d.ts | 5 |
 | ERR | error-codes.d.ts | 6 |
 | Preprocessor | preprocessor.d.ts | 2 |
 | BinTrieFlags | decode.d.ts | 1 |
@@ -5728,14 +5735,12 @@ Common domain entities, validation schemas, and shared utility types
 | CreateCookieOptions | cookie.d.ts | 16 |
 | Cookie | cookie.d.ts | 51 |
 | Callback | utils.d.ts | 5 |
-| ErrorCallback | utils.d.ts | 13 |
 | Nullable | utils.d.ts | 20 |
 | PromiseCallback | utils.d.ts | 26 |
 | Store | store.d.ts | 17 |
 | MemoryCookieStoreIndex | memstore.d.ts | 8 |
 | MemoryCookieStore | memstore.d.ts | 20 |
 | GetPublicSuffixOptions | getPublicSuffix.d.ts | 5 |
-| ParameterError | validators.d.ts | 23 |
 | SetCookieOptions | cookieJar.d.ts | 9 |
 | GetCookiesOptions | cookieJar.d.ts | 61 |
 | CreateCookieJarOptions | cookieJar.d.ts | 120 |
@@ -5743,7 +5748,6 @@ Common domain entities, validation schemas, and shared utility types
 | FinalizationRegistryConstructor | index.d.ts | 16 |
 | WeakRefConstructor | index.d.ts | 18 |
 | ValidationResult | index.d.ts | 717 |
-| ValidationError | index.d.ts | 722 |
 | ReadableOptions | index.d.ts | 13 |
 | Options | index.d.ts | 22 |
 | AbortSignal | externals.d.ts | 5 |
@@ -5752,9 +5756,6 @@ Common domain entities, validation schemas, and shared utility types
 | BlobOptions | index.d.ts | 113 |
 | Blob | index.d.ts | 118 |
 | Body | index.d.ts | 127 |
-| SystemError | index.d.ts | 141 |
-| AbortError | index.d.ts | 145 |
-| FetchError | index.d.ts | 151 |
 | URLLike | index.d.ts | 191 |
 | HeadersInit | index.d.ts | 195 |
 | BodyInit | index.d.ts | 196 |
@@ -5773,7 +5774,6 @@ Common domain entities, validation schemas, and shared utility types
 | ParseRemoteConfig | index.d.ts | 359 |
 | UnparseConfig | index.d.ts | 361 |
 | UnparseObject | index.d.ts | 422 |
-| ParseError | index.d.ts | 428 |
 | ParseMeta | index.d.ts | 441 |
 | ParseStepResult | index.d.ts | 459 |
 | ParseResult | index.d.ts | 478 |
@@ -6453,10 +6453,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### CustomEventInit
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/node_modules/typescript/lib/lib.dom.d.ts:478
@@ -9658,10 +9658,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### Disposable
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/node_modules/typescript/lib/lib.esnext.disposable.d.ts:35
@@ -9669,10 +9669,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### AsyncDisposable
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/node_modules/typescript/lib/lib.esnext.disposable.d.ts:39
@@ -9883,10 +9883,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### CampaignFormValues
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 3 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/campaign.ts:191
@@ -9895,10 +9895,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### CampaignFormProps
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/campaign.ts:193
@@ -9906,10 +9906,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### CampaignSteps
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/campaign.ts:202
@@ -9917,10 +9917,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### PartialCampaignStep
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/campaign.ts:204
@@ -9950,10 +9950,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### DNSRecordType
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:4
@@ -9961,10 +9961,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### DNSRecordStatus
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:16
@@ -9972,10 +9972,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### DomainStatus
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:19
@@ -9983,10 +9983,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### EmailAccountStatus
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:27
@@ -9994,10 +9994,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### VerificationStatus
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:35
@@ -10005,10 +10005,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### RelayType
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:44
@@ -10016,10 +10016,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### DomainAccountCreationType
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:51
@@ -10027,10 +10027,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### WarmupStatusType
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:56
@@ -10038,10 +10038,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### DNSProvider
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:59
@@ -10094,10 +10094,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### AddDomainFormType
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:263
@@ -10105,10 +10105,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### DomainSettingsFormType
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:278
@@ -10116,10 +10116,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### SPFConfig
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:281
@@ -10127,10 +10127,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### DKIMConfig
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:287
@@ -10138,10 +10138,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### DMARCConfig
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:293
@@ -10149,10 +10149,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### DomainAuthentication
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:301
@@ -10160,10 +10160,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### WarmupConfig
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:307
@@ -10171,10 +10171,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### ReputationFactors
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/domains.ts:318
@@ -10193,10 +10193,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### WarmupStatus
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/mailbox.ts:69
@@ -10433,10 +10433,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### TooltipType
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/node_modules/recharts/types/component/DefaultTooltipContent.d.ts:7
@@ -10467,10 +10467,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### UnknownIfNonSpecific
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/node_modules/redux/dist/redux.d.ts:285
@@ -10579,10 +10579,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### AxisSvgProps
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/node_modules/recharts/types/polar/PolarRadiusAxis.d.ts:14
@@ -10612,10 +10612,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### DataGranularity
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/analytics/core.ts:107
@@ -10645,10 +10645,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### DateRangePreset
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/types/analytics/ui.ts:10
@@ -11797,10 +11797,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### StaticReturnType
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/node_modules/@sinclair/typebox/build/cjs/type/constructor/constructor.d.ts:8
@@ -11808,10 +11808,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### StaticParameter
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/node_modules/@sinclair/typebox/build/cjs/type/constructor/constructor.d.ts:9
@@ -11819,10 +11819,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### StaticParameters
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/node_modules/@sinclair/typebox/build/cjs/type/constructor/constructor.d.ts:12
@@ -11830,10 +11830,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### TRemoveOptionalFromType
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/node_modules/@sinclair/typebox/build/cjs/type/intersect/intersect-evaluated.d.ts:7
@@ -12014,10 +12014,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### TUnionFromPropertyKeys
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/node_modules/@sinclair/typebox/build/cjs/type/omit/omit.d.ts:18
@@ -12025,10 +12025,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### TResolvePropertyKeys
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/node_modules/@sinclair/typebox/build/cjs/type/omit/omit.d.ts:20
@@ -12036,10 +12036,10 @@ Common domain entities, validation schemas, and shared utility types
 
 ### TResolveTypeKey
 
-- **Type**: naming-conflict
-- **Resolution**: consolidate-with-renaming
+- **Type**: exact-duplicate
+- **Resolution**: merge-into-shared-base
 - **Breaking Changes**: No
-- **Description**: Type name used in multiple contexts, may benefit from consolidation
+- **Description**: Exact duplicate type definitions found in 2 locations
 
 **Locations**:
 - /home/israel/personal/code/penguinmails/client/node_modules/@sinclair/typebox/build/cjs/type/omit/omit.d.ts:21
@@ -12248,6 +12248,7 @@ Common domain entities, validation schemas, and shared utility types
 
 ## Recommendations
 
-- 560 naming conflicts identified. Review and potentially rename for clarity.
+- 37 exact duplicate types found. Consider consolidating into shared definitions.
+- 523 naming conflicts identified. Review and potentially rename for clarity.
 - Review breaking changes before implementing consolidation recommendations.
 

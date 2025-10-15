@@ -133,6 +133,12 @@ describe('Type Analysis Workflow Integration', () => {
       expect(categorized['Backend/DB']).toContainEqual(
         expect.objectContaining({ name: 'UserSchema' })
       );
+      expect(categorized['Backend/DB']).toContainEqual(
+        expect.objectContaining({ name: 'ApiResponse' })
+      );
+      expect(categorized['Backend/DB']).toContainEqual(
+        expect.objectContaining({ name: 'CampaignStatus' })
+      );
 
       expect(categorized['Frontend/UI']).toContainEqual(
         expect.objectContaining({ name: 'ButtonProps' })
@@ -150,17 +156,11 @@ describe('Type Analysis Workflow Integration', () => {
       expect(categorized['Shared/Common']).toContainEqual(
         expect.objectContaining({ name: 'EmailValidation' })
       );
-      expect(categorized['Shared/Common']).toContainEqual(
-        expect.objectContaining({ name: 'ApiResponse' })
-      );
-      expect(categorized['Shared/Common']).toContainEqual(
-        expect.objectContaining({ name: 'CampaignStatus' })
-      );
 
       // Verify category counts
-      expect(categorized['Backend/DB']).toHaveLength(3);
+      expect(categorized['Backend/DB']).toHaveLength(4);
       expect(categorized['Frontend/UI']).toHaveLength(2);
-      expect(categorized['Shared/Common']).toHaveLength(5);
+      expect(categorized['Shared/Common']).toHaveLength(4);
     });
 
     it('should handle empty source files gracefully', () => {

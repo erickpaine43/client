@@ -1,3 +1,4 @@
+import * as ts from 'typescript';
 import { TypeDefinition } from '../models/TypeDefinition';
 import { TypeConflict, ConflictAnalysis } from '../models/TypeConflict';
 
@@ -85,13 +86,9 @@ export class ConflictDetector {
   private areExactDuplicates(definitions: TypeDefinition[]): boolean {
     if (definitions.length < 2) return false;
 
-    // Simple check: compare basic properties instead of full AST structure
-    const firstDef = definitions[0];
-    return definitions.every(def =>
-      def.name === firstDef.name &&
-      def.kind === firstDef.kind &&
-      def.filePath === firstDef.filePath
-    );
+    // Simple check: compare the text of the nodes for structural equality.
+    const firstDefText = (definitions[0].structure as ts.Node).getText();
+    return definitions.slice(1).every(def => (def.structure as ts.Node).getText() === firstDefText);
   }
 
   private haveSemanticConflicts(definitions: TypeDefinition[]): boolean {

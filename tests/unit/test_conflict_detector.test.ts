@@ -1,4 +1,4 @@
-import { TypeDefinition } from '@/scripts/type-analysis/models/TypeDefinition';
+import { TypeDefinition } from '../../scripts/type-analysis/models/TypeDefinition';
 import { ConflictDetector } from '../../scripts/type-analysis/services/ConflictDetector';
 
 describe('ConflictDetector', () => {
@@ -45,7 +45,7 @@ describe('ConflictDetector', () => {
           filePath: 'types/user.ts',
           lineNumber: 1,
           kind: 'interface',
-          structure: {},
+          structure: { getText: () => 'interface User { id: string; }' },
           imports: [],
           exports: [],
           usage: []
@@ -55,7 +55,7 @@ describe('ConflictDetector', () => {
           filePath: 'types/user.ts', // Same file, but duplicate definition
           lineNumber: 5,
           kind: 'interface',
-          structure: {},
+          structure: { getText: () => 'interface User { id: string; }' },
           imports: [],
           exports: [],
           usage: []
@@ -77,7 +77,7 @@ describe('ConflictDetector', () => {
           filePath: 'types/api/user.ts',
           lineNumber: 1,
           kind: 'interface',
-          structure: {},
+          structure: { getText: () => 'interface User { id: string; name: string; }' },
           imports: [],
           exports: [],
           usage: []
@@ -87,7 +87,7 @@ describe('ConflictDetector', () => {
           filePath: 'components/UserForm.ts',
           lineNumber: 1,
           kind: 'interface',
-          structure: {},
+          structure: { getText: () => 'interface User { id: string; email: string; }' },
           imports: [],
           exports: [],
           usage: []
@@ -109,7 +109,7 @@ describe('ConflictDetector', () => {
           filePath: 'types/common.ts',
           lineNumber: 1,
           kind: 'interface',
-          structure: {},
+          structure: { getText: () => 'interface Response { data: any; success: boolean; }' },
           imports: [],
           exports: [],
           usage: []
@@ -119,7 +119,7 @@ describe('ConflictDetector', () => {
           filePath: 'types/validation.ts',
           lineNumber: 1,
           kind: 'interface',
-          structure: {},
+          structure: { getText: () => 'interface Response { errors: string[]; isValid: boolean; }' },
           imports: [],
           exports: [],
           usage: []
@@ -137,47 +137,47 @@ describe('ConflictDetector', () => {
     it('should handle multiple conflicts', () => {
       const types: TypeDefinition[] = [
         // Exact duplicate
-        {
-          name: 'User',
-          filePath: 'types/user.ts',
-          lineNumber: 1,
-          kind: 'interface',
-          structure: {},
-          imports: [],
-          exports: [],
-          usage: []
-        },
-        {
-          name: 'User',
-          filePath: 'types/user.ts',
-          lineNumber: 5,
-          kind: 'interface',
-          structure: {},
-          imports: [],
-          exports: [],
-          usage: []
-        },
+         {
+           name: 'User',
+           filePath: 'types/user.ts',
+           lineNumber: 1,
+           kind: 'interface',
+           structure: { getText: () => 'interface User { id: string; }' },
+           imports: [],
+           exports: [],
+           usage: []
+         },
+         {
+           name: 'User',
+           filePath: 'types/user.ts',
+           lineNumber: 5,
+           kind: 'interface',
+           structure: { getText: () => 'interface User { id: string; }' },
+           imports: [],
+           exports: [],
+           usage: []
+         },
         // Naming conflict (both in types/, so no semantic conflict)
-        {
-          name: 'Campaign',
-          filePath: 'types/api/campaign.ts',
-          lineNumber: 1,
-          kind: 'interface',
-          structure: {},
-          imports: [],
-          exports: [],
-          usage: []
-        },
-        {
-          name: 'Campaign',
-          filePath: 'types/common/campaign.ts',
-          lineNumber: 1,
-          kind: 'interface',
-          structure: {},
-          imports: [],
-          exports: [],
-          usage: []
-        }
+         {
+           name: 'Campaign',
+           filePath: 'types/api/campaign.ts',
+           lineNumber: 1,
+           kind: 'interface',
+           structure: { getText: () => 'interface Campaign { id: string; name: string; }' },
+           imports: [],
+           exports: [],
+           usage: []
+         },
+         {
+           name: 'Campaign',
+           filePath: 'types/common/campaign.ts',
+           lineNumber: 1,
+           kind: 'interface',
+           structure: { getText: () => 'interface Campaign { id: string; title: string; }' },
+           imports: [],
+           exports: [],
+           usage: []
+         }
       ];
 
       const conflicts = detector.detectConflicts(types);
@@ -201,7 +201,7 @@ describe('ConflictDetector', () => {
           filePath: 'types/user.ts',
           lineNumber: 1,
           kind: 'interface',
-          structure: {},
+          structure: { getText: () => 'interface User { id: string; }' },
           imports: [],
           exports: [],
           usage: []
@@ -211,7 +211,7 @@ describe('ConflictDetector', () => {
           filePath: 'types/user.ts',
           lineNumber: 5,
           kind: 'interface',
-          structure: {},
+          structure: { getText: () => 'interface User { id: string; }' },
           imports: [],
           exports: [],
           usage: []
@@ -229,68 +229,68 @@ describe('ConflictDetector', () => {
     it('should generate appropriate recommendations for different conflict types', () => {
       const types: TypeDefinition[] = [
         // Exact duplicate
-        {
-          name: 'User',
-          filePath: 'types/user.ts',
-          lineNumber: 1,
-          kind: 'interface',
-          structure: {},
-          imports: [],
-          exports: [],
-          usage: []
-        },
-        {
-          name: 'User',
-          filePath: 'types/user.ts',
-          lineNumber: 5,
-          kind: 'interface',
-          structure: {},
-          imports: [],
-          exports: [],
-          usage: []
-        },
+         {
+           name: 'User',
+           filePath: 'types/user.ts',
+           lineNumber: 1,
+           kind: 'interface',
+           structure: { getText: () => 'interface User { id: string; }' },
+           imports: [],
+           exports: [],
+           usage: []
+         },
+         {
+           name: 'User',
+           filePath: 'types/user.ts',
+           lineNumber: 5,
+           kind: 'interface',
+           structure: { getText: () => 'interface User { id: string; }' },
+           imports: [],
+           exports: [],
+           usage: []
+         },
         // Semantic conflict
-        {
-          name: 'Campaign',
-          filePath: 'types/api/campaign.ts',
-          lineNumber: 1,
-          kind: 'interface',
-          structure: {},
-          imports: [],
-          exports: [],
-          usage: []
-        },
-        {
-          name: 'Campaign',
-          filePath: 'components/CampaignForm.ts',
-          lineNumber: 1,
-          kind: 'interface',
-          structure: {},
-          imports: [],
-          exports: [],
-          usage: []
-        },
+         {
+           name: 'Campaign',
+           filePath: 'types/api/campaign.ts',
+           lineNumber: 1,
+           kind: 'interface',
+           structure: { getText: () => 'interface Campaign { id: string; name: string; }' },
+           imports: [],
+           exports: [],
+           usage: []
+         },
+         {
+           name: 'Campaign',
+           filePath: 'components/CampaignForm.ts',
+           lineNumber: 1,
+           kind: 'interface',
+           structure: { getText: () => 'interface Campaign { id: string; title: string; }' },
+           imports: [],
+           exports: [],
+           usage: []
+         },
         // Naming conflicts (2 total)
-        {
-          name: 'Response',
-          filePath: 'types/common.ts',
-          lineNumber: 1,
-          kind: 'interface',
-          structure: {},
-          imports: [],
-          exports: [],
-          usage: []
-        },
-        {
-          name: 'Response',
-          filePath: 'types/validation.ts',
-          lineNumber: 1,
-          kind: 'interface',
-          structure: {},
-          imports: [],
-          exports: [],
-          usage: []
-        }
+         {
+           name: 'Response',
+           filePath: 'types/common.ts',
+           lineNumber: 1,
+           kind: 'interface',
+           structure: { getText: () => 'interface Response { data: any; success: boolean; }' },
+           imports: [],
+           exports: [],
+           usage: []
+         },
+         {
+           name: 'Response',
+           filePath: 'types/validation.ts',
+           lineNumber: 1,
+           kind: 'interface',
+           structure: { getText: () => 'interface Response { errors: string[]; isValid: boolean; }' },
+           imports: [],
+           exports: [],
+           usage: []
+         }
       ];
 
       const analysis = detector.analyzeConflicts(types);
@@ -309,7 +309,7 @@ describe('ConflictDetector', () => {
           filePath: 'types/user.ts',
           lineNumber: 1,
           kind: 'interface',
-          structure: {},
+          structure: { getText: () => 'interface User { id: string; }' },
           imports: [],
           exports: [],
           usage: []
@@ -319,7 +319,7 @@ describe('ConflictDetector', () => {
           filePath: 'types/campaign.ts',
           lineNumber: 1,
           kind: 'interface',
-          structure: {},
+          structure: { getText: () => 'interface Campaign { id: string; }' },
           imports: [],
           exports: [],
           usage: []
