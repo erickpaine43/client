@@ -236,5 +236,4 @@ For complete setup instructions, see [`docs/infrastructure/cloudflare.md`](./doc
 Built with ❤️ for modern email marketing workflows.
 
 <!-- CONTRIBUTORS START -->
-
 <!-- CONTRIBUTORS END -->
