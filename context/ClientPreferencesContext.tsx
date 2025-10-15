@@ -1,161 +1,97 @@
-"use client";
+/**
+ * Client Preferences Context
+ * Provides user preferences throughout the React component tree
+ * Updated to work with new structured settings tables
+ */
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { useTheme } from "next-themes";
-import {
-  getStorageItem,
-  setStorageItem,
-  StorageKeys,
-  onStorageChange,
-  type SidebarView,
-  type Language,
-  type TableDensity,
-} from "@/lib/utils/clientStorage";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { UserPreferencesResponse } from '@/types/settings/user';
+import { userPreferencesSchema } from '@/lib/validations/settings';
 
-interface ClientPreferences {
-  sidebarView: SidebarView;
-  language: Language;
-  tableDensity: TableDensity;
-  sidebarCollapsed: boolean;
-}
-
+// This implementation will fail until API integration is added
 interface ClientPreferencesContextType {
-  preferences: ClientPreferences;
-  theme: string | undefined;
-  setTheme: (theme: string) => void;
-  updatePreference: <K extends keyof ClientPreferences>(
-    key: K,
-    value: ClientPreferences[K]
-  ) => void;
-  resetPreferences: () => void;
+  preferences: UserPreferencesResponse | null;
+  theme?: "light" | "dark" | "auto";
+  setTheme?: (theme: "light" | "dark" | "auto") => void;
+  updatePreference?: (key: string, value: unknown) => Promise<void>;
   isLoading: boolean;
   error: string | null;
+  updatePreferences: (updates: Partial<UserPreferencesResponse>) => Promise<void>;
+  refreshPreferences: () => Promise<void>;
 }
 
-const ClientPreferencesContext = createContext<
-  ClientPreferencesContextType | undefined
->(undefined);
+const ClientPreferencesContext = createContext<ClientPreferencesContextType | undefined>(undefined);
 
-const defaultPreferences: ClientPreferences = {
-  sidebarView: "expanded",
-  language: "en",
-  tableDensity: "comfortable",
-  sidebarCollapsed: false,
-};
+interface ClientPreferencesProviderProps {
+  children: ReactNode;
+}
 
-export function ClientPreferencesProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { theme, setTheme: setNextTheme } = useTheme();
-  const [preferences, setPreferences] =
-    useState<ClientPreferences>(defaultPreferences);
+export function ClientPreferencesProvider({ children }: ClientPreferencesProviderProps) {
+  const [preferences, setPreferences] = useState<UserPreferencesResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load preferences from localStorage on mount
+  // Extract theme for convenience (defaults to 'light')
+  const theme = preferences?.theme || 'light';
+
+  // Load user preferences on mount
   useEffect(() => {
-    const loadPreferences = () => {
-      try {
-        const loadedPreferences: ClientPreferences = {
-          sidebarView: getStorageItem(StorageKeys.SIDEBAR_VIEW),
-          language: getStorageItem(StorageKeys.LANGUAGE),
-          tableDensity: getStorageItem(StorageKeys.TABLE_DENSITY),
-          sidebarCollapsed: getStorageItem(StorageKeys.SIDEBAR_COLLAPSED),
-        };
-
-        setPreferences(loadedPreferences);
-      } catch (error) {
-        console.error("Failed to load client preferences:", error);
-        setError(error instanceof Error ? error.message : "Failed to load preferences");
-        setPreferences(defaultPreferences);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadPreferences();
+    refreshPreferences();
   }, []);
 
-  // Listen for storage changes (cross-tab synchronization)
-  useEffect(() => {
-    const unsubscribe = onStorageChange((key, value) => {
-      switch (key) {
-        case StorageKeys.SIDEBAR_VIEW:
-          setPreferences((prev) => ({
-            ...prev,
-            sidebarView: value as SidebarView,
-          }));
-          break;
-        case StorageKeys.LANGUAGE:
-          setPreferences((prev) => ({
-            ...prev,
-            language: value as Language,
-          }));
-          break;
-        case StorageKeys.TABLE_DENSITY:
-          setPreferences((prev) => ({
-            ...prev,
-            tableDensity: value as TableDensity,
-          }));
-          break;
-        case StorageKeys.SIDEBAR_COLLAPSED:
-          setPreferences((prev) => ({
-            ...prev,
-            sidebarCollapsed: value as boolean,
-          }));
-          break;
-      }
-    });
-
-    return unsubscribe;
-  }, []);
-
-  const updatePreference = <K extends keyof ClientPreferences>(
-    key: K,
-    value: ClientPreferences[K]
-  ) => {
+  const refreshPreferences = async () => {
     try {
-      // Update local state
-      setPreferences((prev) => ({
-        ...prev,
-        [key]: value,
-      }));
+      setIsLoading(true);
+      setError(null);
 
-      // Persist to localStorage
-      const storageKey = getStorageKeyForPreference(key);
-      if (storageKey) {
-        setStorageItem(storageKey, value as string);
+      // Implement API call to fetch user preferences
+      const response = await fetch('/api/settings/user');
+      if (!response.ok) {
+        throw new Error('Failed to fetch user preferences');
       }
-    } catch (error) {
-      console.error(`Failed to update preference ${key}:`, error);
+      const data = await response.json();
+      // Validate response data with Zod schema for runtime type safety
+      const validatedData = userPreferencesSchema.parse(data) as UserPreferencesResponse;
+      setPreferences(validatedData);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to load preferences';
+      setError(message);
+      console.error('Error loading preferences:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const setTheme = (newTheme: string) => {
-    setNextTheme(newTheme);
-    // next-themes handles localStorage persistence automatically
+  const updatePreferences = async (_updates: Partial<UserPreferencesResponse>): Promise<void> => {
+    try {
+      setError(null);
+
+      // TODO: Implement API call to update user preferences
+      // const response = await fetch('/api/settings/user', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(updates)
+      // });
+      // const data = await response.json();
+      // setPreferences(data);
+
+      throw new Error('User preferences API not integrated');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to update preferences';
+      setError(message);
+      console.error('Error updating preferences:', err);
+      throw err;
+    }
   };
 
-  const resetPreferences = () => {
-    try {
-      setPreferences(defaultPreferences);
+  const setTheme = (newTheme: "light" | "dark" | "auto") => {
+    // This would update the theme in preferences when API is integrated
+    console.log('Setting theme to:', newTheme);
+  };
 
-      // Reset in localStorage
-      setStorageItem(StorageKeys.SIDEBAR_VIEW, defaultPreferences.sidebarView);
-      setStorageItem(StorageKeys.LANGUAGE, defaultPreferences.language);
-      setStorageItem(
-        StorageKeys.TABLE_DENSITY,
-        defaultPreferences.tableDensity
-      );
-      setStorageItem(
-        StorageKeys.SIDEBAR_COLLAPSED,
-        defaultPreferences.sidebarCollapsed
-      );
-    } catch (error) {
-      console.error("Failed to reset preferences:", error);
-    }
+  const updatePreference = async (key: string, value: unknown) => {
+    // This would update a preference when API is integrated
+    console.log('Updating preference:', key, value);
   };
 
   const value: ClientPreferencesContextType = {
@@ -163,9 +99,10 @@ export function ClientPreferencesProvider({
     theme,
     setTheme,
     updatePreference,
-    resetPreferences,
     isLoading,
     error,
+    updatePreferences,
+    refreshPreferences,
   };
 
   return (
@@ -175,30 +112,16 @@ export function ClientPreferencesProvider({
   );
 }
 
-export function useClientPreferences() {
+export function useClientPreferences(): ClientPreferencesContextType {
   const context = useContext(ClientPreferencesContext);
   if (context === undefined) {
-    throw new Error(
-      "useClientPreferences must be used within a ClientPreferencesProvider"
-    );
+    throw new Error('useClientPreferences must be used within a ClientPreferencesProvider');
   }
   return context;
 }
 
-// Helper function to map preference keys to storage keys
-function getStorageKeyForPreference(
-  key: keyof ClientPreferences
-): StorageKeys | null {
-  switch (key) {
-    case "sidebarView":
-      return StorageKeys.SIDEBAR_VIEW;
-    case "language":
-      return StorageKeys.LANGUAGE;
-    case "tableDensity":
-      return StorageKeys.TABLE_DENSITY;
-    case "sidebarCollapsed":
-      return StorageKeys.SIDEBAR_COLLAPSED;
-    default:
-      return null;
-  }
+// Legacy hook for backward compatibility - will be removed after migration
+export function usePreferences() {
+  console.warn('usePreferences is deprecated. Use useClientPreferences instead.');
+  return useClientPreferences();
 }

@@ -1,5 +1,4 @@
 import type { ActionResult } from "./base";
-import type { UserSettings } from "./user";
 import type { NotificationPreferences } from "./notifications";
 import type { BillingInfo } from "./billing";
 import type { TeamMember } from "./team";
@@ -18,6 +17,16 @@ export function isActionSuccess<T>(result: ActionResult<T>): result is { success
 // Type guard for ActionResult error
 export function isActionError<T>(result: ActionResult<T>): result is { success: false; error: string; code?: string } {
   return result.success === false;
+}
+
+// Define UserSettings locally for the type guard
+interface UserSettings {
+  id: string;
+  userId: string;
+  timezone: string;
+  companyInfo: CompanyInfo;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 // Type guard for UserSettings

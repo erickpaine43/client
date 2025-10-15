@@ -30,15 +30,12 @@ const tabs = [
 ];
 
 const themeOptions = [
-  { value: "light", label: "Light", icon: Sun },
-  { value: "dark", label: "Dark", icon: Moon },
-  { value: "system", label: "System", icon: Monitor },
-];
+   { value: "light" as const, label: "Light", icon: Sun },
+   { value: "dark" as const, label: "Dark", icon: Moon },
+   { value: "system" as const, label: "System", icon: Monitor },
+ ];
 
 function Layout({ children }: { children: React.ReactNode }) {
-  const { preferences, theme, setTheme, updatePreference, isLoading } =
-    useClientPreferences();
-
   const [mounted, setMounted] = useState(false);
 
   // Ensure component is mounted before accessing theme to prevent hydration mismatch
@@ -46,12 +43,24 @@ function Layout({ children }: { children: React.ReactNode }) {
     setMounted(true);
   }, []);
 
+  const { preferences, theme, setTheme, updatePreference, isLoading } =
+    useClientPreferences();
+
+  // Early return if preferences are not loaded
+  if (!preferences) {
+    return <div>Loading preferences...</div>;
+  }
+
   const handleSidebarToggle = () => {
-    updatePreference("sidebarCollapsed", !preferences.sidebarCollapsed);
+    if (updatePreference) {
+      updatePreference("sidebarCollapsed", !preferences.sidebarCollapsed);
+    }
   };
 
-  const handleThemeChange = (newTheme: string) => {
-    setTheme(newTheme);
+  const handleThemeChange = (newTheme: "light" | "dark" | "system") => {
+    if (setTheme) {
+      setTheme(newTheme === "system" ? "auto" : newTheme);
+    }
   };
 
   // Show loading state while preferences are loading

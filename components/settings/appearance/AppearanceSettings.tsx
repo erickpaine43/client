@@ -41,10 +41,16 @@ const AppearanceSettings: React.FC = () => {
   const [showCampaignPreviews, setShowCampaignPreviews] = useState(true);
   const [syncLoading, setSyncLoading] = useState(false);
 
+  if (!preferences) {
+    return <div>Loading preferences...</div>;
+  }
+
   const handleThemeChange = async (newTheme: string) => {
     setSyncLoading(true);
     try {
-      setTheme(newTheme);
+      if (setTheme) {
+        setTheme(newTheme as "light" | "dark" | "auto");
+      }
       await syncToServer();
       showAppearanceUpdateSuccess();
     } catch (error) {
@@ -58,7 +64,9 @@ const AppearanceSettings: React.FC = () => {
   const handleDensityChange = async (newDensity: string) => {
     setSyncLoading(true);
     try {
-      updatePreference("tableDensity", newDensity as TableDensity);
+      if (updatePreference) {
+        updatePreference("tableDensity", newDensity as TableDensity);
+      }
       await syncToServer();
       showAppearanceUpdateSuccess();
     } catch (error) {
@@ -86,7 +94,9 @@ const AppearanceSettings: React.FC = () => {
   const handleSidebarToggle = async (checked: boolean) => {
     setSyncLoading(true);
     try {
-      updatePreference("sidebarCollapsed", !checked);
+      if (updatePreference) {
+        updatePreference("sidebarCollapsed", !checked);
+      }
       await syncToServer();
       showAppearanceUpdateSuccess();
     } catch (error) {

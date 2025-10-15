@@ -297,6 +297,90 @@ export default defineSchema({
     .index("by_step_date", ["stepId", "date"]),
 
   // ============================================================================
+  // SETTINGS TABLES
+  // Structured settings with explicit fields for better performance and type safety
+  // ============================================================================
+
+  // User preferences - individual user settings
+  userPreferences: defineTable({
+    userId: v.string(),
+    theme: v.union(v.literal("light"), v.literal("dark"), v.literal("auto")),
+    language: v.string(),
+    timezone: v.string(),
+    emailNotifications: v.boolean(),
+    pushNotifications: v.boolean(),
+    weeklyReports: v.boolean(),
+    marketingEmails: v.boolean(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"]),
+
+  // Company settings - organization-wide settings and limits
+  companySettings: defineTable({
+    companyId: v.string(),
+    maxUsers: v.number(),
+    maxDomains: v.number(),
+    maxCampaignsPerMonth: v.number(),
+    apiRateLimit: v.number(),
+    customBranding: v.boolean(),
+    advancedAnalytics: v.boolean(),
+    prioritySupport: v.boolean(),
+    updatedAt: v.number(),
+  })
+    .index("by_company", ["companyId"]),
+
+  // Tenant settings - tenant-wide defaults and limits
+  tenantSettings: defineTable({
+    tenantId: v.string(),
+    defaultTheme: v.union(v.literal("light"), v.literal("dark"), v.literal("auto")),
+    defaultLanguage: v.string(),
+    defaultTimezone: v.string(),
+    allowCustomBranding: v.boolean(),
+    maxCompaniesPerTenant: v.number(),
+    globalEmailLimits: v.number(),
+    auditLoggingEnabled: v.boolean(),
+    updatedAt: v.number(),
+  })
+    .index("by_tenant", ["tenantId"]),
+
+  // Plans table - subscription plan definitions
+  plans: defineTable({
+    name: v.string(),
+    slug: v.string(),
+    description: v.optional(v.string()),
+    maxUsers: v.number(),
+    maxDomains: v.number(),
+    maxCampaignsPerMonth: v.number(),
+    apiRateLimit: v.number(),
+    priceMonthly: v.number(), // in cents
+    priceYearly: v.number(), // in cents
+    features: v.array(v.string()),
+    isActive: v.boolean(),
+    updatedAt: v.number(),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_active", ["isActive"]),
+
+  // Domains table - domain management and verification
+  domains: defineTable({
+    companyId: v.string(),
+    domain: v.string(),
+    verificationStatus: v.union(v.literal("pending"), v.literal("verified"), v.literal("failed")),
+    dnsRecords: v.array(v.object({
+      type: v.string(),
+      name: v.string(),
+      value: v.string(),
+      ttl: v.optional(v.number()),
+    })),
+    isPrimary: v.boolean(),
+    verifiedAt: v.optional(v.number()),
+    updatedAt: v.number(),
+  })
+    .index("by_company", ["companyId"])
+    .index("by_domain", ["domain"])
+    .index("by_status", ["verificationStatus"]),
+
+  // ============================================================================
   // ADMIN ANALYTICS TABLES
   // These tables track admin user actions, sessions, and system events
   // for auditing and security purposes.

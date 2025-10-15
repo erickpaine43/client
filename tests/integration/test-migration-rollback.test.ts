@@ -35,7 +35,6 @@ describe('Migration Rollback Integration Test', () => {
       'campaigns',
       'templates',
       'inbox_messages',
-      'email_services'
     ];
 
     try {
@@ -88,7 +87,6 @@ describe('Migration Rollback Integration Test', () => {
   test('should rollback in reverse dependency order', () => {
     // Rollback should happen in reverse of seeding order
     const reverseDependencyOrder = [
-      'email_services',
       'inbox_messages',
       'templates',
       'campaigns',

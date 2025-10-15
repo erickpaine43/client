@@ -15,6 +15,9 @@ import {
   type TableDensity,
 } from "./clientStorage";
 
+// Re-export types for use in other modules
+export type { SidebarView, TableDensity };
+
 // Types for server-side preferences (these would come from server actions)
 export interface ServerUserPreferences {
   id: string;

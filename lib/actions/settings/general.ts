@@ -8,17 +8,36 @@
 "use server";
 
 import { nile } from "../../../app/api/[...nile]/nile";
-import { mockUserSettings, mockGeneralSettings } from "../../data/settings.mock";
+import { mockUserSettings } from "../../data/settings.mock";
 import { ActionResult } from "../core/types";
 import { ErrorFactory, withErrorHandling } from "../core/errors";
 import { withAuth } from "../core/auth";
-import { 
+import {
   UserSettings,
   CompanyInfo,
   GeneralSettings,
   DeepPartial,
   ERROR_CODES
 } from './types';
+
+// Define mockGeneralSettings locally since it's no longer exported
+const mockGeneralSettings: GeneralSettings = {
+  profile: {
+    name: "John Doe",
+    email: "john.doe@acmecorp.com",
+    company: "Acme Corporation",
+  },
+  preferences: {
+    theme: "light",
+    language: "en",
+    timezone: "America/New_York",
+  },
+  appearance: {
+    theme: "light",
+    sidebarCollapsed: false,
+    tableDensity: "comfortable",
+  },
+};
 import { validateUserSettings, validateCompanyInfo, isValidTimezone } from './validation';
 
 /**
@@ -133,7 +152,7 @@ export async function updateGeneralSettings(
   return withAuth(async (_context) => {
     return withErrorHandling(async () => {
       // Validate preferences if provided
-      if (settings.preferences?.timezone) {
+      if (settings.preferences?.timezone && typeof settings.preferences.timezone === 'string') {
         if (!isValidTimezone(settings.preferences.timezone)) {
           return ErrorFactory.validation(
             "Invalid timezone",

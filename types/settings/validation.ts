@@ -1,4 +1,19 @@
-import type { UserSettings } from "./user";
+// Define a type for companyInfo
+interface CompanyInfo {
+  name: string;
+  industry: string;
+  size: string;
+}
+
+// Define UserSettings locally for validation since it's not exported from user.ts
+interface UserSettings {
+  id?: string;
+  userId: string;
+  timezone: string;
+  companyInfo: CompanyInfo;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 import type { NotificationPreferences } from "./notifications";
 import type { ClientPreferences } from "./appearance";
 import type { TeamMember } from "./team";

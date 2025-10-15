@@ -11,11 +11,24 @@ import {
   isValidDateFormat,
   isValidTeamMemberRole,
   isValidTeamMemberStatus,
-  type UserSettings,
   type NotificationPreferences,
   type ClientPreferences,
   type TeamMember,
 } from "../settings";
+
+// Define UserSettings locally for tests since it's not exported
+interface UserSettings {
+  id?: string;
+  userId: string;
+  timezone: string;
+  companyInfo: {
+    name: string;
+    industry: string;
+    size: string;
+  };
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 describe("Settings Validation Functions", () => {
   describe("Basic validation helpers", () => {
@@ -77,13 +90,6 @@ describe("Settings Validation Functions", () => {
           name: "Test Company",
           industry: "Technology",
           size: "10-50",
-          address: {
-            street: "123 Test St",
-            city: "Test City",
-            state: "TS",
-            zipCode: "12345",
-            country: "Test Country",
-          },
         },
       };
 
@@ -109,13 +115,6 @@ describe("Settings Validation Functions", () => {
           name: "",
           industry: "",
           size: "",
-          address: {
-            street: "123 Test St",
-            city: "Test City",
-            state: "TS",
-            zipCode: "12345",
-            country: "Test Country",
-          },
         },
       };
 

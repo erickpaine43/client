@@ -8,6 +8,8 @@ import {
   mergePreferences,
   type ServerUserPreferences,
   type SyncedPreferences,
+  type SidebarView,
+  type TableDensity,
 } from "@/lib/utils/preferenceSync";
 
 interface UsePreferenceSyncOptions {
@@ -32,7 +34,7 @@ export function usePreferenceSync(
 ): UsePreferenceSyncReturn {
   const { autoSync = true, syncInterval = 30000 } = options; // 30 seconds default
   const { preferences: clientPrefs, isLoading: clientLoading } = useClientPreferences();
-  
+
   const [syncedPreferences, setSyncedPreferences] = useState<SyncedPreferences | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,22 +47,34 @@ export function usePreferenceSync(
   ): Promise<boolean> => {
     try {
       setError(null);
-      
+
       // Sync server preferences to client storage
       const success = syncServerToClient(serverPrefs);
-      
+
       if (success) {
-        // Update merged preferences
-        const merged = mergePreferences(serverPrefs, {
-          theme: clientPrefs.sidebarView === "expanded" ? "system" : "system", // This would come from actual client prefs
-          sidebarView: clientPrefs.sidebarView,
-          sidebarCollapsed: clientPrefs.sidebarCollapsed,
-          tableDensity: clientPrefs.tableDensity,
-        });
-        
-        setSyncedPreferences(merged);
+        if (clientPrefs) {
+          // Update merged preferences
+          const merged = mergePreferences(serverPrefs, {
+            theme: clientPrefs.sidebarView === "expanded" ? "system" : "system", // This would come from actual client prefs
+            sidebarView: (clientPrefs.sidebarView || "expanded") as SidebarView,
+            sidebarCollapsed: clientPrefs.sidebarCollapsed || false,
+            tableDensity: (clientPrefs.tableDensity || "comfortable") as TableDensity,
+          });
+
+          setSyncedPreferences(merged);
+        } else {
+          // If clientPrefs is not available, set merged preferences with safe defaults
+          const merged = mergePreferences(serverPrefs, {
+            theme: "system",
+            sidebarView: "expanded" as SidebarView,
+            sidebarCollapsed: false,
+            tableDensity: "comfortable" as TableDensity,
+          });
+
+          setSyncedPreferences(merged);
+        }
       }
-      
+
       return success;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to sync from server";
@@ -76,7 +90,7 @@ export function usePreferenceSync(
   const syncToServer = useCallback(async (): Promise<Partial<ServerUserPreferences>> => {
     try {
       setError(null);
-      
+
       const clientPrefsForServer = getClientPreferencesForServer();
       return clientPrefsForServer;
     } catch (err) {
@@ -94,17 +108,19 @@ export function usePreferenceSync(
     try {
       setIsLoading(true);
       setError(null);
-      
+
       // In a real implementation, this would fetch server preferences
       // For now, we'll just merge current client preferences
-      const merged = mergePreferences({}, {
-        theme: "system", // This would come from actual theme context
-        sidebarView: clientPrefs.sidebarView,
-        sidebarCollapsed: clientPrefs.sidebarCollapsed,
-        tableDensity: clientPrefs.tableDensity,
-      });
-      
-      setSyncedPreferences(merged);
+      if (clientPrefs) {
+        const merged = mergePreferences({}, {
+          theme: "system", // This would come from actual theme context
+          sidebarView: clientPrefs.sidebarView as SidebarView,
+          sidebarCollapsed: clientPrefs.sidebarCollapsed || false,
+          tableDensity: clientPrefs.tableDensity as TableDensity,
+        });
+
+        setSyncedPreferences(merged);
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to force sync";
       setError(errorMessage);
@@ -119,11 +135,11 @@ export function usePreferenceSync(
     if (!clientLoading && clientPrefs) {
       const merged = mergePreferences({}, {
         theme: "system", // This would come from actual theme context
-        sidebarView: clientPrefs.sidebarView,
-        sidebarCollapsed: clientPrefs.sidebarCollapsed,
-        tableDensity: clientPrefs.tableDensity,
+        sidebarView: clientPrefs.sidebarView as SidebarView,
+        sidebarCollapsed: clientPrefs.sidebarCollapsed || false,
+        tableDensity: clientPrefs.tableDensity as TableDensity,
       });
-      
+
       setSyncedPreferences(merged);
       setIsLoading(false);
     }

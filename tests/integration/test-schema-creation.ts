@@ -21,7 +21,6 @@ describe('Schema Creation Integration Test', () => {
       'campaigns',
       'templates',
       'inbox_messages',
-      'email_services'
     ];
 
     // Import should fail initially

@@ -21,7 +21,6 @@ describe('Data Seeding Integration Test', () => {
       'campaigns',
       'templates',
       'inbox_messages',
-      'email_services'
     ];
 
     try {
@@ -53,7 +52,6 @@ describe('Data Seeding Integration Test', () => {
       'campaigns',    // Depends on companies
       'templates',    // Depends on tenants
       'inbox_messages', // Depends on tenants
-      'email_services'   // Depends on tenants
     ];
 
     // Verify order matches data-model.md relationships

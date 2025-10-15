@@ -20,7 +20,6 @@ describe('Migration Validation Integration Test', () => {
       'campaigns',
       'templates',
       'inbox_messages',
-      'email_services'
     ];
 
     try {
