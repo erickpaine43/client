@@ -61,13 +61,10 @@ def main():
         html_lines.append("</table>")
         new_section = "\n".join(html_lines)
 
-        # If the contributors section already exists, compare it with the new section
+        # Always update the contributors section (remove the comparison check)
         if start_marker in content and end_marker in content:
             before, current_section_with_markers = content.split(start_marker, 1)
-            current_section, after = current_section_with_markers.split(end_marker, 1)
-            if new_section.strip() == current_section.strip():
-                print("No changes detected in the contributors list. README.md will not be updated.")
-                sys.exit(0)
+            _, after = current_section_with_markers.split(end_marker, 1)
             updated_content = f"{before}{start_marker}\n{new_section}\n{end_marker}{after}"
         else:
             updated_content = f"{content.rstrip()}\n\n{start_marker}\n{new_section}\n{end_marker}\n"
