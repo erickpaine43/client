@@ -141,8 +141,19 @@ export async function createCampaignSequenceStepsSchema(): Promise<void> {
   try {
     console.log('Creating campaign sequence steps schema...');
 
-    // Import schema from SQL file (single source of truth)
-    const { CREATE_CAMPAIGN_SEQUENCE_STEPS_TABLE, CREATE_CAMPAIGN_SEQUENCE_STEPS_INDEXES, CREATE_CAMPAIGN_SEQUENCE_STEPS_TRIGGERS } = await import('./campaign-sequence-steps');
+    // Use directly exported constants from this same file
+    const tableSQL = CREATE_CAMPAIGN_SEQUENCE_STEPS_TABLE;
+    const indexesSQL = CREATE_CAMPAIGN_SEQUENCE_STEPS_INDEXES;
+    const triggersSQL = CREATE_CAMPAIGN_SEQUENCE_STEPS_TRIGGERS;
+
+    // Execute table creation
+    await nile.db.query(tableSQL);
+
+    // Execute indexes creation
+    await nile.db.query(indexesSQL);
+
+    // Execute triggers creation
+    await nile.db.query(triggersSQL);
 
     // Execute table creation
     await nile.db.query(CREATE_CAMPAIGN_SEQUENCE_STEPS_TABLE);
@@ -167,17 +178,19 @@ export async function dropCampaignSequenceStepsSchema(): Promise<void> {
   try {
     console.log('Dropping campaign sequence steps schema...');
 
-    // Import drop statements from SQL file
-    const { DROP_CAMPAIGN_SEQUENCE_STEPS_TRIGGERS, DROP_CAMPAIGN_SEQUENCE_STEPS_INDEXES, DROP_CAMPAIGN_SEQUENCE_STEPS_TABLE } = await import('./campaign-sequence-steps');
+    // Use directly exported constants from this same file
+    const dropTriggersSQL = DROP_CAMPAIGN_SEQUENCE_STEPS_TRIGGERS;
+    const dropIndexesSQL = DROP_CAMPAIGN_SEQUENCE_STEPS_INDEXES;
+    const dropTableSQL = DROP_CAMPAIGN_SEQUENCE_STEPS_TABLE;
 
     // Drop triggers first
-    await nile.db.query(DROP_CAMPAIGN_SEQUENCE_STEPS_TRIGGERS);
+    await nile.db.query(dropTriggersSQL);
 
     // Drop indexes
-    await nile.db.query(DROP_CAMPAIGN_SEQUENCE_STEPS_INDEXES);
+    await nile.db.query(dropIndexesSQL);
 
     // Drop table
-    await nile.db.query(DROP_CAMPAIGN_SEQUENCE_STEPS_TABLE);
+    await nile.db.query(dropTableSQL);
 
     console.log('✓ Campaign sequence steps schema dropped successfully');
   } catch (error) {
