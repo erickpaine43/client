@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/custom/password-input";
@@ -9,8 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signupContent } from "./content";
 import type { PasswordStrength } from "@/lib/utils";
-import { useSignUp } from "@niledatabase/react";
-import { toast } from "sonner";
+import { useAuth } from "@/context/AuthContext";
+
 
 interface FormData {
   name: string;
@@ -23,21 +22,7 @@ export default function SignUpFormView() {
   const [error, setError] = useState<string | null>(null);
   const [passwordStrength, setPasswordStrength] =
     useState<PasswordStrength | null>(null);
-  const router = useRouter();
-    const nileSignUp = useSignUp({
-    onSuccess: () => {
-      toast.success("Account created successfully!");
-      router.push("/dashboard");
-    },
-    onError: (err: unknown) => {
-      let msg = "Signup failed. Please try again.";
-      if (err instanceof Error) {
-        msg = err.message;
-      }
-      setError(msg);
-    },
-    createTenant: true,
-  });
+  const { signup, error: authError } = useAuth();
 
   // Initialize react-hook-form
   const {
@@ -69,7 +54,7 @@ export default function SignUpFormView() {
 
     try {
       // Call centralized signup function
-      nileSignUp({ email: data.email, password: data.password, name: data.name });
+      await signup(data.email, data.password, data.name);
     } catch (err: unknown) {
       console.error("Signup failed:", err);
       if (
@@ -86,6 +71,10 @@ export default function SignUpFormView() {
       setIsSignUpLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (authError) setError(authError.message);
+  }, [authError]);
 
   return (
     <>
