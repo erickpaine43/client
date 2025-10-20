@@ -175,9 +175,78 @@ NEXTAUTH_SECRET=your-auth-secret
 # External Services
 STRIPE_SECRET_KEY=your-stripe-key
 RESEND_API_KEY=your-resend-key
+
+# Loop Email Service (Transactional Emails)
+LOOP_API_KEY=your-loops-api-key
+LOOP_VERIFICATION_TRANSACTIONAL_ID=your-verification-id
+LOOP_RESET_TRANSACTIONAL_ID=your-password-reset-id
+LOOP_WELCOME_TRANSACTIONAL_ID=your-welcome-id
+LOOP_NOTIFICATION_TRANSACTIONAL_ID=your-notification-id
 ```
 
 For complete setup instructions, see [`docs/infrastructure/cloudflare.md`](./docs/infrastructure/cloudflare.md).
+
+## \U0001f4e7 Email Service Integration
+
+### Loop Transactional Emails
+
+The application uses Loop (loops.so) for sending transactional emails including verification, password reset, and welcome emails. This provides a reliable, scalable email delivery service separate from marketing campaigns.
+
+#### Setup Steps
+
+1. **Create a Loops Account**: Sign up at [loops.so](https://loops.so)
+
+2. **Get API Key**: Navigate to Settings → API Keys in your Loops dashboard
+
+3. **Configure Environment**: Add your API key to `.env`:
+   ```bash
+   LOOP_API_KEY=your-api-key-here
+   ```
+
+4. **Create Transactional Emails**: In your Loops dashboard, create the following transactional emails with these IDs:
+    - **Verification Email** (ID: `verification`)
+      - Variables: `{{userName}}`, `{{verificationToken}}`, `{{verificationUrl}}`
+    - **Password Reset Email** (ID: `password-reset`)
+      - Variables: `{{userName}}`, `{{resetToken}}`, `{{resetUrl}}`
+    - **Welcome Email** (ID: `welcome`)
+      - Variables: `{{userName}}`, `{{companyName}}`, `{{loginUrl}}`
+    - **Notification Email** (ID: `notification`)
+      - Variables: `{{userName}}`, `{{message}}`, `{{subject}}`, `{{timestamp}}`
+
+5. **Test Integration**: Use the test endpoint to verify email sending:
+   ```bash
+   curl "http://localhost:3000/api/test/emails?email=test@example.com"
+   ```
+
+#### Usage in Code
+
+```typescript
+import { sendVerificationEmail } from '@/lib/actions/emailActions';
+import { getLoopService } from '@/lib/services/loop';
+
+// Send verification email
+await sendVerificationEmail({
+  email: 'user@example.com',
+  token: 'verification-token',
+  userName: 'John Doe'
+});
+
+// Send notification email
+const loopService = getLoopService();
+await loopService.sendNotificationEmail(
+  'user@example.com',
+  'Your account has been updated successfully.',
+  'Account Update Notification',
+  'John Doe'
+);
+```
+
+#### API Endpoints
+
+- `POST /api/emails/send` - Send transactional emails (requires authentication)
+- `POST /api/emails/notification` - Send notification emails (requires authentication)
+- `GET /api/emails/notification` - Test notification email functionality
+- `GET /api/test/emails` - Test email functionality
 
 ## \U0001f9ea Testing & Quality
 
