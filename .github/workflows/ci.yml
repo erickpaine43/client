@@ -55,3 +55,10 @@ jobs:
 
       - name: Run build
         run: npm run build
+        env:
+          NILEDB_API_URL: ${{ secrets.NILEDB_API_URL }}
+          NILEDB_USER: ${{ secrets.NILEDB_USER }}
+          NILEDB_PASSWORD: ${{ secrets.NILEDB_PASSWORD }}
+          NILEDB_POSTGRES_URL: ${{ secrets.NILEDB_POSTGRES_URL }}
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
+          NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}

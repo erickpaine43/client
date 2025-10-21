@@ -65,6 +65,19 @@ Add the following secrets:
 | `VERCEL_ORG_ID` | Your Vercel org ID | Required for Vercel project identification |
 | `VERCEL_PROJECT_ID` | Your Vercel project ID | Required for Vercel project identification |
 | `CONVEX_DEPLOY_KEY` | Your Convex deploy key | Required for Convex backend deployment |
+| `NILEDB_API_URL` | Your NileDB API URL | Required for database connection during build |
+| `NILEDB_USER` | Your NileDB user ID | Required for database authentication during build |
+| `NILEDB_PASSWORD` | Your NileDB password | Required for database authentication during build |
+| `NILEDB_POSTGRES_URL` | Your NileDB PostgreSQL URL | Required for PostgreSQL connection during build |
+| `CONVEX_DEPLOYMENT` | Your Convex deployment name | Required for Convex configuration during build |
+| `NEXT_PUBLIC_CONVEX_URL` | Your Convex URL | Required for Convex client connection during build |
+| `UPSTASH_REDIS_REST_URL` | Your Upstash Redis URL | Required for Redis connection (optional for build) |
+| `UPSTASH_REDIS_REST_TOKEN` | Your Upstash Redis token | Required for Redis authentication (optional for build) |
+| `LOOP_API_KEY` | Your Loop API key | Required for email services (optional for build) |
+| `LOOP_VERIFICATION_TRANSACTIONAL_ID` | Your verification template ID | Required for email verification (optional for build) |
+| `LOOP_RESET_TRANSACTIONAL_ID` | Your reset template ID | Required for password reset (optional for build) |
+| `LOOP_WELCOME_TRANSACTIONAL_ID` | Your welcome template ID | Required for welcome emails (optional for build) |
+| `LOOP_NOTIFICATION_TRANSACTIONAL_ID` | Your notification template ID | Required for notifications (optional for build) |
 
 ### Step 4: Verify Setup
 

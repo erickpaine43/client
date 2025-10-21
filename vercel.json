@@ -10,6 +10,12 @@
   },
   "regions": ["iad1"],
   "env": {
-    "NODE_ENV": "@node-env"
+    "NODE_ENV": "@node-env",
+    "NILEDB_API_URL": "@niledb-api-url",
+    "NILEDB_USER": "@niledb-user",
+    "NILEDB_PASSWORD": "@niledb-password",
+    "NILEDB_POSTGRES_URL": "@niledb-postgres-url",
+    "CONVEX_DEPLOYMENT": "@convex-deployment",
+    "NEXT_PUBLIC_CONVEX_URL": "@next-public-convex-url"
   }
 }
