@@ -1,6 +1,9 @@
 name: Lint Check
 
 on:
+  push:
+    branches: ["main"]
+
   pull_request:
     types: [opened, synchronize, reopened]
     branches: ["main", "dev", "**"]
@@ -39,8 +42,13 @@ jobs:
         env:
           CI: true
 
-      #- name: Run Prettier
-      #  run: npm run format:check
+      - name: Run TypeScript type check
+        run: npm run typecheck
 
-      #- name: Run Jest
-      #  run: npm run test
+      - name: Run Jest tests
+        run: npm test -- --watchAll=false --passWithNoTests
+        env:
+          CI: true
+
+      - name: Run build
+        run: npm run build
