@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { AuthTemplate } from "@/components/auth/AuthTemplate";
 import { Turnstile } from "next-turnstile";
+import { verifyTurnstileToken } from "./signup/verifyToken";
 
 
 export default function LoginPage() {
@@ -32,21 +33,12 @@ export default function LoginPage() {
     // This prevents the form from submitting if the CAPTCHA hasn’t been completed.
     if (!token) {
       setError("Please complete the CAPTCHA verification.");
-      setIsLoading(false);
       return;
     }
 
     try {
       // Verify Turnstile token on your backend
-      const verifyRes = await fetch("/api/verify-turnstile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
-      });
-
-      if (!verifyRes.ok) {
-        throw new Error("Turnstile verification failed");
-      }
+      await verifyTurnstileToken(token);
 
       // Proceed with Nile login only if token is valid
       await login(email, password);
@@ -122,10 +114,14 @@ export default function LoginPage() {
             </div>
             {/* ✅ NEW - Turnstile Widget */}
             <div className="flex justify-center">
-              <Turnstile
-                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-                onVerify={(token) => setToken(token)}
-              />
+              {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
+                <Turnstile
+                  siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                  onVerify={(token) => setToken(token)}
+                />
+              ) : (
+                <p className="text-sm text-destructive">CAPTCHA is not configured. Please contact support.</p>
+              )}
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading

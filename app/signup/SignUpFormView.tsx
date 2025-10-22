@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { signupContent } from "./content";
 import type { PasswordStrength } from "@/lib/utils";
 import { Turnstile } from "next-turnstile";
+import { verifyTurnstileToken } from "./verifyToken";
 
 interface FormData {
   email: string;
@@ -61,18 +62,9 @@ export default function SignUpFormView() {
 
     try {
        // Verify Turnstile token on your backend
-      const verifyRes = await fetch("/api/verify-turnstile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
-      });
-
-      if (!verifyRes.ok) {
-        throw new Error("Turnstile verification failed");
-      }
+      await verifyTurnstileToken(token);
 
       // Proceed with Nile login only if token is valid
-      // Call centralized signup function
       await signup(data.email, data.password);
       router.push("/dashboard");
     } catch (err: unknown) {
@@ -176,10 +168,14 @@ export default function SignUpFormView() {
         </div>
 
         <div className="space-y-2">
-          <Turnstile
-            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-            onVerify={(token) => setToken(token)}
-          />
+          {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
+            <Turnstile
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+              onVerify={(token) => setToken(token)}
+            />
+          ) : (
+            <p className="text-sm text-destructive">CAPTCHA is not configured. Please contact support.</p>
+          )}
         </div>
 
         <Button type="submit" className="w-full" disabled={isSignUpLoading}>

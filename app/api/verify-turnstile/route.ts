@@ -2,26 +2,32 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { validateTurnstileToken } from "next-turnstile";
-import { v4 } from "uuid";
-
 
 export async function POST(req: NextRequest) {
-  const { token } = await req.json();
-  console.log("Verifying Turnstile token:", token);
+  try {
+    const { token } = await req.json();
 
-  const result = await validateTurnstileToken({
-    token,
-    secretKey: process.env.TURNSTILE_SECRET_KEY!,
-    idempotencyKey: v4(),
-    sandbox: process.env.NODE_ENV === "development",
-  });
+    const secretKey = process.env.TURNSTILE_SECRET_KEY;
+    if (!secretKey) {
+      console.error("TURNSTILE_SECRET_KEY is not set.");
+      return NextResponse.json({ success: false, message: "Server configuration error" }, { status: 500 });
+    }
 
-  console.log("Turnstile verification result:", result);
-  console.log("Turnstile secret loaded:", process.env.TURNSTILE_SECRET_KEY);
+    const result = await validateTurnstileToken({
+      token,
+      secretKey,
+      sandbox: process.env.NODE_ENV === "development",
+    });
 
-  if (!result.success) {
-    return NextResponse.json({ success: false, message: "Invalid CAPTCHA" }, { status: 400 });
+    if (!result.success) {
+      const errorCodes = (result as any)['error-codes'] || [];
+      console.warn("Turnstile verification failed with error codes:", errorCodes);
+      return NextResponse.json({ success: false, message: "Invalid CAPTCHA" }, { status: 400 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("An error occurred during Turnstile verification:", error);
+    return NextResponse.json({ success: false, message: "An internal server error occurred." }, { status: 500 });
   }
-
-  return NextResponse.json({ success: true });
 }
