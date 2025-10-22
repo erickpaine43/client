@@ -1,88 +1,55 @@
 services:
-  convex-backend:
-    # Change this to :${REV} if you want to pin to a specific version
-    image: ghcr.io/get-convex/convex-backend:latest
-    stop_grace_period: 10s
-    stop_signal: SIGINT
-    ports:
-      - "${PORT:-3210}:3210"
-      - "${SITE_PROXY_PORT:-3211}:3211"
-    volumes:
-      - convex_data:/convex/data
-    env_file:
-      - .env.local
-    environment:
-      - CONVEX_CLOUD_ORIGIN=${CONVEX_CLOUD_ORIGIN:-http://127.0.0.1:${PORT:-3210}}
-      - CONVEX_SITE_ORIGIN=${CONVEX_SITE_ORIGIN:-http://127.0.0.1:${SITE_PROXY_PORT:-3211}}
-      - DOCUMENT_RETENTION_DELAY=${DOCUMENT_RETENTION_DELAY:-172800}
-    healthcheck:
-      test: curl -f http://localhost:3210/version || exit 1
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
-  convex-dashboard:
-    image: ghcr.io/get-convex/convex-dashboard:latest
-    stop_grace_period: 10s
-    stop_signal: SIGINT
-    ports:
-      - "${DASHBOARD_PORT:-6791}:6791"
-    env_file:
-      - .env.local
-    environment:
-      - NEXT_PUBLIC_DEPLOYMENT_URL=${NEXT_PUBLIC_DEPLOYMENT_URL:-http://127.0.0.1:${PORT:-3210}}
-    depends_on:
-      convex-backend:
-        condition: service_healthy
-
   niledb-oltp:
     image: ghcr.io/niledatabase/testingcontainer:latest
     ports:
       - "5443:5432"
-      - "3000:3000"
-    env_file:
-      - .env.local
+      - "3005:3000"
     volumes:
       - nile_oltp_data:/var/lib/postgresql/data
     environment:
       - NILE_TESTING_DB_NAME=oltp
+      - NILE_TESTING_DB_ID=01000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_USER=00000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_PASSWORD=password
 
   niledb-olap:
     image: ghcr.io/niledatabase/testingcontainer:latest
     ports:
       - "5444:5432"
       - "3001:3000"
-    env_file:
-      - .env.local
     volumes:
       - nile_olap_data:/var/lib/postgresql/data
     environment:
       - NILE_TESTING_DB_NAME=olap
+      - NILE_TESTING_DB_ID=02000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_USER=00000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_PASSWORD=password
 
   niledb-messages:
     image: ghcr.io/niledatabase/testingcontainer:latest
     ports:
       - "5445:5432"
       - "3002:3000"
-    env_file:
-      - .env.local
     volumes:
       - nile_messages_data:/var/lib/postgresql/data
     environment:
       - NILE_TESTING_DB_NAME=messages
+      - NILE_TESTING_DB_ID=03000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_USER=00000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_PASSWORD=password
 
   niledb-queue:
     image: ghcr.io/niledatabase/testingcontainer:latest
     ports:
       - "5446:5432"
       - "3003:3000"
-    env_file:
-      - .env.local
     volumes:
       - nile_queue_data:/var/lib/postgresql/data
     environment:
       - NILE_TESTING_DB_NAME=queue
+      - NILE_TESTING_DB_ID=04000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_USER=00000000-0000-7000-8000-000000000000
+      - NILE_TESTING_DB_PASSWORD=password
 
   redis:
     image: redis:7-alpine
@@ -92,7 +59,6 @@ services:
       - redis_data:/data
 
 volumes:
-  convex_data:
   nile_oltp_data:
   nile_olap_data:
   nile_messages_data:

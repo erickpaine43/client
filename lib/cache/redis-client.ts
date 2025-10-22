@@ -7,38 +7,59 @@ let redisClient: Redis | null = null;
  * Creates the client on first call and reuses it for subsequent calls.
  */
 export function getRedisClient(): Redis | null {
-  if (redisClient) {
+  console.log('🔍 Redis client status check - current client:', redisClient ? redisClient.status : 'null');
+
+  if (redisClient && redisClient.status === 'ready') {
+    console.log('✅ Returning existing ready Redis client');
     return redisClient;
+  }
+
+  // Clean up existing client if it's in a bad state
+  if (redisClient && redisClient.status !== 'ready') {
+    console.log('🧹 Cleaning up Redis client with status:', redisClient.status);
+    redisClient.disconnect();
+    redisClient = null;
   }
 
   const redisUrl =
     process.env.REDIS_URL ||
     (process.env.NODE_ENV === "development" ? "redis://localhost:6379" : "");
 
+  console.log('🔗 Redis URL:', redisUrl);
+
   if (!redisUrl) {
-    console.warn("Redis not configured. Set REDIS_URL environment variable.");
+    console.warn("⚠️ Redis not configured. Set REDIS_URL environment variable.");
     return null;
   }
 
   try {
+    console.log('🔨 Creating new Redis client...');
     redisClient = new Redis(redisUrl);
-    console.log("Redis client configured successfully");
+    console.log("✅ Redis client configured successfully, status:", redisClient.status);
 
-    // Handle connection errors
+    // Handle connection events
+    redisClient.on('connect', () => {
+      console.log('🔌 Redis client connecting...');
+    });
+
+    redisClient.on('ready', () => {
+      console.log('🎉 Redis client connected and ready');
+    });
+
     redisClient.on('error', (error) => {
-      console.error('Redis client error:', error);
+      console.error('❌ Redis client error:', error);
+      console.error('❌ Redis client status:', redisClient?.status);
       // Reset client on error so it can be recreated
       redisClient = null;
     });
 
-    // Handle connection ready
-    redisClient.on('ready', () => {
-      console.log('Redis client connected and ready');
+    redisClient.on('close', () => {
+      console.log('🔌 Redis client connection closed');
     });
 
     return redisClient;
   } catch (error) {
-    console.error("Failed to create Redis client:", error);
+    console.error("❌ Failed to create Redis client:", error);
     return null;
   }
 }
@@ -50,7 +71,7 @@ export function getRedisClient(): Redis | null {
 export function createRedisClient(): Redis | null {
   const redisUrl =
     process.env.REDIS_URL ||
-    (process.env.NODE_ENV === "development" ? "redis://localhost:6379" : "");
+    (process.env.NODE_ENV === "development" ? "redis://localhost:6380" : "");
 
   if (!redisUrl) {
     console.warn("Redis not configured. Set REDIS_URL environment variable.");

@@ -1,4 +1,3 @@
-"use server";
 import { AnalyticsFilters } from "@/types/analytics/core";
 import { getRedisClient } from "./redis-client";
 import type Redis from "ioredis";
@@ -39,13 +38,13 @@ export const DOMAIN_CACHE_CONFIG = {
 /**
  * Generate a cache key for analytics data
  */
-export function generateAnalyticsCacheKey(
+export async function generateAnalyticsCacheKey(
   domain: string,
   operation: string,
   entityIds: string[] = [],
   filters: AnalyticsFilters,
   timeWindow: number = CACHE_TTL.RECENT
-): string {
+): Promise<string> {
   const entityPart = entityIds.length > 0 ? entityIds.sort().join(",") : "all";
   const filterPart =
     Object.keys(filters).length > 0
@@ -201,7 +200,7 @@ export async function getAnalyticsCacheStats(): Promise<{
 /**
  * Check if Redis cache is available
  */
-export function isAnalyticsCacheAvailable(): boolean {
+export async function isAnalyticsCacheAvailable(): Promise<boolean> {
   return getRedisClient() !== null;
 }
 

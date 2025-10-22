@@ -1,6 +1,7 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
+import { defineConfig, globalIgnores } from "eslint/config";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -9,17 +10,50 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+const eslintConfig = defineConfig([
+  // Global ignores
+  globalIgnores([
+    "**/node_modules/",
+    ".git/",
+    ".next/",
+    "out/",
+    "build/",
+    "dist/",
+    "public/",
+    ".vscode/",
+    "*.log",
+    "next-env.d.ts",
+    ".eslintcache",
+    "tsconfig.json",
+    "*.lock",
+    "package.json",
+    "*.yml",
+    "jest.setup.js",
+    "coverage/",
+  ]),
+  // Next.js and TypeScript configuration
   {
-    ignores: [
-      "node_modules/**",
-      ".next/**",
-      "out/**",
-      "build/**",
-      "next-env.d.ts",
+    name: "next-typescript-config",
+    files: ["**/*.{js,jsx,ts,tsx}"],
+    extends: [
+      ...compat.config({
+        extends: ["next", "next/typescript", "prettier"],
+      }),
     ],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_" },
+      ],
+      // Additional best practice rules
+      "@/prefer-const": "error",
+      "@typescript-eslint/no-var-requires": "error",
+    },
+    linterOptions: {
+      reportUnusedDisableDirectives: "warn",
+    },
   },
-];
+]);
 
 export default eslintConfig;

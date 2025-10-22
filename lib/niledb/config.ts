@@ -37,7 +37,7 @@ export const createNileConfig = (): NileConfig => {
   }
 
   // Extract base database name from URL for backward compatibility
-  const databaseName = extractDatabaseNameFromUrl(postgresUrl);
+  const databaseName = 'test'; // Default for multi-database setup
 
   return {
     apiUrl,
@@ -68,28 +68,4 @@ function createDatabaseConfig(name: string, port: number): { name: string; url: 
     user,
     password,
   };
-}
-
-/**
- * Extract database ID from API URL for backward compatibility
- */
-function extractDatabaseIdFromUrl(apiUrl: string): string {
-  if (!apiUrl) return '';
-  if(['development', 'local', 'test'].includes(process.env.NODE_ENV)) return 'test';
-
-  // Extract from URL like: https://us-west-2.api.thenile.dev/v2/databases/01988a31-7e7a-7bc7-a089-92bc09d501d4
-  const match = apiUrl.match(/\/databases\/([a-zA-Z0-9-]+)(?:\/|$)/);
-  return match ? match[1] : '';
-}
-
-/**
- * Extract database name from Postgres URL
- */
-function extractDatabaseNameFromUrl(postgresUrl: string): string {
-  try {
-    const url = new URL(postgresUrl);
-    return url.pathname.slice(1); // Remove leading slash
-  } catch {
-    return 'test'; // Default fallback
-  }
 }

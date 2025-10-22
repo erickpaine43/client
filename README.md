@@ -27,9 +27,9 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 ### Core Stack
 
-- **Frontend**: Next.js 14 with App Router and TypeScript
-- **Backend**: Convex for real-time data and server functions
+- **Frontend**: Next.js 15 with App Router and TypeScript
 - **Database**: NileDB for multi-tenant data isolation (4 separate databases: OLTP, OLAP, Messages, Queue)
+- **ORM**: Drizzle ORM with PostgreSQL connections for each database
 - **Cache**: Redis for analytics caching and performance optimization
 - **Authentication**: NileDB integrated auth with role-based permissions
 - **Deployment**: Cloudflare Workers with OpenNext adapter
