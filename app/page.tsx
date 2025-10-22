@@ -11,6 +11,8 @@ import { loginContent } from "./content";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { AuthTemplate } from "@/components/auth/AuthTemplate";
+import { Turnstile } from "next-turnstile";
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -19,15 +21,37 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { login, user } = useAuth();
+  const [token, setToken] = useState(""); // ✅ NEW — stores Turnstile token when user verifies
+
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
 
+    // This prevents the form from submitting if the CAPTCHA hasn’t been completed.
+    if (!token) {
+      setError("Please complete the CAPTCHA verification.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
+      // Verify Turnstile token on your backend
+      const verifyRes = await fetch("/api/verify-turnstile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+
+      if (!verifyRes.ok) {
+        throw new Error("Turnstile verification failed");
+      }
+
+      // Proceed with Nile login only if token is valid
       await login(email, password);
       router.push("/dashboard");
+      setToken(""); // ✅ reset after successful login
     } catch (err) {
       console.error("Login failed:", err);
       setError((err as Error)?.message || loginContent.errors.generic);
@@ -35,6 +59,8 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+
+
 
   const icon = user ? User : LogIn;
   const title = user ? "You are already signed in." : loginContent.title;
@@ -92,6 +118,13 @@ export default function LoginPage() {
                 onValueChange={setPassword}
                 disabled={isLoading}
                 required
+              />
+            </div>
+            {/* ✅ NEW - Turnstile Widget */}
+            <div className="flex justify-center">
+              <Turnstile
+                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                onVerify={(token) => setToken(token)}
               />
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
