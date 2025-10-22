@@ -100,8 +100,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     lastCheck?: Date;
   }>({ status: "unknown" });
 
-  console.log(user);
-
   // API helper functions using the completed Task 8 API routes
   const fetchProfile = useCallback(async (): Promise<NileDBUser | null> => {
     try {
@@ -158,7 +156,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const fetchUserCompanies = useCallback(
-    async (userId: string): Promise<CompanyInfo[] | []> => {
+    async (userId: string): Promise<CompanyInfo[]> => {
       try {
         /*
         const response = await fetch(`/api/users/${userId}/companies`, {
@@ -257,10 +255,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               ]);
 
               setUserTenants(tenants);
-              if (companies.length === 0) {
-                console.log("No companies found for user.");
-                setUserCompanies(companies);
-              }
+              setUserCompanies(companies);
 
               // Auto-select first tenant if available
               if (tenants.length > 0 && !selectedTenantId) {
