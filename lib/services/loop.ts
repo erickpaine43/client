@@ -130,7 +130,7 @@ class LoopService {
     */
   async sendTestNotificationEmail(email: string, message: string, subject?: string, userName?: string): Promise<LoopResponse> {
     return this.sendTransactionalEmail({
-      transactionalId: process.env.LOOP_VERIFICATION_TRANSACTIONAL_ID || 'verification',
+      transactionalId: process.env.LOOP_NOTIFICATION_TRANSACTIONAL_ID || 'verification',
       email,
       dataVariables: {
         userName: userName || 'Test User',

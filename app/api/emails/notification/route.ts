@@ -70,6 +70,8 @@ export async function POST(request: NextRequest) {
 // GET endpoint for testing notification email functionality (uses verification template)
 export async function GET(request: Request) {
   try {
+    const authService = getAuthService();
+    await authService.validateSession();
     const { searchParams } = new URL(request.url);
 
     // Validate email parameter with Zod for consistency
@@ -87,11 +89,11 @@ export async function GET(request: Request) {
     const userName = searchParams.get('userName') ?? 'Test User';
 
     const loopService = getLoopService();
-    const result = await loopService.sendTestNotificationEmail(email, message, subject, userName);
+    const result = await loopService.sendNotificationEmail(email, message, subject, userName);
 
     return NextResponse.json({
       success: result.success,
-      message: result.success ? 'Test notification email sent successfully (using verification template)' : 'Failed to send test notification email',
+      message: result.success ? 'Test notification email sent successfully' : 'Failed to send test notification email',
       contactId: result.contactId,
       error: result.message,
       testData: {
@@ -100,7 +102,6 @@ export async function GET(request: Request) {
         subject,
         userName,
       },
-      note: 'This test uses the verification email template. Create a dedicated "notification" template in Loop dashboard for production use.',
     });
   } catch (error) {
     console.error('Test notification email error:', error);
