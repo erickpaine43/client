@@ -93,7 +93,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       success: result.success,
-      message: result.success ? 'Test notification email sent successfully' : 'Failed to send test notification email',
+      message: result.success ? 'Notification email sent successfully' : 'Failed to send test notification email',
       contactId: result.contactId,
       error: result.message,
       testData: {
@@ -104,9 +104,9 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error('Test notification email error:', error);
+    console.error('Notification email error:', error);
     return NextResponse.json(
-      { error: 'Failed to send test notification email' },
+      { error: 'Failed to send notification email' },
       { status: 500 }
     );
   }
