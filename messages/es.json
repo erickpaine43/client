@@ -1,8 +1,10 @@
 {
     "Errors": {
-        "403-CAMPAIGNS": "No está autorizado para acceder a este recurso de campaña.",
-        "401-LOGIN": "Credenciales inválidas. Por favor, revise su nombre de usuario y contraseña.",
-        "500-AUTH": "Ocurrió un error inesperado del servidor durante la autenticación."
+        "401-LOGIN": "Las credenciales que proporcionaste no son válidas. Por favor, verifica tu correo electrónico y contraseña.",
+        "403-CAMPAIGNS": "No estás autorizado para ver o modificar los datos de la campaña.",
+        "403-USERS": "No tienes los permisos necesarios para gestionar cuentas de usuario.",
+        "500-AUTH": "Ocurrió un error inesperado del servidor durante la autenticación. Por favor, inténtalo de nuevo más tarde.",
+        "500-LEADS": "Ocurrió un error del sistema al obtener los datos de los leads. El problema ha sido registrado."
     },
     "Metadata": {
         "title": "Penguin Mails - Alcance por correo electrónico y calentamiento de dominio",
