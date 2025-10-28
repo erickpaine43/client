@@ -7,7 +7,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 function WarmupSummarySkeleton() {
   return (
-    <Card className="bg-white rounded-xl shadow-sm border border-gray-200 ">
+    <Card>
       <CardHeader>
         <h3 className="font-semibold text-gray-900 mb-4">Warmup Status</h3>
       </CardHeader>
