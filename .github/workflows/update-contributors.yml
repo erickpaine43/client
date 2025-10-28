@@ -71,6 +71,8 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add README.md
+          git add scripts/update_contributors.py
+          git add contributors.json
           if ! git diff-index --quiet HEAD; then
             git commit -m "Update contributors list in README.md"
             git pull --rebase origin dev
