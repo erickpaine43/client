@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/custom/password-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signupContent } from "./content";
 import type { PasswordStrength } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext";
+
 
 interface FormData {
+  name: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -21,8 +22,7 @@ export default function SignUpFormView() {
   const [error, setError] = useState<string | null>(null);
   const [passwordStrength, setPasswordStrength] =
     useState<PasswordStrength | null>(null);
-  const router = useRouter();
-  const { signup } = useAuth();
+  const { signup, error: authError } = useAuth();
 
   // Initialize react-hook-form
   const {
@@ -33,6 +33,7 @@ export default function SignUpFormView() {
     setValue,
   } = useForm<FormData>({
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -53,8 +54,7 @@ export default function SignUpFormView() {
 
     try {
       // Call centralized signup function
-      await signup(data.email, data.password);
-      router.push("/dashboard");
+      await signup(data.email, data.password, data.name);
     } catch (err: unknown) {
       console.error("Signup failed:", err);
       if (
@@ -72,12 +72,33 @@ export default function SignUpFormView() {
     }
   };
 
+  useEffect(() => {
+    if (authError) setError(authError.message);
+  }, [authError]);
+
   return (
     <>
       {error && (
         <p className="text-sm text-red-600">{error}</p>
       )}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Name Field */}
+        <div className="space-y-2">
+          <Label htmlFor="name">{signupContent.form.name.label}</Label>
+          <Input
+            id="name"
+            type="text"
+            placeholder={signupContent.form.name.placeholder}
+            {...register("name", {
+              required: "Name is required",
+            })}
+            disabled={isSignUpLoading}
+          />
+          {errors.name && (
+            <p className="text-sm text-red-600">{errors.name.message}</p>
+          )}
+        </div>
+
         {/* Email Field */}
         <div className="space-y-2">
           <Label htmlFor="email">{signupContent.form.email.label}</Label>

@@ -293,6 +293,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onSuccess: (data) => {
       const { ok } = data;
       if (ok) {
+        toast.success("Account created successfully!");
         // After signup, we might need to sign in immediately
         // But since useSignUp doesn't automatically populate session, we'll handle in signup
         setAuthError(null);
@@ -305,7 +306,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setAuthError(error);
     },
     createTenant: true,
-    callbackUrl: "/dashboard/settings",
+    callbackUrl: "/dashboard",
   });
 
   // Enhanced mapping function for NileDB user to legacy User format
@@ -385,6 +386,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signup = async (
     email: string,
     password: string,
+    name: string,
     _firstName?: string,
     _lastName?: string,
     _companyName?: string
@@ -393,8 +395,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(true);
 
     try {
-      await signUpHook({ email, password });
-      toast.success("Account created successfully!");
+      await signUpHook({ email, password, name });
     } catch (error) {
       console.error("Signup error:", error);
       setLoading(false);
