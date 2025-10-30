@@ -15,7 +15,7 @@ export default async function DashboardRootLayout({
       <ClientAnalyticsProvider>
         <SidebarProvider>
           <AppSideBar />
-          <SidebarInset className="w-10/12  md:peer-data-[variant=inset]:shadow-none gap-5">
+          <SidebarInset className="max-w-10/12  md:peer-data-[variant=inset]:shadow-none gap-5  overflow-hidden">
             <div className=" rounded-lg shadow-sm">
               <Header />
             </div>

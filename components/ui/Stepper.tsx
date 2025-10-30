@@ -34,12 +34,12 @@ function Stepper<T>({ context }: StepperProps<T>) {
 
   if (!setCurrentStep || !steps || typeof currentStep !== "number") {
     throw new Error(
-      "setCurrentStep, steps, and currentStep must be properly defined in the context",
+      "setCurrentStep, steps, and currentStep must be properly defined in the context"
     );
   }
 
   return (
-    <div className="px-8 py-6">
+    <div className="px-4 py-4">
       <div className="flex items-center justify-center">
         {steps.map((step, index) => {
           const StepIcon = step.icon;
@@ -55,35 +55,35 @@ function Stepper<T>({ context }: StepperProps<T>) {
                   disabled={!isAccessible}
                   variant="ghost"
                   className={cn(
-                    "flex flex-col items-center space-y-2 p-4 h-auto w-auto rounded-xl transition-all hover:bg-background/80",
+                    "flex flex-col items-center space-y-2 p-3 h-auto w-auto rounded-lg transition-all hover:bg-background/80",
                     {
                       "bg-background shadow-lg scale-105": isActive,
                       "bg-background shadow-sm hover:shadow-md":
                         isCompleted && !isActive,
                       "bg-muted/50 opacity-50 cursor-not-allowed hover:bg-muted/50":
                         !isAccessible,
-                    },
+                    }
                   )}
                 >
                   <div
                     className={cn(
-                      "w-12 h-12 rounded-xl flex items-center justify-center transition-colors",
+                      "w-10 h-10 rounded-lg flex items-center justify-center transition-colors",
                       {
                         [step.color]: isActive,
                         "bg-green-500": isCompleted && !isActive,
                         "bg-muted-foreground/30": !isAccessible,
-                      },
+                      }
                     )}
                   >
                     {isCompleted ? (
-                      <Check className="w-6 h-6 text-white" />
+                      <Check className="w-5 h-5 text-white" />
                     ) : (
-                      <StepIcon className="w-6 h-6 text-white" />
+                      <StepIcon className="w-5 h-5 text-white" />
                     )}
                   </div>
-                  <div className="text-center min-w-[100px]">
+                  <div className="text-center min-w-[80px]">
                     <p
-                      className={cn("text-sm font-medium", {
+                      className={cn("text-xs font-medium", {
                         "text-foreground": isActive,
                         "text-foreground/70": isCompleted && !isActive,
                         "text-muted-foreground": !isAccessible,
@@ -92,7 +92,7 @@ function Stepper<T>({ context }: StepperProps<T>) {
                       {step.title}
                     </p>
                     <p
-                      className={cn("text-xs", {
+                      className={cn("text-[10px]", {
                         "text-muted-foreground": isActive,
                         "text-muted-foreground/60": !isActive,
                       })}
@@ -103,9 +103,9 @@ function Stepper<T>({ context }: StepperProps<T>) {
                 </Button>
               </div>
               {index < steps.length - 1 && (
-                <div className="flex items-center px-4">
+                <div className="flex items-center px-2">
                   <div
-                    className={cn("w-48 h-1 rounded-full transition-colors", {
+                    className={cn("w-24 h-1 rounded-full transition-colors", {
                       "bg-green-500": isCompleted,
                       "bg-muted": !isCompleted,
                     })}
