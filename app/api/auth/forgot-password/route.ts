@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       }
     } catch (error) {
       // If user lookup fails, continue with default 'User'
-      console.log('Could not find user profile for email:', validatedData.email, 'using default name');
+      console.log('Could not find user profile for email:', validatedData.email, 'using default name', error);
     }
 
     // Generate secure token
