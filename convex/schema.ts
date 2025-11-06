@@ -465,7 +465,22 @@ export default defineSchema({
     resolvedAt: v.optional(v.number()),
     resolution: v.optional(v.string()),
   })
-    .index("eventType", ["eventType"])
-    .index("severity", ["severity"])
-    .index("timestamp", ["timestamp"]),
+  .index("eventType", ["eventType"])
+  .index("severity", ["severity"])
+  .index("timestamp", ["timestamp"]),
+
+  // ============================================================================
+  // PASSWORD RESET TOKENS
+  // ============================================================================
+  passwordResetTokens: defineTable({
+    email: v.string(),
+    token: v.string(),
+    expiresAt: v.number(), // Convex timestamp
+    used: v.boolean(),
+    createdAt: v.number(), // Convex timestamp
+    usedAt: v.optional(v.number()), // Convex timestamp
+  })
+    .index("by_token", ["token"])
+    .index("by_email", ["email"])
+    .index("by_expiresAt", ["expiresAt"]),
 });
