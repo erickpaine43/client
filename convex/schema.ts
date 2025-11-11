@@ -468,34 +468,4 @@ export default defineSchema({
   .index("eventType", ["eventType"])
   .index("severity", ["severity"])
   .index("timestamp", ["timestamp"]),
-
-  // ============================================================================
-  // PASSWORD RESET TOKENS
-  // ============================================================================
-  passwordResetTokens: defineTable({
-    email: v.string(),
-    token: v.string(),
-    expiresAt: v.number(), // Convex timestamp
-    used: v.boolean(),
-    createdAt: v.number(), // Convex timestamp
-    usedAt: v.optional(v.number()), // Convex timestamp
-  })
-    .index("by_token", ["token"])
-    .index("by_email", ["email"])
-    .index("by_expiresAt", ["expiresAt"]),
-
-  // ============================================================================
-  // EMAIL VERIFICATION TOKENS
-  // ============================================================================
-  emailVerificationTokens: defineTable({
-    email: v.string(),
-    token: v.string(),
-    expiresAt: v.number(), // Convex timestamp
-    used: v.boolean(),
-    createdAt: v.number(), // Convex timestamp
-    usedAt: v.optional(v.number()), // Convex timestamp
-  })
-    .index("by_token", ["token"])
-    .index("by_email", ["email"])
-    .index("by_expiresAt", ["expiresAt"]),
 });

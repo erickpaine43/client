@@ -1,15 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ConvexHttpClient } from 'convex/browser';
 import { getLoopService } from '@/lib/services/loop';
 import { getAuthService } from '@/lib/niledb/auth';
+import { getTokenService } from '@/lib/niledb/tokens';
 import { z } from 'zod';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email(),
 });
-
-// Initialize Convex client
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,25 +29,27 @@ export async function POST(request: NextRequest) {
       console.log('Could not find user profile for email:', validatedData.email, 'using default name', error);
     }
 
-    // Generate secure token
-    const token = crypto.randomUUID();
-
+    // Use NILEDB TokenService to generate and store token
+    const tokenService = getTokenService();
+    
+    // Clean up expired tokens for this email first
+    await tokenService.cleanupExpiredTokensForEmail(validatedData.email, 'password_reset');
+    
     // Calculate expiration time (default 1 hour)
     const expiryMinutes = parseInt(process.env.PASSWORD_RESET_TOKEN_EXPIRY_MINUTES || '60');
-    const expiresAt = Date.now() + (expiryMinutes * 60 * 1000);
-
-    // Store token in Convex
-    await (convex as any).mutation('passwordResetTokens:createToken', {
-      email: validatedData.email,
-      token,
-      expiresAt,
-    });
+    
+    // Create new token
+    const tokenData = await tokenService.createToken(
+      validatedData.email,
+      'password_reset',
+      expiryMinutes
+    );
 
     // Send password reset email via Loop with real user name
     const loopService = getLoopService();
     const result = await loopService.sendPasswordResetEmail(
       validatedData.email,
-      token,
+      tokenData.token,
       userName // Now includes real user name from database
     );
 

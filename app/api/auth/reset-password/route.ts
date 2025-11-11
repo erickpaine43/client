@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ConvexHttpClient } from 'convex/browser';
 import { getAuthService } from '@/lib/niledb/auth';
+import { getTokenService } from '@/lib/niledb/tokens';
 import { z } from 'zod';
 import { validateToken } from '@/lib/auth/passwordResetTokenUtils';
 
@@ -13,16 +13,13 @@ const resetPasswordSchema = z.object({
   path: ["confirmPassword"],
 });
 
-// Initialize Convex client
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const validatedData = resetPasswordSchema.parse(body);
 
-    // Validate token
-    const tokenInfo = await validateToken(convex, validatedData.token);
+    // Validate token using NILEDB TokenService
+    const tokenInfo = await validateToken(validatedData.token);
 
     // Update password using NileDB auth service
     const authService = getAuthService();
@@ -32,11 +29,10 @@ export async function POST(request: NextRequest) {
     }
     await (authService as any).updatePassword(tokenInfo.email, validatedData.newPassword);
 
-    // Mark token as used (only if _id exists)
-    if (tokenInfo._id) {
-      await (convex as any).mutation('passwordResetTokens:markTokenAsUsed', {
-        tokenId: tokenInfo._id,
-      });
+    // Mark token as used using NILEDB TokenService (only if id exists)
+    if (tokenInfo.id) {
+      const tokenService = getTokenService();
+      await tokenService.markTokenAsUsed(tokenInfo.id);
     }
 
     return NextResponse.json({
