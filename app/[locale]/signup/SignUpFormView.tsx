@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/custom/password-input";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { signupContent } from "./content";
 import type { PasswordStrength } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 import { Turnstile } from "next-turnstile";
 
@@ -25,6 +27,7 @@ export default function SignUpFormView() {
     useState<PasswordStrength | null>(null);
   const { signup, error: authError } = useAuth();
   const [token, setToken] = useState("");
+  const router = useRouter();
 
   // Initialize react-hook-form
   const {
@@ -32,6 +35,7 @@ export default function SignUpFormView() {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<FormData>({
     defaultValues: {
       name: "",
@@ -74,6 +78,46 @@ export default function SignUpFormView() {
       // Proceed with Nile login only if token is valid
       // Call centralized signup function
       await signup(data.email, data.password, data.name);
+
+      // Store email for resend functionality
+      localStorage.setItem('pendingVerificationEmail', data.email);
+
+      // Trigger email verification via Loop
+      let emailSent = false;
+      try {
+        const response = await fetch('/api/emails/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'verification',
+            email: data.email,
+            userName: data.name,
+            token: 'temp-token', // Backend will generate actual token
+          }),
+        });
+
+        if (response.ok) {
+          emailSent = true;
+        } else {
+          console.warn('Failed to send verification email, but continuing with signup');
+        }
+      } catch (emailError) {
+        console.warn('Error sending verification email:', emailError);
+        // Don't fail signup if email sending fails
+      }
+
+      // Show success message with appropriate feedback
+      const successMessage = emailSent
+        ? "Account created successfully! Check your email for a verification link to activate your account."
+        : "Account created successfully! We'll send you a verification link shortly.";
+
+      // Show success toast notification
+      toast.success(successMessage, {
+        duration: 4000,
+      });
+
+      // Redirect to email confirmation
+      router.push("/email-confirmation");
     } catch (err: unknown) {
       console.error("Signup failed:", err);
       if (

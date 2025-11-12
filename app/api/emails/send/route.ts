@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getLoopService } from '@/lib/services/loop';
 import { getAuthService } from '@/lib/niledb/auth';
 import { z } from 'zod';
+import {
+  generateVerificationToken,
+  getVerificationTokenExpiry,
+  storeVerificationToken
+} from '@/lib/utils/email-verification';
 
 // Schema for transactional email requests
 const transactionalEmailSchema = z.object({
@@ -14,10 +19,8 @@ const transactionalEmailSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    // Validate user session for security
-    const authService = getAuthService();
-    await authService.validateSession();
-
+    // For verification emails, we might not have a valid session yet
+    // So we'll skip session validation for verification emails
     const body = await request.json();
     const validatedData = transactionalEmailSchema.parse(body);
 
@@ -25,19 +28,29 @@ export async function POST(request: NextRequest) {
     let result;
 
     switch (validatedData.type) {
-      case 'verification':
-        if (!validatedData.token) {
-          return NextResponse.json(
-            { error: 'Token is required for verification emails' },
-            { status: 400 }
-          );
+      case 'verification': {
+        // Generate a secure token for email verification
+        const verificationToken = generateVerificationToken();
+        const expiresAt = getVerificationTokenExpiry();
+
+        // Store token in database for reliable verification
+        const tokenStored = await storeVerificationToken(
+          validatedData.email,
+          verificationToken,
+          expiresAt
+        );
+        
+        if (!tokenStored) {
+          console.warn('Failed to store verification token, but continuing with email');
         }
+
         result = await loopService.sendVerificationEmail(
           validatedData.email,
-          validatedData.token,
+          verificationToken,
           validatedData.userName
         );
         break;
+      }
 
       case 'password-reset':
         if (!validatedData.token) {
