@@ -157,26 +157,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchUserCompanies = useCallback(
     async (userId: string): Promise<CompanyInfo[]> => {
       try {
-        /*
+        // In development/non-production uses, we allow mock-ups to facilitate local testing
+        if (process.env.NODE_ENV !== "production") {
+          return Array.isArray(mockUserSettings.companyInfo)
+            ? mockUserSettings.companyInfo
+            : [mockUserSettings.companyInfo];
+        }
+
+        // In production we always use the real API
         const response = await fetch(`/api/users/${userId}/companies`, {
           method: "GET",
           credentials: "include",
         });
-        
+
         if (!response.ok) {
           if (response.status === 401) {
             return [];
           }
           throw new Error(`Companies fetch failed: ${response.status}`);
         }
-        
+
         const data = (await response.json()) as {
           companies: CompanyInfo[];
         };
-        */
-        return Array.isArray(mockUserSettings.companyInfo)
-          ? mockUserSettings.companyInfo
-          : [mockUserSettings.companyInfo];
+
+        return data.companies || [];
       } catch (error) {
         console.error("Failed to fetch user companies:", error);
         return [];
@@ -225,13 +230,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (data?.ok) {
         const initializeUserSession = async () => {
           try {
-            // Test authentication with real session
+            // Test authentication con la sesión real
             const isAuthenticated = await testAuthentication();
             if (!isAuthenticated) {
               throw new AuthenticationError("Authentication validation failed");
             }
 
-            // Fetch enhanced profile data using real API
+            // Fetch del perfil real usando la API de Task 8
             const profileData = await fetchProfile();
 
             if (profileData) {
@@ -250,7 +255,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               // Fetch tenants and companies in parallel
               const [tenants, companies] = await Promise.all([
                 fetchUserTenants(),
-                fetchUserCompanies(profileMockData.id),
+                fetchUserCompanies(profileData.id),
               ]);
 
               setUserTenants(tenants);
@@ -555,11 +560,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         // Test authentication with real session
         const isAuthenticated = await testAuthentication();
-        
+
         if (isAuthenticated) {
           // User is authenticated, fetch real profile data
           const profileData = await fetchProfile();
-          
+
           if (profileData) {
             setNileUser(profileData);
             setIsStaff(profileData.profile?.isPenguinMailsStaff || false);
@@ -571,8 +576,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 fetchUserCompanies(profileData.id),
               ]);
 
-            setUserTenants(tenants);
-            setUserCompanies(companies);
+              setUserTenants(tenants);
+              setUserCompanies(companies);
 
               // Auto-select first tenant/company if none selected yet
               const tenantId =
@@ -636,7 +641,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     initializeAuth();
-  }, []);
+  }, [
+    fetchProfile,
+    fetchUserTenants,
+    fetchUserCompanies,
+    testAuthentication,
+    checkSystemHealthStatus,
+    mapNileUserToLegacyUser,
+    selectedTenantId,
+    selectedCompanyId,
+  ]);
 
   return (
     <AuthContext.Provider
