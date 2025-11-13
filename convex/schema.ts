@@ -465,7 +465,7 @@ export default defineSchema({
     resolvedAt: v.optional(v.number()),
     resolution: v.optional(v.string()),
   })
-    .index("eventType", ["eventType"])
-    .index("severity", ["severity"])
-    .index("timestamp", ["timestamp"]),
+  .index("eventType", ["eventType"])
+  .index("severity", ["severity"])
+  .index("timestamp", ["timestamp"]),
 });

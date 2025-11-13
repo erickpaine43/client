@@ -72,9 +72,10 @@ class LoopService {
       transactionalId: process.env.LOOP_VERIFICATION_TRANSACTIONAL_ID || 'verification',
       email,
       dataVariables: {
-        verificationToken,
+        token: verificationToken,
         userName: userName || 'User',
         verificationUrl: `${process.env.NEXT_PUBLIC_APP_URL}/verify?token=${verificationToken}`,
+        frontendUrl: process.env.NEXT_PUBLIC_APP_URL,
       },
     });
   }

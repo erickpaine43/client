@@ -142,6 +142,7 @@ export interface AuthContextType {
   signup: (
     email: string,
     password: string,
+    name: string,
     firstName?: string,
     lastName?: string,
     companyName?: string,

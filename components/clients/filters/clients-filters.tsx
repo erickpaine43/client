@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Table } from "@tanstack/react-table";
 import { copyText as t } from "../data/copy";
-import { Client } from "@/app/dashboard/inbox/schemas/schemas";
+import { Client } from "@/app/[locale]/dashboard/inbox/schemas/schemas";
 
 interface ClientsFiltersProps {
   table: Table<Client>;

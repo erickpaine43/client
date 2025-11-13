@@ -23,7 +23,6 @@ import {
   AuthenticationError,
   InvalidCredentialsError,
 } from "@/lib/niledb/errors";
-import { profileMockData } from "./mock-user";
 import { mockUserSettings } from "@/lib/data/settings.mock";
 
 interface EnhancedAuthContextType extends AuthContextType {
@@ -226,22 +225,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (data?.ok) {
         const initializeUserSession = async () => {
           try {
-            // Test authentication first
-            //const isAuthenticated = await testAuthentication();
-            //if (!isAuthenticated) {
-            //  throw new AuthenticationError("Authentication validation failed");
-            //}
+            // Test authentication with real session
+            const isAuthenticated = await testAuthentication();
+            if (!isAuthenticated) {
+              throw new AuthenticationError("Authentication validation failed");
+            }
 
-            // Fetch enhanced profile data using Task 8 API
-            //const profileData = await fetchProfile();
+            // Fetch enhanced profile data using real API
+            const profileData = await fetchProfile();
 
-            if (profileMockData) {
-              setNileUser(profileMockData);
-              setIsStaff(profileMockData.profile?.isPenguinMailsStaff || false);
+            if (profileData) {
+              setNileUser(profileData);
+              setIsStaff(profileData.profile?.isPenguinMailsStaff || false);
 
               // Map to legacy User format for backward compatibility
               const legacyUser = mapNileUserToLegacyUser(
-                profileMockData,
+                profileData,
                 userCompanies,
                 selectedTenantId,
                 selectedCompanyId
@@ -299,14 +298,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     },
     callbackUrl:
       typeof window !== "undefined"
-        ? window.location.origin + "/dashboard"
-        : "/dashboard",
+        ? window.location.origin + "/email-confirmation"
+        : "/email-confirmation",
   });
 
   const signUpHook = useSignUp({
     onSuccess: (data) => {
       const { ok } = data;
       if (ok) {
+        toast.success("Account created successfully!");
         // After signup, we might need to sign in immediately
         // But since useSignUp doesn't automatically populate session, we'll handle in signup
         setAuthError(null);
@@ -319,7 +319,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setAuthError(error);
     },
     createTenant: true,
-    callbackUrl: "/dashboard/settings",
+    callbackUrl: "/email-confirmation",
   });
 
   // Enhanced mapping function for NileDB user to legacy User format
@@ -393,6 +393,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signup = async (
     email: string,
     password: string,
+    name: string,
     _firstName?: string,
     _lastName?: string,
     _companyName?: string
@@ -401,8 +402,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(true);
 
     try {
-      await signUpHook({ email, password });
-      toast.success("Account created successfully!");
+      const data = { email, password, name };
+      await signUpHook(data);
     } catch (error) {
       console.error("Signup error:", error);
       setLoading(false);
@@ -458,7 +459,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setIsStaff(profileData.profile?.isPenguinMailsStaff || false);
 
         const legacyUser = mapNileUserToLegacyUser(
-          profileMockData,
+          profileData,
           userCompanies,
           selectedTenantId,
           selectedCompanyId
@@ -552,52 +553,74 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        // Test authentication first
-        // Fetch enhanced profile data
-        if (profileMockData) {
-          setNileUser(profileMockData);
-          setIsStaff(profileMockData.profile?.isPenguinMailsStaff || false);
+        // Test authentication with real session
+        const isAuthenticated = await testAuthentication();
+        
+        if (isAuthenticated) {
+          // User is authenticated, fetch real profile data
+          const profileData = await fetchProfile();
+          
+          if (profileData) {
+            setNileUser(profileData);
+            setIsStaff(profileData.profile?.isPenguinMailsStaff || false);
 
-          try {
-            // Fetch tenants and companies in parallel FIRST
-            const [tenants, companies] = await Promise.all([
-              fetchUserTenants(),
-              fetchUserCompanies(profileMockData.id),
-            ]);
+            try {
+              // Fetch tenants and companies in parallel
+              const [tenants, companies] = await Promise.all([
+                fetchUserTenants(),
+                fetchUserCompanies(profileData.id),
+              ]);
 
             setUserTenants(tenants);
             setUserCompanies(companies);
 
-            // Auto-select first tenant/company if none selected yet
-            const tenantId =
-              selectedTenantId ||
-              tenants[0]?.id ||
-              profileMockData.tenants?.[0] ||
-              null;
-            const companyId = selectedCompanyId || companies[0]?.id || null;
+              // Auto-select first tenant/company if none selected yet
+              const tenantId =
+                selectedTenantId ||
+                tenants[0]?.id ||
+                profileData.tenants?.[0] ||
+                null;
+              const companyId = selectedCompanyId || companies[0]?.id || null;
 
-            setSelectedTenantId(tenantId);
-            setSelectedCompanyId(companyId);
+              setSelectedTenantId(tenantId);
+              setSelectedCompanyId(companyId);
 
-            // Now that we have all data, map to legacy User format
-            const legacyUser = mapNileUserToLegacyUser(
-              profileMockData,
-              companies,
-              tenantId,
-              companyId
-            );
-            setUser(legacyUser);
+              // Map to legacy User format
+              const legacyUser = mapNileUserToLegacyUser(
+                profileData,
+                companies,
+                tenantId,
+                companyId
+              );
+              setUser(legacyUser);
 
-            // Check system health for staff users
-            if (profileMockData.profile?.isPenguinMailsStaff) {
-              checkSystemHealthStatus();
+              // Check system health for staff users
+              if (profileData.profile?.isPenguinMailsStaff) {
+                checkSystemHealthStatus();
+              }
+
+              setAuthError(null);
+            } catch (error) {
+              console.warn("Failed to fetch additional user data:", error);
+              // Don't fail initialization for this
             }
-
+          } else {
+            // Profile data fetch failed, clear any existing state
+            setNileUser(null);
+            setUser(null);
+            setUserTenants([]);
+            setUserCompanies([]);
+            setIsStaff(false);
             setAuthError(null);
-          } catch (error) {
-            console.warn("Failed to fetch additional user data:", error);
-            // Don't fail initialization for this
           }
+        } else {
+          // User is not authenticated, clear state
+          setNileUser(null);
+          setUser(null);
+          setUserTenants([]);
+          setUserCompanies([]);
+          setIsStaff(false);
+          setAuthError(null);
         }
       } catch (error) {
         console.error("Auth initialization error:", error);

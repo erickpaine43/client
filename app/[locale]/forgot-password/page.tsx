@@ -25,27 +25,24 @@ export default function ForgotPasswordPage() {
     setError(null);
     setIsSubmitted(false);
 
-    // --- Placeholder for actual password reset request logic ---
-    console.log("Password reset request for:", email);
-
     try {
-      // Simulate API call to your backend to send reset link
-      await new Promise((resolve, reject) =>
-        setTimeout(() => {
-          // Simulate success/failure (e.g., check if email exists)
-          if (email.includes("@")) {
-            // Basic check
-            resolve("Success");
-          } else {
-            reject(new Error("Invalid email format"));
-          }
-        }, 1500),
-      );
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
 
-      console.log("Password reset request successful (simulated)");
-      setIsSubmitted(true); // Show success message
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send reset link');
+      }
+
+      setIsSubmitted(true);
     } catch (err) {
-      console.error("Password reset request failed (simulated):", err);
+      console.error('Forgot password request error:', err);
       setError(
         err instanceof Error
           ? err.message
@@ -54,7 +51,6 @@ export default function ForgotPasswordPage() {
     } finally {
       setIsLoading(false);
     }
-    // --- End placeholder ---
   };
 
   const icon = user ? User : KeyRound;

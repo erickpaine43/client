@@ -4,6 +4,10 @@ export const signupContent = {
     description: "Get started with your secure email experience.",
   },
   form: {
+    name: {
+      label: "Name",
+      placeholder: "Enter your name",
+    },
     email: {
       label: "Email",
       placeholder: "you@example.com",

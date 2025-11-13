@@ -14,6 +14,7 @@ import { AuthTemplate } from "@/components/auth/AuthTemplate";
 import { Turnstile } from "next-turnstile";
 import { verifyTurnstileToken } from "./signup/verifyToken";
 
+import { useTranslations } from "next-intl";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -22,8 +23,8 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { login, user } = useAuth();
-  const [token, setToken] = useState(""); // ✅ NEW — stores Turnstile token when user verifies
-
+  const [token, setToken] = useState("");
+  const t = useTranslations("Login");
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,8 +56,6 @@ export default function LoginPage() {
 
 
   const icon = user ? User : LogIn;
-  const title = user ? "You are already signed in." : loginContent.title;
-  const description = user ? "" : loginContent.description;
   const mode = user ? "loggedIn" : "form";
   const footer = user ? undefined : (
     <div className="flex flex-col items-center space-y-2">
@@ -74,19 +73,19 @@ export default function LoginPage() {
       <AuthTemplate
         mode={mode}
         icon={icon}
-        title={title}
-        description={description}
+        title={t("title")}
+        description={t("description")}
         footer={footer}
         error={mode === "form" ? error : undefined}
       >
         {user ? undefined : (
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">{loginContent.email.label}</Label>
+              <Label htmlFor="email">{t("email.label")}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder={loginContent.email.placeholder}
+                placeholder={t("email.placeholder")}
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -95,7 +94,7 @@ export default function LoginPage() {
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">{loginContent.password.label}</Label>
+                <Label htmlFor="password">{t("password.label")}</Label>
                 {/* <Link
                   href="/forgot-password"
                   className="text-sm font-medium text-primary hover:underline underline-offset-4"
@@ -120,13 +119,13 @@ export default function LoginPage() {
                   onVerify={(token) => setToken(token)}
                 />
               ) : (
-                <p className="text-sm text-destructive">CAPTCHA is not configured. Please contact support.</p>
+                <p className="text-sm text-destructive">
+                  CAPTCHA is not configured. Please contact support.
+                </p>
               )}
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading
-                ? loginContent.loginButton.loading
-                : loginContent.loginButton.default}
+              {isLoading ? t("loginButton.loading") : t("loginButton.default")}
             </Button>
           </form>
         )}
@@ -136,4 +135,4 @@ export default function LoginPage() {
 }
 
 // Force dynamic rendering to prevent SSR issues
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";

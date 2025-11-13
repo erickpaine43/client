@@ -4,13 +4,17 @@ import { Client, Email } from "@/types/inbox";
 import { Campaign } from "@/types/campaign";
 import { User } from "@/types/auth";
 import { Button } from "@/components/ui/button";
-import { markEmailAsStarredAction } from "@/app/dashboard/inbox/actions";
+import { markEmailAsStarredAction } from "@/app/[locale]/dashboard/inbox/actions";
 import { toast } from "sonner";
 import { InboxColumnAction } from "./inbox-column-action";
 import { showCustomToast } from "@/components/ui/custom/custom-toast";
 import { redirect } from "next/navigation";
 
-const markEmailAsStarredMutarion = async (id: number, starred: boolean, user: User | null) => {
+const markEmailAsStarredMutarion = async (
+  id: number,
+  starred: boolean,
+  user: User | null
+) => {
   try {
     const response = await markEmailAsStarredAction(id, starred, user?.id);
     if (!response) {

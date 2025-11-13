@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/table";
 import { DataTableToolbar } from "./datatable-toolbar";
 import EmailTableSkeleton from "../components/EmailTableSkeleton";
-import { Email } from "@/app/dashboard/inbox/schemas/schemas";
+import { Email } from "@/app/[locale]/dashboard/inbox/schemas/schemas";
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData, unknown>[];

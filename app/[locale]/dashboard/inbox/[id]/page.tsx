@@ -10,7 +10,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { ConversationProvider } from "@/context/ConversationContext";
-import { fetchConversationByIdAction } from "@/app/dashboard/inbox/actions";
+import { fetchConversationByIdAction } from "@/app/[locale]/dashboard/inbox/actions";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 

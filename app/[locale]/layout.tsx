@@ -6,6 +6,9 @@ import { Toaster } from "sonner";
 import { AuthProvider } from "@/context/AuthContext";
 import { Providers } from "@/components/common/providers";
 import EnhancedErrorBoundary from "@/components/auth/EnhancedErrorBoundary";
+import {NextIntlClientProvider, hasLocale} from 'next-intl';
+import {notFound} from 'next/navigation';
+import {routing} from '@/i18n/routing';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,27 +36,40 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+// Generate static params for each locale
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({locale}));
+}
+
+export default async function RootLayout({
   children,
+  params
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{locale: string}>;
 }>) {
+  const {locale} = await params;
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
   return (
-    <html lang="en" suppressHydrationWarning={true}>
+    <html lang={locale} suppressHydrationWarning={true}>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased flex flex-col",
           `${geistSans.variable} ${geistMono.variable} antialiased`
         )}
       >
-        <Providers>
-          <EnhancedErrorBoundary enableRecovery={true} showDetails={false}>
-            <AuthProvider>
-              {children}
-              <Toaster />
-            </AuthProvider>
-          </EnhancedErrorBoundary>
-        </Providers>
+        <NextIntlClientProvider>
+          <Providers>
+            <EnhancedErrorBoundary enableRecovery={true} showDetails={false}>
+              <AuthProvider>
+                {children}
+                <Toaster />
+              </AuthProvider>
+            </EnhancedErrorBoundary>
+          </Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

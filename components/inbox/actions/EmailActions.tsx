@@ -1,5 +1,5 @@
 import { Archive, MailOpen, Trash2 } from "lucide-react";
-import { Email } from "@/app/dashboard/inbox/schemas/schemas";
+import { Email } from "@/app/[locale]/dashboard/inbox/schemas/schemas";
 import { TooltipButton } from "../components/tooltip-button";
 import { showCustomToast } from "@/components/ui/custom/custom-toast";
 import { JSX } from "react";
@@ -35,7 +35,7 @@ export default function EmailActions({ email }: { email: Email }) {
         onClick={() =>
           handleAction(
             "mark as read",
-            <MailOpen className="w-5 h-5 text-green-500" />,
+            <MailOpen className="w-5 h-5 text-green-500" />
           )
         }
       />
