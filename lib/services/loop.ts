@@ -69,7 +69,7 @@ class LoopService {
    */
   async sendVerificationEmail(email: string, verificationToken: string, userName?: string): Promise<LoopResponse> {
     return this.sendTransactionalEmail({
-      transactionalId: process.env.LOOP_VERIFICATION_TRANSACTIONAL_ID || 'verification',
+      transactionalId: process.env.LOOP_VERIFICATION_TRANSACTIONAL_ID || (() => { throw new Error('LOOP_VERIFICATION_TRANSACTIONAL_ID is not set'); })(),
       email,
       dataVariables: {
         token: verificationToken,
@@ -85,7 +85,7 @@ class LoopService {
    */
   async sendPasswordResetEmail(email: string, resetToken: string, userName?: string): Promise<LoopResponse> {
     return this.sendTransactionalEmail({
-      transactionalId: process.env.LOOP_RESET_TRANSACTIONAL_ID || 'password-reset',
+      transactionalId: process.env.LOOP_RESET_TRANSACTIONAL_ID || (() => { throw new Error('LOOP_RESET_TRANSACTIONAL_ID is not set'); })(),
       email,
       dataVariables: {
         resetToken,
@@ -100,7 +100,7 @@ class LoopService {
     */
   async sendWelcomeEmail(email: string, userName: string, companyName?: string): Promise<LoopResponse> {
     return this.sendTransactionalEmail({
-      transactionalId: process.env.LOOP_WELCOME_TRANSACTIONAL_ID || 'welcome',
+      transactionalId: process.env.LOOP_WELCOME_TRANSACTIONAL_ID || (() => { throw new Error('LOOP_WELCOME_TRANSACTIONAL_ID is not set'); })(),
       email,
       dataVariables: {
         userName,
@@ -115,7 +115,7 @@ class LoopService {
     */
   async sendNotificationEmail(email: string, message: string, subject?: string, userName?: string): Promise<LoopResponse> {
     return this.sendTransactionalEmail({
-      transactionalId: process.env.LOOP_NOTIFICATION_TRANSACTIONAL_ID || 'notification',
+      transactionalId: process.env.LOOP_NOTIFICATION_TRANSACTIONAL_ID || (() => { throw new Error('LOOP_NOTIFICATION_TRANSACTIONAL_ID is not set'); })(),
       email,
       dataVariables: {
         userName: userName || 'User',

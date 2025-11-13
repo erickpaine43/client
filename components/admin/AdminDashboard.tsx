@@ -17,9 +17,6 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
   const [loading, setLoading] = useState(!initialData);
   const [error, setError] = useState<string | null>(null);
 
-  // Debug logging
-  console.log("AdminDashboard: Component loaded");
-  console.log("AdminDashboard: initialData:", initialData);
 
   const fetchUsers = async (
     search?: string,
@@ -35,13 +32,8 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
       if (role) params.set("role", role);
       if (staffOnly) params.set("staff_only", "true");
 
-      console.log(
-        "AdminDashboard: Fetching users with params:",
-        params.toString()
-      );
 
       const response = await fetch(`/api/admin/users?${params}`);
-      console.log("AdminDashboard: Response status:", response.status);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -52,7 +44,6 @@ export function AdminDashboard({ initialData }: AdminDashboardProps) {
       }
 
       const result: AdminUsersResponse = await response.json();
-      console.log("AdminDashboard: Received data:", result);
       setData(result);
     } catch (err) {
       console.error("AdminDashboard: Fetch error:", err);

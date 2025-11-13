@@ -230,13 +230,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (data?.ok) {
         const initializeUserSession = async () => {
           try {
-            // Test authentication con la sesión real
+
             const isAuthenticated = await testAuthentication();
             if (!isAuthenticated) {
               throw new AuthenticationError("Authentication validation failed");
             }
 
-            // Fetch del perfil real usando la API de Task 8
             const profileData = await fetchProfile();
 
             if (profileData) {
@@ -328,46 +327,52 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   // Enhanced mapping function for NileDB user to legacy User format
-  const mapNileUserToLegacyUser = (
-    nileUser: NileDBUser,
-    userCompanies: CompanyInfo[],
-    selectedTenantId: string | null,
-    selectedCompanyId: string | null
-  ): User => {
-    const displayName = nileUser.name || nileUser.email.split("@")[0];
-    let role = UserRole.USER;
-    if (nileUser.profile?.role === "super_admin") role = UserRole.SUPER_ADMIN;
-    else if (nileUser.profile?.role === "admin") role = UserRole.ADMIN;
+  const mapNileUserToLegacyUser = useCallback(
+    (
+      nileUser: NileDBUser,
+      userCompanies: CompanyInfo[],
+      selectedTenantId: string | null,
+      selectedCompanyId: string | null
+    ): User => {
+      const displayName = nileUser.name || nileUser.email.split("@")[0];
+      let role = UserRole.USER;
+      if (nileUser.profile?.role === "super_admin") role = UserRole.SUPER_ADMIN;
+      else if (nileUser.profile?.role === "admin") role = UserRole.ADMIN;
 
-    const selectedCompany = userCompanies.find(
-      (c) => c.id === selectedCompanyId
-    );
-    return {
-      id: nileUser.id,
-      tenantId: selectedTenantId || nileUser.tenants?.[0] || "",
-      email: nileUser.email,
-      displayName,
-      photoURL: nileUser.picture,
-      uid: nileUser.id,
-      token: nileUser.id,
-      claims: {
-        role,
+      const selectedCompany = userCompanies.find(
+        (c) => c.id === selectedCompanyId
+      );
+
+      return {
+        id: nileUser.id,
         tenantId: selectedTenantId || nileUser.tenants?.[0] || "",
-        companyId: selectedCompany?.id,
-        permissions: [],
-      },
-      profile: {
-        timezone: (nileUser.profile?.preferences?.timezone as string) || "UTC",
-        language: (nileUser.profile?.preferences?.language as string) || "en",
-        firstName: nileUser.givenName,
-        lastName: nileUser.familyName,
-        avatar: nileUser.picture,
-        lastLogin: nileUser.profile?.lastLoginAt,
-        createdAt: nileUser.created ? new Date(nileUser.created) : undefined,
-        updatedAt: nileUser.updated ? new Date(nileUser.updated) : undefined,
-      },
-    };
-  };
+        email: nileUser.email,
+        displayName,
+        photoURL: nileUser.picture,
+        uid: nileUser.id,
+        token: nileUser.id,
+        claims: {
+          role,
+          tenantId: selectedTenantId || nileUser.tenants?.[0] || "",
+          companyId: selectedCompany?.id,
+          permissions: [],
+        },
+        profile: {
+          timezone:
+            (nileUser.profile?.preferences?.timezone as string) || "UTC",
+          language:
+            (nileUser.profile?.preferences?.language as string) || "en",
+          firstName: nileUser.givenName,
+          lastName: nileUser.familyName,
+          avatar: nileUser.picture,
+          lastLogin: nileUser.profile?.lastLoginAt,
+          createdAt: nileUser.created ? new Date(nileUser.created) : undefined,
+          updatedAt: nileUser.updated ? new Date(nileUser.updated) : undefined,
+        },
+      };
+    },
+    []
+  );
 
   const login = async (email: string, password: string): Promise<void> => {
     setAuthError(null);
