@@ -54,7 +54,7 @@ function EditLeadListButton({ list }: { list: LeadList }) {
         <Button
           variant="ghost"
           size="icon"
-          className="text-gray-500 hover:text-gray-700"
+          className="text-gray-500 hover:text-gray-700 dark:text-muted-foreground dark:hover:text-foreground"
         >
           <Pencil className="w-4 h-4" />
         </Button>

@@ -138,13 +138,15 @@ function DialogTwoAuth() {
               <Smartphone className="w-8 h-8 text-primary" />
             </div>
             <h4 className="text-lg font-semibold ">Scan QR Code</h4>
-            <p className="text-sm text-gray-600 ">
+            <p className="text-sm text-gray-600 dark:text-muted-foreground">
               Use your authenticator app to scan this QR code
             </p>
           </div>
-          <div className="bg-gray-100 rounded-lg p-8 flex items-center justify-center">
-            <div className="w-32 h-32 bg-white border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
-              <span className="text-gray-500 text-sm">QR Code</span>
+          <div className="bg-gray-100 dark:bg-muted rounded-lg p-8 flex items-center justify-center">
+            <div className="w-32 h-32 bg-white dark:bg-card border-2 border-dashed border-gray-300 dark:border-border rounded-lg flex items-center justify-center">
+              <span className="text-gray-500 dark:text-muted-foreground text-sm">
+                QR Code
+              </span>
             </div>
           </div>
           <div className="space-y-4">

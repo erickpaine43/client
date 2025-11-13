@@ -32,8 +32,10 @@ const getTaskIcon = (type: string) => {
 // Accept tasks as props
 const UpcomingTasksList: React.FC<UpcomingTasksListProps> = ({ tasks }) => {
   return (
-    <div className="bg-white shadow rounded-lg p-4 h-64 flex flex-col">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Upcoming Tasks</h3>
+    <div className="bg-card dark:bg-card shadow rounded-lg p-4 h-64 flex flex-col">
+      <h3 className="text-lg font-medium text-foreground mb-4">
+        Upcoming Tasks
+      </h3>
       <div className="flex-grow overflow-y-auto">
         {/* Use the tasks prop */}
         <ul className="space-y-3">

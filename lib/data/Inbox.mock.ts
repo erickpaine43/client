@@ -109,6 +109,6 @@ export const getTagColor = (tag: TagType | string) => {
     case "follow-up":
       return "bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100";
     default:
-      return "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100";
+      return "bg-gray-50 dark:bg-muted/30 text-gray-700 dark:text-foreground border-gray-200 dark:border-border hover:bg-gray-100 dark:hover:bg-muted";
   }
 };

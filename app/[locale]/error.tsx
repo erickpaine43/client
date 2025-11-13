@@ -1,23 +1,23 @@
-'use client'
+"use client";
 
-import { useEffect } from 'react'
+import { useEffect } from "react";
 
 export default function Error({
   error,
   reset,
 }: {
-  error: Error & { digest?: string }
-  reset: () => void
+  error: Error & { digest?: string };
+  reset: () => void;
 }) {
   useEffect(() => {
     // Log the error to an error reporting service
-    console.error(error)
-  }, [error])
+    console.error(error);
+  }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8 text-center">
-        <div className="mx-auto h-12 w-12 text-red-400">
+        <div className="mx-auto h-12 w-12 text-red-400 dark:text-red-500">
           <svg
             fill="none"
             viewBox="0 0 24 24"
@@ -33,29 +33,32 @@ export default function Error({
           </svg>
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Something went wrong!</h1>
-          <p className="mt-2 text-sm text-gray-600">
+          <h1 className="text-2xl font-bold text-foreground">
+            Something went wrong!
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
             An unexpected error occurred. Please try refreshing the page.
           </p>
           <div className="mt-6">
             <button
               onClick={reset}
-              className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600"
             >
               Try again
             </button>
           </div>
         </div>
-        <div className="rounded-md bg-gray-100 p-4 text-left">
+        <div className="rounded-md bg-muted/50 p-4 text-left">
           <details className="text-sm">
-            <summary className="cursor-pointer font-medium text-gray-700">
+            <summary className="cursor-pointer font-medium text-foreground">
               Error details
             </summary>
-            <pre className="mt-2 whitespace-pre-wrap text-xs text-gray-600">
+            <pre className="mt-2 whitespace-pre-wrap text-xs text-muted-foreground">
               {error.message}
               {error.digest && (
                 <>
-                  {'\n\nDigest: '}{error.digest}
+                  {"\n\nDigest: "}
+                  {error.digest}
                 </>
               )}
             </pre>
@@ -63,5 +66,5 @@ export default function Error({
         </div>
       </div>
     </div>
-  )
+  );
 }

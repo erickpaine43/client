@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CampaignAnalytics } from "@/types/analytics/domain-specific";
 import MigratedKpiCards from "@/components/dashboard/cards/MigratedKpiCards";
 import QuickActions from "@/components/dashboard/actions/QuickActions";
@@ -9,9 +9,7 @@ import RecentRepliesList from "@/components/inbox/RecentReply/RecentReplyList";
 import WarmupSummary from "@/components/dashboard/summaries/WarmupSummary";
 
 // Import skeleton loaders
-import {
-  KPISummaryCardSkeleton,
-} from "@/components/analytics/components/SkeletonLoaders";
+import { KPISummaryCardSkeleton } from "@/components/analytics/components/SkeletonLoaders";
 import RecentReplySkeleton from "@/components/inbox/RecentReply/RecentReplySkeleton";
 import WarmupSummarySkeleton from "@/components/dashboard/summaries/WarmupSummarySkeleton";
 import type { RecentReply } from "@/types/campaign";
@@ -43,8 +41,10 @@ export default function MigratedDashboardContent() {
   return (
     <div className="mx-auto space-y-8">
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-500">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          Dashboard
+        </h1>
+        <p className="text-gray-500 dark:text-gray-400">
           Welcome back! Here&apos;s what&apos;s happening with your campaigns.
         </p>
       </div>
@@ -68,13 +68,11 @@ export default function MigratedDashboardContent() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <Card className="bg-white rounded-xl shadow-sm border border-gray-200 p-0 gap-0">
-            <CardHeader className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">
-                Recent Replies
-              </h2>
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Replies</CardTitle>
             </CardHeader>
-            <CardContent className="divide-y divide-gray-200 p-0">
+            <CardContent>
               <Suspense
                 fallback={
                   <div className="space-y-0">

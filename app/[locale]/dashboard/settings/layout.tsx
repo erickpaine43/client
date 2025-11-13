@@ -30,10 +30,10 @@ const tabs = [
 ];
 
 const themeOptions = [
-   { value: "light" as const, label: "Light", icon: Sun },
-   { value: "dark" as const, label: "Dark", icon: Moon },
-   { value: "system" as const, label: "System", icon: Monitor },
- ];
+  { value: "light" as const, label: "Light", icon: Sun },
+  { value: "dark" as const, label: "Dark", icon: Moon },
+  { value: "system" as const, label: "System", icon: Monitor },
+];
 
 function Layout({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
@@ -78,7 +78,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         </div>
         <Separator orientation="vertical" />
         <div className="flex-1">
-          <div className="h-full bg-gray-100 rounded animate-pulse" />
+          <div className="h-full bg-gray-100 dark:bg-muted rounded animate-pulse" />
         </div>
       </div>
     );

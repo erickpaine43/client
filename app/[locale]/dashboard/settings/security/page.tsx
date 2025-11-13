@@ -15,14 +15,14 @@ import {
 } from "@/components/ui/card";
 
 // Force dynamic rendering to prevent SSR issues
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 function page() {
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold ">Security Settings</h2>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-muted-foreground">
           Manage your account security and authentication
         </p>
       </div>

@@ -11,10 +11,10 @@ function Layout({ children }: { children: React.ReactNode }) {
     <ClientAnalyticsProvider>
       <div className="space-y-8">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-foreground">
             Mailboxes & Warmups
           </h1>
-          <p className="text-gray-600 ">
+          <p className="text-muted-foreground ">
             Manage your sending mailboxes and warmup processes
           </p>
         </div>

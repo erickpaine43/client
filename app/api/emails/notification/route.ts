@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET endpoint for testing notification email functionality (uses verification template)
+// GET endpoint for testing notification email functionality
 export async function GET(request: Request) {
   try {
     const authService = getAuthService();

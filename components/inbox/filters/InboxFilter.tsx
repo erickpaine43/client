@@ -39,16 +39,16 @@ function InboxFilter() {
 
   useEffect(() => {
     const params = new URLSearchParams(currentSearchParams);
-    const filter = params.get('filter') || 'all';
+    const filter = params.get("filter") || "all";
     setSelectedFilter(filter);
-    const campaigns = params.getAll('campaigns');
+    const campaigns = params.getAll("campaigns");
     setCampaignFilter(campaigns);
-    const mailboxes = params.getAll('mailboxes');
+    const mailboxes = params.getAll("mailboxes");
     setMailboxFilter(mailboxes);
-    const tags = params.getAll('tags');
+    const tags = params.getAll("tags");
     setTagFilter(tags);
 
-    const time = params.get('time') || 'all';
+    const time = params.get("time") || "all";
     setTimeFilter(time);
   }, [currentSearchParams]);
 
@@ -61,21 +61,27 @@ function InboxFilter() {
   ];
   useEffect(() => {
     const params = new URLSearchParams();
-    if (selectedFilter !== 'all') params.append('filter', selectedFilter);
-    campaignFilter.forEach(c => params.append('campaigns', c));
-    tagFilter.forEach(t => params.append('tags', t));
-    mailboxFilter.forEach(m => params.append('mailboxes', m));
-    if (timeFilter !== 'all') params.append('time', timeFilter);
+    if (selectedFilter !== "all") params.append("filter", selectedFilter);
+    campaignFilter.forEach((c) => params.append("campaigns", c));
+    tagFilter.forEach((t) => params.append("tags", t));
+    mailboxFilter.forEach((m) => params.append("mailboxes", m));
+    if (timeFilter !== "all") params.append("time", timeFilter);
     router.push(`/dashboard/inbox?${params.toString()}`, { scroll: false });
-  }, [selectedFilter, campaignFilter, tagFilter, mailboxFilter, timeFilter, router]);
-
+  }, [
+    selectedFilter,
+    campaignFilter,
+    tagFilter,
+    mailboxFilter,
+    timeFilter,
+    router,
+  ]);
 
   const tags = ["Interested", "Not Interested", "Maybe Later", "Follow Up"];
 
   const handleMultiSelectToggle = (
     value: string,
     currentSelection: string[],
-    setSelection: (selection: string[]) => void,
+    setSelection: (selection: string[]) => void
   ) => {
     if (currentSelection.includes(value)) {
       setSelection(currentSelection.filter((item) => item !== value));
@@ -93,22 +99,22 @@ function InboxFilter() {
     items: string[],
     selectedItems: string[],
     setSelectedItems: (items: string[]) => void,
-    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>,
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
   ) => {
     const Icon = icon;
     return (
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Icon className="w-4 h-4 text-gray-500" />
-            <span className="text-sm font-medium text-gray-700">{title}</span>
+            <Icon className="w-4 h-4 text-muted-foreground" />
+            <span className="text-sm font-medium text-foreground">{title}</span>
           </div>
           {selectedItems.length > 0 && (
             <Button
               variant="ghost"
               size="sm"
               onClick={() => clearMultiSelect(setSelectedItems)}
-              className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600"
+              className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
             >
               <X className="w-3 h-3" />
             </Button>
@@ -131,7 +137,7 @@ function InboxFilter() {
                     handleMultiSelectToggle(
                       item,
                       selectedItems,
-                      setSelectedItems,
+                      setSelectedItems
                     )
                   }
                   className="h-3 w-3 p-0 ml-1 hover:bg-gray-300"
@@ -170,7 +176,7 @@ function InboxFilter() {
     <>
       <Filter
         className={cn(
-          "bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none",
+          "bg-card dark:bg-card border-r border-border flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none"
         )}
       >
         <SearchInput />
@@ -189,7 +195,7 @@ function InboxFilter() {
                     "w-full justify-between h-auto py-2.5 px-3",
                     selectedFilter === filter.id
                       ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
-                      : "text-gray-700",
+                      : "text-gray-700 dark:text-muted-foreground"
                   )}
                 >
                   <div className="flex items-center space-x-3">
@@ -198,7 +204,7 @@ function InboxFilter() {
                         "w-4 h-4",
                         selectedFilter === filter.id
                           ? "text-blue-600"
-                          : "text-gray-500",
+                          : "text-gray-500"
                       )}
                     />
                     <span className="text-sm font-medium">{filter.label}</span>
@@ -228,7 +234,7 @@ function InboxFilter() {
               campaignsData.map((c) => c.name),
               campaignFilter,
               setCampaignFilter,
-              TrendingUp,
+              TrendingUp
             )}
 
             {/* Mailboxes Filter */}
@@ -237,7 +243,7 @@ function InboxFilter() {
               mailboxes.map((m) => m.email),
               mailboxFilter,
               setMailboxFilter,
-              AtSign,
+              AtSign
             )}
 
             {/* Tags Filter */}
@@ -246,14 +252,16 @@ function InboxFilter() {
               tags,
               tagFilter,
               setTagFilter,
-              Tag,
+              Tag
             )}
 
             {/* Time Filter (single select) */}
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <Clock className="w-4 h-4 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Time</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-foreground">
+                  Time
+                </span>
               </div>
               <Select value={timeFilter} onValueChange={setTimeFilter}>
                 <SelectTrigger className="w-full">

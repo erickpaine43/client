@@ -21,13 +21,13 @@ const RecentCampaignsList: React.FC<RecentCampaignsListProps> = ({
   campaigns,
 }) => {
   return (
-    <div className="bg-white shadow rounded-lg p-4 h-64 flex flex-col">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">
+    <div className="bg-card dark:bg-card shadow rounded-lg p-4 h-64 flex flex-col">
+      <h3 className="text-lg font-medium text-foreground mb-4">
         Recent Campaigns
       </h3>
       <div className="flex-grow overflow-y-auto">
         {/* Use the campaigns prop */}
-        <ul className="divide-y divide-gray-200">
+        <ul className="divide-y divide-border">
           {campaigns.map((campaign, index) => (
             <li key={index} className="py-3">
               <p className="text-sm font-medium text-gray-800 truncate mb-1">

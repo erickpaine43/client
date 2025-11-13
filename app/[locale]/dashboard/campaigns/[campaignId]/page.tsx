@@ -32,7 +32,9 @@ async function CampaignContent({ campaignId }: { campaignId: string }) {
   return (
     <div className="space-y-6">
       <CampaignHeader backArrow={true} campaign={campaign}>
-        <h1 className="text-xl font-semibold text-gray-900">{campaign.name}</h1>
+        <h1 className="text-xl font-semibold text-foreground">
+          {campaign.name}
+        </h1>
       </CampaignHeader>
       <CampiagnTabs>
         <div className="p-6 overflow-y-auto max-h-[60vh]">

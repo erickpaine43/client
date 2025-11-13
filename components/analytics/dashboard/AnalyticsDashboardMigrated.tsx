@@ -86,11 +86,11 @@ function MigratedAnalyticsContent() {
   // Show empty state if no mailboxes
   if (mailboxes.length === 0) {
     return (
-      <div className="text-center p-8 bg-gray-50 rounded-lg">
-        <h3 className="text-lg font-medium text-gray-900 mb-2">
+      <div className="text-center p-8 bg-gray-50 dark:bg-muted/30 rounded-lg">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-foreground mb-2">
           No Mailboxes Available
         </h3>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-muted-foreground">
           Please set up a mailbox to view analytics.
         </p>
       </div>

@@ -20,15 +20,15 @@ interface WaitStepProps {
 
 function WaitStep({ step, index, updateStep, removeStep }: WaitStepProps) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+    <div className="bg-card dark:bg-card rounded-2xl shadow-sm border border-border p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-100">
-            <Clock className="w-5 h-5 text-gray-600" />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-muted dark:bg-muted">
+            <Clock className="w-5 h-5 text-muted-foreground" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">Wait Step</h3>
-            <p className="text-sm text-gray-500">Step {index + 1}</p>
+            <h3 className="text-lg font-semibold text-foreground">Wait Step</h3>
+            <p className="text-sm text-muted-foreground">Step {index + 1}</p>
           </div>
         </div>
         <Button
@@ -36,7 +36,7 @@ function WaitStep({ step, index, updateStep, removeStep }: WaitStepProps) {
           variant="ghost"
           size="sm"
           onClick={() => removeStep(index)}
-          className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+          className="p-2 text-muted-foreground hover:text-red-600 dark:hover:text-red-400 transition-colors"
         >
           <Trash2 className="w-5 h-5" />
         </Button>
@@ -44,7 +44,7 @@ function WaitStep({ step, index, updateStep, removeStep }: WaitStepProps) {
 
       <div className="grid grid-cols-2 gap-6">
         <div>
-          <Label className="block text-sm font-medium text-gray-700 mb-2">
+          <Label className="block text-sm font-medium text-foreground mb-2">
             Wait Duration
           </Label>
           <Input
@@ -55,11 +55,11 @@ function WaitStep({ step, index, updateStep, removeStep }: WaitStepProps) {
                 delay: parseInt(e.target.value) || 0,
               })
             }
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+            className="w-full px-4 py-3 border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-transparent"
           />
         </div>
         <div>
-          <Label className="block text-sm font-medium text-gray-700 mb-2">
+          <Label className="block text-sm font-medium text-foreground mb-2">
             Unit
           </Label>
           <Select

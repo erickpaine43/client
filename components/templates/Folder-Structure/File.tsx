@@ -20,7 +20,7 @@ function File({ file, onRename: _, onDelete: __ }: FileProps) {
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <div className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-md cursor-pointer">
+        <div className="flex items-center space-x-2 p-2 hover:bg-gray-50 dark:hover:bg-muted/50 rounded-md cursor-pointer">
           <FileText className="w-4 h-4 text-gray-500" />
 
           <span className="text-sm ">{file.name}</span>

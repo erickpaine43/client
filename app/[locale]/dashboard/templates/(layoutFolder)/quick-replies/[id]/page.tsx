@@ -50,7 +50,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
         <CardContent>
           <div className="flex flex-col gap-2">
             <h6>Quick Reply Text</h6>
-            <p className="text-sm p-3 bg-gray-100 rounded-md">
+            <p className="text-sm p-3 bg-gray-100 dark:bg-muted rounded-md">
               {quickReply.content}
             </p>
           </div>

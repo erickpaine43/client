@@ -5,10 +5,8 @@ import Image from "next/image";
 const NotFound = () => {
   return (
     <LandingLayout>
-      <div
-        className="min-h-screen flex flex-col items-center justify-center text-primary-800 gradient-bg"
-      >
-        <div className="flex flex-col items-center text-center p-8 bg-white rounded-lg shadow-lg">
+      <div className="min-h-screen flex flex-col items-center justify-center text-primary-800 gradient-bg">
+        <div className="flex flex-col items-center text-center p-8 bg-background dark:bg-card rounded-lg shadow-lg border border-border">
           <Image
             src="/img/pengo_48X48.png"
             alt="Product Logo"
@@ -65,4 +63,4 @@ const NotFound = () => {
 export default NotFound;
 
 // Force dynamic rendering to prevent SSR issues
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";

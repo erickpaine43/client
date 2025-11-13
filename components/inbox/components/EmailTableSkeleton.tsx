@@ -3,7 +3,7 @@ import React from "react";
 export default function EmailTableSkeleton() {
   return (
     <div className="border rounded-lg overflow-hidden animate-pulse">
-      <div className="grid grid-cols-5 gap-4 px-4 py-3 bg-gray-100 text-sm font-medium text-gray-600">
+      <div className="grid grid-cols-5 gap-4 px-4 py-3 bg-gray-100 dark:bg-muted text-sm font-medium text-gray-600 dark:text-muted-foreground">
         <div>Starred</div>
         <div>From</div>
         <div>Email</div>

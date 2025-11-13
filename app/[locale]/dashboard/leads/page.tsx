@@ -12,25 +12,38 @@ import ContactsTab from "@/components/leads/components/ContactsTab";
 import { FileText, Upload, Mail, Users } from "lucide-react";
 
 // Force dynamic rendering since this page uses authentication and headers
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 async function LeadsPage() {
   const leadsStatsData = await getLeadsStats();
   const leadListsData = await getLeadLists();
 
-  const totalContacts = leadListsData.reduce((sum, list) => sum + list.contacts, 0);
+  const totalContacts = leadListsData.reduce(
+    (sum, list) => sum + list.contacts,
+    0
+  );
 
   const leadsTabs = [
-    { id: "lists", label: "Lead Lists", count: leadListsData.length, icon: FileText },
+    {
+      id: "lists",
+      label: "Lead Lists",
+      count: leadListsData.length,
+      icon: FileText,
+    },
     { id: "upload", label: "Upload CSV", icon: Upload },
-    { id: "contacts", label: "All Contacts", count: totalContacts, icon: Users },
+    {
+      id: "contacts",
+      label: "All Contacts",
+      count: totalContacts,
+      icon: Users,
+    },
   ];
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Lead Hub</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-foreground">Lead Hub</h1>
+          <p className="text-muted-foreground mt-1">
             Manage your lead lists, imports, and contact database
           </p>
         </div>

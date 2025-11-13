@@ -12,9 +12,16 @@ import { getLoopService } from '@/lib/services/loop';
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const email = searchParams.get('email') || 'test@example.com';
+    const email = searchParams.get('email');
     const userName = searchParams.get('userName') || 'Test User';
     const token = searchParams.get('token') || 'test-verification-token-123';
+
+    if (!email) {
+      return NextResponse.json(
+        { error: 'Email parameter is required for testing' },
+        { status: 400 }
+      );
+    }
 
     const loopService = getLoopService();
     const result = await loopService.sendVerificationEmail(email, token, userName);
@@ -53,7 +60,7 @@ export async function PATCH(request: Request) {
 
     // Test 2: Try to create/update a test contact (this validates API access)
     const testContact = {
-      email: 'test-connection@penguinmails.test',
+      email: `test-connection-${Date.now()}@penguinmails.test`,
       firstName: 'Test',
       lastName: 'Connection',
       userGroup: 'test-users',

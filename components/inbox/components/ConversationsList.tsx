@@ -46,7 +46,7 @@ function ConversationsList({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-3">
-                          <h3 className="text-lg font-semibold text-gray-900">
+                          <h3 className="text-lg font-semibold text-foreground">
                             {conversation.name}
                           </h3>
                           {conversation.isStarred && (
@@ -56,15 +56,15 @@ function ConversationsList({
                             <Pin className="w-4 h-4 text-blue-600" />
                           )}
                         </div>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-muted-foreground">
                           {getRelativeTime(conversation.time)}
                         </span>
                       </div>
 
-                      <h4 className="font-medium text-gray-900 mb-2">
+                      <h4 className="font-medium text-foreground mb-2">
                         {conversation.subject}
                       </h4>
-                      <p className="text-gray-600 mb-4 line-clamp-2">
+                      <p className="text-muted-foreground mb-4 line-clamp-2">
                         {conversation.preview}
                       </p>
 

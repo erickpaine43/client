@@ -13,13 +13,13 @@ export default async function DashboardRootLayout({
   return (
     <ProtectedRoute>
       <ClientAnalyticsProvider>
-        <SidebarProvider >
+        <SidebarProvider>
           <AppSideBar />
-          <SidebarInset className="w-10/12 bg-sidebar md:peer-data-[variant=inset]:shadow-none gap-5">
-            <div className="bg-white rounded-lg shadow-sm">
+          <SidebarInset className="max-w-10/12  md:peer-data-[variant=inset]:shadow-none gap-5  overflow-hidden">
+            <div className=" rounded-lg shadow-sm">
               <Header />
             </div>
-            <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 bg-white rounded-lg shadow-sm">
+            <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6  rounded-lg shadow-sm">
               {children}
             </main>
           </SidebarInset>

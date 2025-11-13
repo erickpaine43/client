@@ -6,7 +6,7 @@ function page() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold ">Tracking Settings</h1>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-muted-foreground">
           Manage your tracking preferences and settings.
         </p>
       </div>

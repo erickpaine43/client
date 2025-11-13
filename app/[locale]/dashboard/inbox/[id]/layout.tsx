@@ -10,7 +10,7 @@ function layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider className="overflow-hidden">
       <Sidebar className="relative group-data-[state='collapsed']:w-0 w-80 h-full">
-        <SidebarContent className="bg-white">
+        <SidebarContent className="bg-white dark:bg-card">
           <ConversationSmallList />
         </SidebarContent>
       </Sidebar>

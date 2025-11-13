@@ -44,7 +44,7 @@ async function layout({
     <div className="space-y-5 flex flex-col h-full">
       <div className="flex justify-between items-center">
         <div className="space-y-1">
-          <h1 className="text-3xl font-semibold text-gray-900">
+          <h1 className="text-3xl font-semibold text-gray-900 dark:text-foreground">
             Template Library
           </h1>
           <p className="text-sm text-muted-foreground">

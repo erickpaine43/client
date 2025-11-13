@@ -13,33 +13,33 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({ status }) => {
 
   switch (status) {
     case "ACTIVE":
-      colorClass = "bg-green-100";
-      textClass = "text-green-800";
+      colorClass = "bg-green-100 dark:bg-green-500/20";
+      textClass = "text-green-800 dark:text-green-400";
       displayText = "Running";
       break;
     case "PAUSED":
-      colorClass = "bg-yellow-100";
-      textClass = "text-yellow-800";
+      colorClass = "bg-yellow-100 dark:bg-yellow-500/20";
+      textClass = "text-yellow-800 dark:text-yellow-400";
       displayText = "Paused";
       break;
     case "DRAFT":
-      colorClass = "bg-blue-100";
-      textClass = "text-blue-800";
+      colorClass = "bg-blue-100 dark:bg-blue-500/20";
+      textClass = "text-blue-800 dark:text-blue-400";
       displayText = "Draft";
       break;
     case "COMPLETED":
-      colorClass = "bg-gray-100";
-      textClass = "text-gray-800";
+      colorClass = "bg-muted/50 dark:bg-muted/30";
+      textClass = "text-foreground dark:text-muted-foreground";
       displayText = "Completed";
       break;
     case "ARCHIVED":
-      colorClass = "bg-gray-200";
-      textClass = "text-gray-800";
+      colorClass = "bg-muted dark:bg-muted/50";
+      textClass = "text-muted-foreground";
       displayText = "Archived";
       break;
     default:
-      colorClass = "bg-gray-100";
-      textClass = "text-gray-800";
+      colorClass = "bg-muted/50 dark:bg-muted/30";
+      textClass = "text-foreground dark:text-muted-foreground";
   }
 
   // Using a slightly different style than the simple dot to match modern UI trends, but keeping the color coding.

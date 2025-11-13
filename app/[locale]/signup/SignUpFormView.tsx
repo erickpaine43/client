@@ -75,12 +75,14 @@ export default function SignUpFormView() {
         throw new Error("Turnstile verification failed");
       }
 
-      // Proceed with Nile login only if token is valid
-      // Call centralized signup function
+      // Proceed with Nile signup only if token is valid
       await signup(data.email, data.password, data.name);
 
+      // Clear Turnstile token after successful use to prevent reuse
+      setToken("");
+
       // Store email for resend functionality
-      localStorage.setItem('pendingVerificationEmail', data.email);
+      localStorage.setItem("pendingVerificationEmail", data.email);
 
       // Trigger email verification via Loop
       let emailSent = false;

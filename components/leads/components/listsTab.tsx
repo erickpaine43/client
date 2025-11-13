@@ -80,7 +80,7 @@ function ListsTab() {
           />
         </div>
       </Filter>
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="bg-card dark:bg-card border border-border rounded-xl overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>

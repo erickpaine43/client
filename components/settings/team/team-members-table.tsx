@@ -150,7 +150,14 @@ function EditMemberDialog({
 interface AddMemberDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAdd: (data: { email: string; password: string; role: TeamRole; name?: string; givenName?: string; familyName?: string }) => void;
+  onAdd: (data: {
+    email: string;
+    password: string;
+    role: TeamRole;
+    name?: string;
+    givenName?: string;
+    familyName?: string;
+  }) => void;
   loading: boolean;
 }
 
@@ -266,7 +273,10 @@ function AddMemberDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleAdd} disabled={loading || !email.trim() || !password.trim()}>
+          <Button
+            onClick={handleAdd}
+            disabled={loading || !email.trim() || !password.trim()}
+          >
             {loading && <RefreshCw className="w-4 h-4 mr-2 animate-spin" />}
             Create Account
           </Button>
@@ -342,8 +352,14 @@ function TeamMembersTable() {
   );
 
   const addMemberAction = useServerActionWithParams(
-    (data: { email: string; password: string; role: TeamRole; name?: string; givenName?: string; familyName?: string }) =>
-      addTeamMember(data),
+    (data: {
+      email: string;
+      password: string;
+      role: TeamRole;
+      name?: string;
+      givenName?: string;
+      familyName?: string;
+    }) => addTeamMember(data),
     {
       onSuccess: () => {
         toast({
@@ -443,26 +459,26 @@ function TeamMembersTable() {
       case "owner":
         return "bg-red-100 text-red-700 border-red-300";
       case "admin":
-        return "bg-blue-100 text-blue-700 border-blue-300";
+        return "bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 border-blue-300 dark:border-blue-500/30";
       case "member":
-        return "bg-green-100 text-green-700 border-green-300";
+        return "bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 border-green-300 dark:border-green-500/30";
       case "viewer":
-        return "bg-gray-100 text-gray-700 border-gray-300";
+        return "bg-muted dark:bg-muted/60 text-foreground border-border";
       default:
-        return "bg-gray-100 text-gray-700 border-gray-300";
+        return "bg-muted dark:bg-muted/60 text-foreground border-border";
     }
   };
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case "active":
-        return "bg-green-100 text-green-700 border-green-300";
+        return "bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 border-green-300 dark:border-green-500/30";
       case "inactive":
-        return "bg-gray-100 text-gray-700 border-gray-300";
+        return "bg-muted dark:bg-muted/60 text-foreground border-border";
       case "pending":
-        return "bg-yellow-100 text-yellow-700 border-yellow-300";
+        return "bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 border-yellow-300 dark:border-yellow-500/30";
       default:
-        return "bg-gray-100 text-gray-700 border-gray-300";
+        return "bg-muted dark:bg-muted/60 text-foreground border-border";
     }
   };
 
@@ -487,7 +503,14 @@ function TeamMembersTable() {
     }
   };
 
-  const handleAddMember = (data: { email: string; password: string; role: TeamRole; name?: string; givenName?: string; familyName?: string }) => {
+  const handleAddMember = (data: {
+    email: string;
+    password: string;
+    role: TeamRole;
+    name?: string;
+    givenName?: string;
+    familyName?: string;
+  }) => {
     addMemberAction.execute(data);
   };
 

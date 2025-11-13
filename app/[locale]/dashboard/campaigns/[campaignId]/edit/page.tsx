@@ -28,7 +28,7 @@ export default async function CampaignCreatePage({
       <Card className="border-none shadow-none">
         <CardHeader>
           <AddCampaignHeader>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-foreground">
               Edit Campaign {campaign.name || "New Campaign"}
             </h1>
           </AddCampaignHeader>

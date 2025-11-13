@@ -8,7 +8,7 @@ function AddCampaignSteps() {
   const { currentStep, setCurrentStep, steps } = useAddCampaignContext();
   return (
     <Card className="p-0 overflow-hidden">
-      <CardContent className="bg-gray-50 px-8 py-6">
+      <CardContent className="bg-muted/30 dark:bg-muted/20 px-8 py-6">
         <div className="flex items-center justify-between mb-4">
           {steps.map((step, index) => {
             const StepIcon = step.icon;
@@ -24,11 +24,11 @@ function AddCampaignSteps() {
                   className={cn(
                     "flex flex-col items-center space-y-2 p-4 rounded-xl transition-all",
                     isActive
-                      ? "bg-white shadow-lg scale-105"
+                      ? "bg-card dark:bg-card shadow-lg scale-105"
                       : isCompleted
-                        ? "bg-white shadow-sm hover:shadow-md"
-                        : "bg-gray-100 opacity-50 cursor-not-allowed",
-                    "",
+                        ? "bg-card dark:bg-card shadow-sm hover:shadow-md"
+                        : "bg-muted dark:bg-muted/60 opacity-50 cursor-not-allowed",
+                    ""
                   )}
                 >
                   <div
@@ -37,8 +37,8 @@ function AddCampaignSteps() {
                       isActive
                         ? step.color
                         : isCompleted
-                          ? "bg-green-500"
-                          : "bg-gray-300",
+                          ? "bg-green-500 dark:bg-green-500/80"
+                          : "bg-muted-foreground/30 dark:bg-muted-foreground/20"
                     )}
                   >
                     {isCompleted ? (
@@ -52,10 +52,10 @@ function AddCampaignSteps() {
                       className={cn(
                         "text-sm font-medium ",
                         isActive
-                          ? "text-gray-900"
+                          ? "text-foreground"
                           : isCompleted
-                            ? "text-gray-700"
-                            : "text-gray-400",
+                            ? "text-foreground"
+                            : "text-muted-foreground"
                       )}
                     >
                       {step.title}
@@ -63,7 +63,9 @@ function AddCampaignSteps() {
                     <p
                       className={cn(
                         "text-xs",
-                        isActive ? "text-gray-600" : "text-gray-400",
+                        isActive
+                          ? "text-muted-foreground"
+                          : "text-muted-foreground/60"
                       )}
                     >
                       {step.subtitle}
@@ -74,7 +76,9 @@ function AddCampaignSteps() {
                   <div
                     className={cn(
                       "w-16 h-1 mx-4 rounded-full",
-                      isCompleted ? "bg-green-500" : "bg-gray-200",
+                      isCompleted
+                        ? "bg-green-500 dark:bg-green-500/80"
+                        : "bg-border"
                     )}
                   />
                 )}

@@ -35,16 +35,16 @@ function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const availableDomains = domains;
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+    <div className="bg-card dark:bg-card rounded-2xl shadow-sm border border-border p-8">
       <div className="max-w-2xl mx-auto space-y-8">
         <div className="text-center">
-          <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Mail className="w-8 h-8 text-blue-600" />
+          <div className="w-16 h-16 bg-blue-100 dark:bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Mail className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold text-foreground mb-2">
             Mailbox Details
           </h2>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Set up a mailbox to start sending cold emails
           </p>
         </div>
@@ -55,7 +55,7 @@ function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">
+                <FormLabel className="text-sm font-medium text-foreground">
                   Mailbox Name *
                 </FormLabel>
                 <div className="flex items-center space-x-2">
@@ -64,7 +64,7 @@ function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
                       placeholder="john"
                       className={cn(
                         "flex-1 px-4 py-3 text-lg h-12",
-                        form.formState.errors.name && "border-red-300",
+                        form.formState.errors.name && "border-red-300"
                       )}
                       {...field}
                     />
@@ -81,7 +81,7 @@ function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
                         <SelectTrigger
                           className={cn(
                             "px-4 py-3 text-lg h-12 min-w-[160px]",
-                            form.formState.errors.domain && "border-red-300",
+                            form.formState.errors.domain && "border-red-300"
                           )}
                         >
                           <SelectValue placeholder="Select Domain" />
@@ -113,7 +113,7 @@ function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">
+                <FormLabel className="text-sm font-medium text-gray-700 dark:text-foreground">
                   Password *
                 </FormLabel>
                 <div className="relative">
@@ -123,7 +123,7 @@ function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
                       placeholder="Enter a secure password"
                       className={cn(
                         "px-4 py-3 pr-12 text-lg h-12",
-                        form.formState.errors.password && "border-red-300",
+                        form.formState.errors.password && "border-red-300"
                       )}
                       {...field}
                     />
@@ -133,7 +133,7 @@ function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 h-5 w-5 p-0"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-foreground h-5 w-5 p-0"
                   >
                     {showPassword ? (
                       <EyeOff className="w-5 h-5" />
@@ -156,7 +156,7 @@ function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">
+                <FormLabel className="text-sm font-medium text-gray-700 dark:text-foreground">
                   Confirm Password *
                 </FormLabel>
                 <div className="relative">
@@ -167,7 +167,7 @@ function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
                       className={cn(
                         "px-4 py-3 pr-12 text-lg h-12",
                         form.formState.errors.confirmPassword &&
-                          "border-red-300",
+                          "border-red-300"
                       )}
                       {...field}
                     />
@@ -177,7 +177,7 @@ function AddMailboxDetails({ domains }: AddMailboxDetailsProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 h-5 w-5 p-0"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-foreground h-5 w-5 p-0"
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="w-5 h-5" />

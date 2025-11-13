@@ -22,7 +22,8 @@ interface CampaignsPageProps {
 export default function CampaignsPage({
   searchParams: _searchParams,
 }: CampaignsPageProps) {
-  const { totalSent, openRate, replyRate, clickRate, campaigns } = useAnalytics();
+  const { totalSent, openRate, replyRate, clickRate, campaigns } =
+    useAnalytics();
 
   const stats = [
     {
@@ -39,19 +40,19 @@ export default function CampaignsPage({
     },
     {
       title: "Open Rate",
-      value: openRate + '%',
+      value: openRate + "%",
       icon: Eye,
       color: "text-orange-500  bg-orange-100",
     },
     {
       title: "Click Rate",
-      value: clickRate + '%',
+      value: clickRate + "%",
       icon: TrendingUp,
       color: "bg-green-100 text-green-600",
     },
     {
       title: "Reply Rate",
-      value: replyRate + '%',
+      value: replyRate + "%",
       icon: Users,
       color: "text-pink-600 bg-pink-100",
     },
@@ -61,8 +62,8 @@ export default function CampaignsPage({
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Campaigns</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-foreground">Campaigns</h1>
+          <p className="text-muted-foreground mt-1">
             Manage your email outreach campaigns like a pro
           </p>
         </div>

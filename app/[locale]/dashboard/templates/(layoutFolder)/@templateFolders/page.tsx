@@ -20,7 +20,7 @@ async function TemplateFolders() {
     return null;
   }
   return (
-    <div className="bg-gray-50 p-2 px-4 border-r border-gray-200 w-72 space-y-5">
+    <div className="bg-gray-50 dark:bg-muted/30 p-2 px-4 border-r border-gray-200 dark:border-border w-72 space-y-5">
       <h1 className="text-md font-semibold">Folders</h1>
       <div className="flex flex-col space-y-3">
         <div className="flex items-center space-x-3 p-3 bg-blue-50 text-blue-700 rounded-lg">

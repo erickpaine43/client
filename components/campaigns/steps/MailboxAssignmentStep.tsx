@@ -19,7 +19,7 @@ function MailboxAssignmentStep() {
 
   const handleMailboxToggle = (
     mailbox: (typeof mailboxes)[0],
-    checked: boolean,
+    checked: boolean
   ) => {
     if (editingMode && initiallySelectedEmails.includes(mailbox.email)) {
       return;
@@ -30,7 +30,7 @@ function MailboxAssignmentStep() {
     } else {
       setValue(
         "selectedMailboxes",
-        selectedMailboxes.filter((m) => m.email !== mailbox.email),
+        selectedMailboxes.filter((m) => m.email !== mailbox.email)
       );
     }
   };
@@ -39,20 +39,20 @@ function MailboxAssignmentStep() {
     <>
       <Card className="max-w-3xl mx-auto space-y-8">
         <CardHeader className="text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Mail className="w-8 h-8 text-green-600" />
+          <div className="w-16 h-16 bg-green-100 dark:bg-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Mail className="w-8 h-8 text-green-600 dark:text-green-400" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold text-foreground mb-2">
             Assign Mailboxes
           </h2>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Select which mailboxes will send emails for this campaign
           </p>
         </CardHeader>
 
         <CardContent className="grid gap-4">
           {editingMode && (
-            <Alert className="mb-4 bg-blue-100 text-blue-800">
+            <Alert className="mb-4 bg-blue-100 dark:bg-blue-500/20 text-blue-800 dark:text-blue-400">
               <Info className="h-4 w-4" />
               <AlertDescription className="text-sm font-medium text-inherit">
                 You can add new mailboxes to this active campaign, but cannot
@@ -73,10 +73,10 @@ function MailboxAssignmentStep() {
             return (
               <Label
                 key={mailbox.id}
-                className={`flex items-center p-6 border-2 rounded-xl transition-all bg-gray-50 border-gray-200 ${
+                className={`flex items-center p-6 border-2 rounded-xl transition-all bg-muted/50 dark:bg-muted/30 border-border ${
                   isDisabled
                     ? "opacity-75 cursor-not-allowed"
-                    : "cursor-pointer hover:shadow-md hover:border-gray-300 has-[[aria-checked=true]]:border-green-500 has-[[aria-checked=true]]:bg-green-50"
+                    : "cursor-pointer hover:shadow-md hover:border-border/80 has-[[aria-checked=true]]:border-green-500 has-[[aria-checked=true]]:bg-green-50 dark:has-[[aria-checked=true]]:bg-green-500/20"
                 }`}
               >
                 <Checkbox
@@ -89,10 +89,10 @@ function MailboxAssignmentStep() {
                 />
                 <div className="ml-4 flex-1">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-lg font-semibold text-gray-900">
+                    <h4 className="text-lg font-semibold text-foreground">
                       {mailbox.email}
                       {isInitiallySelected && (
-                        <span className="ml-2 text-xs text-green-600 font-medium">
+                        <span className="ml-2 text-xs text-green-600 dark:text-green-400 font-medium">
                           (Active)
                         </span>
                       )}
@@ -101,19 +101,19 @@ function MailboxAssignmentStep() {
                       <span
                         className={`px-3 py-1 rounded-full text-sm font-medium ${
                           mailbox.status === "ready"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-orange-100 text-orange-800"
+                            ? "bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-400"
+                            : "bg-orange-100 dark:bg-orange-500/20 text-orange-800 dark:text-orange-400"
                         }`}
                       >
                         {mailbox.status}
                       </span>
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-muted-foreground">
                         {mailbox.dailyLimit} emails/day
                       </span>
                     </div>
                   </div>
                   <div className="flex items-center space-x-4 mt-2">
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-muted-foreground">
                       Reputation: {mailbox.reputation}
                     </span>
                     <div

@@ -14,7 +14,7 @@ export const getRecordIcon = (status: string) => {
     case "failed":
       return <X className="w-4 h-4 text-red-600" />;
     default:
-      return <AlertTriangle className="w-4 h-4 text-gray-600" />;
+      return <AlertTriangle className="w-4 h-4 text-muted-foreground" />;
   }
 };
 
@@ -45,7 +45,7 @@ function DomainsTab({ domains, dnsRecords }: DomainsTabProps) {
         <Card key={domain.id} className="p-6">
           <CardHeader className="flex flex-row items-center justify-between p-0 mb-6">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-lg font-semibold text-foreground">
                 {domain.domain}
               </h3>
               <div className="flex items-center space-x-4 mt-1">

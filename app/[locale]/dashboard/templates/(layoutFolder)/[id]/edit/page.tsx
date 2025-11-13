@@ -48,7 +48,9 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
               <Button variant="outline" asChild>
                 <Link href={`/dashboard/templates/${id}`}>Cancel</Link>
               </Button>
-              <Button type="submit" form="edit-form">Save Changes</Button>
+              <Button type="submit" form="edit-form">
+                Save Changes
+              </Button>
             </div>
           </div>
         </CardHeader>
@@ -57,33 +59,33 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
           <form action={updateTemplate} id="edit-form">
             <input type="hidden" name="id" value={id} />
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-2">
+              <h3 className="text-sm font-medium text-gray-700 dark:text-foreground mb-2">
                 Template Name
               </h3>
               <Input
-                className="text-gray-900"
+                className="text-gray-900 dark:text-foreground"
                 defaultValue={name}
                 name="name"
                 required
               />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-2">
+              <h3 className="text-sm font-medium text-gray-700 dark:text-foreground mb-2">
                 Subject Line
               </h3>
               <Input
-                className="text-gray-900"
+                className="text-gray-900 dark:text-foreground"
                 defaultValue={subject}
                 name="subject"
                 required
               />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-2">
+              <h3 className="text-sm font-medium text-gray-700 dark:text-foreground mb-2">
                 Email Content
               </h3>
               <Textarea
-                className="text-gray-900 h-64"
+                className="text-gray-900 dark:text-foreground h-64"
                 defaultValue={content}
                 name="content"
                 required

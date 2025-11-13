@@ -150,7 +150,7 @@ export default function AvatarSelector({
               onCustomUrlChange?.(e.target.value);
             }}
             placeholder="Enter avatar URL"
-            className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="flex-1 border border-gray-300 dark:border-border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             disabled={disabled}
           />
           <button
@@ -167,7 +167,7 @@ export default function AvatarSelector({
       {currentAvatarUrl && (
         <div className="flex items-center gap-4">
           <p className="text-sm text-gray-500">Current avatar:</p>
-          <div className="w-16 h-16 relative rounded-full overflow-hidden border border-gray-200">
+          <div className="w-16 h-16 relative rounded-full overflow-hidden border border-gray-200 dark:border-border">
             <img
               src={currentAvatarUrl}
               alt="Current avatar"

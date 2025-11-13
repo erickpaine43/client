@@ -26,12 +26,12 @@ export const notificationStyles = (type: NotificationType) => {
     case NotificationType.INFO:
       return {
         icon: Info,
-        color: "text-gray-600 bg-gray-100",
+        color: "text-gray-600 dark:text-muted-foreground bg-gray-100 dark:bg-muted",
       };
     default:
       return {
         icon: Info,
-        color: "bg-gray-100 text-gray-800",
+        color: "bg-gray-100 dark:bg-muted text-gray-800 dark:text-foreground",
       };
   }
 };

@@ -170,7 +170,7 @@ function ContactsTab() {
       <CardContent className="border p-0 rounded-xl overflow-hidden">
         <div className="overflow-hidden">
           <Table>
-            <TableHeader className="bg-gray-100">
+            <TableHeader className="bg-gray-100 dark:bg-muted">
               <TableRow>
                 <TableHead className="w-12">
                   <Checkbox

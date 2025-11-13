@@ -13,57 +13,61 @@ import { SettingsLoadingSkeleton } from "@/components/settings/common/SettingsLo
 import { SettingsErrorState } from "@/components/settings/common/SettingsErrorState";
 import { showBillingUpdateSuccess } from "@/components/settings/common/SettingsSuccessNotification";
 import { useServerAction } from "@/hooks/useServerAction";
-import {
-  getBillingDataForSettings as getBillingInfo,
-} from "@/lib/actions/billing";
+import { getBillingDataForSettings as getBillingInfo } from "@/lib/actions/billing";
 import { Loader2 } from "lucide-react";
 import type { BillingData } from "@/types/settings";
 
 // Type guards
-const isValidPlanDetails = (planDetails: unknown): planDetails is BillingData['planDetails'] => {
-  if (typeof planDetails !== 'object' || planDetails === null) return false;
+const isValidPlanDetails = (
+  planDetails: unknown
+): planDetails is BillingData["planDetails"] => {
+  if (typeof planDetails !== "object" || planDetails === null) return false;
   const obj = planDetails as Record<string, unknown>;
   return (
-    typeof obj.id === 'string' &&
-    typeof obj.name === 'string' &&
-    typeof obj.isMonthly === 'boolean' &&
-    typeof obj.price === 'number' &&
-    typeof obj.description === 'string' &&
-    typeof obj.maxEmailAccounts === 'number' &&
-    typeof obj.maxCampaigns === 'number' &&
-    typeof obj.maxEmailsPerMonth === 'number'
+    typeof obj.id === "string" &&
+    typeof obj.name === "string" &&
+    typeof obj.isMonthly === "boolean" &&
+    typeof obj.price === "number" &&
+    typeof obj.description === "string" &&
+    typeof obj.maxEmailAccounts === "number" &&
+    typeof obj.maxCampaigns === "number" &&
+    typeof obj.maxEmailsPerMonth === "number"
   );
 };
 
-const isValidPaymentMethod = (paymentMethod: unknown): paymentMethod is BillingData['paymentMethod'] => {
-  if (typeof paymentMethod !== 'object' || paymentMethod === null) return false;
+const isValidPaymentMethod = (
+  paymentMethod: unknown
+): paymentMethod is BillingData["paymentMethod"] => {
+  if (typeof paymentMethod !== "object" || paymentMethod === null) return false;
   const obj = paymentMethod as Record<string, unknown>;
   return (
-    typeof obj.lastFour === 'string' &&
-    typeof obj.expiry === 'string' &&
-    typeof obj.brand === 'string'
+    typeof obj.lastFour === "string" &&
+    typeof obj.expiry === "string" &&
+    typeof obj.brand === "string"
   );
 };
 
-const isValidInvoice = (invoice: unknown): invoice is BillingData['billingHistory'][0] => {
-  if (typeof invoice !== 'object' || invoice === null) return false;
+const isValidInvoice = (
+  invoice: unknown
+): invoice is BillingData["billingHistory"][0] => {
+  if (typeof invoice !== "object" || invoice === null) return false;
   const obj = invoice as Record<string, unknown>;
   return (
-    typeof obj.date === 'string' &&
-    typeof obj.description === 'string' &&
-    typeof obj.amount === 'string' &&
-    typeof obj.method === 'string'
+    typeof obj.date === "string" &&
+    typeof obj.description === "string" &&
+    typeof obj.amount === "string" &&
+    typeof obj.method === "string"
   );
 };
 
 const isBillingData = (billing: unknown): billing is BillingData => {
-  if (typeof billing !== 'object' || billing === null) return false;
+  if (typeof billing !== "object" || billing === null) return false;
   const obj = billing as Record<string, unknown>;
   return (
-    typeof obj.renewalDate === 'string' &&
-    typeof obj.emailAccountsUsed === 'number' &&
-    typeof obj.campaignsUsed === 'number' &&
-    typeof obj.emailsPerMonthUsed === 'number' &&
+    typeof obj.renewalDate === "string" &&
+    typeof obj.emailAccountsUsed === "number" &&
+    typeof obj.campaignsUsed === "number" &&
+    typeof obj.emailsPerMonthUsed === "number" &&
     isValidPlanDetails(obj.planDetails) &&
     (obj.paymentMethod === null || isValidPaymentMethod(obj.paymentMethod)) &&
     Array.isArray(obj.billingHistory) &&
@@ -88,7 +92,7 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
     if (!initialBilling) {
       billingAction.execute();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialBilling]);
 
   const handlePlanChange = async () => {
@@ -161,11 +165,15 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-medium">
-                {isValidPlanDetails(billing.planDetails) ? billing.planDetails.name : 'Unknown Plan'}
+                {isValidPlanDetails(billing.planDetails)
+                  ? billing.planDetails.name
+                  : "Unknown Plan"}
               </h3>
               <p className="text-sm text-muted-foreground">
-                {isValidPlanDetails(billing.planDetails) ? `${billing.planDetails.price} / month` : 'Unknown price'} • Renews on{" "}
-                {billing.renewalDate}{" "}
+                {isValidPlanDetails(billing.planDetails)
+                  ? `${billing.planDetails.price} / month`
+                  : "Unknown price"}{" "}
+                • Renews on {billing.renewalDate}{" "}
               </p>
             </div>
             <Button
@@ -190,7 +198,9 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
                 <span>Email accounts</span>
                 <span>
                   {billing.emailAccountsUsed || 0} /{" "}
-                  {isValidPlanDetails(billing.planDetails) ? billing.planDetails.maxEmailAccounts : 'Unknown'}
+                  {isValidPlanDetails(billing.planDetails)
+                    ? billing.planDetails.maxEmailAccounts
+                    : "Unknown"}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
@@ -199,7 +209,9 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
               </div>
               <div className="flex justify-between text-sm">
                 <span>Emails per month</span>
-                <span>{(billing.emailsPerMonthUsed || 0).toLocaleString()}</span>
+                <span>
+                  {(billing.emailsPerMonthUsed || 0).toLocaleString()}
+                </span>
               </div>
             </div>
           )}
@@ -207,10 +219,11 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
 
         <div className="space-y-4">
           <h3 className="text-lg font-medium">Payment Method</h3>
-          {billing.paymentMethod && isValidPaymentMethod(billing.paymentMethod) ? (
+          {billing.paymentMethod &&
+          isValidPaymentMethod(billing.paymentMethod) ? (
             <div className="flex items-center justify-between rounded-md border p-4">
               <div className="flex items-center space-x-4">
-                <div className="h-10 w-14 rounded-md bg-gray-100 flex items-center justify-center">
+                <div className="h-10 w-14 rounded-md bg-gray-100 dark:bg-muted flex items-center justify-center">
                   {/* Basic card icon - replace with actual icon based on billingData.paymentMethod.brand if available */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -251,7 +264,7 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
           ) : (
             <div className="flex items-center justify-between rounded-md border p-4">
               <div className="flex items-center space-x-4">
-                <div className="h-10 w-14 rounded-md bg-gray-100 flex items-center justify-center">
+                <div className="h-10 w-14 rounded-md bg-gray-100 dark:bg-muted flex items-center justify-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -303,14 +316,22 @@ const BillingSettings: React.FC<{ billing?: BillingData }> = ({
                     index > 0 ? "border-t" : ""
                   }`}
                 >
-                  <p className="font-medium">{isValidInvoice(item) ? item.date : 'Unknown date'}</p>
+                  <p className="font-medium">
+                    {isValidInvoice(item) ? item.date : "Unknown date"}
+                  </p>
                   <p className="text-xs text-muted-foreground">
-                    {isValidInvoice(item) ? item.description : 'Unknown description'}
+                    {isValidInvoice(item)
+                      ? item.description
+                      : "Unknown description"}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium">{isValidInvoice(item) ? item.amount : 'Unknown amount'}</p>
-                  <p className="text-xs text-muted-foreground">{isValidInvoice(item) ? item.method : 'Unknown method'}</p>
+                  <p className="font-medium">
+                    {isValidInvoice(item) ? item.amount : "Unknown amount"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {isValidInvoice(item) ? item.method : "Unknown method"}
+                  </p>
                 </div>
               </div>
             ))}

@@ -29,14 +29,14 @@ function UserMenu() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <SignOutButton className="w-full h-full bg-red-500 text-white rounded-md flex items-center justify-center hover:bg-red-600 transition-colors duration-200" />
+        <SignOutButton className="w-full h-full bg-red-500 dark:bg-red-600 text-white rounded-md flex items-center justify-center hover:bg-red-600 dark:hover:bg-red-700 transition-colors duration-200" />
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
 function AvatarCallback() {
   return (
-    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 dark:from-blue-400 dark:to-purple-500 rounded-full flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
       <User className="w-4 h-4 text-white" />
     </div>
   );

@@ -142,9 +142,9 @@ function UsageTab() {
     fetchUsageData();
   }, []);
 
- useEffect(() => {
-   fetchStorageOptions();
- }, []);
+  useEffect(() => {
+    fetchStorageOptions();
+  }, []);
 
   if (loading) {
     return <UsageTabSkeleton />;
@@ -332,7 +332,7 @@ function UsageTab() {
         <CardHeader className="flex-center-between">
           <div>
             <CardTitle className="text-xl font-semibold">Add Storage</CardTitle>
-            <CardDescription className="text-gray-600">
+            <CardDescription className="text-gray-600 dark:text-muted-foreground">
               Purchase additional storage at $3 per GB
             </CardDescription>
           </div>
@@ -345,28 +345,26 @@ function UsageTab() {
           </AddStorageTrigger>
         </CardHeader>
         <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {loadingStorage ? (
-            Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-24 w-full" />
-            ))
-          ) : (
-            storageOptions &&
-            storageOptions.map((option) => (
-              <Card
-                key={option.gb}
-                className="bg-gray-50 rounded-lg p-4 text-center border border-gray-200 hover:border-blue-300 transition-colors cursor-pointer"
-              >
-                <CardContent>
-                  <div className="text-lg font-semibold text-gray-900">
-                    {option.gb} GB
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    ${option.price}/month
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          )}
+          {loadingStorage
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} className="h-24 w-full" />
+              ))
+            : storageOptions &&
+              storageOptions.map((option) => (
+                <Card
+                  key={option.gb}
+                  className="bg-gray-50 dark:bg-muted/30 rounded-lg p-4 text-center border border-gray-200 dark:border-border hover:border-blue-300 transition-colors cursor-pointer"
+                >
+                  <CardContent>
+                    <div className="text-lg font-semibold text-gray-900 dark:text-foreground">
+                      {option.gb} GB
+                    </div>
+                    <div className="text-sm text-gray-600 dark:text-muted-foreground">
+                      ${option.price}/month
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
         </CardContent>
       </Card>
     </div>

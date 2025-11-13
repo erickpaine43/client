@@ -101,16 +101,15 @@ function BillingTab() {
   const companyOptions = useMemo(
     () => ({
       onError: (error: string) => {
-        toast.error("Failed to load company information", { description: error });
+        toast.error("Failed to load company information", {
+          description: error,
+        });
       },
     }),
     []
   );
 
-  const companyDataAction = useServerAction(
-    getUserSettings,
-    companyOptions
-  );
+  const companyDataAction = useServerAction(getUserSettings, companyOptions);
   const { execute: loadCompanyData } = companyDataAction;
 
   // Load billing data on component mount
@@ -239,17 +238,17 @@ function BillingTab() {
           </CardHeader>
           <CardContent>
             {billingData.paymentMethod ? (
-              <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4">
+              <div className="flex items-center justify-between bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
                 <div className="flex items-center space-x-3">
-                  <div className="bg-white p-2 rounded-lg border">
-                    <CreditCard className="w-5 h-5 text-gray-600" />
+                  <div className="bg-white dark:bg-card p-2 rounded-lg border dark:border-border">
+                    <CreditCard className="w-5 h-5 text-gray-600 dark:text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-gray-900 dark:text-foreground">
                       {billingData.paymentMethod.brand} ending in{" "}
                       {billingData.paymentMethod.lastFour}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 dark:text-muted-foreground">
                       Expires {billingData.paymentMethod.expiry}
                     </p>
                   </div>
@@ -257,14 +256,18 @@ function BillingTab() {
                 <UpdateCardDialogTrigger title="Update Card" />
               </div>
             ) : (
-              <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4">
+              <div className="flex items-center justify-between bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
                 <div className="flex items-center space-x-3">
-                  <div className="bg-white p-2 rounded-lg border">
-                    <CreditCard className="w-5 h-5 text-gray-600" />
+                  <div className="bg-white dark:bg-card p-2 rounded-lg border dark:border-border">
+                    <CreditCard className="w-5 h-5 text-gray-600 dark:text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">No payment method</p>
-                    <p className="text-sm text-gray-600">Add a payment method to continue</p>
+                    <p className="font-medium text-gray-900 dark:text-foreground">
+                      No payment method
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-muted-foreground">
+                      Add a payment method to continue
+                    </p>
                   </div>
                 </div>
                 <UpdateCardDialogTrigger title="Add Card" />
@@ -284,12 +287,17 @@ function BillingTab() {
               className="text-sm text-blue-600 hover:text-blue-800 underline disabled:opacity-50"
               disabled={updateBillingAction.loading}
               onClick={() => {
-                const currentName = companyDataAction.data?.companyInfo.name || "Company";
+                const currentName =
+                  companyDataAction.data?.companyInfo.name || "Company";
                 const newCompanyName = prompt(
                   "Enter company name:",
                   currentName
                 );
-                if (newCompanyName && newCompanyName.trim() && newCompanyName.trim() !== currentName) {
+                if (
+                  newCompanyName &&
+                  newCompanyName.trim() &&
+                  newCompanyName.trim() !== currentName
+                ) {
                   handleCompanyNameUpdate(newCompanyName.trim());
                 }
               }}
@@ -298,32 +306,34 @@ function BillingTab() {
             </button>
           </CardHeader>
           <CardContent>
-            <div className="bg-gray-50 rounded-lg p-4">
+            <div className="bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="text-sm font-medium text-gray-700">
+                    <label className="text-sm font-medium text-gray-700 dark:text-foreground">
                       Company Name
                     </label>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-gray-900 dark:text-foreground">
                       {companyDataAction.data?.companyInfo.name || "Loading..."}
                     </p>
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700">
+                  <label className="text-sm font-medium text-gray-700 dark:text-foreground">
                     Industry
                   </label>
-                  <p className="text-gray-600">
-                    {companyDataAction.data?.companyInfo.industry || "Technology Services"}
+                  <p className="text-gray-600 dark:text-muted-foreground">
+                    {companyDataAction.data?.companyInfo.industry ||
+                      "Technology Services"}
                   </p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700">
+                  <label className="text-sm font-medium text-gray-700 dark:text-foreground">
                     Company Size
                   </label>
-                  <p className="text-gray-600">
-                    {companyDataAction.data?.companyInfo.size || "51-200 employees"}
+                  <p className="text-gray-600 dark:text-muted-foreground">
+                    {companyDataAction.data?.companyInfo.size ||
+                      "51-200 employees"}
                   </p>
                 </div>
               </div>
@@ -338,15 +348,21 @@ function BillingTab() {
             <EditAddressTrigger title="Edit Address" />
           </CardHeader>
           <CardContent>
-            <div className="bg-gray-50 rounded-lg p-4">
+            <div className="bg-gray-50 dark:bg-muted/30 rounded-lg p-4">
               <div className="space-y-1">
-                <p className="font-medium text-gray-900">
+                <p className="font-medium text-gray-900 dark:text-foreground">
                   {companyDataAction.data?.companyInfo.name || "Company"}
                 </p>
-                <p className="text-gray-600">123 Business Street</p>
-                <p className="text-gray-600">San Francisco, CA 94105</p>
-                <p className="text-gray-600">United States</p>
-                <p className="text-sm text-gray-500 mt-2">
+                <p className="text-gray-600 dark:text-muted-foreground">
+                  123 Business Street
+                </p>
+                <p className="text-gray-600 dark:text-muted-foreground">
+                  San Francisco, CA 94105
+                </p>
+                <p className="text-gray-600 dark:text-muted-foreground">
+                  United States
+                </p>
+                <p className="text-sm text-gray-500 dark:text-muted-foreground mt-2">
                   VAT ID: US123456789
                 </p>
               </div>
@@ -367,7 +383,7 @@ function BillingTab() {
         {/* Loading overlay for updates */}
         {updateBillingAction.loading && (
           <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
-            <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-2">
+            <div className="bg-white dark:bg-card p-4 rounded-lg shadow-lg flex items-center space-x-2">
               <RefreshCw className="h-4 w-4 animate-spin" />
               <span>Updating billing information...</span>
             </div>

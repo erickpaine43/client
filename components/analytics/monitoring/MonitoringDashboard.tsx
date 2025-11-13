@@ -11,10 +11,10 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
-import { 
-  AlertTriangle, 
-  CheckCircle, 
-  XCircle, 
+import {
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
   Database,
   Minus,
   RefreshCw,
@@ -34,13 +34,16 @@ interface MonitoringData {
       averageDuration: number;
       activeAlerts: number;
     };
-    domains: Record<string, {
-      operationCount: number;
-      successRate: number;
-      averageDuration: number;
-      errorRate: number;
-      cacheHitRate: number;
-    }>;
+    domains: Record<
+      string,
+      {
+        operationCount: number;
+        successRate: number;
+        averageDuration: number;
+        errorRate: number;
+        cacheHitRate: number;
+      }
+    >;
   };
   cache: {
     health: {
@@ -86,7 +89,9 @@ export function MonitoringDashboard() {
   const fetchMonitoringData = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/analytics/monitoring?action=dashboard");
+      const response = await fetch(
+        "/api/analytics/monitoring?action=dashboard"
+      );
       const result: ApiResponse = await response.json();
 
       if (result.success && result.data) {
@@ -105,7 +110,7 @@ export function MonitoringDashboard() {
 
   useEffect(() => {
     fetchMonitoringData();
-    
+
     // Auto-refresh every 30 seconds
     const interval = setInterval(fetchMonitoringData, 30000);
     return () => clearInterval(interval);
@@ -133,7 +138,7 @@ export function MonitoringDashboard() {
       case "unhealthy":
         return "text-red-600 bg-red-50 border-red-200";
       default:
-        return "text-gray-600 bg-gray-50 border-gray-200";
+        return "text-gray-600 dark:text-muted-foreground bg-gray-50 dark:bg-muted/30 border-gray-200 dark:border-border";
     }
   };
 
@@ -190,14 +195,18 @@ export function MonitoringDashboard() {
             </span>
           )}
           <Button onClick={fetchMonitoringData} disabled={loading} size="sm">
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
+            />
             Refresh
           </Button>
         </div>
       </div>
 
       {/* Overall Health Status */}
-      <Card className={`border-2 ${getHealthColor(data.summary.overallHealth)}`}>
+      <Card
+        className={`border-2 ${getHealthColor(data.summary.overallHealth)}`}
+      >
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
@@ -206,7 +215,11 @@ export function MonitoringDashboard() {
                 System {data.summary.overallHealth}
               </CardTitle>
             </div>
-            <Badge variant={data.summary.criticalIssues > 0 ? "destructive" : "secondary"}>
+            <Badge
+              variant={
+                data.summary.criticalIssues > 0 ? "destructive" : "secondary"
+              }
+            >
               {data.summary.criticalIssues} Critical Issues
             </Badge>
           </div>
@@ -214,27 +227,40 @@ export function MonitoringDashboard() {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold">{data.analytics.overview.totalOperations}</div>
-              <div className="text-sm text-muted-foreground">Total Operations</div>
+              <div className="text-2xl font-bold">
+                {data.analytics.overview.totalOperations}
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Total Operations
+              </div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold">{formatPercentage(data.analytics.overview.successRate)}</div>
+              <div className="text-2xl font-bold">
+                {formatPercentage(data.analytics.overview.successRate)}
+              </div>
               <div className="text-sm text-muted-foreground">Success Rate</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold">{formatDuration(data.analytics.overview.averageDuration)}</div>
+              <div className="text-2xl font-bold">
+                {formatDuration(data.analytics.overview.averageDuration)}
+              </div>
               <div className="text-sm text-muted-foreground">Avg Response</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold">{formatPercentage(data.cache.health.hitRate)}</div>
-              <div className="text-sm text-muted-foreground">Cache Hit Rate</div>
+              <div className="text-2xl font-bold">
+                {formatPercentage(data.cache.health.hitRate)}
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Cache Hit Rate
+              </div>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Alerts */}
-      {(data.summary.totalAlerts > 0 || data.errors.criticalErrors.length > 0) && (
+      {(data.summary.totalAlerts > 0 ||
+        data.errors.criticalErrors.length > 0) && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
@@ -255,13 +281,21 @@ export function MonitoringDashboard() {
                 </AlertDescription>
               </Alert>
             ))}
-            
+
             {data.cache.alerts.map((alert, index) => (
-              <Alert key={index} className={alert.severity === "error" ? "border-red-200 bg-red-50" : "border-yellow-200 bg-yellow-50"}>
-                {alert.severity === "error" ? 
-                  <XCircle className="h-4 w-4 text-red-500" /> : 
-                  <AlertTriangle className="h-4 w-4 text-yellow-500" />
+              <Alert
+                key={index}
+                className={
+                  alert.severity === "error"
+                    ? "border-red-200 bg-red-50"
+                    : "border-yellow-200 bg-yellow-50"
                 }
+              >
+                {alert.severity === "error" ? (
+                  <XCircle className="h-4 w-4 text-red-500" />
+                ) : (
+                  <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                )}
                 <AlertTitle>{alert.type}</AlertTitle>
                 <AlertDescription>{alert.message}</AlertDescription>
               </Alert>
@@ -285,7 +319,11 @@ export function MonitoringDashboard() {
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     <span className="capitalize">{domain}</span>
-                    <Badge variant={metrics.successRate > 95 ? "default" : "secondary"}>
+                    <Badge
+                      variant={
+                        metrics.successRate > 95 ? "default" : "secondary"
+                      }
+                    >
                       {formatPercentage(metrics.successRate)} Success
                     </Badge>
                   </CardTitle>
@@ -293,20 +331,36 @@ export function MonitoringDashboard() {
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div>
-                      <div className="text-sm text-muted-foreground">Operations</div>
-                      <div className="text-lg font-semibold">{metrics.operationCount}</div>
+                      <div className="text-sm text-muted-foreground">
+                        Operations
+                      </div>
+                      <div className="text-lg font-semibold">
+                        {metrics.operationCount}
+                      </div>
                     </div>
                     <div>
-                      <div className="text-sm text-muted-foreground">Avg Duration</div>
-                      <div className="text-lg font-semibold">{formatDuration(metrics.averageDuration)}</div>
+                      <div className="text-sm text-muted-foreground">
+                        Avg Duration
+                      </div>
+                      <div className="text-lg font-semibold">
+                        {formatDuration(metrics.averageDuration)}
+                      </div>
                     </div>
                     <div>
-                      <div className="text-sm text-muted-foreground">Error Rate</div>
-                      <div className="text-lg font-semibold">{formatPercentage(metrics.errorRate)}</div>
+                      <div className="text-sm text-muted-foreground">
+                        Error Rate
+                      </div>
+                      <div className="text-lg font-semibold">
+                        {formatPercentage(metrics.errorRate)}
+                      </div>
                     </div>
                     <div>
-                      <div className="text-sm text-muted-foreground">Cache Hit Rate</div>
-                      <div className="text-lg font-semibold">{formatPercentage(metrics.cacheHitRate)}</div>
+                      <div className="text-sm text-muted-foreground">
+                        Cache Hit Rate
+                      </div>
+                      <div className="text-lg font-semibold">
+                        {formatPercentage(metrics.cacheHitRate)}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -333,21 +387,36 @@ export function MonitoringDashboard() {
                     ) : (
                       <XCircle className="h-4 w-4 text-red-500 mr-1" />
                     )}
-                    {data.cache.health.isAvailable ? "Available" : "Unavailable"}
+                    {data.cache.health.isAvailable
+                      ? "Available"
+                      : "Unavailable"}
                   </div>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">Hit Rate</div>
-                  <div className="text-lg font-semibold">{formatPercentage(data.cache.health.hitRate)}</div>
-                  <Progress value={data.cache.health.hitRate} className="mt-1" />
+                  <div className="text-lg font-semibold">
+                    {formatPercentage(data.cache.health.hitRate)}
+                  </div>
+                  <Progress
+                    value={data.cache.health.hitRate}
+                    className="mt-1"
+                  />
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Avg Hit Time</div>
-                  <div className="text-lg font-semibold">{formatDuration(data.cache.health.averageHitTime)}</div>
+                  <div className="text-sm text-muted-foreground">
+                    Avg Hit Time
+                  </div>
+                  <div className="text-lg font-semibold">
+                    {formatDuration(data.cache.health.averageHitTime)}
+                  </div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Total Requests</div>
-                  <div className="text-lg font-semibold">{data.cache.health.totalRequests}</div>
+                  <div className="text-sm text-muted-foreground">
+                    Total Requests
+                  </div>
+                  <div className="text-lg font-semibold">
+                    {data.cache.health.totalRequests}
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -364,15 +433,21 @@ export function MonitoringDashboard() {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span>Total Errors</span>
-                    <span className="font-semibold">{data.errors.statistics.totalErrors}</span>
+                    <span className="font-semibold">
+                      {data.errors.statistics.totalErrors}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Error Rate</span>
-                    <span className="font-semibold">{formatPercentage(data.errors.statistics.errorRate)}</span>
+                    <span className="font-semibold">
+                      {formatPercentage(data.errors.statistics.errorRate)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Health Score</span>
-                    <span className="font-semibold">{data.errors.healthScore}/100</span>
+                    <span className="font-semibold">
+                      {data.errors.healthScore}/100
+                    </span>
                   </div>
                   <Progress value={data.errors.healthScore} className="mt-2" />
                 </div>
@@ -385,12 +460,14 @@ export function MonitoringDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  {Object.entries(data.errors.statistics.errorsByDomain).map(([domain, count]) => (
-                    <div key={domain} className="flex justify-between">
-                      <span className="capitalize">{domain}</span>
-                      <Badge variant="outline">{count}</Badge>
-                    </div>
-                  ))}
+                  {Object.entries(data.errors.statistics.errorsByDomain).map(
+                    ([domain, count]) => (
+                      <div key={domain} className="flex justify-between">
+                        <span className="capitalize">{domain}</span>
+                        <Badge variant="outline">{count}</Badge>
+                      </div>
+                    )
+                  )}
                 </div>
               </CardContent>
             </Card>

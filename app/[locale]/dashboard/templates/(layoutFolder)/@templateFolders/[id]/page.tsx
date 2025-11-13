@@ -49,7 +49,7 @@ function Default() {
 
   if (isLoading) {
     return (
-      <div className="bg-gray-50 p-2 px-4 border-r border-gray-200 w-72 space-y-5">
+      <div className="bg-gray-50 dark:bg-muted/30 p-2 px-4 border-r border-gray-200 dark:border-border w-72 space-y-5">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold">Templates</h3>
           <Link href="/dashboard/templates">
@@ -74,7 +74,7 @@ function Default() {
 
   if (error) {
     return (
-      <div className="bg-gray-50 p-2 px-4 border-r border-gray-200 w-72 space-y-5">
+      <div className="bg-gray-50 dark:bg-muted/30 p-2 px-4 border-r border-gray-200 dark:border-border w-72 space-y-5">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold">Templates</h3>
           <Link href="/dashboard/templates">
@@ -83,15 +83,13 @@ function Default() {
             </Button>
           </Link>
         </div>
-        <div className="text-red-500 text-center p-4">
-          {error}
-        </div>
+        <div className="text-red-500 text-center p-4">{error}</div>
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-50 p-2 px-4 border-r border-gray-200 w-72 space-y-5">
+    <div className="bg-gray-50 dark:bg-muted/30 p-2 px-4 border-r border-gray-200 dark:border-border w-72 space-y-5">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold">Templates</h3>
         <Link href="/dashboard/templates">

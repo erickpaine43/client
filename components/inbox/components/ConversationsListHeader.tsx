@@ -10,9 +10,9 @@ export default async function ConversationsListHeader({
   const countResult = await getConversationCount();
   const count = countResult.success ? countResult.data || 0 : 0;
   return (
-    <div className="p-2 border-b border-gray-200">
+    <div className="p-2 border-b border-gray-200 dark:border-border">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-foreground">
           {title}
           <span className="ml-2 text-sm font-normal text-gray-500">
             ({count})

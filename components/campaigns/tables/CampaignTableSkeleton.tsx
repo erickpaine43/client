@@ -23,7 +23,7 @@ function CampaignTableSkeleton({
       <Separator />
       <CardContent className="overflow-x-auto p-0">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-50 dark:bg-muted">
             <tr className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
               {columns?.map((column, index) => (
                 <th key={index} className="px-8 py-4">
@@ -34,7 +34,10 @@ function CampaignTableSkeleton({
           </thead>
           <tbody className="divide-y divide-gray-200">
             {Array.from({ length: 5 }).map((_, index) => (
-              <tr key={index} className="hover:bg-gray-50 transition-colors">
+              <tr
+                key={index}
+                className="hover:bg-gray-50 dark:hover:bg-muted/30 transition-colors"
+              >
                 {/* Campaign Name Column */}
                 <td className="px-8 py-6">
                   <div>

@@ -21,7 +21,9 @@ function SequenceTab() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">Email Sequence</h3>
+        <h3 className="text-lg font-semibold text-foreground">
+          Email Sequence
+        </h3>
       </div>
 
       <div className="space-y-4">
@@ -29,26 +31,28 @@ function SequenceTab() {
           <Card key={step.id}>
             <CardHeader className="flex items-start justify-between gap-4">
               {step.type === "email" ? (
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Mail className="w-5 h-5 text-blue-600" />
+                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-500/20 rounded-lg flex items-center justify-center">
+                  <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 </div>
               ) : (
-                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <Clock className="w-5 h-5 text-gray-600" />
+                <div className="w-10 h-10 bg-muted dark:bg-muted/60 rounded-lg flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-muted-foreground" />
                 </div>
               )}
               <div className="flex-1">
                 {step.type === "email" ? (
                   <>
-                    <h4 className="font-medium text-gray-900">
+                    <h4 className="font-medium text-foreground">
                       Email {Math.floor((index + 1) / 2) + 1}
                     </h4>
-                    <p className="text-gray-600 mt-1">{step.subject}</p>
+                    <p className="text-muted-foreground mt-1">{step.subject}</p>
                   </>
                 ) : (
                   <div>
-                    <h4 className="font-medium text-gray-900">Wait Step</h4>
-                    <p className="text-gray-600 mt-1">Wait {step.duration}</p>
+                    <h4 className="font-medium text-foreground">Wait Step</h4>
+                    <p className="text-muted-foreground mt-1">
+                      Wait {step.duration}
+                    </p>
                   </div>
                 )}
               </div>
@@ -57,7 +61,7 @@ function SequenceTab() {
               {step.type === "email" ? (
                 <div className="grid grid-cols-4 gap-4 mt-3">
                   <div className="text-center">
-                    <p className="text-lg font-bold text-gray-900">
+                    <p className="text-lg font-bold text-foreground">
                       {Number(step.sent ?? 0).toLocaleString()}
                     </p>
                     <p className="text-xs text-gray-500">Sent</p>

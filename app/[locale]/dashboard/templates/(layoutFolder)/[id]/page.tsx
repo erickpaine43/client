@@ -7,7 +7,11 @@ import WarmupSummary from "@/components/dashboard/summaries/WarmupSummary";
 import WarmupSummarySkeleton from "@/components/dashboard/summaries/WarmupSummarySkeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Suspense } from "react";
-import { getStatsCards, getRecentReplies, getWarmupSummaryData } from "@/lib/actions/dashboard";
+import {
+  getStatsCards,
+  getRecentReplies,
+  getWarmupSummaryData,
+} from "@/lib/actions/dashboard";
 
 async function page() {
   // Fetch data using server actions
@@ -18,7 +22,9 @@ async function page() {
   return (
     <div className=" mx-auto  space-y-8">
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-foreground">
+          Dashboard
+        </h1>
         <p className="text-gray-500">
           Welcome back! Here&apos;s what&apos;s happening with your campaigns.
         </p>
@@ -36,9 +42,9 @@ async function page() {
       </Suspense>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <Card className="bg-white rounded-xl shadow-sm border border-gray-200 p-0 gap-0">
-            <CardHeader className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">
+          <Card className="bg-white dark:bg-card rounded-xl shadow-sm border border-gray-200 dark:border-border p-0 gap-0">
+            <CardHeader className="p-6 border-b border-gray-200 dark:border-border">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-foreground">
                 Recent Replies
               </h2>
             </CardHeader>

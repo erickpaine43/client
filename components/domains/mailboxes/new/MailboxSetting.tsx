@@ -18,16 +18,16 @@ function MailboxSetting() {
   const form = useFormContext();
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+    <div className="bg-white dark:bg-card rounded-2xl shadow-sm border border-gray-200 dark:border-border p-8">
       <div className="max-w-2xl mx-auto space-y-8">
         <div className="text-center">
           <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Settings className="w-8 h-8 text-purple-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-foreground mb-2">
             Set Sending & Warmup Limits
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-muted-foreground">
             Control how many emails this mailbox sends per day and enable warmup
           </p>
         </div>
@@ -38,7 +38,7 @@ function MailboxSetting() {
             name="dailyLimit"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">
+                <FormLabel className="text-sm font-medium text-gray-700 dark:text-foreground">
                   Daily Sending Limit
                 </FormLabel>
                 <div className="relative">
@@ -49,7 +49,7 @@ function MailboxSetting() {
                       max={50}
                       className={cn(
                         "w-full px-4 py-3 pr-24 text-lg h-12",
-                        form.formState.errors.dailyLimit && "border-red-300",
+                        form.formState.errors.dailyLimit && "border-red-300"
                       )}
                       {...field}
                       onChange={(e) => field.onChange(parseInt(e.target.value))}

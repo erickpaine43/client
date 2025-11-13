@@ -27,7 +27,7 @@ function NewDomainNavigation() {
   const isCheckingDNS = false; // Replace with actual state if needed
 
   return (
-    <div className="w-full border-t border-gray-200 ">
+    <div className="w-full border-t border-gray-200 dark:border-border">
       <div className="px-8 py-6">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Button
@@ -48,7 +48,7 @@ function NewDomainNavigation() {
                 disabled={!domainName.trim() || isValidating}
                 className={cn(
                   "px-8 py-3 font-medium",
-                  "bg-blue-600 hover:bg-blue-700 text-white",
+                  "bg-blue-600 hover:bg-blue-700 text-white"
                 )}
               >
                 {isValidating ? (
@@ -72,7 +72,7 @@ function NewDomainNavigation() {
                   disabled={isCheckingDNS}
                   className={cn(
                     "px-6 py-3 font-medium",
-                    "bg-purple-600 hover:bg-purple-700 text-white",
+                    "bg-purple-600 hover:bg-purple-700 text-white"
                   )}
                 >
                   {isCheckingDNS ? (
@@ -91,7 +91,7 @@ function NewDomainNavigation() {
                   onClick={() => setCurrentStep(3)}
                   className={cn(
                     "px-6 py-3 font-medium",
-                    "bg-green-600 hover:bg-green-700 text-white",
+                    "bg-green-600 hover:bg-green-700 text-white"
                   )}
                 >
                   <span>Finish</span>

@@ -107,10 +107,10 @@ export function AddMailboxesProvider({
                     </Link>
                   </Button>
                   <div>
-                    <DialogTitle className="text-2xl font-bold text-gray-900">
+                    <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-foreground">
                       Create New Mailbox
                     </DialogTitle>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 dark:text-muted-foreground">
                       Set up a mailbox to start sending cold emails
                     </p>
                   </div>

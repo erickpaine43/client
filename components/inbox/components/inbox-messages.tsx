@@ -22,8 +22,8 @@ export default function InboxMessages({ emails }: Props) {
   const renderEmail = (email: Email) => (
     <div
       key={email.id}
-      className={`px-4 py-4 flex flex-col hover:bg-gray-50 cursor-pointer border rounded-md ${
-        !email.read ? "bg-blue-50" : "bg-white"
+      className={`px-4 py-4 flex flex-col hover:bg-gray-50 dark:hover:bg-muted/50 cursor-pointer border rounded-md ${
+        !email.read ? "bg-blue-50" : "bg-white dark:bg-card"
       }`}
     >
       <Link href={`/dashboard/inbox/${email.id}`}>

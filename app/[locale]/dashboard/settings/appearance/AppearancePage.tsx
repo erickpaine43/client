@@ -39,9 +39,9 @@ export default function AppearanceSettingsPage() {
   };
 
   return (
-    <div className="bg-white shadow sm:rounded-lg">
+    <div className="bg-white dark:bg-card shadow sm:rounded-lg">
       <div className="px-4 py-5 sm:p-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
+        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-foreground">
           Appearance
         </h3>
         <div className="mt-2 max-w-xl text-sm text-gray-500">
@@ -57,7 +57,7 @@ export default function AppearanceSettingsPage() {
         <div className="mt-5 space-y-6">
           {/* Theme Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-foreground">
               Theme
             </label>
             <fieldset className="mt-2">
@@ -72,11 +72,11 @@ export default function AppearanceSettingsPage() {
                       value={themeOption}
                       checked={theme === themeOption}
                       onChange={(e) => setTheme(e.target.value)}
-                      className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"
+                      className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-border"
                     />
                     <label
                       htmlFor={`theme-${themeOption.toLowerCase()}`}
-                      className="ml-3 block text-sm font-medium text-gray-700"
+                      className="ml-3 block text-sm font-medium text-gray-700 dark:text-foreground"
                     >
                       {themeOption.charAt(0) +
                         themeOption.slice(1).toLowerCase()}
@@ -89,7 +89,7 @@ export default function AppearanceSettingsPage() {
 
           {/* Layout Density Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-foreground">
               Layout Density
             </label>
             <fieldset className="mt-2">
@@ -104,11 +104,11 @@ export default function AppearanceSettingsPage() {
                       value={densityOption}
                       checked={layoutDensity === densityOption}
                       onChange={(e) => setLayoutDensity(e.target.value)}
-                      className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"
+                      className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-border"
                     />
                     <label
                       htmlFor={`density-${densityOption.toLowerCase()}`}
-                      className="ml-3 block text-sm font-medium text-gray-700"
+                      className="ml-3 block text-sm font-medium text-gray-700 dark:text-foreground"
                     >
                       {densityOption.charAt(0) +
                         densityOption.slice(1).toLowerCase()}

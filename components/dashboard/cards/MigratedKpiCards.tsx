@@ -196,7 +196,7 @@ function MigratedKpiCards({
     return (
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <div className="col-span-full">
-          <div className="flex items-center space-x-2 text-red-500 p-4 bg-red-50 rounded-lg">
+          <div className="flex items-center space-x-2 text-destructive p-4 bg-destructive/10 rounded-lg">
             <AlertTriangle className="w-5 h-5" />
             <span>Error loading KPI data: {error}</span>
           </div>
@@ -210,12 +210,12 @@ function MigratedKpiCards({
     return (
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <div className="col-span-full">
-          <div className="text-center p-8 bg-gray-50 rounded-lg">
-            <Mail className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <div className="text-center p-8 bg-muted rounded-lg">
+            <Mail className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-foreground mb-2">
               No Campaign Data
             </h3>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Start a campaign to see KPI metrics.
             </p>
           </div>
@@ -249,14 +249,14 @@ function MigratedKpiCards({
 function getColorForKPI(color?: KPIDisplayConfig["color"]) {
   switch (color) {
     case "positive":
-      return "bg-green-100 text-green-600";
+      return "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400";
     case "warning":
-      return "bg-yellow-100 text-yellow-600";
+      return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400";
     case "danger":
-      return "bg-red-100 text-red-600";
+      return "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400";
     case "neutral":
     default:
-      return "bg-blue-100 text-blue-600";
+      return "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400";
   }
 }
 

@@ -87,7 +87,7 @@ function FileUploadZone({
       />
 
       <Card
-        className="border-2 border-dashed border-gray-300 hover:border-primary hover:bg-muted/50 transition-all cursor-pointer"
+        className="border-2 border-dashed border-border hover:border-primary hover:bg-muted/50 transition-all cursor-pointer"
         onDrop={(e) => {
           e.preventDefault();
           handleFileChange(e.dataTransfer.files[0]);
@@ -282,8 +282,8 @@ function FilePreview({
           </div>
 
           {/* Add Custom Column */}
-          <div className="mt-4 p-4 border border-dashed border-gray-300 rounded-lg">
-            <h5 className="font-medium text-sm mb-3 text-gray-700">
+          <div className="mt-4 p-4 border border-dashed border-gray-300 dark:border-border rounded-lg">
+            <h5 className="font-medium text-sm mb-3 text-gray-700 dark:text-foreground">
               Add Custom Merge Tag
             </h5>
             <div className="flex gap-2">
