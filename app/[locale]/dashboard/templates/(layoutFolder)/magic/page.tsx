@@ -13,7 +13,7 @@ function page() {
             Coming Soon
           </h3>
           <p className="text-gray-600 dark:text-muted-foreground">
-            This tab is under construction. But trust us, it'll be worth the
+            This tab is under construction. But trust us, it&apos;ll be worth the
             wait.
           </p>
         </div>
