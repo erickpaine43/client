@@ -1,5 +1,5 @@
 import TemplateActions from "@/components/templates/template-actions";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Card,
   CardContent,

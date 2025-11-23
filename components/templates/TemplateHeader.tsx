@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { ArrowLeft, Copy } from "lucide-react";
 import { copyText as t } from "./copy";
 

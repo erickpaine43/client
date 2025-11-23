@@ -9,7 +9,7 @@ import {
 } from "@/types";
 import { EmailAccountFormValues, EmailAccountFormProps } from "@/types/forms";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Form,
   FormControl,
@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import {
   Select,
   SelectContent,
@@ -90,14 +90,36 @@ export default function EmailAccountForm({
           const metricsObj = metrics as Record<string, unknown>;
           // Validate that metrics has the expected shape
           const validatedMetrics: AccountMetrics = {
-            bounceRate: typeof metricsObj.bounceRate === "number" ? metricsObj.bounceRate : 0,
-            spamComplaints: typeof metricsObj.spamComplaints === "number" ? metricsObj.spamComplaints : 0,
-            openRate: typeof metricsObj.openRate === "number" ? metricsObj.openRate : 0,
-            replyRate: typeof metricsObj.replyRate === "number" ? metricsObj.replyRate : 0,
-            maxBounceRateThreshold: typeof metricsObj.maxBounceRateThreshold === "number" ? metricsObj.maxBounceRateThreshold : 0.05,
-            maxSpamComplaintRateThreshold: typeof metricsObj.maxSpamComplaintRateThreshold === "number" ? metricsObj.maxSpamComplaintRateThreshold : 0.001,
-            minOpenRateThreshold: typeof metricsObj.minOpenRateThreshold === "number" ? metricsObj.minOpenRateThreshold : 0.2,
-            minReplyRateThreshold: typeof metricsObj.minReplyRateThreshold === "number" ? metricsObj.minReplyRateThreshold : 0.05,
+            bounceRate:
+              typeof metricsObj.bounceRate === "number"
+                ? metricsObj.bounceRate
+                : 0,
+            spamComplaints:
+              typeof metricsObj.spamComplaints === "number"
+                ? metricsObj.spamComplaints
+                : 0,
+            openRate:
+              typeof metricsObj.openRate === "number" ? metricsObj.openRate : 0,
+            replyRate:
+              typeof metricsObj.replyRate === "number"
+                ? metricsObj.replyRate
+                : 0,
+            maxBounceRateThreshold:
+              typeof metricsObj.maxBounceRateThreshold === "number"
+                ? metricsObj.maxBounceRateThreshold
+                : 0.05,
+            maxSpamComplaintRateThreshold:
+              typeof metricsObj.maxSpamComplaintRateThreshold === "number"
+                ? metricsObj.maxSpamComplaintRateThreshold
+                : 0.001,
+            minOpenRateThreshold:
+              typeof metricsObj.minOpenRateThreshold === "number"
+                ? metricsObj.minOpenRateThreshold
+                : 0.2,
+            minReplyRateThreshold:
+              typeof metricsObj.minReplyRateThreshold === "number"
+                ? metricsObj.minReplyRateThreshold
+                : 0.05,
           };
           setAccountMetrics(validatedMetrics);
         }

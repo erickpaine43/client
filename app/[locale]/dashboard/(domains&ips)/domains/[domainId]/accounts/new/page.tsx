@@ -1,12 +1,16 @@
 "use client";
 import { use } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import EmailAccountForm from "@/components/domains/email-account-form";
 import { type EmailAccountFormValues } from "@/types/forms";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-function NewAccountClient({ params }: { params: Promise<{ domainId: string }> }) {
+function NewAccountClient({
+  params,
+}: {
+  params: Promise<{ domainId: string }>;
+}) {
   const { domainId } = use(params);
   const domain = {
     id: parseInt(domainId),

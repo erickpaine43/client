@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link"; // Import Link
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button/button";
+import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { KeyRound, MailCheck, User } from "lucide-react"; // Icons
@@ -26,6 +26,18 @@ export default function ForgotPasswordPage() {
     setIsSubmitted(false);
 
     try {
+      // Simulate API call to your backend to send reset link
+      await new Promise((resolve, reject) =>
+        setTimeout(() => {
+          // Simulate success/failure (e.g., check if email exists)
+          if (email.includes("@")) {
+            // Basic check
+            resolve("Success");
+          } else {
+            reject(new Error("Invalid email format"));
+          }
+        }, 1500)
+      );
       const response = await fetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: {
@@ -46,7 +58,7 @@ export default function ForgotPasswordPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to send reset link. Please try again.",
+          : "Failed to send reset link. Please try again."
       );
     } finally {
       setIsLoading(false);

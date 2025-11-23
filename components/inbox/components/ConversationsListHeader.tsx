@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { getConversationCount } from "@/lib/actions/inbox";
 import { RefreshCw, Settings } from "lucide-react";
 

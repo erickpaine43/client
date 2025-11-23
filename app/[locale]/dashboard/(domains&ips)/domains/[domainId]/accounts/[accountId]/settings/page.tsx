@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import EmailAccountForm from "@/components/domains/email-account-form";

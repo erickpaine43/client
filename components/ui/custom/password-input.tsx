@@ -8,8 +8,8 @@ import {
   debounce,
   type PasswordStrength,
 } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input/input";
+import { Button } from "@/components/ui/button/button";
 import { Label } from "@/components/ui/label";
 import { PasswordStrengthMeter } from "./password-strength-meter";
 
@@ -54,13 +54,13 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
       onStrengthChange,
       ...props
     },
-    ref,
+    ref
   ) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const [passwordStrength, setPasswordStrength] =
       React.useState<PasswordStrength | null>(null);
     const [inputValue, setInputValue] = React.useState(
-      value || defaultValue || "",
+      value || defaultValue || ""
     );
 
     const testId = dataTestId ?? `password-input-${name}`;
@@ -76,7 +76,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
           togglePasswordVisibility();
         }
       },
-      [togglePasswordVisibility],
+      [togglePasswordVisibility]
     );
 
     // Debounced password strength calculation
@@ -89,7 +89,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
             onStrengthChange?.(strength);
           }
         }, 300),
-      [showStrengthMeter, onStrengthChange],
+      [showStrengthMeter, onStrengthChange]
     );
 
     // Calculate strength when password changes
@@ -115,7 +115,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
         setInputValue(newValue);
         onValueChange?.(newValue);
       },
-      [onValueChange],
+      [onValueChange]
     );
 
     const inputProps = {
@@ -184,7 +184,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
         )}
       </div>
     );
-  },
+  }
 );
 
 PasswordInput.displayName = "PasswordInput";

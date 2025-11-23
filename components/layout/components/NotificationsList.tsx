@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Notification } from "@/types/notification";
 import { Bell } from "lucide-react";
 import NotificationListItem from "./NotificationListItem";

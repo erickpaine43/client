@@ -3,7 +3,7 @@
 import Icon from "@/components/ui/custom/Icon";
 import NavLink from "@/components/settings/general/nav-link";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { useClientPreferences } from "@/context/ClientPreferencesContext";
 import {
   Bell,

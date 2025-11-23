@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Form,
   FormControl,
@@ -12,7 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { Info, Save } from "lucide-react";
 import {
   Select,
@@ -29,7 +29,9 @@ import {
 } from "@/components/ui/tooltip";
 import { copyText as t } from "./copy";
 import PersonalizationTags from "@/components/email/PersonalizationTags";
-import LexicalEditor, { LexicalEditorRef } from "@/components/ui/custom/LexicalEditor";
+import LexicalEditor, {
+  LexicalEditorRef,
+} from "@/components/ui/custom/LexicalEditor";
 import { templateFormSchema, TemplateFormValues } from "@/types/forms";
 import { TemplateCategory } from "@/types";
 
@@ -64,7 +66,7 @@ export function TemplateForm({
 
   const handleSubmit = async (
     data: TemplateFormValues,
-    event?: React.BaseSyntheticEvent,
+    event?: React.BaseSyntheticEvent
   ) => {
     event?.preventDefault();
     console.log("Body value to save:", data.body);

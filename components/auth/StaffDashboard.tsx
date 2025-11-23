@@ -11,7 +11,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useStaffAccess } from "@/hooks/useEnhancedAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -387,9 +387,7 @@ export const StaffDashboard = () => {
                       className="flex items-center justify-between p-3 border rounded-lg"
                     >
                       <div className="flex items-center space-x-3">
-                        <Badge
-                          variant={getSeverityColor(alert.severity)}
-                        >
+                        <Badge variant={getSeverityColor(alert.severity)}>
                           {alert.severity}
                         </Badge>
                         <span className="font-medium">{alert.name}</span>

@@ -1,4 +1,4 @@
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { Table } from "@tanstack/react-table";
 import { copyText as t } from "../data/copy";
 import { Client } from "@/app/[locale]/dashboard/inbox/schemas/schemas";

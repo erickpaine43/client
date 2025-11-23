@@ -9,7 +9,7 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
-import { Button } from "../../ui/button";
+import { Button } from "../../ui/button/button";
 
 // Type for performance metrics
 type PerformanceMetrics = {

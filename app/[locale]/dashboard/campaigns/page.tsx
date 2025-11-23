@@ -6,7 +6,7 @@ import CampaignsTable, {
 } from "@/components/campaigns/tables/CampaignsTable";
 import StatsCardSkeleton from "@/components/dashboard/cards/StatsCardSkeleton";
 import StatsCards from "@/components/campaigns/reports/StatsCards";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Plus, Send, Mail, Eye, TrendingUp, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";

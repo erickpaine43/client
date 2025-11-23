@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Client, Email } from "@/types/inbox";
 import { Campaign } from "@/types/campaign";
 import { User } from "@/types/auth";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { markEmailAsStarredAction } from "@/app/[locale]/dashboard/inbox/actions";
 import { toast } from "sonner";
 import { InboxColumnAction } from "./inbox-column-action";

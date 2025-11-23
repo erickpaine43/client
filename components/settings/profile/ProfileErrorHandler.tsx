@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle, Loader2, RefreshCw, AlertCircle } from "lucide-react";
 import { type ProfileError } from "@/lib/actions/profileActions";

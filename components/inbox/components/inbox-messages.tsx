@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { TabsContent } from "@/components/ui/tabs";
 import { Star } from "lucide-react";
 import { Email } from "@/app/[locale]/dashboard/inbox/schemas/schemas";

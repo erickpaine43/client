@@ -1,6 +1,6 @@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label";
 import { AlertTriangle, Globe, Lightbulb } from "lucide-react";
 import { useFormContext } from "react-hook-form";
@@ -37,7 +37,8 @@ function EnterDomain() {
                 </div>
               )}
               <p className="text-sm text-muted-foreground">
-                Please enter only the root domain. Don&apos;t include http:// or www.
+                Please enter only the root domain. Don&apos;t include http:// or
+                www.
               </p>
             </div>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import {
   Select,
   SelectContent,
@@ -19,7 +19,7 @@ interface DelayStepProps {
   onDaysChange: (value: number) => void;
   onHoursChange: (value: number) => void;
   onConditionChange: (
-    value: "always" | "if_not_opened" | "if_not_clicked" | "if_not_replied",
+    value: "always" | "if_not_opened" | "if_not_clicked" | "if_not_replied"
   ) => void;
 }
 

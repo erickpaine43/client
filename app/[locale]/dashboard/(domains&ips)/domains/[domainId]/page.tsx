@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Card,
   CardContent,
@@ -91,7 +91,10 @@ export default async function DomainPage({
                   {(domain as Domain).metrics?.total24h}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {((domain as Domain).metrics?.bounceRate ?? 0 * 100).toFixed(1)}% bounce rate
+                  {((domain as Domain).metrics?.bounceRate ?? 0 * 100).toFixed(
+                    1
+                  )}
+                  % bounce rate
                 </p>
               </CardContent>
             </Card>
@@ -103,10 +106,14 @@ export default async function DomainPage({
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {((domain as Domain).metrics?.openRate ?? 0 * 100).toFixed(1)}%
+                  {((domain as Domain).metrics?.openRate ?? 0 * 100).toFixed(1)}
+                  %
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {((domain as Domain).metrics?.replyRate ?? 0 * 100).toFixed(1)}% reply rate
+                  {((domain as Domain).metrics?.replyRate ?? 0 * 100).toFixed(
+                    1
+                  )}
+                  % reply rate
                 </p>
               </CardContent>
             </Card>
@@ -118,7 +125,8 @@ export default async function DomainPage({
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {((domain as Domain).metrics?.spamRate ?? 0 * 100).toFixed(3)}%
+                  {((domain as Domain).metrics?.spamRate ?? 0 * 100).toFixed(3)}
+                  %
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Last 7 days average
@@ -155,7 +163,7 @@ export default async function DomainPage({
                       {domain.spf ? "Configured" : "Not Configured"}
                     </Badge>
                   </div>
-  
+
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium mb-1">DKIM Record</div>
@@ -174,7 +182,7 @@ export default async function DomainPage({
                       {domain.dkim ? "Configured" : "Not Configured"}
                     </Badge>
                   </div>
-  
+
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium mb-1">DMARC Record</div>
@@ -194,7 +202,7 @@ export default async function DomainPage({
                     </Badge>
                   </div>
                 </div>
-  
+
                 {(!domain.spf || !domain.dkim || !domain.dmarc) && (
                   <Button className="w-full mt-6" asChild>
                     <Link href={`/dashboard/domains/${domain.id}/setup`}>
@@ -204,7 +212,7 @@ export default async function DomainPage({
                 )}
               </CardContent>
             </Card>
-  
+
             <Card>
               <CardHeader>
                 <CardTitle>Weekly Metrics</CardTitle>

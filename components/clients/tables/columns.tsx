@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { copyText as t } from "@/components/clients/data/copy";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Dialog,
   DialogContent,
@@ -25,7 +25,7 @@ import { Client } from "@/types/inbox";
 export const createColumns = (
   maskPII: (text: string) => string,
   onEdit: (client: Client) => void,
-  onRemove: (client: Client) => void,
+  onRemove: (client: Client) => void
 ): ColumnDef<Client>[] => {
   const NOTES_PREVIEW_LIMIT = 100;
 
@@ -111,7 +111,7 @@ export const createColumns = (
               <DropdownMenuItem
                 onClick={() => {
                   navigator.clipboard.writeText(
-                    JSON.stringify(client, null, 2),
+                    JSON.stringify(client, null, 2)
                   );
                   toast.success(t.actions.dataCopied);
                 }}

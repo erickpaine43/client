@@ -1,7 +1,7 @@
 "use client";
 import { Filter, SearchInput } from "@/components/ui/custom/Filter";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Select,
   SelectContent,
@@ -176,7 +176,7 @@ function InboxFilter() {
     <>
       <Filter
         className={cn(
-          "bg-card dark:bg-card border-r border-border flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none"
+          "bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out lg:flex-col rounded-none"
         )}
       >
         <SearchInput />
@@ -195,7 +195,7 @@ function InboxFilter() {
                     "w-full justify-between h-auto py-2.5 px-3",
                     selectedFilter === filter.id
                       ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
-                      : "text-gray-700 dark:text-muted-foreground"
+                      : "text-gray-700"
                   )}
                 >
                   <div className="flex items-center space-x-3">

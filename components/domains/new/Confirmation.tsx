@@ -1,6 +1,6 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { ArrowRight, CheckCircle, Mail } from "lucide-react";
@@ -37,7 +37,9 @@ function Confirmation() {
           </div>
 
           <Alert className={cn("border-green-200 bg-green-50")}>
-            <AlertTitle className="text-green-900">🎉 What&apos;s Next?</AlertTitle>
+            <AlertTitle className="text-green-900">
+              🎉 What&apos;s Next?
+            </AlertTitle>
             <AlertDescription>
               <ul className="text-sm text-green-700 space-y-2 text-left mt-3">
                 <li>
@@ -55,7 +57,7 @@ function Confirmation() {
             className={cn(
               "bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg font-semibold",
               "shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200",
-              "flex items-center space-x-2 mx-auto",
+              "flex items-center space-x-2 mx-auto"
             )}
           >
             <Mail className="w-5 h-5" />

@@ -35,5 +35,8 @@
             "text": "¿No tienes una cuenta?",
             "link": "Regístrate"
         }
+    },
+    "button": {
+        "label": "botón"
     }
 }

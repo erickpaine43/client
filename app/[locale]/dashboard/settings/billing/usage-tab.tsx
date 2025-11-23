@@ -2,7 +2,7 @@
 
 import AddStorageTrigger from "@/components/settings/billing/add-storge-dialog";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Card,
   CardContent,
@@ -353,13 +353,13 @@ function UsageTab() {
               storageOptions.map((option) => (
                 <Card
                   key={option.gb}
-                  className="bg-gray-50 dark:bg-muted/30 rounded-lg p-4 text-center border border-gray-200 dark:border-border hover:border-blue-300 transition-colors cursor-pointer"
+                  className="bg-gray-50 rounded-lg p-4 text-center border border-gray-200 hover:border-blue-300 transition-colors cursor-pointer"
                 >
                   <CardContent>
-                    <div className="text-lg font-semibold text-gray-900 dark:text-foreground">
+                    <div className="text-lg font-semibold text-gray-900">
                       {option.gb} GB
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-muted-foreground">
+                    <div className="text-sm text-gray-600">
                       ${option.price}/month
                     </div>
                   </CardContent>

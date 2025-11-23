@@ -1,7 +1,7 @@
 "use client";
 
 import React, { RefObject } from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { Textarea } from "@/components/ui/textarea";
 import { TemplateSelector } from "../../forms/TemplateSelector";
 import PersonalizationTags from "@/components/email/PersonalizationTags";

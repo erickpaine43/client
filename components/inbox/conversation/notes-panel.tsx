@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useConversation } from "@/context/ConversationContext";
 import { X } from "lucide-react";

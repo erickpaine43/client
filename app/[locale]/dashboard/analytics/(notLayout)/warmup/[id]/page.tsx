@@ -1,6 +1,6 @@
 import WarmUpTable from "@/components/analytics/warmup/warmup-[id]-table";
 import WarmupStatsOverview from "@/components/analytics/warmup/warmup-stats-overview";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Separator } from "@/components/ui/separator";
 import { getMailboxById } from "@/lib/queries/warmup";
 import { ArrowLeft } from "lucide-react";

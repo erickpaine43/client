@@ -35,7 +35,7 @@ import {
   SettingsErrorBoundary,
   SettingsErrorFallback,
 } from "@/components/settings/SettingsErrorBoundary";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { toast } from "sonner";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 import { useSearchParams } from "next/navigation";
@@ -285,10 +285,10 @@ function BillingTab() {
                     <CreditCard className="w-5 h-5 text-gray-600 dark:text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-foreground">
+                    <p className="font-medium text-gray-900">
                       No payment method
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-muted-foreground">
+                    <p className="text-sm text-gray-600">
                       Add a payment method to continue
                     </p>
                   </div>
@@ -345,7 +345,7 @@ function BillingTab() {
                   <label className="text-sm font-medium text-gray-700 dark:text-foreground">
                     Industry
                   </label>
-                  <p className="text-gray-600 dark:text-muted-foreground">
+                  <p className="text-gray-600">
                     {companyDataAction.data?.companyInfo.industry ||
                       "Technology Services"}
                   </p>
@@ -354,7 +354,7 @@ function BillingTab() {
                   <label className="text-sm font-medium text-gray-700 dark:text-foreground">
                     Company Size
                   </label>
-                  <p className="text-gray-600 dark:text-muted-foreground">
+                  <p className="text-gray-600">
                     {companyDataAction.data?.companyInfo.size ||
                       "51-200 employees"}
                   </p>

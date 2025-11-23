@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { PasswordInput } from "@/components/ui/custom/password-input";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label";
 import { LogIn, User } from "lucide-react";
 import { LandingLayout } from "@/components/landing/LandingLayout";
@@ -23,7 +23,8 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { login, user } = useAuth();
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(""); // ✅ NEW — stores Turnstile token when user verifies
+
   const t = useTranslations("Login");
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {

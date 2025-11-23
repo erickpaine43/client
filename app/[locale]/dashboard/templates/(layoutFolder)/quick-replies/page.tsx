@@ -1,5 +1,5 @@
 import QuickReplyItem from "@/components/templates/quick-replies/quick-replay-item";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { getQuickReplies } from "@/lib/actions/templates";
 
 // Force dynamic rendering since this page uses authentication

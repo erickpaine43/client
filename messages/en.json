@@ -35,5 +35,8 @@
       "text": "Don't have an account?",
       "link": "Sign Up"
     }
+  },
+  "button": {
+    "label": "button"
   }
 }

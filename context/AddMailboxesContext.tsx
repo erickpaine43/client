@@ -3,7 +3,7 @@ import AddMailboxesNavigation from "@/components/domains/mailboxes/new/AddMailbo
 import AddMailboxesStep from "@/components/domains/mailboxes/new/AddMailboxesStep";
 import AddMailboxesStepper from "@/components/domains/mailboxes/new/AddMailboxesStepper";
 import NewMailboxHeaderDetails from "@/components/domains/mailboxes/new/NewMailboxHeaderDetails";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Dialog,
   DialogClose,

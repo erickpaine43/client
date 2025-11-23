@@ -9,7 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Card,
   CardContent,
@@ -212,8 +212,8 @@ function ConfirmDialog() {
             Confirm Plan Upgrade
           </AlertDialogTitle>
           <AlertDialogDescription className="text-center">
-            You&apos;re about to switch from Growth to Pro. You will be charged the
-            prorated difference immediately.
+            You&apos;re about to switch from Growth to Pro. You will be charged
+            the prorated difference immediately.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
