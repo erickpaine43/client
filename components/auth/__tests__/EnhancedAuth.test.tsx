@@ -9,9 +9,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { jest } from "@jest/globals";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
-import {
-  useTenantAccess,
-} from "@/hooks/useEnhancedAuth";
+import { useTenantAccess } from "@/hooks/useEnhancedAuth";
 import TenantCompanySelector from "@/components/auth/TenantCompanySelector";
 import StaffDashboard from "@/components/auth/StaffDashboard";
 
@@ -258,14 +256,16 @@ describe("Enhanced Authentication System", () => {
   });
 
   describe("TenantCompanySelector Component", () => {
-    it("should render tenant selector", () => {
+    it("should render tenant selector", async () => {
       render(
         <AuthProvider>
           <TenantCompanySelector />
         </AuthProvider>
       );
 
-      expect(screen.getByText("Context Selection")).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText("Context Selection")).toBeInTheDocument();
+      });
       expect(screen.getByText("Tenant")).toBeInTheDocument();
     });
 
