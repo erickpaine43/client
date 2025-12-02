@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -33,13 +33,10 @@ export default function LoginPage() {
   const [loginAttempts, setLoginAttempts] = useState(0);
   const router = useRouter();
   const { login, user, error: authError } = useAuth();
-
   const t = useTranslations("Login");
 
   useEffect(() => {
-    initPostHog().then((client) => {
-      client.capture("login_page_loaded");
-    });
+    initPostHog().then(client => client.capture("login_page_loaded"));
   }, []);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -55,13 +52,13 @@ export default function LoginPage() {
       }
     }
 
-    try {
-      if (showTurnstile && !turnstileToken) {
-        setError(t("errors.captchaRequired"));
-        setIsLoading(false);
-        return;
-      }
+    if (showTurnstile && !turnstileToken) {
+      setError(t("errors.captchaRequired"));
+      setIsLoading(false);
+      return;
+    }
 
+    try {
       if (showTurnstile && turnstileToken) {
         await verifyTurnstileToken(turnstileToken);
         ph().capture("captcha_completed", { email });
@@ -69,6 +66,8 @@ export default function LoginPage() {
 
       await login(email, password);
       ph().capture("login_attempt", { email, success: true });
+
+      router.push("/dashboard");
     } catch (err) {
       console.error("Login failed:", err);
       const errorMessage = (err as Error)?.message || loginContent.errors.generic;
@@ -113,18 +112,16 @@ export default function LoginPage() {
   const icon = user ? User : LogIn;
   const mode = user ? "loggedIn" : "form";
 
-  const footer = user
-    ? undefined
-    : (
-      <div className="flex flex-col items-center space-y-2">
-        <p className="text-xs text-muted-foreground">
-          {loginContent.signup.text}{" "}
-          <Link href="/signup" className="underline font-medium text-primary">
-            {loginContent.signup.link}
-          </Link>
-        </p>
-      </div>
-    );
+  const footer = user ? undefined : (
+    <div className="flex flex-col items-center space-y-2">
+      <p className="text-xs text-muted-foreground">
+        {loginContent.signup.text}{" "}
+        <Link href="/signup" className="underline font-medium text-primary">
+          {loginContent.signup.link}
+        </Link>
+      </p>
+    </div>
+  );
 
   return (
     <LandingLayout>
@@ -154,12 +151,9 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">{t("password.label")}</Label>
-                <Link
-                  href="/forgot-password"
-                  className="text-sm font-medium text-primary hover:underline underline-offset-4"
-                >
+                {/* <Link href="/forgot-password" className="text-sm font-medium text-primary hover:underline underline-offset-4">
                   {loginContent.forgotPassword}
-                </Link>
+                </Link> */}
               </div>
               <PasswordInput
                 name="password"
@@ -217,10 +211,10 @@ export default function LoginPage() {
               {isLoading
                 ? t("loginButton.loading")
                 : loginAttempts >= MAX_LOGIN_ATTEMPTS && !turnstileToken
-                  ? "Too many attempts. Complete verification."
-                  : showTurnstile && !turnstileToken
-                    ? "Complete verification to continue"
-                    : t("loginButton.default")}
+                ? "Too many attempts. Complete verification."
+                : showTurnstile && !turnstileToken
+                ? "Complete verification to continue"
+                : t("loginButton.default")}
             </Button>
           </form>
         )}
