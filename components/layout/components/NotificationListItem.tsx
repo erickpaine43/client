@@ -14,7 +14,7 @@ function NotificationListItem({
   return (
     <div
       key={notification.id}
-      className={`p-4 hover:bg-gray-50 transition-colors cursor-pointer ${
+      className={`p-4 hover:bg-gray-50 dark:hover:bg-muted/50 transition-colors cursor-pointer ${
         !notification.isRead ? "bg-blue-50" : ""
       }`}
       onClick={() => markAsRead(notification.id)}
@@ -26,7 +26,7 @@ function NotificationListItem({
         <div className="flex-1 min-w-0">
           <div className="flex items-center space-x-2">
             <h4
-              className={`text-sm font-medium text-gray-900 ${
+              className={`text-sm font-medium text-gray-900 dark:text-foreground ${
                 !notification.isRead ? "font-semibold" : ""
               }`}
             >
@@ -36,7 +36,7 @@ function NotificationListItem({
               <div className="w-2 h-2 bg-blue-600 rounded-full" />
             )}
           </div>
-          <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+          <p className="text-sm text-gray-600 dark:text-muted-foreground mt-1 line-clamp-2">
             {notification.message}
           </p>
           <p className="text-xs text-gray-500 mt-2 flex items-center space-x-1">

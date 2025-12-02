@@ -1,6 +1,9 @@
 name: Lint Check
 
 on:
+  push:
+    branches: ["main"]
+
   pull_request:
     types: [opened, synchronize, reopened]
     branches: ["main", "dev", "**"]
@@ -39,8 +42,26 @@ jobs:
         env:
           CI: true
 
-      #- name: Run Prettier
-      #  run: npm run format:check
+      # - name: Run TypeScript type check
+      #   run: npm run typecheck
+      #   Note: Temporarily disabled due to existing TypeScript errors
+      #   TODO: Create ticket to resolve TypeScript compilation issues before re-enabling
 
-      #- name: Run Jest
-      #  run: npm run test
+      - name: Run Jest tests
+        run: npm test -- --watchAll=false --passWithNoTests
+        continue-on-error: true
+        env:
+          CI: true
+
+      - name: Run build
+        run: CONVEX_DEPLOY_KEY='${{ secrets.CONVEX_DEPLOY_KEY }}' npx convex dev --once && npm run build
+        env:
+          NILEDB_API_URL: ${{ secrets.NILEDB_API_URL }}
+          NILEDB_USER: ${{ secrets.NILEDB_USER }}
+          NILEDB_PASSWORD: ${{ secrets.NILEDB_PASSWORD }}
+          NILEDB_POSTGRES_URL: ${{ secrets.NILEDB_POSTGRES_URL }}
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
+          NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}

@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { useState } from "react";
 import { toast } from "sonner";
 /**
@@ -42,7 +42,7 @@ function AlertDialogDelete({
         loading: "Deleting...",
         success: "Deleted successfully",
         error: "Failed to delete",
-      },
+      }
     );
   };
   return (

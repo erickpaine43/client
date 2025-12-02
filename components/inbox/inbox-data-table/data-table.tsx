@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/table";
 import { DataTableToolbar } from "./datatable-toolbar";
 import EmailTableSkeleton from "../components/EmailTableSkeleton";
-import { Email } from "@/app/dashboard/inbox/schemas/schemas";
+import { Email } from "@/app/[locale]/dashboard/inbox/schemas/schemas";
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData, unknown>[];
@@ -53,7 +53,7 @@ function highlightMatch(text: string, query: string) {
       </span>
     ) : (
       part
-    ),
+    )
   );
 }
 
@@ -98,7 +98,7 @@ export function InboxDataTable<TData>({
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext(),
+                        header.getContext()
                       )}
                 </TableHead>
               ))}
@@ -113,7 +113,7 @@ export function InboxDataTable<TData>({
                 data-state={row.getIsSelected() && "selected"}
                 className={
                   (row.original as Email).read
-                    ? "bg-white text-gray-500"
+                    ? "bg-white dark:bg-card text-gray-500 dark:text-muted-foreground"
                     : "bg-blue-50 text-black font-semibold"
                 }
               >
@@ -127,7 +127,7 @@ export function InboxDataTable<TData>({
                         ? highlightMatch(value, query)
                         : flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext(),
+                            cell.getContext()
                           )}
                     </TableCell>
                   );

@@ -29,11 +29,11 @@ env:
     secret: upstash-redis-rest-url
   - variable: UPSTASH_REDIS_REST_TOKEN
     secret: upstash-redis-rest-token
-  # - variable: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-  #   secret: stripe-publishable-key
-  # - variable: STRIPE_SECRET_KEY
-  #   secret: stripe-secret-key
-  # - variable: STRIPE_WEBHOOK_SIGNING_SECRET
+    
+  - variable: NEXT_PUBLIC_TURNSTILE_SITE_KEY
+    secret: next-public-turnstile-site-key
+  - variable: TURNSTILE_SECRET_KEY
+    secret: turnstile-secret-key
   #   secret: stripe-webhook-signing-secret
 
   # Grant access to secrets in Cloud Secret Manager.

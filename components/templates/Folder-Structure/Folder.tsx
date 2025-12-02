@@ -10,7 +10,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { ContextMenuSeparator } from "@radix-ui/react-context-menu";
 import {
   Edit2,
@@ -49,7 +49,7 @@ function Folder({
       <ContextMenuTrigger>
         <AccordionItem value={folder.id.toString()}>
           <ContextMenuTrigger>
-            <AccordionTrigger className="flex items-center justify-between  p-2 hover:bg-gray-100 rounded-md flex-row-reverse">
+            <AccordionTrigger className="flex items-center justify-between  p-2 hover:bg-gray-100 dark:hover:bg-muted/50 rounded-md flex-row-reverse">
               {isRenaming ? (
                 <Input
                   defaultValue={folder.name}
@@ -76,7 +76,7 @@ function Folder({
                 <Folder key={child.id} folder={child as TemplateFolder} />
               ) : (
                 showFiles && <File key={child.id} file={child as Template} />
-              ),
+              )
             )}
           </AccordionContent>
         </AccordionItem>

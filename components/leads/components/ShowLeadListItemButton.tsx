@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -8,7 +8,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -75,7 +75,7 @@ function ShowLeadListItemButton({ list }: { list: LeadList }) {
       case "bounced":
         return "bg-red-100 text-red-800";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-800 dark:bg-muted dark:text-muted-foreground";
     }
   };
 
@@ -85,7 +85,7 @@ function ShowLeadListItemButton({ list }: { list: LeadList }) {
         <Button
           variant="ghost"
           size="icon"
-          className="text-gray-500 hover:text-gray-700"
+          className="text-gray-500 hover:text-gray-700 dark:text-muted-foreground dark:hover:text-foreground"
         >
           <Eye className="w-4 h-4" />
         </Button>
@@ -94,7 +94,7 @@ function ShowLeadListItemButton({ list }: { list: LeadList }) {
         <DialogClose />
         <DialogHeader>
           <DialogTitle>Contacts in &ldquo;{list.name}&rdquo;</DialogTitle>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-muted-foreground">
             {mockListData.totalContacts} total contacts
           </p>
         </DialogHeader>

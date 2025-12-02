@@ -1,6 +1,6 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Check, Smartphone } from "lucide-react";
@@ -138,13 +138,15 @@ function DialogTwoAuth() {
               <Smartphone className="w-8 h-8 text-primary" />
             </div>
             <h4 className="text-lg font-semibold ">Scan QR Code</h4>
-            <p className="text-sm text-gray-600 ">
+            <p className="text-sm text-gray-600 dark:text-muted-foreground">
               Use your authenticator app to scan this QR code
             </p>
           </div>
-          <div className="bg-gray-100 rounded-lg p-8 flex items-center justify-center">
-            <div className="w-32 h-32 bg-white border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
-              <span className="text-gray-500 text-sm">QR Code</span>
+          <div className="bg-gray-100 dark:bg-muted rounded-lg p-8 flex items-center justify-center">
+            <div className="w-32 h-32 bg-white dark:bg-card border-2 border-dashed border-gray-300 dark:border-border rounded-lg flex items-center justify-center">
+              <span className="text-gray-500 dark:text-muted-foreground text-sm">
+                QR Code
+              </span>
             </div>
           </div>
           <div className="space-y-4">

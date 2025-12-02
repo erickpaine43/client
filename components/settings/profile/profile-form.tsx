@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Loader2 } from "lucide-react";

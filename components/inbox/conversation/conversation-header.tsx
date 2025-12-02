@@ -9,7 +9,7 @@ function ConversationHeader() {
   const { selectedConversation } = useConversation();
 
   return (
-    <div className="p-6 border-b border-gray-200 bg-white space-y-5">
+    <div className="p-6 border-b border-border bg-card dark:bg-card space-y-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Avatar className="w-12 h-12">
@@ -18,10 +18,10 @@ function ConversationHeader() {
             </AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">
+            <h1 className="text-xl font-semibold text-foreground">
               {selectedConversation.name}
             </h1>
-            <div className="flex items-center space-x-2 text-gray-600">
+            <div className="flex items-center space-x-2 text-muted-foreground">
               <span>{selectedConversation.email}</span>
             </div>
           </div>

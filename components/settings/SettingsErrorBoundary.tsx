@@ -2,7 +2,7 @@
 
 import React, { Component, ReactNode } from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 

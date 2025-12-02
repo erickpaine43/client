@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { useAddCampaignContext } from "@/context/AddCampaignContext";
 import { ArrowLeft, ArrowRight, Play } from "lucide-react";
 
@@ -34,7 +34,7 @@ function NavigationButtons() {
   const disabled = !canProceed();
 
   return (
-    <div className="bg-white border-t border-gray-200 px-8 py-6 w-full">
+    <div className="bg-card dark:bg-card border-t border-border px-8 py-6 w-full">
       <div className="max-w-4xl mx-auto flex items-center justify-between">
         <Button
           onClick={prevStep}

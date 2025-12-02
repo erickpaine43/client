@@ -23,6 +23,7 @@ import {
   AuthenticationError,
   InvalidCredentialsError,
 } from "@/lib/niledb/errors";
+import { mockUserSettings } from "@/lib/data/settings.mock";
 
 interface EnhancedAuthContextType extends AuthContextType {
   // Enhanced user data
@@ -156,6 +157,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchUserCompanies = useCallback(
     async (userId: string): Promise<CompanyInfo[]> => {
       try {
+        // In development/non-production uses, we allow mock-ups to facilitate local testing
+        if (process.env.NODE_ENV !== "production") {
+          return Array.isArray(mockUserSettings.companyInfo)
+            ? mockUserSettings.companyInfo
+            : [mockUserSettings.companyInfo];
+        }
+
+        // In production we always use the real API
         const response = await fetch(`/api/users/${userId}/companies`, {
           method: "GET",
           credentials: "include",
@@ -168,7 +177,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           throw new Error(`Companies fetch failed: ${response.status}`);
         }
 
-        const data = (await response.json()) as { companies: CompanyInfo[] };
+        const data = (await response.json()) as {
+          companies: CompanyInfo[];
+        };
+
         return data.companies || [];
       } catch (error) {
         console.error("Failed to fetch user companies:", error);
@@ -218,20 +230,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (data?.ok) {
         const initializeUserSession = async () => {
           try {
-            // Test authentication first
+
             const isAuthenticated = await testAuthentication();
             if (!isAuthenticated) {
               throw new AuthenticationError("Authentication validation failed");
             }
 
-            // Fetch enhanced profile data using Task 8 API
             const profileData = await fetchProfile();
+
             if (profileData) {
               setNileUser(profileData);
               setIsStaff(profileData.profile?.isPenguinMailsStaff || false);
 
               // Map to legacy User format for backward compatibility
-              const legacyUser = mapNileUserToLegacyUser(profileData);
+              const legacyUser = mapNileUserToLegacyUser(
+                profileData,
+                userCompanies,
+                selectedTenantId,
+                selectedCompanyId
+              );
               setUser(legacyUser);
 
               // Fetch tenants and companies in parallel
@@ -285,8 +302,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     },
     callbackUrl:
       typeof window !== "undefined"
-        ? window.location.origin + "/dashboard"
-        : "/dashboard",
+        ? window.location.origin + "/email-confirmation"
+        : "/email-confirmation",
   });
 
   const signUpHook = useSignUp({
@@ -306,23 +323,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setAuthError(error);
     },
     createTenant: true,
-    callbackUrl: "/dashboard",
+    callbackUrl: "/email-confirmation",
   });
 
   // Enhanced mapping function for NileDB user to legacy User format
   const mapNileUserToLegacyUser = useCallback(
-    (nileUser: NileDBUser): User => {
+    (
+      nileUser: NileDBUser,
+      userCompanies: CompanyInfo[],
+      selectedTenantId: string | null,
+      selectedCompanyId: string | null
+    ): User => {
       const displayName = nileUser.name || nileUser.email.split("@")[0];
-
-      // Map role from profile
       let role = UserRole.USER;
-      if (nileUser.profile?.role === "super_admin") {
-        role = UserRole.SUPER_ADMIN;
-      } else if (nileUser.profile?.role === "admin") {
-        role = UserRole.ADMIN;
-      }
+      if (nileUser.profile?.role === "super_admin") role = UserRole.SUPER_ADMIN;
+      else if (nileUser.profile?.role === "admin") role = UserRole.ADMIN;
 
-      // Get selected company info
       const selectedCompany = userCompanies.find(
         (c) => c.id === selectedCompanyId
       );
@@ -333,18 +349,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         email: nileUser.email,
         displayName,
         photoURL: nileUser.picture,
-        uid: nileUser.id, // Legacy support
-        token: nileUser.id, // Legacy support
+        uid: nileUser.id,
+        token: nileUser.id,
         claims: {
           role,
           tenantId: selectedTenantId || nileUser.tenants?.[0] || "",
           companyId: selectedCompany?.id,
-          permissions: [], // TODO: Get from role permissions
+          permissions: [],
         },
         profile: {
           timezone:
             (nileUser.profile?.preferences?.timezone as string) || "UTC",
-          language: (nileUser.profile?.preferences?.language as string) || "en",
+          language:
+            (nileUser.profile?.preferences?.language as string) || "en",
           firstName: nileUser.givenName,
           lastName: nileUser.familyName,
           avatar: nileUser.picture,
@@ -354,7 +371,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         },
       };
     },
-    [userCompanies, selectedTenantId, selectedCompanyId]
+    []
   );
 
   const login = async (email: string, password: string): Promise<void> => {
@@ -395,7 +412,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(true);
 
     try {
-      await signUpHook({ email, password, name });
+      const data = { email, password, name };
+      await signUpHook(data);
     } catch (error) {
       console.error("Signup error:", error);
       setLoading(false);
@@ -450,7 +468,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setNileUser(profileData);
         setIsStaff(profileData.profile?.isPenguinMailsStaff || false);
 
-        const legacyUser = mapNileUserToLegacyUser(profileData);
+        const legacyUser = mapNileUserToLegacyUser(
+          profileData,
+          userCompanies,
+          selectedTenantId,
+          selectedCompanyId
+        );
         setUser(legacyUser);
         setAuthError(null);
       } else {
@@ -540,23 +563,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        // Test authentication first
+        // Test authentication with real session
         const isAuthenticated = await testAuthentication();
 
         if (isAuthenticated) {
-          // Fetch enhanced profile data
+          // User is authenticated, fetch real profile data
           const profileData = await fetchProfile();
 
           if (profileData) {
             setNileUser(profileData);
             setIsStaff(profileData.profile?.isPenguinMailsStaff || false);
 
-            // Map to legacy User format
-            const legacyUser = mapNileUserToLegacyUser(profileData);
-            setUser(legacyUser);
-
-            // Fetch tenants and companies in parallel
             try {
+              // Fetch tenants and companies in parallel
               const [tenants, companies] = await Promise.all([
                 fetchUserTenants(),
                 fetchUserCompanies(profileData.id),
@@ -565,27 +584,53 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               setUserTenants(tenants);
               setUserCompanies(companies);
 
-              // Auto-select first tenant if available
-              if (tenants.length > 0) {
-                setSelectedTenantId(tenants[0].id);
-              }
+              // Auto-select first tenant/company if none selected yet
+              const tenantId =
+                selectedTenantId ||
+                tenants[0]?.id ||
+                profileData.tenants?.[0] ||
+                null;
+              const companyId = selectedCompanyId || companies[0]?.id || null;
 
-              // Auto-select first company if available
-              if (companies.length > 0) {
-                setSelectedCompanyId(companies[0].id);
-              }
+              setSelectedTenantId(tenantId);
+              setSelectedCompanyId(companyId);
+
+              // Map to legacy User format
+              const legacyUser = mapNileUserToLegacyUser(
+                profileData,
+                companies,
+                tenantId,
+                companyId
+              );
+              setUser(legacyUser);
 
               // Check system health for staff users
               if (profileData.profile?.isPenguinMailsStaff) {
                 checkSystemHealthStatus();
               }
+
+              setAuthError(null);
             } catch (error) {
               console.warn("Failed to fetch additional user data:", error);
               // Don't fail initialization for this
             }
-
+          } else {
+            // Profile data fetch failed, clear any existing state
+            setNileUser(null);
+            setUser(null);
+            setUserTenants([]);
+            setUserCompanies([]);
+            setIsStaff(false);
             setAuthError(null);
           }
+        } else {
+          // User is not authenticated, clear state
+          setNileUser(null);
+          setUser(null);
+          setUserTenants([]);
+          setUserCompanies([]);
+          setIsStaff(false);
+          setAuthError(null);
         }
       } catch (error) {
         console.error("Auth initialization error:", error);
@@ -608,6 +653,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     testAuthentication,
     checkSystemHealthStatus,
     mapNileUserToLegacyUser,
+    selectedTenantId,
+    selectedCompanyId,
   ]);
 
   return (

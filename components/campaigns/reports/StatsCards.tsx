@@ -1,11 +1,11 @@
-import StatsCard from "@/components/analytics/cards/StatsCard";
+import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";
 import { LucideIcon } from "lucide-react";
 
 interface StatsItem {
   title: string;
   value: string;
   icon: LucideIcon;
-  color: string;
+  color: "primary" | "secondary" | "success" | "warning" | "error" | "info";
 }
 
 interface StatsCardsProps {
@@ -16,8 +16,7 @@ function StatsCards({ stats }: StatsCardsProps) {
   return (
     <>
       {stats.map((item) => (
-        <StatsCard
-          className="flex-row-reverse justify-end gap-2 "
+        <UnifiedStatsCard
           key={item.title}
           title={item.title}
           value={item.value}

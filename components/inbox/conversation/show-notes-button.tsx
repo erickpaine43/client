@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { useConversation } from "@/context/ConversationContext";
 import { StickyNote } from "lucide-react";
 

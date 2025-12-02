@@ -55,7 +55,7 @@ export function UsageMetricsCard({ usageMetrics }: UsageMetricsCardProps) {
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium">Emails</span>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-600 dark:text-muted-foreground">
               {usageMetrics.emailsSent.toLocaleString()} /{" "}
               {usageMetrics.emailsRemaining === -1
                 ? "∞"
@@ -65,7 +65,7 @@ export function UsageMetricsCard({ usageMetrics }: UsageMetricsCardProps) {
             </span>
           </div>
           <Progress value={usageMetrics.usagePercentages.emails} />
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-muted-foreground">
             {usageMetrics.usagePercentages.emails}% used
           </p>
         </div>
@@ -74,7 +74,7 @@ export function UsageMetricsCard({ usageMetrics }: UsageMetricsCardProps) {
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium">Domains</span>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-600 dark:text-muted-foreground">
               {usageMetrics.domainsUsed} /{" "}
               {usageMetrics.domainsLimit === 0
                 ? "∞"
@@ -91,7 +91,7 @@ export function UsageMetricsCard({ usageMetrics }: UsageMetricsCardProps) {
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium">Mailboxes</span>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-600 dark:text-muted-foreground">
               {usageMetrics.mailboxesUsed} /{" "}
               {usageMetrics.mailboxesLimit === 0
                 ? "∞"
@@ -99,7 +99,7 @@ export function UsageMetricsCard({ usageMetrics }: UsageMetricsCardProps) {
             </span>
           </div>
           <Progress value={usageMetrics.usagePercentages.mailboxes} />
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-muted-foreground">
             {usageMetrics.usagePercentages.mailboxes}% used
           </p>
         </div>

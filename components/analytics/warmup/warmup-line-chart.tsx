@@ -1,6 +1,6 @@
 "use client";
 import type { ReactElement } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Card,
   CardContent,
@@ -69,12 +69,14 @@ function WarmUpLineChart(): ReactElement {
   }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
-          <p className="font-medium text-gray-900 mb-2">{label}</p>
+        <div className="bg-white dark:bg-card border border-gray-200 dark:border-border rounded-lg shadow-lg p-3">
+          <p className="font-medium text-gray-900 dark:text-foreground mb-2">
+            {label}
+          </p>
           {payload.map((entry: TooltipPayloadItem, index: number) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
               <span className="font-semibold">{entry.value}</span>
-              <span className="ml-2 text-gray-600">
+              <span className="ml-2 text-gray-600 dark:text-muted-foreground">
                 {entry.dataKey === "totalWarmups" && "Total Warmups"}
                 {entry.dataKey === "spamFlags" && "Spam Flags"}
                 {entry.dataKey === "replies" && "Replies"}

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 import { flexRender, Table as TableType } from "@tanstack/react-table";
 import { copyText as t } from "../data/copy";
-import { Client } from "@/app/dashboard/inbox/schemas/schemas";
+import { Client } from "@/app/[locale]/dashboard/inbox/schemas/schemas";
 
 interface ClientsTableProps {
   table: TableType<Client>;
@@ -28,7 +28,7 @@ export function ClientsTable({ table, columns }: ClientsTableProps) {
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext(),
+                        header.getContext()
                       )}
                 </TableHead>
               ))}

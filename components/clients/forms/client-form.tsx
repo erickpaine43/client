@@ -2,13 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button/button";
+import { Input } from "@/components/ui/input/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  createClient,
-  updateClient,
-} from "@/lib/actions/clients";
+import { createClient, updateClient } from "@/lib/actions/clients";
 import { copyText as t } from "../data/copy";
 
 interface ClientFormProps {

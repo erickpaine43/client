@@ -271,7 +271,7 @@ export function BillingAnalyticsProgressiveLoader({
       <CardContent className="p-8">
         <div className="text-center space-y-4">
           <div className="mx-auto w-16 h-16 relative">
-            <div className="absolute inset-0 rounded-full border-4 border-gray-200"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-gray-200 dark:border-border"></div>
             <div
               className="absolute inset-0 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"
               style={{
@@ -297,7 +297,7 @@ export function BillingAnalyticsProgressiveLoader({
             </div>
           </div>
 
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-muted-foreground">
             Analyzing your usage patterns and cost projections...
           </p>
         </div>

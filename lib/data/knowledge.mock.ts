@@ -232,5 +232,5 @@ export const getTagColor = (tag: string) => {
     Metrics: "bg-green-100 text-green-800",
     Process: "bg-blue-100 text-blue-800",
   };
-  return colors[tag] || "bg-gray-100 text-gray-800";
+  return colors[tag] || "bg-gray-100 dark:bg-muted text-gray-800 dark:text-foreground";
 };

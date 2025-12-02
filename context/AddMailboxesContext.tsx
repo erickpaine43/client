@@ -3,7 +3,7 @@ import AddMailboxesNavigation from "@/components/domains/mailboxes/new/AddMailbo
 import AddMailboxesStep from "@/components/domains/mailboxes/new/AddMailboxesStep";
 import AddMailboxesStepper from "@/components/domains/mailboxes/new/AddMailboxesStepper";
 import NewMailboxHeaderDetails from "@/components/domains/mailboxes/new/NewMailboxHeaderDetails";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Dialog,
   DialogClose,
@@ -107,10 +107,10 @@ export function AddMailboxesProvider({
                     </Link>
                   </Button>
                   <div>
-                    <DialogTitle className="text-2xl font-bold text-gray-900">
+                    <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-foreground">
                       Create New Mailbox
                     </DialogTitle>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 dark:text-muted-foreground">
                       Set up a mailbox to start sending cold emails
                     </p>
                   </div>

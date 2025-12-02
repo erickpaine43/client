@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Play } from "lucide-react";
 import { useCallback } from "react";

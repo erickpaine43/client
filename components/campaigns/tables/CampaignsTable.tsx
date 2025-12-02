@@ -18,13 +18,13 @@ function CampaignsTable() {
     <Card>
       <CardHeader>
         <h1 className="text-2xl font-semibold mb-4">Campaigns Table</h1>
-        <p className="text-gray-600">{5} campaigns found</p>
+        <p className="text-muted-foreground">{5} campaigns found</p>
       </CardHeader>
       <Separator />
       <CardContent className="overflow-x-auto p-0">
         <table className="w-full">
-          <thead className="bg-gray-50">
-            <tr className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+          <thead className="bg-muted/50 dark:bg-muted/30">
+            <tr className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               {campaignColumns.map((column) => (
                 <th key={column.key} className="px-8 py-4">
                   {column.name}
@@ -32,7 +32,7 @@ function CampaignsTable() {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-border">
             {campaigns.map((campaign) => (
               <CampaignsTableRow key={campaign.id} campaign={campaign} />
             ))}

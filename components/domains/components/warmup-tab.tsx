@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -95,7 +95,9 @@ function WarmupMailboxesTable({
         return <Pause className="w-3 h-3 text-yellow-600" />;
       case "NOT_STARTED":
       default:
-        return <Clock className="w-3 h-3 text-gray-600" />;
+        return (
+          <Clock className="w-3 h-3 text-gray-600 dark:text-muted-foreground" />
+        );
     }
   };
 
@@ -165,7 +167,7 @@ function WarmupMailboxesTable({
       <CardContent className="p-0">
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader className="bg-gray-100">
+            <TableHeader className="bg-gray-100 dark:bg-muted">
               <TableRow>
                 <TableHead>Domain</TableHead>
                 <TableHead>Status Summary</TableHead>
@@ -192,11 +194,11 @@ function WarmupMailboxesTable({
                 return (
                   <TableRow
                     key={domain.id}
-                    className="hover:bg-gray-50 transition-colors group"
+                    className="hover:bg-gray-50 dark:hover:bg-muted/30 transition-colors group"
                   >
                     <TableCell className="px-8 py-6">
                       <div>
-                        <h3 className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors text-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-foreground cursor-pointer hover:text-blue-600 transition-colors text-lg">
                           {domain.domain}
                         </h3>
                         <p className="text-sm text-gray-500 mt-1">
@@ -246,7 +248,7 @@ function WarmupMailboxesTable({
                         <Mail className="w-4 h-4 text-gray-400" />
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <span className="text-sm font-medium text-gray-900 cursor-pointer hover:text-blue-600 underline decoration-dotted">
+                            <span className="text-sm font-medium text-gray-900 dark:text-foreground cursor-pointer hover:text-blue-600 underline decoration-dotted">
                               {aggregated.totalMailboxes}
                             </span>
                           </TooltipTrigger>
@@ -281,7 +283,7 @@ function WarmupMailboxesTable({
                     <TableCell className="px-6 py-6">
                       <div className="flex items-center space-x-2">
                         <Mail className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-gray-900 dark:text-foreground">
                           {aggregated.totalWarmups}
                         </span>
                       </div>
@@ -293,7 +295,7 @@ function WarmupMailboxesTable({
                     <TableCell className="px-6 py-6">
                       <div className="space-y-1">
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-medium text-gray-900 dark:text-foreground">
                             {aggregated.totalSent}
                           </span>
                           <span className="text-xs text-gray-500">

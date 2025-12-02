@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { copyText as t } from "../data/copy";
@@ -6,7 +6,7 @@ import { copyText as t } from "../data/copy";
 export default function CampaignsHeader() {
   return (
     <div className="flex justify-between items-center mb-6">
-      <h1 className="text-2xl font-semibold text-gray-900">{t.title}</h1>
+      <h1 className="text-2xl font-semibold text-foreground">{t.title}</h1>
       <Button asChild={true}>
         <Link
           href="/dashboard/campaigns/create"

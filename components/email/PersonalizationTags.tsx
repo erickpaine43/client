@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Tag } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";

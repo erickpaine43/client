@@ -1,0 +1,777 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Hostwinds Cloud Integration API (OpenAPI)",
+    "version": "1.0.0",
+    "description": "OpenAPI specification for Hostwinds VPS Lifecycle, IP Management, Billing, and Monitoring integration. Logical paths are provided for each action; actual Hostwinds endpoint is POST https://clients.hostwinds.com/cloud/api.php with an action parameter."
+  },
+  "servers": [
+    {
+      "url": "https://clients.hostwinds.com/cloud/api.php",
+      "description": "Hostwinds Cloud API endpoint (posts to this URL; include action in body or map logical path to action)"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Image": {
+        "type": "object",
+        "properties": {
+          "uuid": { "type": "string" },
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "category": { "type": "string" },
+          "version": { "type": "string" },
+          "min_disk": { "type": "integer" },
+          "sortorder": { "type": "integer" },
+          "email_template": { "type": "string" },
+          "retired": { "type": "integer" },
+          "message": { "type": "string" },
+          "levels": { "type": "string" },
+          "data": { "type": "object", "nullable": true },
+          "config_options": { "type": "object" },
+          "category_sort": { "type": "string" },
+          "category_name": { "type": "string" }
+        }
+      },
+      "VPSInstance": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "serviceid": { "type": "integer" },
+          "userid": { "type": "integer" },
+          "location_id": { "type": "integer" },
+          "server_uuid": { "type": "string" },
+          "volume_uuid": { "type": "string", "nullable": true },
+          "password": { "type": "string" },
+          "port_uuid": { "type": "string" },
+          "main_ip": { "type": "string" },
+          "private_ip": { "type": "string" },
+          "ips": { "type": "array", "items": { "type": "string" }, "nullable": true }, 
+          "items": { "type": "string" },
+          "upgrade_available": { "type": "integer" },
+          "is_suspended": { "type": "integer" },
+          "configkey": { "type": "string" },
+          "ssh_keys": { "type": "string" },
+          "hourly": { "type": "integer" },
+          "bandwidth": { "type": "integer" },
+          "pswd_changed": { "type": "string", "format": "date-time" },
+          "srvrname": { "type": "string" },
+          "template_uuid": { "type": "string" },
+          "app_id": { "type": "string", "nullable": true },
+          "locked": { "type": "integer" },
+          "hostname": { "type": "string" },
+          "product_id": { "type": "integer" },
+          "billingcycle": { "type": "string" },
+          "product_name": { "type": "string" },
+          "disk_type": { "type": "string" },
+          "upgrade_ram": { "type": "string" },
+          "upgrade_cpu": { "type": "string" },
+          "upgrade_disk": { "type": "string" },
+          "bandwidth_used": { "type": "integer" },
+          "mac_address": { "type": "string" },
+          "status": { "type": "string" },
+          "disp_status": { "type": "string" },
+          "image": { "$ref": "#/components/schemas/Image" },
+          "ip_v6": { "type": "string" },
+          "flavor": { "type": "boolean"},
+          "vm_state": { "type": "string" },
+          "task_state": { "type": "string", "nullable": true },
+          "image_ref": { "type": "string" },
+          "ram": { "type": "integer" },
+          "cpu": { "type": "integer" },
+          "disk": { "type": "integer" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "name": { "type": "string" },
+          "launched_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "power_state": { "type": "integer" },
+          "host": { "type": "string" }
+        },
+        "required": ["serviceid", "hostname", "status"]
+      },
+      "InstanceList": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/VPSInstance" }
+          }
+        }
+      },
+      "InstanceLight": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "hostname": { "type": "string" },
+          "ips": { "type": "string" },
+          "srvrname": { "type": "string" },
+          "dedicated_ip": { "type": "string" },
+          "ip_v6": { "type": "string" }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "result": { "type": "string", "example": "error" },
+          "action": { "type": "string", "example": "Get Instance" },
+          "message": { "type": "string", "example": "A valid serviceid is required." }
+        }
+      },
+      "ActionArraySuccess": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "result": { "type": "string", "example": "success" },
+            "action": { "type": "string", "example": "Add Instance" },
+            "message": { "type": "string", "example": "Server is being Created!" }
+          }
+        }
+      },
+      "IPList": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ip": { "type": "string", "example": "1.2.3.4" },
+                "type": { "type": "string", "example": "ipv4" },
+                "primary": { "type": "boolean", "example": true }
+              }
+            }
+          }
+        }
+      },
+      "PriceList": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "object",
+          "description": "Price list keyed by resource id",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "name": { "type": "string" },
+              "ram": { "type": "string" },
+              "cpu": { "type": "string" },
+              "disk": { "type": "string" },
+              "bandwidth": { "type": "string" },
+              "monthly": { "type": "string" },
+              "quarterly": { "type": "string" },
+              "semiannually": { "type": "string" },
+              "annually": { "type": "string" },
+              "biennially": { "type": "string" },
+              "triennially": { "type": "string" },
+              "mysort": { "type": "integer" },
+              "current": { "type": "integer" },
+              "promo": {
+                "type": "object",
+                "properties": {
+                  "monthly": { "$ref": "#/components/schemas/PromoDetail" },
+                  "quarterly": { "$ref": "#/components/schemas/PromoDetail" },
+                  "semiannually": { "$ref": "#/components/schemas/PromoDetail" },
+                  "annually": { "$ref": "#/components/schemas/PromoDetail" },
+                  "biennially": { "$ref": "#/components/schemas/PromoDetail" },
+                  "triennially": { "$ref": "#/components/schemas/PromoDetail" }
+                }
+              },
+              "percent": { "type": "integer" },
+              "rid": { "type": "integer" },
+              "mtotal": { "oneOf": [{ "type": "string" }, { "type": "number" }] },
+              "pricing": {
+                "type": "object",
+                "properties": {
+                  "ram": { "$ref": "#/components/schemas/PricingOptions" },
+                  "cpu": { "$ref": "#/components/schemas/PricingOptions" },
+                  "disk": { "$ref": "#/components/schemas/PricingOptions" },
+                  "bandwidth": { "$ref": "#/components/schemas/PricingOptions" }
+                }
+              },
+              "cycles": {
+                "type": "object",
+                "properties": {
+                  "monthly": { "type": "string" },
+                  "quarterly": { "type": "string" },
+                  "semiannually": { "type": "string" },
+                  "annually": { "type": "string" },
+                  "biennially": { "type": "string" },
+                  "triennially": { "type": "string" }
+                }
+              },
+              "firsts": {
+                "type": "object",
+                "properties": {
+                  "ram": { "type": "string" },
+                  "cpu": { "type": "string" },
+                  "disk": { "type": "string" },
+                  "bandwidth": { "type": "string" }
+                }
+              },
+              "resource": { "type": "string", "nullable": true }
+            }
+          }
+        }
+      }
+      },
+      "PromoDetail": {
+        "type": "object",
+        "properties": {
+          "discount": { "type": "number" },
+          "pctoff": { "type": "string" },
+          "code": { "type": "string" }
+        }
+      },
+      "PricingOptions": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "options": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "integer" },
+                "name": { "type": "string" },
+                "monthly": { "type": "string" },
+                "quarterly": { "type": "string" },
+                "semiannually": { "type": "string" },
+                "annually": { "type": "string" },
+                "biennially": { "type": "string" },
+                "triennially": { "type": "string" },
+                "value": { "type": "string" }
+              },
+              "required": ["id", "name", "value"]
+            }
+          }
+        }
+      },
+      "ServerCharts": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "object",
+            "properties": {
+              "cpu": { "type": "array", "items": { "type": "object" } },
+              "network": { "type": "array", "items": { "type": "object" } }
+            }
+          }
+        }
+      },
+      "ActionLogTableResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "object",
+            "properties": {
+              "draw": { "type": "integer" },
+              "recordsTotal": { "type": "integer" },
+              "recordsFiltered": { "type": "integer" },
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "description": "Result of the action, e.g., 'success' or 'error'" },
+                    "timestamp": { "type": "string", "format": "date-time", "description": "Date and time of the action" },
+                    "method": { "type": "string", "description": "HTTP method used" },
+                    "endpoint": { "type": "string", "description": "API endpoint acted upon" },
+                    "message": { "type": "string", "description": "Error message if any, empty if success" }
+                  },
+                  "required": ["status", "timestamp", "method", "endpoint", "message"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "FirewallProfile": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "security_group_rules": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "direction": { "type": "string" },
+                      "ethertype": { "type": "string" },
+                      "protocol": { "type": "string", "nullable": true },
+                      "port_range_min": { "type": "integer", "nullable": true },
+                      "port_range_max": { "type": "integer", "nullable": true },
+                      "description": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "SMTPFilters": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "object",
+            "properties": {
+              "spam": { 
+                "type": "array", 
+                "items": { 
+                  "type": "object", 
+                  "properties": { 
+                    "type": { "type": "string" }, 
+                    "created": {"type": "string", "format": "date-time"},
+                    "invoice_id": { "type": "string" }
+                    } 
+                  } 
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "get_instances": {
+      "post": {
+        "summary": "Get all VPS instances",
+        "description": "Retrieve a list of VPS instances for the account (optionally filter by location_id).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "action": { "type": "string", "example": "get_instances" },
+                  "API": { "type": "string", "example": "YOUR_API_KEY" },
+                  "location_id": { "type": "integer", "nullable": true }
+                },
+                "required": ["action", "API"]
+              },
+              "examples": {
+                "default": {
+                  "value": { "action": "get_instances", "API": "YOUR_API_KEY" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of instances",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InstanceList" }
+              }
+            }
+          },
+          "401": { "description": "Not Authorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } }
+        }
+      }
+    },
+    "get_instance": {
+      "post": {
+        "summary": "Get instance details",
+        "description": "Get full details for a single instance by serviceid.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "action": { "type": "string", "example": "get_instance" },
+                  "API": { "type": "string" },
+                  "serviceid": { "type": "integer" }
+                },
+                "required": ["action", "API", "serviceid"]
+              },
+              "examples": {
+                "byService": { "value": { "action": "get_instance", "API": "YOUR_API_KEY", "serviceid": 170 } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Instance detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "success": { "$ref": "#/components/schemas/VPSInstance" } }
+                }
+              }
+            }
+          },
+          "400": { "description": "Bad request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } }
+        }
+      }
+    },
+    "get_instance_ids": {
+      "post": {
+        "summary": "Get lightweight instance ids list",
+        "description": "Returns a compact list of instance ids and hostnames for listing and selection.",
+        "requestBody": { 
+          "required": true, 
+          "content": { 
+            "application/json": { 
+              "schema": { 
+                "type": "object", 
+                "properties": { 
+                  "action": { "type": "string", "example": "get_instance_ids" }, 
+                  "API": { "type": "string" }, 
+                  "search": { "type": "string" }, 
+                  "page": { "type": "integer" }, 
+                  "limit": { "type": "integer" }, 
+                  "location_id": { "type": "integer" } 
+                },
+                "required": ["action", "API"]
+              }
+            } 
+          } 
+        },
+        "responses": { 
+          "200": { 
+            "description": "IDs list", 
+            "content": { 
+              "application/json": { 
+                "schema": { 
+                  "type": "object", 
+                  "properties": { 
+                    "success": { 
+                      "type": "array", 
+                      "items": { "$ref": "#/components/schemas/InstanceLight" }
+                      }
+                  } 
+                } 
+              } 
+            } 
+          } 
+        } 
+      }
+    },
+    "get_instance_ips": {
+      "post": {
+        "summary": "Get a list of valid instance ips",
+        "description": "Returns a compact list of instance ips.",
+        "requestBody": { 
+          "required": true, 
+          "content": { 
+            "application/json": { 
+              "schema": { 
+                "type": "object", 
+                "properties": { 
+                  "action": { "type": "string", "example": "get_instance_ips" }, 
+                  "API": { "type": "string" }, 
+                  "serviceid": { "type": "integer" }, 
+                  "location_id": { "type": "integer" } 
+                },
+                "required": ["action", "API", "serviceid"]
+              }
+            } 
+          } 
+        },
+        "responses": { 
+          "200": { 
+            "description": "IPs list", 
+            "content": { 
+              "application/json": { 
+                "schema": { 
+                  "type": "object", 
+                  "properties": { 
+                    "success": { 
+                      "type": "array", 
+                      "items": { "$ref": "#/components/schemas/InstanceLight" }
+                      }
+                  } 
+                } 
+              } 
+            } 
+          } 
+        } 
+      }
+    },
+    "add_instance": {
+      "post": {
+        "summary": "Create (add) a new instance",
+        "description": "Create a new VPS instance. Uses templates/pricing from get_price_list.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "action": { "type": "string", "example": "add_instance" },
+                  "API": { "type": "string" },
+                  "template": { "type": "string" },
+                  "rid": { "type": "integer" },
+                  "qty": { "type": "integer", "default": 1 },
+                  "keys": { "type": "array", "items": { "type": "string" } },
+                  "srvrname": { "type": "string" },
+                  "billingcycle": { "type": "string", "example": "monthly" },
+                  "location_id": { "type": "integer" },
+                  "ram": { "type": "integer" },
+                  "cpu": { "type": "integer" },
+                  "disk": { "type": "integer" },
+                  "bandwidth": { "type": "integer" },
+                  "cclass": { "type": "integer"}
+                },
+                "required": ["API", "action", "template", "rid", "location_id"]
+              },
+              "examples": { "create": { "value": { "action": "add_instance", "API": "YOUR_API_KEY", "template": "ubuntu-22.04-uuid", "rid": 36, "location_id": 1, "srvrname": "web-01", "billingcycle": "monthly" } } }
+            }
+          }
+        },
+        "responses": {
+          "200": { 
+            "description": "Queue/create instance result", 
+            "content": { 
+              "application/json": { 
+                "schema": { 
+                  "oneOf": [ 
+                    { "$ref": "#/components/schemas/ActionArraySuccess" },
+                    { "$ref": "#/components/schemas/ErrorResponse" } 
+                  ] 
+                } 
+              } 
+            } 
+          }
+        }
+      }
+    },
+    "boot": {
+      "post": {
+        "summary": "Boot (start) an instance",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": { "action": { "type": "string", "example": "boot" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } },
+                "required": ["API", "action", "serviceid"]
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Boot result", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } }, "400": { "description": "Bad request" } }
+      }
+    },
+    "reboot": {
+      "post": {
+        "summary": "Reboot an instance",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "reboot" }, "API": { "type": "string" }, "serviceid": { "type": "integer" }, "time": { "type": "string", "description": "Optional scheduled time: MM/DD/YYYY HH:MM AM/PM" } }, "required": ["API","action", "serviceid"] } } } },
+        "responses": { "200": { "description": "Reboot scheduled/result", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } } }
+      }
+    },
+    "shutdown": {
+      "post": {
+        "summary": "Shutdown instance",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "shutdown" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API", "action", "serviceid"] } } } },
+        "responses": { "200": { "description": "Shutdown result", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } } }
+      }
+    },
+    "terminate": {
+      "post": {
+        "summary": "Terminate (delete) instance",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "terminate" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API", "action", "serviceid"] } } } },
+        "responses": { "200": { "description": "Termination queued", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } }, "400": { "description": "Cannot terminate (locked or invalid)" } }
+      }
+    },
+    "reinstall_instance": {
+      "post": {
+        "summary": "Reinstall instance from template/ISO",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "reinstall_instance" }, "API": { "type": "string" }, "serviceid": { "type": "integer" }, "template": { "type": "string" } }, "required": ["API", "action", "serviceid", "template"] } } } },
+        "responses": { "200": { "description": "Reinstall result", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } }, "403": { "description": "Locked instance, cannot reinstall", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } } }
+      }
+    },
+    "finalize_iso": {
+      "post": {
+        "summary": "Finalize ISO installation for an instance",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "finalize_iso" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API", "action", "serviceid"] } } } },
+        "responses": { "200": { "description": "Finalize OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } } }
+      }
+    },
+    "get_price_list": {
+      "post": {
+        "summary": "Retrieve price list and resource options",
+        "requestBody": { 
+          "required": true, 
+          "content": { 
+            "application/json": { 
+              "schema": { 
+                "type": "object", 
+                "properties": { 
+                  "action": { "type": "string", "example": "get_price_list" }, 
+                  "API": { "type": "string" }, 
+                  "drive_type": { "type": "string", "example": "ssd" }, 
+                  "managed": { "type": "integer", "example": 1 }, 
+                  "disk": { "type": "integer" } 
+                },
+                "required": ["action", "API"]
+              } 
+            } 
+          } 
+        },
+        "responses": { 
+          "200": { 
+            "description": "Price list", 
+            "content": { 
+              "application/json": { 
+                "schema": { 
+                  "$ref": "#/components/schemas/PriceList" 
+                } 
+              } 
+            } 
+          } 
+        }
+      }
+    },
+    "upgrade_instance": {
+      "post": {
+        "summary": "Create an upgrade order (will likely generate invoice)",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "upgrade_instance" }, "API": { "type": "string" }, "serviceid": { "type": "integer" }, "rid": { "type": "integer" }, "ram": { "type": "integer" }, "cpu": { "type": "integer" }, "disk": { "type": "integer" }, "bandwidth": { "type": "integer" } }, "required": ["API","action", "serviceid", "rid"] } } } } },
+        "responses": { "200": { "description": "Upgrade queued; invoice may be created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } } }
+    
+    },
+    "upgrade_server": {
+      "post": {
+        "summary": "Apply paid upgrade to server (may require migration and reboot)",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "upgrade_server" }, "API": { "type": "string" }, "serviceid": { "type": "integer" }, "disk": { "type": "integer" }, "upgrade_drive_type": { "type": "integer", "example": 0 } }, "required": ["API", "action", "serviceid"] } } } } },
+        "responses": { "200": { "description": "Upgrade in progress", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } } }
+    },
+    "confirm_upgrade": {
+      "post": {
+        "summary": "Confirm an upgrade after status RESIZED",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "confirm_upgrade" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API", "action", "serviceid"] } } } },
+        "responses": { "200": { "description": "Upgrade confirmed", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } } }
+      }
+    },
+    "revert_upgrade": {
+      "post": {
+        "summary": "Revert upgrade after status RESIZED",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "revert_upgrade" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API", "action", "serviceid"] } } } },
+        "responses": { "200": { "description": "Upgrade reverted", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } } }
+      }
+    },
+    "upgrade_to_managed": {
+      "post": {
+        "summary": "Upgrade instance to managed service",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "upgrade_to_managed" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API", "action", "serviceid"] } } } },
+        "responses": { "200": { "description": "Upgraded to managed", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } } }
+      }
+    },
+    "downgrade_to_unmanaged": {
+      "post": {
+        "summary": "Downgrade instance to unmanaged",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "downgrade_to_unmanaged" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API", "action", "serviceid"] } } } },
+        "responses": { "200": { "description": "Downgraded to unmanaged", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } } }
+      }
+    },
+    "change_password": {
+      "post": {
+        "summary": "Change instance password (may not work for ISO instances)",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "change_password" }, "API": { "type": "string" }, "serviceid": { "type": "integer" }, "password": { "type": "string" } }, "required": ["API", "action", "serviceid", "password"] } } } },
+        "responses": { "200": { "description": "Password changed (reboot may be required)", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } }, "400": { "description": "Invalid serviceid or password", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } } }
+      }
+    },
+    "get_instance_firewall_profile": {
+      "post": {
+        "summary": "Retrieve firewall profile for an instance",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "get_instance_firewall_profile" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API", "action", "serviceid"] } } } },
+        "responses": { "200": { "description": "Firewall profile", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/FirewallProfile" } } } }, "401": { "description": "Not Authorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } } }
+      }
+    },
+    "get_instance_maintenance": {
+      "post": {
+        "summary": "Get maintenance events for an instance",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "get_instance_maintenance" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API", "action", "serviceid"] } } } },
+        "responses": { "200": { "description": "Maintenance list", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } } }
+      }
+    },
+    "get_server_charts": {
+      "post": {
+        "summary": "Get server charts (metrics)",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "get_server_charts" }, "API": { "type": "string" }, "serviceid": { "type": "integer" }, "period": { "type": "string", "enum": ["hour", "day", "week", "month"] } }, "required": ["API", "action", "serviceid", "period"] } } } },
+        "responses": { "200": { "description": "Charts data", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ServerCharts" } } } } }
+      }
+    },
+    "get_vnc": {
+      "post": {
+        "summary": "Get VNC / action log entries (DataTables format)",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "get_vnc" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API","action", "serviceid"] } } } },
+        "responses": { "200": { "description": "VNC/log entries", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionLogTableResponse" } } } } }
+      }
+    },
+    "get_serial": {
+      "post": {
+        "summary": "Get serial console access details",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "get_serial" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API", "action", "serviceid"] } } } },
+        "responses": { "200": { "description": "Serial console details",  "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionLogTableResponse" } } } }}
+      }
+    },
+    "set_main_ip": {
+      "post": {
+        "summary": "Set an IPv4 address as the main IP",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "set_main_ip" }, "API": { "type": "string" }, "serviceid": { "type": "integer" }, "ip": { "type": "string" } }, "required": ["API", "action", "serviceid", "ip"] } } } },
+        "responses": { "200": { "description": "Main IP set", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } }, "400": { "description": "Invalid IP" } }
+      }
+    },
+    "change_main_ip": {
+      "post": {
+        "summary": "Change the main IP (alias)",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "change_main_ip" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API", "action", "serviceid"] } } } },
+        "responses": { "200": { "description": "Main IP changed", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } } }
+      }
+    },
+    "delete_ip": {
+      "post": {
+        "summary": "Delete a secondary IP from an instance",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "delete_ip" }, "API": { "type": "string" }, "serviceid": { "type": "integer" }, "ip": { "type": "string" } }, "required": ["API", "action", "serviceid", "ip"] } } } },
+        "responses": { "200": { "description": "IP deleted", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } }, "400": { "description": "Invalid IP", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } } }
+    
+      }
+    },
+    "create_ip_cleanup_fee": {
+      "post": {
+        "summary": "Create an IP cleanup fee invoice",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "create_ip_cleanup_fee" }, "API": { "type": "string" }, "serviceid": { "type": "integer" } }, "required": ["API", "action", "serviceid"] } } } },
+        "responses": { "200": { "description": "Invoice created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } } }
+      }
+    },
+    "get_billingcycle_prices": {
+      "post": {
+        "summary": "Get pricing/duedates for billing cycles",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "get_billingcycle_prices" }, "API": { "type": "string" }, "serviceid": { "type": "integer", "nullable": true } }, "required": ["API", "action"] } } } },
+        "responses": { "200": { "description": "Billing cycle prices", "content": { "application/json": { "schema": { "type": "object", "example": {} }} } }, "401": { "description": "Not Authorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } } }
+      }
+    },
+    "change_billing_cycle": {
+      "post": {
+        "summary": "Change billing cycle of an instance",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "change_billing_cycle" }, "API": { "type": "string" }, "serviceid": { "type": "integer" }, "billingcycle": { "type": "string", "enum": ["hourly", "monthly", "quarterly", "semiannually", "annually", "biennially", "triennially"] } }, "required": ["action", "serviceid", "API"] } } } },
+        "responses": { "200": { "description": "Billing cycle changed", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActionArraySuccess" } } } }, "400": { "description": "Invalid request or product disabled", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } } }
+      }
+    },
+    "get_smtp_filters": {
+      "post": {
+        "summary": "Get SMTP filters applied to a service",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "action": { "type": "string", "example": "get_smtp_filters" }, "API": { "type": "string" }, "serviceid": { "type": "integer", "nullable": true } }, "required": ["API", "action"] } } } },
+        "responses": { "200": { "description": "SMTP filters", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SMTPFilters" } } } } }
+      }
+    }
+  }  
+}
+

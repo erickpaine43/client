@@ -50,7 +50,7 @@ export function BillingLoadingSkeleton() {
           <Skeleton className="h-6 w-32" />
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4">
+          <div className="flex items-center justify-between bg-muted/50 dark:bg-muted/30 rounded-lg p-4">
             <div className="flex items-center space-x-3">
               <Skeleton className="h-9 w-9 rounded-lg" />
               <div>
@@ -70,7 +70,7 @@ export function BillingLoadingSkeleton() {
           <Skeleton className="h-4 w-24" />
         </CardHeader>
         <CardContent>
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-muted/50 dark:bg-muted/30 rounded-lg p-4">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
@@ -98,7 +98,7 @@ export function BillingLoadingSkeleton() {
           <Skeleton className="h-9 w-24" />
         </CardHeader>
         <CardContent>
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-muted/50 dark:bg-muted/30 rounded-lg p-4">
             <div className="space-y-1">
               <Skeleton className="h-4 w-32" />
               <Skeleton className="h-4 w-36" />

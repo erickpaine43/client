@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -42,7 +42,7 @@ export default function GoToTopButton() {
       onClick={scrollToTop}
       className={cn(
         "fixed bottom-4 right-4 rounded-full h-10 w-10 z-50 transition-opacity duration-300 ease-in-out",
-        isVisible ? "opacity-100" : "opacity-0 pointer-events-none", // Hide and disable when not visible
+        isVisible ? "opacity-100" : "opacity-0 pointer-events-none" // Hide and disable when not visible
       )}
       aria-label="Go to top"
     >

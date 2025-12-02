@@ -1,5 +1,5 @@
 "use client ";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +23,7 @@ function ConversationHeaderButtons() {
         <Star
           className={cn(
             "w-5 h-5",
-            selectedConversation.isStarred && "text-yellow-500 fill-current",
+            selectedConversation.isStarred && "text-yellow-500 fill-current"
           )}
         />
       </Button>
@@ -31,7 +31,7 @@ function ConversationHeaderButtons() {
         <Pin
           className={cn(
             "w-5 h-5",
-            selectedConversation.isPinned && "text-blue-600",
+            selectedConversation.isPinned && "text-blue-600"
           )}
         />
       </Button>
@@ -47,13 +47,12 @@ function ConversationHeaderButtons() {
               <DropdownMenuItem
                 key={tag}
                 className={cn(
-                  selectedConversation.tag === tag &&
-                    "bg-blue-50 text-blue-700",
+                  selectedConversation.tag === tag && "bg-blue-50 text-blue-700"
                 )}
               >
                 {tag.replace("-", " ")}
               </DropdownMenuItem>
-            ),
+            )
           )}
         </DropdownMenuContent>
       </DropdownMenu>

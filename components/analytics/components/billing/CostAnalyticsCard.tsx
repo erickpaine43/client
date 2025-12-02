@@ -49,14 +49,18 @@ export function CostAnalyticsCard({ costAnalytics }: CostAnalyticsCardProps) {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-gray-600">Total Cost</p>
+            <p className="text-sm text-gray-600 dark:text-muted-foreground">
+              Total Cost
+            </p>
             <p className="text-2xl font-bold">
               {costAnalytics.currency === "USD" ? "$" : costAnalytics.currency}
               {costAnalytics.totalCost.toFixed(2)}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Projected Monthly</p>
+            <p className="text-sm text-gray-600 dark:text-muted-foreground">
+              Projected Monthly
+            </p>
             <p className="text-2xl font-bold">
               {costAnalytics.currency === "USD" ? "$" : costAnalytics.currency}
               {costAnalytics.projectedMonthlyCost.toFixed(2)}
@@ -78,7 +82,7 @@ export function CostAnalyticsCard({ costAnalytics }: CostAnalyticsCardProps) {
                 ? "text-red-600"
                 : costAnalytics.costTrend === "decreasing"
                   ? "text-green-600"
-                  : "text-gray-600"
+                  : "text-gray-600 dark:text-muted-foreground"
             }`}
           >
             {costAnalytics.costTrend} ({costAnalytics.trendPercentage}%)

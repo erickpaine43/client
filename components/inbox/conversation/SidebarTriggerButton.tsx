@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Minimize2, MoveDiagonal } from "lucide-react";
 

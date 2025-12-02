@@ -59,13 +59,13 @@ const MigratedStatsCard: React.FC<MigratedStatsCardProps> = ({
   const getChangeColor = () => {
     switch (changeType) {
       case "increase":
-        return "text-green-600";
+        return "text-green-600 dark:text-green-400";
       case "decrease":
-        return "text-red-600";
+        return "text-red-600 dark:text-red-400";
       case "stable":
-        return "text-gray-600";
+        return "text-muted-foreground";
       default:
-        return "text-gray-600";
+        return "text-muted-foreground";
     }
   };
 
@@ -76,14 +76,14 @@ const MigratedStatsCard: React.FC<MigratedStatsCardProps> = ({
       <CardContent className="flex items-center justify-between p-6">
         <div className="flex-1">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-sm font-medium text-gray-600">{title}</p>
+            <p className="text-sm font-medium text-muted-foreground">{title}</p>
             {meetsTarget !== null && (
               <div
                 className={cn(
                   "text-xs px-2 py-1 rounded-full",
                   meetsTarget
-                    ? "bg-green-100 text-green-700"
-                    : "bg-yellow-100 text-yellow-700"
+                    ? "bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400"
+                    : "bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400"
                 )}
               >
                 {meetsTarget ? "On Target" : "Below Target"}
@@ -92,7 +92,7 @@ const MigratedStatsCard: React.FC<MigratedStatsCardProps> = ({
           </div>
 
           <div className="flex items-baseline space-x-2">
-            <p className="text-2xl font-bold text-gray-900">{value}</p>
+            <p className="text-2xl font-bold text-foreground">{value}</p>
             {trend && (
               <div className="flex items-center space-x-1">
                 {getTrendIcon()}

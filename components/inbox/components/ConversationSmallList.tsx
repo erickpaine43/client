@@ -47,8 +47,8 @@ export default async function ConversationSmallList() {
                       <h3
                         className={`font-semibold truncate ${
                           conversation.status === "unread"
-                            ? "text-gray-900"
-                            : "text-gray-700"
+                            ? "text-gray-900 dark:text-foreground"
+                            : "text-gray-700 dark:text-muted-foreground"
                         }`}
                       >
                         {conversation.name}
@@ -65,8 +65,8 @@ export default async function ConversationSmallList() {
                     <p
                       className={`text-sm truncate mb-2 ${
                         conversation.status === "unread"
-                          ? "font-medium text-gray-900"
-                          : "text-gray-600"
+                          ? "font-medium text-gray-900 dark:text-foreground"
+                          : "text-gray-600 dark:text-muted-foreground"
                       }`}
                     >
                       {conversation.preview}

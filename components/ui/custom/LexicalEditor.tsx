@@ -161,7 +161,8 @@ const LexicalEditor = forwardRef<LexicalEditorRef, LexicalEditorProps>(
           h2: "text-xl font-bold mb-2",
           h3: "text-lg font-bold mb-2",
         },
-        quote: "border-l-4 border-gray-400 pl-4 italic text-gray-700",
+        quote:
+          "border-l-4 border-gray-400 dark:border-border pl-4 italic text-gray-700 dark:text-muted-foreground",
         link: "text-blue-600 underline hover:text-blue-800",
         image: "my-4 max-w-full",
       },

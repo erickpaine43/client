@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Barcode } from "lucide-react";
 
 interface DataTableViewOptionsProps<TData> {
@@ -39,7 +39,7 @@ export function DataTableViewOptions<TData>({
           .getAllColumns()
           .filter(
             (column) =>
-              typeof column.accessorFn !== "undefined" && column.getCanHide(),
+              typeof column.accessorFn !== "undefined" && column.getCanHide()
           )
           .map((column) => {
             const meta = column.columnDef.meta as CustomColumnMeta | undefined;

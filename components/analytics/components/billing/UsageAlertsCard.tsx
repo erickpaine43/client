@@ -53,7 +53,7 @@ export function UsageAlertsCard({ limitAlerts }: UsageAlertsCardProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-muted-foreground">
             No active alerts. All usage is within limits.
           </p>
         </CardContent>
@@ -68,7 +68,7 @@ export function UsageAlertsCard({ limitAlerts }: UsageAlertsCardProps) {
           <AlertTriangle className="h-5 w-5 text-yellow-600" />
           <span>Usage Alerts</span>
         </CardTitle>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 dark:text-muted-foreground">
           {limitAlerts.totalAlerts} active alerts
         </p>
       </CardHeader>

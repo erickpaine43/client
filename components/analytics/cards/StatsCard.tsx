@@ -25,7 +25,9 @@ const StatsCard: React.FC<StatsCardProps> = ({
         className={cn("flex items-center justify-between", className)}
       >
         <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
+          <p className="text-sm font-medium text-gray-600 dark:text-muted-foreground">
+            {title}
+          </p>
           <p className="text-2xl font-bold  mt-1">{value}</p>
         </div>
         <div className={cn("p-3 rounded-lg ", color)}>

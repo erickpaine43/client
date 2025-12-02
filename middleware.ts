@@ -7,6 +7,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { logError } from './lib/niledb/errors';
+import createMiddleware from 'next-intl/middleware';
+import {routing} from './i18n/routing';
 
 // Security headers configuration
 const SECURITY_HEADERS = {
@@ -173,6 +175,13 @@ function handleCORS(request: NextRequest): NextResponse | null {
   return null;
 }
 
+// Integrate with next-intl middleware for i18n routing
+
+const intlMiddleware = createMiddleware({
+    ...routing,
+    localeDetection: false // <-- The new setting to stop redirection
+});
+
 // Main middleware function
 export async function middleware(request: NextRequest) {
   const startTime = Date.now();
@@ -254,9 +263,11 @@ export async function middleware(request: NextRequest) {
     }
 
     // Continue with the request
-    const response = NextResponse.next();
+    // Chain the request through the next-intl middleware instance.
+    const response = intlMiddleware(request);
 
     // Add security headers
+    // NOTE: Headers are now applied to the response returned by next-intl.
     Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
       response.headers.set(key, value);
     });
@@ -310,6 +321,7 @@ export const config = {
      * - favicon.ico (favicon file)
      * - public folder files
      */
-    '/((?!_next/static|_next/image|favicon.ico|public/).*)',
+    '/',
+    '/((?!api|_next|.*\\..*).*)',
   ],
 };

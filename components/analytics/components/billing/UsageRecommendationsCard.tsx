@@ -49,7 +49,7 @@ export function UsageRecommendationsCard({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-muted-foreground">
             Your usage is optimized. No recommendations at this time.
           </p>
         </CardContent>
@@ -61,7 +61,7 @@ export function UsageRecommendationsCard({
     <Card>
       <CardHeader>
         <CardTitle>Usage Recommendations</CardTitle>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 dark:text-muted-foreground">
           Optimize your plan and usage based on current patterns
         </p>
       </CardHeader>

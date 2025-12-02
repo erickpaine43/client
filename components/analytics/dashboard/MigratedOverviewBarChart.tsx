@@ -119,7 +119,9 @@ function MigratedOverviewBarChart({
       <div className="h-96 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-500 mb-2">Error loading chart data</p>
-          <p className="text-sm text-gray-600">{error}</p>
+          <p className="text-sm text-gray-600 dark:text-muted-foreground">
+            {error}
+          </p>
         </div>
       </div>
     );

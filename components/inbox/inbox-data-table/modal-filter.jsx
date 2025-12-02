@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { DataTableFacetedFilter } from "./datatable-faceted-filter";
 import { Check, Filter, Package, RotateCcw, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import React from "react";
@@ -33,7 +33,7 @@ export function ModalFilter({
 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 z-50 max-h-[90vh] w-[90vw] max-w-md translate-x-[-50%] translate-y-[-50%] rounded-md bg-white p-6 shadow-lg focus:outline-none">
+        <Dialog.Content className="fixed top-1/2 left-1/2 z-50 max-h-[90vh] w-[90vw] max-w-md translate-x-[-50%] translate-y-[-50%] rounded-md bg-white dark:bg-card p-6 shadow-lg focus:outline-none">
           <div className="flex justify-between items-center mb-4">
             <Dialog.Title className="text-lg font-semibold">
               Filter Options

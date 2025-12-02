@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -45,7 +45,7 @@ function MailboxesTab({
           <CardTitle>
             <div className="flex items-center space-x-2">
               <Mail className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-foreground">
                 All Mailboxes
               </h2>
               <Badge className="bg-primary/20 text-primary">Loading...</Badge>
@@ -56,7 +56,7 @@ function MailboxesTab({
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
               <Loader2 className="w-12 h-12 text-primary mx-auto mb-4 animate-spin" />
-              <p className="text-gray-500">Loading mailboxes...</p>
+              <p className="text-muted-foreground">Loading mailboxes...</p>
             </div>
           </div>
         </CardContent>
@@ -71,17 +71,19 @@ function MailboxesTab({
           <CardTitle>
             <div className="flex items-center space-x-2">
               <Mail className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-foreground">
                 All Mailboxes
               </h2>
-              <Badge className="bg-red-100 text-red-800">Error</Badge>
+              <Badge className="bg-red-100 dark:bg-red-500/20 text-red-800 dark:text-red-400">
+                Error
+              </Badge>
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-12">
             <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <p className="text-gray-500 mb-4">{error}</p>
+            <p className="text-muted-foreground mb-4">{error}</p>
             <Button onClick={() => window.location.reload()} variant="outline">
               Try Again
             </Button>
@@ -97,7 +99,7 @@ function MailboxesTab({
         <CardTitle>
           <div className="flex items-center space-x-2">
             <Mail className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-foreground">
               All Mailboxes
             </h2>
             <Badge className="bg-primary/20 text-primary">
@@ -121,7 +123,7 @@ function MailboxesTab({
       <CardContent className="p-0">
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader className="bg-gray-100 ">
+            <TableHeader className="bg-gray-100 dark:bg-muted">
               <TableRow>
                 <TableHead>Mailbox</TableHead>
                 <TableHead>Status</TableHead>
@@ -142,11 +144,11 @@ function MailboxesTab({
                 return (
                   <TableRow
                     key={mailbox.id}
-                    className="hover:bg-gray-50 transition-colors group"
+                    className="hover:bg-gray-50 dark:hover:bg-muted/30 transition-colors group"
                   >
                     <TableCell className="px-8 py-6">
                       <div>
-                        <h3 className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors text-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-foreground cursor-pointer hover:text-blue-600 transition-colors text-lg">
                           {mailbox.email}
                         </h3>
                         <p className="text-sm text-gray-500 mt-1">
@@ -178,7 +180,7 @@ function MailboxesTab({
                     <TableCell className="px-6 py-6">
                       <div className="flex items-center space-x-2">
                         <Mail className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-gray-900 dark:text-foreground">
                           {mailbox.dailyVolume}/day
                         </span>
                       </div>
@@ -189,7 +191,7 @@ function MailboxesTab({
                     <TableCell className="px-6 py-6">
                       <div className="space-y-1">
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-medium text-gray-900 dark:text-foreground">
                             {(
                               analytics?.data?.totalWarmups || 0
                             ).toLocaleString()}

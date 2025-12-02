@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Column } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Command,
   CommandEmpty,
@@ -117,7 +117,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     }}
                     className={cn(
                       "cursor-pointer",
-                      isSelected && "bg-accent text-accent-foreground",
+                      isSelected && "bg-accent text-accent-foreground"
                     )}
                   >
                     {option.icon && (

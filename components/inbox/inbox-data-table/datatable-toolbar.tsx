@@ -3,11 +3,11 @@
 import React from "react";
 import { Table } from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button/button";
+import { Input } from "@/components/ui/input/input";
 import { Mail, Search, User } from "lucide-react";
 import { DataTableViewOptions } from "./datatable-view-options";
-import { getUniqueFiltersAction } from "@/app/dashboard/inbox/actions";
+import { getUniqueFiltersAction } from "@/app/[locale]/dashboard/inbox/actions";
 import { ModalFilter } from "./modal-filter";
 
 interface DataTableToolbarProps<TData> {

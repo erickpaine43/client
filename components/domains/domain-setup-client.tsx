@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { ArrowLeft, RefreshCw, Shield, Copy } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Progress } from "@/components/ui/progress";
 import { copyText } from "@/components/domains/copy";
 
@@ -25,7 +25,7 @@ interface DomainData {
 // Server action for DNS verification
 async function verifyDnsRecord(
   domainId: number,
-  recordType: "spf" | "dkim" | "dmarc",
+  recordType: "spf" | "dkim" | "dmarc"
 ) {
   try {
     const response = await fetch(`/api/domains/${domainId}/verify`, {
@@ -103,11 +103,11 @@ export default function DomainSetupClient({
       if (verified) {
         setDomain((prev) => ({ ...prev, [recordType]: true }));
         toast.success(
-          `${recordType.toUpperCase()} record verified successfully`,
+          `${recordType.toUpperCase()} record verified successfully`
         );
       } else {
         toast.error(
-          `${recordType.toUpperCase()} record verification failed. Please check your DNS settings.`,
+          `${recordType.toUpperCase()} record verification failed. Please check your DNS settings.`
         );
       }
     } catch {

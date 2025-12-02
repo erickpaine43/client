@@ -1,5 +1,5 @@
 "use client";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import {
   Select,
   SelectContent,
@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Popover,
   PopoverContent,
@@ -60,9 +60,9 @@ function CampaignsFilter() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center bg-white p-4 rounded-lg shadow border gap-4">
-      <div className="flex items-center space-x-2 border shadow-sm rounded-lg px-2 bg-gray-50 peer-focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 w-full lg:w-auto">
-        <Search className="text-gray-400 w-5 h-5" />
+    <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center bg-card dark:bg-card p-4 rounded-lg shadow border border-border gap-4">
+      <div className="flex items-center space-x-2 border border-border shadow-sm rounded-lg px-2 bg-muted/50 dark:bg-muted/30 peer-focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 w-full lg:w-auto">
+        <Search className="text-muted-foreground w-5 h-5" />
         <Input
           type="text"
           placeholder="Search campaigns..."
@@ -110,11 +110,11 @@ function CampaignsFilter() {
             ))}
             <div
               onClick={() => setDateRange(DateRange.Custom)}
-              className="cursor-pointer hover:bg-gray-100 p-2 rounded text-sm flex justify-between"
+              className="cursor-pointer hover:bg-accent dark:hover:bg-accent p-2 rounded text-sm flex justify-between"
             >
               <span>Custom Date</span>
               {dateRange === DateRange.Custom && (
-                <CheckIcon className="size-4 text-gray-500" />
+                <CheckIcon className="size-4 text-muted-foreground" />
               )}
             </div>
             {dateRange === DateRange.Custom && (
@@ -151,7 +151,7 @@ function CampaignsFilter() {
           <PopoverTrigger asChild>
             <Button
               variant="outline"
-              className="w-full sm:w-auto justify-start text-gray-500"
+              className="w-full sm:w-auto justify-start text-muted-foreground"
             >
               <Server className="w-4 h-4 mr-2" />
               {selectedMailboxes.length === 0
@@ -181,11 +181,11 @@ function CampaignsFilter() {
                     {selectedMailboxes.map((mailbox) => (
                       <div
                         key={mailbox}
-                        className="inline-flex items-center gap-1 bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                        className="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-500/20 text-blue-800 dark:text-blue-300 text-xs px-2 py-1 rounded"
                       >
                         {mailbox}
                         <X
-                          className="w-3 h-3 cursor-pointer hover:text-blue-600"
+                          className="w-3 h-3 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
                           onClick={() => removeMailbox(mailbox)}
                         />
                       </div>

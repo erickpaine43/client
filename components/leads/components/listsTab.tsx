@@ -1,7 +1,7 @@
 "use client";
 import { Filter } from "@/components/ui/custom/Filter";
 import { DropDownFilter, SearchInput } from "@/components/ui/custom/Filter";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Table,
   TableBody,
@@ -80,7 +80,7 @@ function ListsTab() {
           />
         </div>
       </Filter>
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="bg-card dark:bg-card border border-border rounded-xl overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>

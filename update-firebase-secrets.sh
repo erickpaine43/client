@@ -56,3 +56,7 @@ update_secret "$UPSTASH_REDIS_REST_TOKEN" "upstash-redis-rest-token"
 echo "setup secrets done"
 echo "you can now deploy your app with firebase deploy"
 echo "or deploy your app with firebase deploy --only hosting"
+
+# Turnstile
+update_secret "$NEXT_PUBLIC_TURNSTILE_SITE_KEY" "next-public-turnstile-site-key"
+update_secret "$TURNSTILE_SECRET_KEY" "turnstile-secret-key"

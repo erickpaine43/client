@@ -2,7 +2,7 @@
 
 import React, { Component, ReactNode } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { AlertTriangle, RefreshCw, Home, Bug } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -37,7 +37,7 @@ class ProfileErrorBoundary extends Component<
   }
 
   static getDerivedStateFromError(
-    error: Error,
+    error: Error
   ): Partial<ProfileErrorBoundaryState> {
     return {
       hasError: true,

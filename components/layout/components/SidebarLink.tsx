@@ -19,12 +19,13 @@ function SidebarLink({ link }: { link: NavLinkItem }) {
       className={cn(
         "flex items-center gap-2 px-3 py-2 rounded-md transition-colors duration-200 cursor-pointer",
         {
-          "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg hover:from-purple-700 hover:to-blue-700 hover:text-white":
+          "bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-500 dark:to-blue-500 text-white shadow-lg hover:from-purple-700 hover:to-blue-700 dark:hover:from-purple-600 dark:hover:to-blue-600 hover:text-white":
             isActive && link.highlight,
-          "bg-blue-50 text-blue-700 border-r-2 border-blue-600 shadow-sm hover:bg-blue-100":
+          "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-r-2 border-blue-600 dark:border-blue-400 shadow-sm hover:bg-blue-100 dark:hover:bg-blue-900/50":
             isActive && !link.highlight,
-          "text-gray-700 hover:bg-gray-200 hover:text-gray-900": !isActive,
-        },
+          "text-foreground hover:bg-accent hover:text-accent-foreground":
+            !isActive,
+        }
       )}
     >
       <Icon
@@ -34,14 +35,14 @@ function SidebarLink({ link }: { link: NavLinkItem }) {
           isActive
             ? link.highlight
               ? "text-white"
-              : "text-blue-600"
-            : "text-gray-500",
+              : "text-blue-600 dark:text-blue-400"
+            : "text-muted-foreground"
         )}
       />
       <span>{link.label}</span>
       {link.highlight && (
         <div className="ml-auto">
-          <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
+          <div className="w-2 h-2 bg-yellow-400 dark:bg-yellow-300 rounded-full animate-pulse" />
         </div>
       )}
     </SidebarMenuButton>
