@@ -2,7 +2,7 @@
 
 import type { PostHog } from 'posthog-js'
 
-// Fallback NOOP client (nunca rompe)
+// Fallback NOOP client (never breaks)
 const NOOP: PostHog = {
   capture: () => {},
   identify: () => {},
@@ -16,25 +16,25 @@ const NOOP: PostHog = {
   reloadFeatureFlags: () => Promise.resolve(),
 } as any
 
-// Variable interna que almacenará la instancia real
+// Internal variable storing the real instance
 let client: PostHog | null = null
 
 const KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY
 const HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST
 
 /**
- * Devuelve SIEMPRE un cliente funcional.
- * Si PostHog falló, devuelve NOOP.
+ * Always returns a functional client.
+ * If PostHog fails, returns the NOOP client.
  */
 export function ph(): PostHog {
   return client ?? NOOP
 }
 
 /**
- * Inicializa PostHog de forma segura.
- * - Solo corre en el browser
- * - No rompe SSR
- * - No lanza errores si falla
+ * Safely initializes PostHog.
+ * - Runs only in the browser
+ * - Does not break SSR
+ * - Does not throw errors if it fails
  */
 export async function initPostHog(): Promise<PostHog> {
   if (typeof window === 'undefined') return NOOP
