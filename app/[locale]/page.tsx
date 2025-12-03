@@ -1,116 +1,114 @@
 'use client'
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button/button";
-import { PasswordInput } from "@/components/ui/custom/password-input";
-import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label";
-import { LogIn, User } from "lucide-react";
-import { LandingLayout } from "@/components/landing/LandingLayout";
-import { loginContent } from "./content";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
-import { AuthTemplate } from "@/components/auth/AuthTemplate";
-import { Turnstile } from "next-turnstile";
-import { verifyTurnstileToken } from "./signup/verifyToken";
-import { useTranslations } from "next-intl";
-import { initPostHog, ph } from "@/lib/instrumentation-client";
-import { getLoginAttemptStatus } from "@/lib/auth/rate-limit";
+import React, { useState, useEffect } from "react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button/button"
+import { PasswordInput } from "@/components/ui/custom/password-input"
+import { Input } from "@/components/ui/input/input"
+import { Label } from "@/components/ui/label"
+import { LogIn, User } from "lucide-react"
+import { LandingLayout } from "@/components/landing/LandingLayout"
+import { loginContent } from "./content"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/context/AuthContext"
+import { AuthTemplate } from "@/components/auth/AuthTemplate"
+import { Turnstile } from "next-turnstile"
+import { verifyTurnstileToken } from "./signup/verifyToken"
+import { useTranslations } from "next-intl"
+import { initPostHog, ph } from "@/lib/instrumentation-client"
+import { getLoginAttemptStatus } from "@/lib/auth/rate-limit"
 
 const MAX_LOGIN_ATTEMPTS = parseInt(
   process.env.NEXT_PUBLIC_MAX_LOGIN_ATTEMPTS || "3",
   10
-);
+)
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [showTurnstile, setShowTurnstile] = useState(false);
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [loginAttempts, setLoginAttempts] = useState(0);
-  const router = useRouter();
-  const { login, user, error: authError } = useAuth();
-  const t = useTranslations("Login");
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [showTurnstile, setShowTurnstile] = useState(false)
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+  const [loginAttempts, setLoginAttempts] = useState(0)
+  const router = useRouter()
+  const { login, user, error: authError } = useAuth()
+  const t = useTranslations("Login")
 
   useEffect(() => {
-    initPostHog().then(client => client.capture("login_page_loaded"));
-  }, []);
+    initPostHog().then(client => {
+      client.capture('login_page_loaded')
+    })
+  }, [])
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
+    e.preventDefault()
+    setError(null)
+    setIsLoading(true)
 
     if (email?.includes("@")) {
-      const status = getLoginAttemptStatus(email);
+      const status = getLoginAttemptStatus(email)
       if (status.attempts > 0) {
-        setLoginAttempts(status.attempts);
-        setShowTurnstile(status.requiresTurnstile);
+        setLoginAttempts(status.attempts)
+        setShowTurnstile(status.requiresTurnstile)
       }
     }
 
     if (showTurnstile && !turnstileToken) {
-      setError(t("errors.captchaRequired"));
-      setIsLoading(false);
-      return;
+      setError(t("errors.captchaRequired"))
+      setIsLoading(false)
+      return
     }
 
     try {
       if (showTurnstile && turnstileToken) {
-        await verifyTurnstileToken(turnstileToken);
-        ph().capture("captcha_completed", { email });
+        await verifyTurnstileToken(turnstileToken)
+        ph().capture('captcha_completed', { email })
       }
 
-      await login(email, password);
-      ph().capture("login_attempt", { email, success: true });
+      // Login attempt
+      await login(email, password)
+      ph().capture('login_attempt', { email, success: true })
 
-      router.push("/dashboard");
+      router.push("/dashboard")
     } catch (err) {
-      console.error("Login failed:", err);
-      const errorMessage = (err as Error)?.message || loginContent.errors.generic;
-      setError(errorMessage);
+      console.error("Login failed:", err)
+      const errorMessage = (err as Error)?.message || loginContent.errors.generic
+      setError(errorMessage)
 
-      const status = getLoginAttemptStatus(email);
-      setShowTurnstile(status.requiresTurnstile);
-      setLoginAttempts(status.attempts || 0);
-      setTurnstileToken(null);
-
-      ph().capture("login_attempt", {
-        email,
-        success: false,
-        error: "Login failed",
-        attempts: status.attempts,
-      });
+      // Log failed login attempt
+      ph().capture('login_attempt', { 
+        email, 
+        success: false, 
+        error: 'Login failed'
+      })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
     if (user && !isLoading) {
-      router.push("/dashboard");
-      setError(null);
+      router.push("/dashboard")
+      setError(null)
     }
-  }, [user, router, isLoading]);
+  }, [user, router, isLoading])
 
   useEffect(() => {
     if (authError) {
-      setError(authError.message);
+      setError(authError.message)
       if (email && email.includes("@")) {
-        const status = getLoginAttemptStatus(email);
-        setLoginAttempts(status.attempts || 0);
-        setShowTurnstile(status.requiresTurnstile);
+        const status = getLoginAttemptStatus(email)
+        setLoginAttempts(status.attempts || 0)
+        setShowTurnstile(status.requiresTurnstile)
       }
     } else {
-      setError(null);
+      setError(null)
     }
-  }, [authError, email]);
+  }, [authError, email])
 
-  const icon = user ? User : LogIn;
-  const mode = user ? "loggedIn" : "form";
+  const icon = user ? User : LogIn
+  const mode = user ? "loggedIn" : "form"
 
   const footer = user ? undefined : (
     <div className="flex flex-col items-center space-y-2">
@@ -121,7 +119,7 @@ export default function LoginPage() {
         </Link>
       </p>
     </div>
-  );
+  )
 
   return (
     <LandingLayout>
@@ -220,8 +218,8 @@ export default function LoginPage() {
         )}
       </AuthTemplate>
     </LandingLayout>
-  );
+  )
 }
 
 // Force dynamic rendering to prevent SSR issues
-export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic"
