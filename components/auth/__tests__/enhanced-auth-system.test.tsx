@@ -17,7 +17,7 @@ import { renderHook } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-// Mock data (debe estar ANTES del mock de AuthContext)
+
 const mockUser = {
   id: "user-123",
   email: "test@example.com",
@@ -35,16 +35,16 @@ const mockUser = {
   tenants: ["tenant-1", "tenant-2"],
 };
 
-// ✅ Tipos para el mock de AuthProvider
+
 interface MockAuthProviderProps {
   children: React.ReactNode;
   useRealAuth?: boolean;
   mockTenants?: any[];
   mockCompanies?: any[];
-  isStaff?: boolean; // ✅ NUEVO: controlar isStaff
+  isStaff?: boolean; 
 }
 
-// ✅ Mock de AuthContext CORREGIDO
+
 jest.mock('@/context/AuthContext', () => {
   const React = require('react');
   const MockAuthContext = React.createContext(null);
@@ -54,7 +54,7 @@ jest.mock('@/context/AuthContext', () => {
     useRealAuth = false, 
     mockTenants = [], 
     mockCompanies = [],
-    isStaff = false // ✅ Default false
+    isStaff = false 
   }) => {
     const [selectedTenantId, setSelectedTenantId] = React.useState("tenant-1");
     const [selectedCompanyId, setSelectedCompanyId] = React.useState("company-1");
@@ -69,13 +69,13 @@ jest.mock('@/context/AuthContext', () => {
       userCompanies: mockCompanies.length > 0 ? mockCompanies : [
         { id: "company-1", tenantId: "tenant-1", role: "member", permissions: {} }
       ],
-      isStaff: isStaff, // ✅ Usar prop
+      isStaff: isStaff,
     } : {
       user: null,
       nileUser: null,
       userTenants: mockTenants,
       userCompanies: mockCompanies,
-      isStaff: isStaff, // ✅ Usar prop
+      isStaff: isStaff, 
     };
 
     Object.assign(value, {
@@ -112,16 +112,15 @@ jest.mock('@/context/AuthContext', () => {
 
 import { useAuth } from "@/context/AuthContext";
 
-// ✅ No importamos AuthProvider, usamos el del mock directamente
 
-// Mock the NileDB client and services
+
+
 jest.mock("@/lib/niledb/client");
 jest.mock("@/lib/niledb/auth");
 jest.mock("@/lib/niledb/tenant");
 jest.mock("@/lib/niledb/company");
 jest.mock("@/lib/niledb/monitoring");
 
-// Mock Next.js navigation
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
     push: jest.fn(),
@@ -211,7 +210,7 @@ const mockCompanies = [
 // Mock fetch for API calls
 global.fetch = jest.fn();
 
-// ✅ Helper para crear Response mocks completos
+
 const createMockResponse = (
   status: number,
   data: any,
@@ -234,15 +233,15 @@ const createMockResponse = (
   text: async () => JSON.stringify(data)
 } as Response);
 
-// ✅ Obtener AuthProvider del mock (con tipos correctos)
+
 const { AuthProvider } = require("@/context/AuthContext");
 
-// ✅ createTestWrapper CORREGIDO
+
 const createTestWrapper = (options?: {
   useRealAuth?: boolean;
   mockTenants?: any[];
   mockCompanies?: any[];
-  isStaff?: boolean; // ✅ NUEVO
+  isStaff?: boolean; 
 }) => {
   const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const queryClient = new QueryClient({
@@ -258,7 +257,7 @@ const createTestWrapper = (options?: {
           useRealAuth={options?.useRealAuth}
           mockTenants={options?.mockTenants}
           mockCompanies={options?.mockCompanies}
-          isStaff={options?.isStaff} // ✅ Pasar prop
+          isStaff={options?.isStaff} 
         >
           {children}
         </AuthProvider>
@@ -268,7 +267,7 @@ const createTestWrapper = (options?: {
   return TestWrapper;
 };
 
-// ✅ Alias para compatibilidad con tests antiguos
+
 const TestWrapper = createTestWrapper();
 
 describe("Enhanced Authentication System", () => {
@@ -276,7 +275,7 @@ describe("Enhanced Authentication System", () => {
     jest.clearAllMocks();
     (fetch as jest.MockedFunction<typeof fetch>).mockClear();
 
-    // ✅ Mock default más robusto que no lanza excepciones
+    
     const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
     mockFetch.mockImplementation((url) => {
       const urlStr = url.toString();
@@ -287,7 +286,7 @@ describe("Enhanced Authentication System", () => {
         );
       }
 
-      // Default: 404 (no lanzar excepciones)
+     
       return Promise.resolve(
         createMockResponse(404, { error: "Not found" })
       );
@@ -399,7 +398,7 @@ describe("Enhanced Authentication System", () => {
       it("should handle tenant access denial", async () => {
         const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
         
-        // ✅ RESETEAR completamente el mock antes de configurarlo
+       
         mockFetch.mockReset();
         mockFetch.mockImplementation((url) => {
           const urlStr = url.toString();
@@ -415,9 +414,9 @@ describe("Enhanced Authentication System", () => {
 
         const wrapper = createTestWrapper({ 
           useRealAuth: true,
-          mockTenants: [{ id: "tenant-1" }], // Solo tenant-1, NO tenant-unauthorized
+          mockTenants: [{ id: "tenant-1" }], 
           mockCompanies: [],
-          isStaff: false // ✅ CRÍTICO: Usuario NO es staff
+          isStaff: false 
         });
 
         const { result } = renderHook(() => useTenantAccess("tenant-unauthorized"), { wrapper });
@@ -486,7 +485,7 @@ describe("Enhanced Authentication System", () => {
       it("should handle insufficient company permissions", async () => {
         const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
         
-        // ✅ RESETEAR completamente el mock antes de configurarlo
+       
         mockFetch.mockReset();
         mockFetch.mockImplementation((url) => {
           const urlStr = url.toString();
@@ -503,8 +502,8 @@ describe("Enhanced Authentication System", () => {
         const wrapper = createTestWrapper({ 
           useRealAuth: true,
           mockTenants: [{ id: "tenant-1" }],
-          mockCompanies: [], // Vacío para forzar llamada API
-          isStaff: false // ✅ CRÍTICO: Usuario NO es staff
+          mockCompanies: [], 
+          isStaff: false 
         });
 
         const { result } = renderHook(() => useCompanyAccess("company-restricted", "tenant-1"), { wrapper });
