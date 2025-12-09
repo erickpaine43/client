@@ -1,6 +1,7 @@
 "use client";
 import KpiCard from "@/components/analytics/cards/StatsCard";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
+import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -59,14 +60,16 @@ const CustomTooltip = ({
     });
 
     return (
-      <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[140px]">
-        <p className="font-medium text-gray-900 text-sm mb-2">
+      <div className="bg-white dark:bg-card border border-gray-200 dark:border-border rounded-lg shadow-lg p-3 min-w-[140px]">
+        <p className="font-medium text-gray-900 dark:text-foreground text-sm mb-2">
           {formattedDate}
         </p>
         <div className="space-y-1">
           <div className="flex justify-between items-center">
-            <span className="text-gray-600 text-xs">Sent:</span>
-            <span className="font-medium text-gray-700 text-xs">
+            <span className="text-gray-600 dark:text-muted-foreground text-xs">
+              Sent:
+            </span>
+            <span className="font-medium text-gray-700 dark:text-foreground text-xs">
               {data.sent}
             </span>
           </div>
@@ -190,7 +193,7 @@ function StatsTab() {
   if (error) {
     return (
       <div className="space-y-6">
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground">
           Campaign Performance
         </h3>
         <div className="flex items-center justify-center py-8">
@@ -210,7 +213,7 @@ function StatsTab() {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-semibold text-gray-900">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground">
         Campaign Performance
       </h3>
 
@@ -220,46 +223,41 @@ function StatsTab() {
           {Array.from({ length: 5 }).map((_, i) => (
             <div
               key={i}
-              className="bg-gray-100 animate-pulse rounded-lg p-4 h-24"
+              className="bg-gray-100 dark:bg-muted animate-pulse rounded-lg p-4 h-24"
             />
           ))}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <KpiCard
-            className="flex-row-reverse justify-end gap-2"
+          <UnifiedStatsCard
             title="Total Sent"
             value={totals.sent.toLocaleString()}
             icon={Mail}
-            color="bg-gray-100 text-gray-600"
+            color="secondary"
           />
-          <KpiCard
-            className="flex-row-reverse justify-end gap-2"
+          <UnifiedStatsCard
             title="Opens (Tracked)"
             value={`${totals.opened_tracked.toLocaleString()} (${openRate})`}
             icon={Eye}
-            color="bg-blue-100 text-blue-600"
+            color="info"
           />
-          <KpiCard
-            className="flex-row-reverse justify-end gap-2"
+          <UnifiedStatsCard
             title="Replies"
             value={`${totals.replied.toLocaleString()} (${replyRate})`}
             icon={TrendingUp}
-            color="bg-green-100 text-green-600"
+            color="success"
           />
-          <KpiCard
-            className="flex-row-reverse justify-end gap-2"
+          <UnifiedStatsCard
             title="Clicks (Tracked)"
             value={`${totals.clicked_tracked.toLocaleString()} (${clickRate})`}
             icon={MousePointer}
-            color="bg-purple-100 text-purple-600"
+            color="warning"
           />
-          <KpiCard
-            className="flex-row-reverse justify-end gap-2"
+          <UnifiedStatsCard
             title="Bounces"
             value={`${totals.bounced.toLocaleString()} (${bounceRate}%)`}
             icon={AlertTriangle}
-            color="bg-red-100 text-red-600"
+            color="error"
           />
         </div>
       )}
@@ -271,7 +269,9 @@ function StatsTab() {
             <div className="h-80 w-full flex items-center justify-center">
               <div className="text-center">
                 <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-500" />
-                <p className="text-gray-600">Loading analytics data...</p>
+                <p className="text-gray-600 dark:text-muted-foreground">
+                  Loading analytics data...
+                </p>
               </div>
             </div>
           </CardContent>
@@ -281,7 +281,7 @@ function StatsTab() {
           <CardContent className="p-6">
             {/* Header with Controls */}
             <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-6 gap-4">
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground">
                 Performance Over Time
               </h3>
 
@@ -296,8 +296,8 @@ function StatsTab() {
                       onClick={() => toggleMetric(metric.key)}
                       className={`flex items-center gap-1.5 h-8 ${
                         metric.visible
-                          ? "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                          : "border-gray-200 bg-gray-50 text-gray-400 hover:bg-gray-100"
+                          ? "border-gray-300 dark:border-border bg-white dark:bg-card text-gray-700 dark:text-foreground hover:bg-gray-50 dark:hover:bg-muted/30"
+                          : "border-gray-200 dark:border-border bg-gray-50 dark:bg-muted/30 text-gray-400 dark:text-muted-foreground hover:bg-gray-100 dark:hover:bg-muted"
                       }`}
                     >
                       {metric.visible ? (
@@ -412,7 +412,7 @@ function StatsTab() {
                       className="w-3 h-0.5 rounded-full"
                       style={{ backgroundColor: metric.color }}
                     />
-                    <span className="text-sm text-gray-600 font-medium">
+                    <span className="text-sm text-gray-600 dark:text-muted-foreground font-medium">
                       {metric.label}
                     </span>
                   </div>

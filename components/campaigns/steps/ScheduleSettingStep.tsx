@@ -2,13 +2,13 @@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label";
 import { useAddCampaignContext } from "@/context/AddCampaignContext";
 import { allTimezones, calculateMaxEmails, cn } from "@/lib/utils";
 import { Calendar, Check, ChevronsUpDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Command,
   CommandEmpty,
@@ -60,7 +60,7 @@ function ScheduleSettingStep() {
     } else {
       setValue(
         "schedule.days",
-        currentDays.filter((d) => d !== day),
+        currentDays.filter((d) => d !== day)
       );
     }
   };
@@ -78,17 +78,17 @@ function ScheduleSettingStep() {
   return (
     <Card className="max-w-3xl mx-auto space-y-8">
       <CardHeader className="text-center">
-        <div className="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-          <Calendar className="w-8 h-8 text-pink-600" />
+        <div className="w-16 h-16 bg-pink-100 dark:bg-pink-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <Calendar className="w-8 h-8 text-pink-600 dark:text-pink-400" />
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <h2 className="text-2xl font-bold text-foreground mb-2">
           Set Sending Schedule
         </h2>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           Configure when and how your emails will be sent
         </p>
-        <Alert variant="default" className="bg-blue-100 ">
-          <AlertDescription className="text-blue-800 text-sm font-medium">
+        <Alert variant="default" className="bg-blue-100 dark:bg-blue-500/20 ">
+          <AlertDescription className="text-blue-800 dark:text-blue-400 text-sm font-medium">
             📝 Changes will apply to next scheduled emails
           </AlertDescription>
         </Alert>
@@ -96,14 +96,14 @@ function ScheduleSettingStep() {
 
       <CardContent className="space-y-8">
         <div>
-          <Label className="text-sm font-medium text-gray-700 mb-4 block">
+          <Label className="text-sm font-medium text-foreground mb-4 block">
             Sending Days
           </Label>
           <div className="grid grid-cols-7 gap-3">
             {daysOfWeek.map((day) => (
               <div
                 key={day.value}
-                className="flex flex-col items-center space-y-2 p-3 border border-gray-200 rounded-xl hover:bg-gray-50"
+                className="flex flex-col items-center space-y-2 p-3 border border-gray-200 dark:border-border rounded-xl hover:bg-gray-50 dark:hover:bg-muted/50"
               >
                 <Checkbox
                   id={day.value}
@@ -114,7 +114,7 @@ function ScheduleSettingStep() {
                 />
                 <Label
                   htmlFor={day.value}
-                  className="text-sm font-medium text-gray-700 cursor-pointer"
+                  className="text-sm font-medium text-foreground cursor-pointer"
                 >
                   {day.label}
                 </Label>
@@ -132,7 +132,7 @@ function ScheduleSettingStep() {
           <div>
             <Label
               htmlFor="start-time"
-              className="text-sm font-medium text-gray-700 mb-2 block"
+              className="text-sm font-medium text-foreground mb-2 block"
             >
               Start Time
             </Label>
@@ -151,7 +151,7 @@ function ScheduleSettingStep() {
           <div>
             <Label
               htmlFor="end-time"
-              className="text-sm font-medium text-gray-700 mb-2 block"
+              className="text-sm font-medium text-foreground mb-2 block"
             >
               End Time
             </Label>
@@ -173,7 +173,7 @@ function ScheduleSettingStep() {
           <div>
             <Label
               htmlFor="daily-limit"
-              className="text-sm font-medium text-gray-700 mb-2 block"
+              className="text-sm font-medium text-foreground mb-2 block"
             >
               Daily Email Limit
             </Label>
@@ -199,7 +199,7 @@ function ScheduleSettingStep() {
           <div>
             <Label
               htmlFor="delay"
-              className="text-sm font-medium text-gray-700 mb-2 block"
+              className="text-sm font-medium text-foreground mb-2 block"
             >
               Delay Between Emails (minutes)
             </Label>
@@ -224,7 +224,7 @@ function ScheduleSettingStep() {
           </AlertDescription>
         </Alert>
         <div>
-          <Label className="text-sm font-medium text-gray-700 mb-2 block">
+          <Label className="text-sm font-medium text-foreground mb-2 block">
             Timezone
           </Label>
           <Popover open={openTimezone} onOpenChange={setOpenTimezone}>
@@ -261,7 +261,7 @@ function ScheduleSettingStep() {
                           "mr-2 h-4 w-4",
                           timezoneValue === zone.value
                             ? "opacity-100"
-                            : "opacity-0",
+                            : "opacity-0"
                         )}
                       />
                       {zone.label}

@@ -1,6 +1,6 @@
 function RecentReplySkeleton() {
   return (
-    <div className="p-6 hover:bg-gray-50 transition-colors">
+    <div className="p-6 hover:bg-gray-50 dark:hover:bg-muted/50 transition-colors">
       <div className="flex items-start space-x-4">
         <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse" />
         <div className="flex-1">

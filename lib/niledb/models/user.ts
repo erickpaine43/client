@@ -11,6 +11,7 @@ export interface User {
   tenant_id: string;
   company_id: string;
   role: 'admin' | 'user' | 'manager';
+  emailVerified: boolean;
   created_at: Date;
   updated_at: Date;
 }

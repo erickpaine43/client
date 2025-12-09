@@ -137,7 +137,7 @@ export async function getQuickReplyById(id: string): Promise<ActionResult<Templa
           // Validate template ID
           const idValidation = validateTemplateId(id);
           if (!idValidation.success) {
-            throw new Error(idValidation.error?.message || "Invalid template ID");
+            return ErrorFactory.validation(idValidation.error?.message || "Invalid template ID");
           }
 
           const templateId = idValidation.data;
@@ -251,7 +251,7 @@ export async function createQuickReply(data: {
           });
 
           if (!validation.success) {
-            throw new Error(validation.error?.message || "Validation failed");
+            return ErrorFactory.validation(validation.error?.message || "Validation failed");
           }
 
           const { name, content, subject } = validation.data!;
@@ -496,7 +496,7 @@ export async function deleteQuickReply(id: string): Promise<ActionResult<void>> 
           // Validate template ID
           const idValidation = validateTemplateId(id);
           if (!idValidation.success) {
-            throw new Error(idValidation.error?.message || "Invalid template ID");
+            return ErrorFactory.validation(idValidation.error?.message || "Invalid template ID");
           }
 
           const templateId = idValidation.data!;
@@ -539,7 +539,7 @@ export async function markQuickReplyAsUsed(id: string): Promise<ActionResult<voi
           // Validate template ID
           const idValidation = validateTemplateId(id);
           if (!idValidation.success) {
-            throw new Error(idValidation.error?.message || "Invalid template ID");
+            return ErrorFactory.validation(idValidation.error?.message || "Invalid template ID");
           }
 
           const templateId = idValidation.data!;

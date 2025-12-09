@@ -3,9 +3,12 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { AlertTriangle } from "lucide-react";
 import { WarmupSummaryData } from "@/types/campaign";
+import { statusColors } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 interface WarmupSummaryProps {
   data: WarmupSummaryData;
@@ -13,27 +16,34 @@ interface WarmupSummaryProps {
 
 function WarmupSummary({ data }: WarmupSummaryProps) {
   return (
-    <Card className="bg-white rounded-xl shadow-sm border border-gray-200 ">
+    <Card>
       <CardHeader>
-        <h3 className="font-semibold text-gray-900 mb-4">Warmup Status</h3>
+        <CardTitle>Warmup Status</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-600">Active Mailboxes</span>
+          <span className="text-sm text-muted-foreground">
+            Active Mailboxes
+          </span>
           <span className="font-medium">{data.activeMailboxes}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-600">Warming Up</span>
-          <span className="font-medium text-orange-600">{data.warmingUp}</span>
+          <span className="text-sm text-muted-foreground">Warming Up</span>
+          <span className={cn("font-medium", statusColors.warning)}>
+            {data.warmingUp}
+          </span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-600">Ready to Send</span>
-          <span className="font-medium text-green-600">{data.readyToSend}</span>
+          <span className="text-sm text-muted-foreground">Ready to Send</span>
+          <span className={cn("font-medium", statusColors.success)}>
+            {data.readyToSend}
+          </span>
         </div>
       </CardContent>
-      <CardFooter className="border-t border-gray-200">
-        <div className="flex items-center text-sm text-amber-600">
-          <AlertTriangle className="w-4 h-4 mr-2" />{data.needsAttention} mailboxes need attention
+      <CardFooter className="border-t">
+        <div className={cn("flex items-center text-sm", statusColors.alert)}>
+          <AlertTriangle className="w-4 h-4 mr-2" />
+          {data.needsAttention} mailboxes need attention
         </div>
       </CardFooter>
     </Card>

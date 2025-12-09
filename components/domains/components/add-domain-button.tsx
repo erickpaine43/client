@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { useAddDomainContext } from "@/context/AddDomainContext";
 import { Plus } from "lucide-react";
 

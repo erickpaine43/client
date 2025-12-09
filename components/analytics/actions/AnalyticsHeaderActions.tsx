@@ -1,7 +1,7 @@
 "use client";
 
 import { Download, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { useAnalytics, useDomainAnalytics } from "@/context/AnalyticsContext";
 import { ChartDataPoint } from "@/types/analytics/ui";
 import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
@@ -52,25 +52,27 @@ function AnalyticsHeaderActions() {
         const timeSeriesData = await campaignService.getTimeSeriesData(
           filters.selectedCampaigns.length > 0 ? filters.selectedCampaigns : [],
           dataFilters,
-          'day',
+          "day",
           undefined
         );
 
-        const formattedData = timeSeriesData.map((point: TimeSeriesDataPoint) => {
-          const rates = AnalyticsCalculator.calculateAllRates(point.metrics);
+        const formattedData = timeSeriesData.map(
+          (point: TimeSeriesDataPoint) => {
+            const rates = AnalyticsCalculator.calculateAllRates(point.metrics);
 
-          return {
-            name: point.label,
-            date: point.date,
-            sent: point.metrics.sent,
-            opened_tracked: point.metrics.opened_tracked,
-            clicked_tracked: point.metrics.clicked_tracked,
-            replied: point.metrics.replied,
-            openRate: rates.openRate * 100,
-            clickRate: rates.clickRate * 100,
-            replyRate: rates.replyRate * 100,
-          };
-        });
+            return {
+              name: point.label,
+              date: point.date,
+              sent: point.metrics.sent,
+              opened_tracked: point.metrics.opened_tracked,
+              clicked_tracked: point.metrics.clicked_tracked,
+              replied: point.metrics.replied,
+              openRate: rates.openRate * 100,
+              clickRate: rates.clickRate * 100,
+              replyRate: rates.replyRate * 100,
+            };
+          }
+        );
 
         setChartData(formattedData);
       } catch (error) {

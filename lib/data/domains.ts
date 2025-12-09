@@ -15,7 +15,7 @@ export const getStatusColor = (status: string) => {
     case "PAUSED":
       return "bg-red-100 text-red-800";
     default:
-      return "bg-gray-100 text-gray-800";
+      return "bg-gray-100 dark:bg-muted text-gray-800 dark:text-foreground";
   }
 };
 

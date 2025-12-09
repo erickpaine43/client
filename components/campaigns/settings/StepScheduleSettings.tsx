@@ -1,5 +1,5 @@
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { Toggle } from "@/components/ui/toggle";
 import { copyText as t } from "../data/copy";
 
@@ -19,7 +19,7 @@ interface ScheduleSettingsProps {
         | "emailsPerDay"
         | "timezone"
       >
-    >,
+    >
   ) => void;
 }
 

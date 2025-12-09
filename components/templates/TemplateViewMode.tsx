@@ -27,14 +27,16 @@ export function TemplateViewMode({ template }: TemplateViewModeProps) {
         <div className="text-sm font-medium text-muted-foreground mb-1">
           {t.subjectLine.label}
         </div>
-        <div className="p-3 bg-gray-50 rounded-md">{template.subject}</div>
+        <div className="p-3 bg-muted/50 dark:bg-muted/30 rounded-md">
+          {template.subject}
+        </div>
       </div>
 
       <div>
         <div className="text-sm font-medium text-muted-foreground mb-1">
           {t.emailBody.label}
         </div>
-        <div className="p-3 bg-gray-50 rounded-md whitespace-pre-wrap">
+        <div className="p-3 bg-muted/50 dark:bg-muted/30 rounded-md whitespace-pre-wrap">
           {template.body}
         </div>
       </div>

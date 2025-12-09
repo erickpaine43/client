@@ -13,7 +13,12 @@ module.exports = {
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
+    '^server-only$': '<rootDir>/__mocks__/server-only.js',
+    '^client-only$': '<rootDir>/__mocks__/client-only.js',
+    '^next/navigation$': '<rootDir>/__mocks__/next-navigation.js',
+    '^next/headers$': '<rootDir>/__mocks__/next-headers.js',
   },
+  modulePathIgnorePatterns: ['node_modules', 'jest-test-results.json'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   globals: {
     'ts-jest': {
@@ -23,3 +28,4 @@ module.exports = {
     },
   },
 };
+

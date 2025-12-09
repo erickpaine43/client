@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { copyText as t } from "../data/copy";
 
 interface ClientsPaginationProps {

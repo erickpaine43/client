@@ -9,11 +9,11 @@ const getStatusColor = (status: string) => {
     case "opened":
       return "bg-blue-100 text-blue-800";
     case "sent":
-      return "bg-gray-100 text-gray-800";
+      return "bg-gray-100 text-gray-800 dark:bg-muted dark:text-muted-foreground";
     case "bounced":
       return "bg-red-100 text-red-800";
     default:
-      return "bg-gray-100 text-gray-800";
+      return "bg-gray-100 text-gray-800 dark:bg-muted dark:text-muted-foreground";
   }
 };
 
@@ -26,7 +26,9 @@ async function LeadsTab() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">Campaign Leads</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground">
+          Campaign Leads
+        </h3>
       </div>
       <div>
         <LeadsFilter />
@@ -34,7 +36,7 @@ async function LeadsTab() {
       <Card className="p-0">
         <CardContent className="p-0">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-muted">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Contact
@@ -54,11 +56,13 @@ async function LeadsTab() {
               {campaignLeads.map((lead) => (
                 <tr
                   key={lead.id}
-                  className="hover:bg-gray-50 transition-colors"
+                  className="hover:bg-gray-50 dark:hover:bg-muted/30 transition-colors"
                 >
                   <td className="px-6 py-4">
                     <div>
-                      <h4 className="font-medium text-gray-900">{lead.name}</h4>
+                      <h4 className="font-medium text-gray-900 dark:text-foreground">
+                        {lead.name}
+                      </h4>
                       <p className="text-sm text-gray-500">{lead.email}</p>
                       <p className="text-sm text-gray-500">{lead.company}</p>
                     </div>
@@ -72,7 +76,7 @@ async function LeadsTab() {
                       {lead.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
+                  <td className="px-6 py-4 text-sm text-gray-900 dark:text-foreground">
                     Step {lead.currentStep}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500">

@@ -5,7 +5,7 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { RefreshCw } from "lucide-react";
 
 /**
@@ -31,7 +31,7 @@ export function RefreshControls({
     <div className="flex items-center justify-between">
       <div>
         <h2 className="text-2xl font-bold">Billing Analytics</h2>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-muted-foreground">
           Real-time usage monitoring and cost tracking
         </p>
       </div>
@@ -44,7 +44,7 @@ export function RefreshControls({
               isRealTime ? "bg-green-500 animate-pulse" : "bg-gray-400"
             }`}
           />
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-gray-600 dark:text-muted-foreground">
             {isRealTime ? "Live" : "Cached"}
           </span>
         </div>

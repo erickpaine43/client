@@ -6,9 +6,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { copyText as t } from "../data/copy";
-import { Client } from "@/app/dashboard/inbox/schemas/schemas";
+import { Client } from "@/app/[locale]/dashboard/inbox/schemas/schemas";
 
 interface RemoveClientDialogProps {
   isOpen: boolean;

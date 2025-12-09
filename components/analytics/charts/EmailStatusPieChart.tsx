@@ -77,8 +77,8 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
         : AnalyticsCalculator.formatNumber(value);
 
     return (
-      <div className="bg-white p-2 shadow rounded border border-gray-200">
-        <p className="font-semibold text-sm text-gray-700">
+      <div className="bg-card dark:bg-card p-2 shadow rounded border border-border">
+        <p className="font-semibold text-sm text-foreground">
           {`${payload[0].name}: ${formattedValue}`}
         </p>
       </div>
@@ -90,8 +90,8 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
 // Accept data as props
 const EmailStatusPieChart: React.FC<EmailStatusPieChartProps> = ({ data }) => {
   return (
-    <div className="bg-white shadow rounded-lg p-4 h-96 flex flex-col">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Email Status</h3>
+    <div className="bg-card dark:bg-card shadow rounded-lg p-4 h-96 flex flex-col">
+      <h3 className="text-lg font-medium text-foreground mb-4">Email Status</h3>
       <div className="flex-grow flex items-center justify-center">
         <ResponsiveContainer width="100%" height={250}>
           <PieChart>

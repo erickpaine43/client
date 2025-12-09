@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { useState } from "react";
 
 function Filter({
@@ -22,7 +22,7 @@ function Filter({
     <div
       className={cn(
         "flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-4 lg:space-y-0 lg:space-x-4 p-4 bg-white border rounded-lg shadow-sm",
-        className,
+        className
       )}
     >
       {children}
@@ -45,14 +45,14 @@ function SearchInput({
     onChange?.(e.target.value);
   }
   return (
-    <div className="flex items-center space-x-2 border shadow-sm rounded-lg px-2 bg-gray-50 peer-focus-within:border-ring-primary focus-within:ring-1 focus-within:ring-primary w-full lg:w-auto">
-      <Search className="text-gray-400 w-5 h-5" />
+    <div className="flex items-center space-x-2 border shadow-sm rounded-lg px-2 bg-background dark:bg-muted/50 peer-focus-within:border-ring-primary focus-within:ring-1 focus-within:ring-primary w-full lg:w-auto">
+      <Search className="text-muted-foreground w-5 h-5" />
       <Input
         value={searchTerm}
         onChange={handleChange}
         type="text"
         placeholder={placeholder || "Search "}
-        className="w-full lg:max-w-md border-none shadow-none focus-visible:border-none focus-visible:ring-0 peer"
+        className="w-full lg:max-w-md border-none shadow-none focus-visible:border-none focus-visible:ring-0 peer bg-transparent"
       />
     </div>
   );

@@ -75,7 +75,9 @@ function MigratedAnalyticsChartsLegend() {
             className="w-3 h-3 rounded-full"
             style={{ backgroundColor: metric.color }}
           />
-          <span className="text-sm text-gray-700">{metric.label}</span>
+          <span className="text-sm text-gray-700 dark:text-foreground">
+            {metric.label}
+          </span>
         </div>
       ))}
     </div>

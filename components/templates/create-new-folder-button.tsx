@@ -1,5 +1,5 @@
 import { Folder, FolderPlus } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../ui/button/button";
 import {
   Dialog,
   DialogContent,

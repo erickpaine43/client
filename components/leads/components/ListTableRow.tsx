@@ -9,7 +9,7 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
-import { Button } from "../../ui/button";
+import { Button } from "../../ui/button/button";
 
 // Type for performance metrics
 type PerformanceMetrics = {
@@ -20,11 +20,11 @@ const getStatusColor = (status: string) => {
   switch (status) {
     case "used":
     case "being-used":
-      return "bg-green-100 text-green-800 border-green-200";
+      return "bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-300 border-green-200 dark:border-green-500/30";
     case "not-used":
-      return "bg-gray-100 text-gray-800 border-gray-200";
+      return "bg-muted/50 dark:bg-muted text-muted-foreground border-border";
     default:
-      return "bg-gray-100 text-gray-800 border-gray-200";
+      return "bg-muted/50 dark:bg-muted text-muted-foreground border-border";
   }
 };
 
@@ -59,11 +59,11 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
     <TableRow key={list.id}>
       <TableCell>
         <div>
-          <h3 className="font-semibold text-gray-900">{list.name}</h3>
+          <h3 className="font-semibold text-foreground">{list.name}</h3>
           {/* Only show bounced if the list is being used */}
           {isUsed && list.bounced > 0 && (
             <div className="flex items-center space-x-4 mt-1">
-              <span className="text-sm text-red-600">
+              <span className="text-sm text-red-600 dark:text-red-400">
                 {list.bounced} bounced
               </span>
             </div>
@@ -72,7 +72,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
             {list.tags.map((tag, index) => (
               <span
                 key={index}
-                className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
+                className="px-2 py-1 bg-muted/50 dark:bg-muted text-muted-foreground text-xs rounded-full"
               >
                 {tag}
               </span>
@@ -82,8 +82,8 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
       </TableCell>
       <TableCell>
         <div className="flex items-center space-x-2">
-          <Users className="w-4 h-4 text-gray-400" />
-          <span className="text-sm font-medium text-gray-900">
+          <Users className="w-4 h-4 text-muted-foreground" />
+          <span className="text-sm font-medium text-foreground">
             {list.contacts.toLocaleString()}
           </span>
         </div>
@@ -99,11 +99,11 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
         </span>
       </TableCell>
       <TableCell>
-        <div className="text-sm font-medium text-gray-900">
+        <div className="text-sm font-medium text-foreground">
           {isUsed ? (
             list.campaign
           ) : (
-            <span className="text-gray-500 italic">Not used yet</span>
+            <span className="text-muted-foreground italic">Not used yet</span>
           )}
         </div>
       </TableCell>
@@ -111,7 +111,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
         {isUsed ? (
           <div className="space-y-1">
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-blue-600">
+              <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
                 {("performance" in list &&
                 list.performance &&
                 typeof list.performance === "object" &&
@@ -120,10 +120,10 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
                   : 0) || 0}
                 %
               </span>
-              <span className="text-xs text-gray-500">open</span>
+              <span className="text-xs text-muted-foreground">open</span>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-green-600">
+              <span className="text-sm font-medium text-green-600 dark:text-green-400">
                 {("performance" in list &&
                 list.performance &&
                 typeof list.performance === "object" &&
@@ -132,14 +132,16 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
                   : 0) || 0}
                 %
               </span>
-              <span className="text-xs text-gray-500">reply</span>
+              <span className="text-xs text-muted-foreground">reply</span>
             </div>
           </div>
         ) : (
-          <span className="text-sm text-gray-500 italic">Not used yet</span>
+          <span className="text-sm text-muted-foreground italic">
+            Not used yet
+          </span>
         )}
       </TableCell>
-      <TableCell className="text-sm text-gray-500">
+      <TableCell className="text-sm text-muted-foreground">
         {new Date(list.uploadDate).toLocaleDateString()}
       </TableCell>
       <TableCell className="text-right">
@@ -147,7 +149,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
           <Button
             variant="ghost"
             size="icon"
-            className=" hover:text-blue-600 hover:bg-blue-50"
+            className=" hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/20"
             title="View Contacts"
           >
             <Eye className="w-4 h-4" />
@@ -155,7 +157,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
           <Button
             variant="ghost"
             size="icon"
-            className=" hover:text-gray-600 hover:bg-gray-100"
+            className=" hover:text-foreground hover:bg-accent dark:hover:bg-accent"
             title="Edit List"
           >
             <Edit className="w-4 h-4" />
@@ -163,7 +165,7 @@ function ListTableRow({ list }: { list: (typeof leadListsData)[0] }) {
           <Button
             variant="ghost"
             size="icon"
-            className=" hover:text-green-600 hover:bg-green-50"
+            className=" hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-500/20"
             title="Download CSV"
           >
             <Download className="w-4 h-4" />

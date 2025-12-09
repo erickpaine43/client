@@ -9,6 +9,7 @@ import type {
 
 // Company Information Types
 export interface CompanyInfo {
+  id: string;
   name: string;
   industry: string;
   size: string;
@@ -16,6 +17,8 @@ export interface CompanyInfo {
   vatId?: string;
   website?: string;
   founded?: string;
+  tenantId: string;
+  role: "admin" | "member" | "owner";
 }
 
 export interface BillingAddress {
@@ -99,9 +102,12 @@ export const mockUserSettings: UserSettings = {
   userId: "user-1",
   timezone: "America/New_York",
   companyInfo: {
+    id: "company-1",
     name: "Acme Corporation",
     industry: "Technology Services",
     size: "51-200 employees",
+    tenantId: "tenant-123",
+    role: "admin",
     address: {
       street: "123 Business Street",
       city: "San Francisco",
@@ -173,6 +179,9 @@ export const mockUserSettings2: UserSettings = {
   userId: "user-2",
   timezone: "Europe/London",
   companyInfo: {
+    id: "company-2",
+    role: "admin",
+    tenantId: "tenant-456",
     name: "Tech Innovators Ltd",
     industry: "Software Development",
     size: "11-50 employees",

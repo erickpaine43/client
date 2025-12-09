@@ -1,13 +1,13 @@
 "use client";
 import { Row } from "@tanstack/react-table";
-import { Email } from "@/app/dashboard/inbox/schemas/schemas";
+import { Email } from "@/app/[locale]/dashboard/inbox/schemas/schemas";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Eye,
   EyeClosed,
@@ -21,7 +21,7 @@ import {
   hideEmailAction,
   markEmailAsReadAction,
   softDeleteEmailAction,
-} from "@/app/dashboard/inbox/actions";
+} from "@/app/[locale]/dashboard/inbox/actions";
 import { redirect } from "next/navigation";
 
 type IdType = string | number | undefined;

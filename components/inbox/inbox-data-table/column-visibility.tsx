@@ -5,7 +5,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { SlidersHorizontal } from "lucide-react";
 
 interface ColumnVisibilityProps<TData> {

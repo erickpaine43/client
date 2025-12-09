@@ -43,10 +43,12 @@ export function BillingTimeSeriesChart({
     <Card>
       <CardHeader>
         <CardTitle>Usage Trends</CardTitle>
-        <p className="text-sm text-gray-600">Usage and cost trends over time</p>
+        <p className="text-sm text-gray-600 dark:text-muted-foreground">
+          Usage and cost trends over time
+        </p>
       </CardHeader>
       <CardContent>
-        <div className="h-64 flex items-center justify-center text-gray-500">
+        <div className="h-64 flex items-center justify-center text-gray-500 dark:text-muted-foreground">
           <p>
             Chart visualization would be implemented here with your preferred
             charting library
@@ -60,7 +62,10 @@ export function BillingTimeSeriesChart({
             {timeSeriesData
               .slice(-3)
               .map((point: TimeSeriesDataPoint, index: number) => (
-                <div key={index} className="p-2 bg-gray-50 rounded">
+                <div
+                  key={index}
+                  className="p-2 bg-gray-50 dark:bg-muted/30 rounded"
+                >
                   <p className="font-medium">{point.label}</p>
                   <p>Emails: {point.usage.emailsSent.toLocaleString()}</p>
                   <p>

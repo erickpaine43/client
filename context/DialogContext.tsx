@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { Maximize2, XIcon } from "lucide-react";
@@ -70,7 +70,7 @@ export function useDialogContext() {
   const context = useContext(DialogContext);
   if (!context) {
     throw new Error(
-      "useDialogContext must be used within a DialogContextProvider",
+      "useDialogContext must be used within a DialogContextProvider"
     );
   }
   return context;
@@ -105,7 +105,7 @@ export function DialogContextProviderContent({
   }
   return (
     <DialogContent className={cn("min-w-11/12 h-11/12", className)}>
-      <div className="absolute right-2 z-10 bg-white  cursor-pointer top-2 flex items-center justify-center ">
+      <div className="absolute right-2 z-10 bg-white dark:bg-card cursor-pointer top-2 flex items-center justify-center ">
         <Button
           variant="link"
           className="cursor-pointer"

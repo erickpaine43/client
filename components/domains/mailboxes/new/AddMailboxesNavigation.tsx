@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { useAddMailboxesContext } from "@/context/AddMailboxesContext";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -41,7 +41,7 @@ function AddMailboxesNavigation() {
     }
   };
   return (
-    <div className="w-full border-t border-gray-200 px-8 py-6">
+    <div className="w-full border-t border-gray-200 dark:border-border px-8 py-6">
       <div className="max-w-4xl mx-auto flex items-center justify-between">
         <Button
           variant="ghost"

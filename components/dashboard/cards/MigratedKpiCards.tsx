@@ -12,7 +12,7 @@ import {
 import { AnalyticsCalculator } from "@/lib/utils/analytics-calculator";
 import { KPIDisplayConfig } from "@/types/analytics/ui";
 import { CampaignAnalytics } from "@/types/analytics/domain-specific";
-import MigratedStatsCard from "@/components/analytics/dashboard/MigratedStatsCard";
+import { UnifiedStatsCard } from "@/components/design-system/components/unified-stats-card";
 import { KPISummaryCardSkeleton } from "@/components/analytics/components/SkeletonLoaders";
 
 interface MigratedKpiCardsProps {
@@ -196,7 +196,7 @@ function MigratedKpiCards({
     return (
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <div className="col-span-full">
-          <div className="flex items-center space-x-2 text-red-500 p-4 bg-red-50 rounded-lg">
+          <div className="flex items-center space-x-2 text-destructive p-4 bg-destructive/10 rounded-lg">
             <AlertTriangle className="w-5 h-5" />
             <span>Error loading KPI data: {error}</span>
           </div>
@@ -210,12 +210,12 @@ function MigratedKpiCards({
     return (
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <div className="col-span-full">
-          <div className="text-center p-8 bg-gray-50 rounded-lg">
-            <Mail className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <div className="text-center p-8 bg-muted rounded-lg">
+            <Mail className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-foreground mb-2">
               No Campaign Data
             </h3>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Start a campaign to see KPI metrics.
             </p>
           </div>
@@ -227,7 +227,7 @@ function MigratedKpiCards({
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
       {kpiConfigs.map((kpi) => (
-        <MigratedStatsCard
+        <UnifiedStatsCard
           key={kpi.id}
           title={kpi.name}
           value={kpi.displayValue}
@@ -239,6 +239,7 @@ function MigratedKpiCards({
           trend={kpi.trend}
           change={kpi.change}
           changeType={kpi.changeType}
+          benchmark={true}
         />
       ))}
     </div>
@@ -246,17 +247,44 @@ function MigratedKpiCards({
 }
 
 // Color mapping helper function
-function getColorForKPI(color?: KPIDisplayConfig["color"]) {
+// TODO: Critical bug - duplicate return statements make this function broken
+//
+// Current issues:
+// 1. Each case has duplicate return statements (line 253 has unreachable code)
+// 2. First return returns CSS class strings but return type expects semantic colors
+// 3. The intended semantic color returns ("success", "warning", "error", "primary") are unreachable
+//
+// This function should only return the semantic color strings to match the return type:
+//
+// function getColorForKPI(color?: KPIDisplayConfig["color"]): "primary" | "secondary" | "success" | "warning" | "error" | "info" {
+//   switch (color) {
+//     case "positive":
+//       return "success";
+//     case "warning":
+//       return "warning";
+//     case "danger":
+//       return "error";
+//     case "neutral":
+//     default:
+//       return "primary";
+//   }
+// }
+//
+// Note: If CSS classes are needed, this should be a different helper function
+// that maps semantic colors to CSS classes, or the return type should be updated accordingly.
+function getColorForKPI(
+  color?: KPIDisplayConfig["color"]
+): "primary" | "secondary" | "success" | "warning" | "error" | "info" {
   switch (color) {
     case "positive":
-      return "bg-green-100 text-green-600";
+      return "success";
     case "warning":
-      return "bg-yellow-100 text-yellow-600";
+      return "warning";
     case "danger":
-      return "bg-red-100 text-red-600";
+      return "error";
     case "neutral":
     default:
-      return "bg-blue-100 text-blue-600";
+      return "primary";
   }
 }
 

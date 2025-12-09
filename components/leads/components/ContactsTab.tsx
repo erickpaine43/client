@@ -13,7 +13,7 @@ import { useState } from "react";
 import { DropDownFilter, Filter, SearchInput } from "../../ui/custom/Filter";
 import { Avatar, AvatarFallback } from "../../ui/avatar";
 import { Badge } from "../../ui/badge";
-import { Button } from "../../ui/button";
+import { Button } from "../../ui/button/button";
 import { Card, CardContent, CardHeader } from "../../ui/card";
 import { Checkbox } from "../../ui/checkbox";
 import {
@@ -170,7 +170,7 @@ function ContactsTab() {
       <CardContent className="border p-0 rounded-xl overflow-hidden">
         <div className="overflow-hidden">
           <Table>
-            <TableHeader className="bg-gray-100">
+            <TableHeader className="bg-gray-100 dark:bg-muted">
               <TableRow>
                 <TableHead className="w-12">
                   <Checkbox

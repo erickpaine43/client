@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Plus } from "lucide-react";
 import { copyText as t } from "../../data/copy";
 

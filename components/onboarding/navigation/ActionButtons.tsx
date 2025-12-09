@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { useOnboarding } from "@/context/onboarding-context";
 import { ArrowRight, BookOpen, ExternalLink } from "lucide-react";
 import Link from "next/link";

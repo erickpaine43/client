@@ -12,12 +12,12 @@ function Toolbar() {
   };
 
   return (
-    <div className="flex flex-wrap gap-2 border-b p-2 bg-gray-50">
+    <div className="flex flex-wrap gap-2 border-b p-2 bg-muted/50 dark:bg-muted/30">
       {pluginsList.map(({ id, Icon, event }) => (
         <button
           key={id}
           type="button"
-          className="px-2 py-1 hover:bg-gray-200 rounded"
+          className="px-2 py-1 hover:bg-muted dark:hover:bg-muted/60 rounded"
           onClick={() => onClick(event)}
         >
           <Icon fontSize="small" />

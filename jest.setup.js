@@ -28,3 +28,13 @@ global.console = {
   // warn: jest.fn(),
   // error: jest.fn(),
 };
+
+// ---------------------------------------------------------------------------
+//  MOCK next-intl to avoid ESM parsing errors in Jest
+// ---------------------------------------------------------------------------
+jest.mock("next-intl", () => ({
+  useTranslations: () => ((key) => key), // returns the key as fallback
+  useFormatter: () => ({ format: (value) => value }),
+  NextIntlClientProvider: ({ children }) => children,
+}));
+

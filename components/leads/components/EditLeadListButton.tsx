@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   Dialog,
   DialogClose,
@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { LeadList } from "@/lib/data/leads";
@@ -54,7 +54,7 @@ function EditLeadListButton({ list }: { list: LeadList }) {
         <Button
           variant="ghost"
           size="icon"
-          className="text-gray-500 hover:text-gray-700"
+          className="text-gray-500 hover:text-gray-700 dark:text-muted-foreground dark:hover:text-foreground"
         >
           <Pencil className="w-4 h-4" />
         </Button>

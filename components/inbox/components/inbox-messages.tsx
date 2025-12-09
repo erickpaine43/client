@@ -1,8 +1,8 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { TabsContent } from "@/components/ui/tabs";
 import { Star } from "lucide-react";
-import { Email } from "@/app/dashboard/inbox/schemas/schemas";
+import { Email } from "@/app/[locale]/dashboard/inbox/schemas/schemas";
 import EmailActions from "../actions/EmailActions";
 import Link from "next/link";
 
@@ -22,8 +22,8 @@ export default function InboxMessages({ emails }: Props) {
   const renderEmail = (email: Email) => (
     <div
       key={email.id}
-      className={`px-4 py-4 flex flex-col hover:bg-gray-50 cursor-pointer border rounded-md ${
-        !email.read ? "bg-blue-50" : "bg-white"
+      className={`px-4 py-4 flex flex-col hover:bg-gray-50 dark:hover:bg-muted/50 cursor-pointer border rounded-md ${
+        !email.read ? "bg-blue-50" : "bg-white dark:bg-card"
       }`}
     >
       <Link href={`/dashboard/inbox/${email.id}`}>

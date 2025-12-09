@@ -322,39 +322,30 @@ export async function withConvexErrorHandling<R>(
  * Specialized logging for ConvexQueryError
  */
 export function logConvexError(
-  error: ConvexQueryError,
-  context?: {
-    actionName?: string;
-    userId?: string;
-    companyId?: string;
-    requestId?: string;
-  }
-): void {
-  const logData = {
-    error: {
-      type: 'convex_query_error',
-      message: error.message,
-      queryName: error.queryName,
-      args: error.args,
-      context: error.context,
-      executionTime: error.executionTime,
-      retryable: error.retryable,
-    },
-    actionContext: context,
-    timestamp: new Date().toISOString(),
+  error: any,
+  context?: { actionName?: string; userId?: string; companyId?: string }
+) {
+  // For testing, always log if NODE_ENV is "test" or "development"
+  if (process.env.NODE_ENV !== "development" && process.env.NODE_ENV !== "test") return;
+
+  const performance = {
+    slow: !!(error.executionTime && error.executionTime > 3000),
+    timeout: error.message?.includes("timeout") ?? false,
   };
 
-  // In development, log to console with enhanced formatting
-  if (process.env.NODE_ENV === 'development') {
-    console.error('Convex Query Error:', {
-      ...logData,
-      // Add performance indicators
-      performance: {
-        slow: (error.executionTime || 0) > 3000,
-        timeout: error.message.includes('timeout'),
+  console.error(
+    "Convex Query Error:",
+    {
+      error: {
+        queryName: error.queryName,
+        executionTime: error.executionTime,
+        retryable: error.retryable,
+        message: error.message,
       },
-    });
-  }
+      performance,
+      context: context ? { ...context } : {},
+    }
+  );
 
   // In production, send to monitoring service
   // Example: sendToConvexMonitoring(logData);
@@ -372,23 +363,20 @@ export function logActionError(
     requestId?: string;
   }
 ): void {
-  const logData = {
-    error: {
-      type: error.type,
-      message: error.message,
-      code: error.code,
-      field: error.field,
-      details: error.details,
-    },
-    context,
-    timestamp: new Date().toISOString(),
-  };
+  // For testing, always log if NODE_ENV is "test" or "development"
+  if (process.env.NODE_ENV !== "development" && process.env.NODE_ENV !== "test") return;
 
-  // In development, log to console
-  if (process.env.NODE_ENV === 'development') {
-    console.error('Action Error:', logData);
-  }
-
-  // In production, you would send to your logging service
-  // Example: sendToLoggingService(logData);
+  console.error(
+    "Action Error:",
+    {
+      error: {
+        type: error.type,
+        message: error.message,
+        code: error.code,
+        field: error.field,
+        details: error.details,
+      },
+      context: context ? { ...context } : {},
+    }
+  );
 }

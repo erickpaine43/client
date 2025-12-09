@@ -47,8 +47,8 @@ const CustomTooltip = ({
 }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white p-2 shadow rounded border border-gray-200">
-        <p className="font-semibold text-sm text-gray-700">{`${label}`}</p>
+      <div className="bg-white dark:bg-card p-2 shadow rounded border border-gray-200 dark:border-border">
+        <p className="font-semibold text-sm text-gray-700 dark:text-foreground">{`${label}`}</p>
         {payload.map((entry, index) => (
           <p
             key={`item-${index}`}
@@ -70,8 +70,8 @@ const CampaignPerformanceChart: React.FC<CampaignPerformanceChartProps> = ({
 }) => {
   const safeData = canonicalizeChartData(data);
   return (
-    <div className="bg-white shadow rounded-lg p-4 h-96 flex flex-col">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">
+    <div className="bg-white dark:bg-card shadow rounded-lg p-4 h-96 flex flex-col">
+      <h3 className="text-lg font-medium text-gray-900 dark:text-foreground mb-4">
         Campaign Performance
       </h3>
       <div className="flex-grow">

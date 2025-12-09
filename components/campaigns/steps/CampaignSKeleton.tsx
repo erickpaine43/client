@@ -81,7 +81,7 @@ function CampaignSKeleton() {
           <div className="space-y-4">
             <Skeleton className="h-6 w-40" />
             <div className="border rounded-lg overflow-hidden">
-              <div className="grid grid-cols-4 gap-4 p-4 bg-gray-50">
+              <div className="grid grid-cols-4 gap-4 p-4 bg-muted/50 dark:bg-muted/30">
                 <Skeleton className="h-4 w-20" />
                 <Skeleton className="h-4 w-24" />
                 <Skeleton className="h-4 w-16" />

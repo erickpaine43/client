@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useConversation } from "@/context/ConversationContext";
 import { X } from "lucide-react";
@@ -30,7 +30,7 @@ function NotesPanel() {
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         placeholder="Add internal notes about this conversation..."
-        className="w-full p-3 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent resize-none bg-white"
+        className="w-full p-3 border border-yellow-300 dark:border-border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent resize-none bg-white dark:bg-card"
         rows={3}
       />
       <div className="flex justify-end mt-2">

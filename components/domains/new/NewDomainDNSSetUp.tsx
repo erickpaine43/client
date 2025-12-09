@@ -2,9 +2,9 @@
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label";
 import {
   Tooltip,
@@ -51,7 +51,7 @@ const getRecordIconStyles = (type: DNSRecord["type"]) => {
     case "MX":
       return cn(baseStyles, "bg-orange-100");
     default:
-      return cn(baseStyles, "bg-gray-100");
+      return cn(baseStyles, "bg-gray-100 dark:bg-muted");
   }
 };
 
@@ -190,7 +190,7 @@ function NewDomainDNSSetUp() {
                           record.status === "failed" &&
                             "bg-red-100 text-red-800 hover:bg-red-100",
                           record.status === "pending" &&
-                            "bg-orange-100 text-orange-800 hover:bg-orange-100",
+                            "bg-orange-100 text-orange-800 hover:bg-orange-100"
                         )}
                       >
                         {record.status === "verified"

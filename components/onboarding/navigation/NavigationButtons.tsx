@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { useOnboarding } from "@/context/onboarding-context";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { useCallback } from "react";

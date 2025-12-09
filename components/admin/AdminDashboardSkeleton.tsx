@@ -1,4 +1,4 @@
-import { Skeleton } from '@/components/ui/skeleton'
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function AdminDashboardSkeleton() {
   return (
@@ -6,7 +6,10 @@ export function AdminDashboardSkeleton() {
       {/* Summary Cards Skeleton */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-white overflow-hidden shadow rounded-lg">
+          <div
+            key={i}
+            className="bg-white dark:bg-card overflow-hidden shadow rounded-lg"
+          >
             <div className="p-5">
               <div className="flex items-center">
                 <Skeleton className="h-6 w-6" />
@@ -21,7 +24,7 @@ export function AdminDashboardSkeleton() {
       </div>
 
       {/* Filters Skeleton */}
-      <div className="bg-white shadow rounded-lg">
+      <div className="bg-white dark:bg-card shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
           <div className="flex flex-col sm:flex-row gap-4">
             <Skeleton className="h-10 flex-1" />
@@ -32,7 +35,7 @@ export function AdminDashboardSkeleton() {
       </div>
 
       {/* Table Skeleton */}
-      <div className="bg-white shadow overflow-hidden sm:rounded-md">
+      <div className="bg-white dark:bg-card shadow overflow-hidden sm:rounded-md">
         <div className="px-4 py-5 sm:p-6">
           <div className="space-y-4">
             {[...Array(10)].map((_, i) => (
@@ -50,5 +53,5 @@ export function AdminDashboardSkeleton() {
         </div>
       </div>
     </div>
-  )
+  );
 }

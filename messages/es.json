@@ -1,0 +1,42 @@
+{
+    "Errors": {
+        "401-LOGIN": "Las credenciales que proporcionaste no son válidas. Por favor, verifica tu correo electrónico y contraseña.",
+        "403-CAMPAIGNS": "No estás autorizado para ver o modificar los datos de la campaña.",
+        "403-USERS": "No tienes los permisos necesarios para gestionar cuentas de usuario.",
+        "500-AUTH": "Ocurrió un error inesperado del servidor durante la autenticación. Por favor, inténtalo de nuevo más tarde.",
+        "500-LEADS": "Ocurrió un error del sistema al obtener los datos de los leads. El problema ha sido registrado."
+    },
+    "Metadata": {
+        "title": "Penguin Mails - Alcance por correo electrónico y calentamiento de dominio",
+        "description": "¡Bienvenido al mundo de Penguin Mails, donde cada mensaje es una sorpresa encantadora!"
+    },
+    "Login": {
+        "title": "¡Bienvenido de nuevo!",
+        "description": "Ingrese sus credenciales para acceder a su panel de control.",
+        "email": {
+            "label": "Correo electrónico",
+            "placeholder": "tu@ejemplo.com"
+        },
+        "password": {
+            "label": "Contraseña"
+        },
+        "forgotPassword": "¿Olvidaste tu contraseña?",
+        "loginButton": {
+            "default": "Iniciar sesión",
+            "loading": "Iniciando sesión..."
+        },
+        "errors": {
+            "title": "Error de inicio de sesión",
+            "incorrectPassword": "Contraseña incorrecta",
+            "userNotFound": "Usuario no encontrado",
+            "generic": "Error de inicio de sesión. Por favor, verifica tus credenciales."
+        },
+        "signup": {
+            "text": "¿No tienes una cuenta?",
+            "link": "Regístrate"
+        }
+    },
+    "button": {
+        "label": "botón"
+    }
+}

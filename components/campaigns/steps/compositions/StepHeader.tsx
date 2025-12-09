@@ -1,7 +1,7 @@
 "use client";
 
 import React, { MouseEvent } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Trash2, ArrowUp, ArrowDown } from "lucide-react";
 import { copyText as t } from "../../data/copy";
 
@@ -26,7 +26,7 @@ export function StepHeader({
 }: StepHeaderProps) {
   const handleAction = (
     evt: MouseEvent<HTMLButtonElement>,
-    handleAction: () => void,
+    handleAction: () => void
   ) => {
     evt.preventDefault();
     handleAction();
