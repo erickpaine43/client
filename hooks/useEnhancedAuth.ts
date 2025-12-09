@@ -78,6 +78,12 @@ export const useTenantAccess = (tenantId?: string) => {
           hasAccess: true,
           role: data.role || 'member',
         });
+      }else if (response.status === 403){ //Add this conditions
+          setAccessResult({
+            hasAccess: false,
+            error: 'Access denied',
+          });
+      
       } else {
         setAccessResult({
           hasAccess: false,
@@ -167,7 +173,13 @@ export const useCompanyAccess = (companyId?: string, tenantId?: string) => {
 
       if (response.ok) {
         setAccessResult({ hasAccess: true, role: 'member' });
-      } else {
+      } else if(response.status === 403) {
+        setAccessResult({
+          hasAccess: false,
+          error: 'Access denied',
+        });
+      }
+      else {
         setAccessResult({
           hasAccess: false,
           error: response.status === 403 ? 'Access denied' : 'Company not found',
@@ -287,9 +299,7 @@ export const useErrorRecovery = () => {
   const { error: authError, clearError, refreshUserData } = useAuth();
   const [localError, setLocalError] = useState<Error | null>(null);
   const [errorType, setErrorType] = useState<ErrorType | null>(null);
-   const handleClearError = useCallback(() => {
-    clearError(); // Ahora está definida
-  }, [clearError]);
+   
   const [recovering, setRecovering] = useState(false);
 
   const currentError = localError || authError;

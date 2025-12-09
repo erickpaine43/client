@@ -35,6 +35,17 @@ const mockUser = {
   tenants: ["tenant-1", "tenant-2"],
 };
 
+import { AuthProvider, useAuth } from "@/context/AuthContext";
+
+declare module "@/context/AuthContext" {
+  export interface AuthProviderProps {
+    children: React.ReactNode;
+    useRealAuth?: boolean;
+    mockTenants?: any[];
+    mockCompanies?: any[];
+    isStaff?: boolean;
+  }
+}
 
 interface MockAuthProviderProps {
   children: React.ReactNode;
@@ -44,8 +55,8 @@ interface MockAuthProviderProps {
   isStaff?: boolean; 
 }
 
-
 jest.mock('@/context/AuthContext', () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
   const React = require('react');
   const MockAuthContext = React.createContext(null);
   
@@ -109,11 +120,6 @@ jest.mock('@/context/AuthContext', () => {
   
   return { __esModule: true, AuthContext: MockAuthContext, AuthProvider, useAuth };
 });
-
-import { useAuth } from "@/context/AuthContext";
-
-
-
 
 jest.mock("@/lib/niledb/client");
 jest.mock("@/lib/niledb/auth");
@@ -234,9 +240,6 @@ const createMockResponse = (
 } as Response);
 
 
-const { AuthProvider } = require("@/context/AuthContext");
-
-
 const createTestWrapper = (options?: {
   useRealAuth?: boolean;
   mockTenants?: any[];
@@ -252,17 +255,14 @@ const createTestWrapper = (options?: {
     });
 
     return (
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider 
-          useRealAuth={options?.useRealAuth}
-          mockTenants={options?.mockTenants}
-          mockCompanies={options?.mockCompanies}
-          isStaff={options?.isStaff} 
-        >
-          {children}
-        </AuthProvider>
-      </QueryClientProvider>
-    );
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider 
+      {...(options as any)}
+    >
+      {children}
+    </AuthProvider>
+  </QueryClientProvider>
+);
   };
   return TestWrapper;
 };
