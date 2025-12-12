@@ -157,7 +157,7 @@ export const sampleLeads = [
     campaign: null,
     source: "Conference",
   },
-] as const;
+];
 
 
 export const SAMPLE_CSV_DATA = [

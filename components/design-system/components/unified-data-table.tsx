@@ -45,6 +45,8 @@ interface UnifiedDataTableProps<TData> {
   className?: string;
   onRowSelect?: (rows: Row<TData>[]) => void;
   renderActions?: (row: Row<TData>) => React.ReactNode;
+  contentClassName?: string;
+  tableContainerClassName?: string;
 }
 
 /**
@@ -64,11 +66,15 @@ export function UnifiedDataTable<TData>({
   className,
   onRowSelect,
   renderActions,
+  contentClassName,
+  tableContainerClassName,
 }: UnifiedDataTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({});
+  const [columnVisibility, setColumnVisibility] = useState<
+    Record<string, boolean>
+  >({});
 
   const table = useReactTable({
     data: data,
@@ -90,23 +96,38 @@ export function UnifiedDataTable<TData>({
     enableRowSelection: !!onRowSelect,
   });
 
+  // Stable reference to onRowSelect to prevent infinite loops if parent passes inline function
+  const onRowSelectRef = React.useRef(onRowSelect);
+
+  React.useEffect(() => {
+    onRowSelectRef.current = onRowSelect;
+  }, [onRowSelect]);
+
   // Handle row selection callback
   React.useEffect(() => {
-    if (onRowSelect) {
-      onRowSelect(table.getFilteredSelectedRowModel().rows);
+    if (onRowSelectRef.current) {
+      onRowSelectRef.current(table.getFilteredSelectedRowModel().rows);
     }
-  }, [rowSelection, onRowSelect, table]);
+  }, [rowSelection, table]);
 
   const renderTable = () => (
-    <div className="rounded-md border overflow-hidden">
+    <div
+      className={cn(
+        "rounded-md border overflow-hidden",
+        tableContainerClassName
+      )}
+    >
       <Table>
-        <TableHeader>
+        <TableHeader className="bg-gray-100 dark:bg-muted">
           {table.getHeaderGroups().map((group) => (
             <TableRow key={group.id}>
               {group.headers.map((header) => (
                 <TableHead
                   key={header.id}
-                  className="font-semibold"
+                  className={cn(
+                    "font-semibold",
+                    header.column.columnDef.meta?.headerClassName
+                  )}
                 >
                   {header.isPlaceholder
                     ? null
@@ -126,23 +147,19 @@ export function UnifiedDataTable<TData>({
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
                 className={cn(
-                  "transition-colors hover:bg-muted/50",
+                  "transition-colors hover:bg-muted/50 group",
                   row.getIsSelected() && "bg-muted"
                 )}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
-                    )}
+                  <TableCell
+                    key={cell.id}
+                    className={cn(cell.column.columnDef.meta?.cellClassName)}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
-                {renderActions && (
-                  <TableCell>
-                    {renderActions(row)}
-                  </TableCell>
-                )}
+                {renderActions && <TableCell>{renderActions(row)}</TableCell>}
               </TableRow>
             ))
           ) : (
@@ -160,70 +177,76 @@ export function UnifiedDataTable<TData>({
     </div>
   );
 
-  const renderToolbar = () => (
-    <div className="flex items-center justify-between space-y-2 py-4">
-      <div className="flex items-center space-x-2 flex-1">
-        {searchable && (
-          <div className="relative max-w-sm">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search..."
-              value={globalFilter}
-              onChange={(e) => setGlobalFilter(e.target.value)}
-              className="pl-9"
-            />
+  const selectionCount = table.getFilteredSelectedRowModel().rows.length;
+
+  const renderToolbar = () => {
+    if (!searchable && !filterable && selectionCount === 0) {
+      return null;
+    }
+
+    return (
+      <div className="flex items-center justify-between space-y-2 py-4">
+        <div className="flex items-center space-x-2 flex-1">
+          {searchable && (
+            <div className="relative max-w-sm">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search..."
+                value={globalFilter}
+                onChange={(e) => setGlobalFilter(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          )}
+
+          {filterable && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Settings2 className="mr-2 h-4 w-4" />
+                  Columns
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => (
+                    <DropdownMenuItem key={column.id}>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={column.getIsVisible()}
+                          onChange={(e) =>
+                            column.toggleVisibility(e.target.checked)
+                          }
+                          className="rounded"
+                        />
+                        {column.id}
+                      </label>
+                    </DropdownMenuItem>
+                  ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
+
+        {/* Selection info */}
+        {selectionCount > 0 && (
+          <div className="flex items-center space-x-2">
+            <Badge variant="secondary">{selectionCount} selected</Badge>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.resetRowSelection()}
+            >
+              Clear
+            </Button>
           </div>
         )}
-
-        {filterable && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <Settings2 className="mr-2 h-4 w-4" />
-                Columns
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => (
-                  <DropdownMenuItem key={column.id}>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={column.getIsVisible()}
-                        onChange={(e) =>
-                          column.toggleVisibility(e.target.checked)
-                        }
-                        className="rounded"
-                      />
-                      {column.id}
-                    </label>
-                  </DropdownMenuItem>
-                ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
       </div>
-
-      {/* Selection info */}
-      {table.getFilteredSelectedRowModel().rows.length > 0 && (
-        <div className="flex items-center space-x-2">
-          <Badge variant="secondary">
-            {table.getFilteredSelectedRowModel().rows.length} selected
-          </Badge>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.resetRowSelection()}
-          >
-            Clear
-          </Button>
-        </div>
-      )}
-    </div>
-  );
+    );
+  };
 
   const renderPagination = () => {
     if (!paginated) return null;
@@ -286,7 +309,7 @@ export function UnifiedDataTable<TData>({
           <CardTitle>{title}</CardTitle>
         </CardHeader>
       )}
-      <CardContent className="space-y-4 px-6">
+      <CardContent className={cn("space-y-4 px-6", contentClassName)}>
         {renderToolbar()}
         {renderTable()}
         {renderPagination()}
