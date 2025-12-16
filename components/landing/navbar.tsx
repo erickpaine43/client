@@ -22,11 +22,9 @@ import Image from "next/image";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/context/AuthContext";
 
-export default function Navbar() {
-  const isMobile = useIsMobile();
-  const { user, loading, logout } = useAuth();
-
-  const Logo = () => (
+const Logo = () => {
+  const { loading } = useAuth();
+  return (
     <Link
       href="https://penguinmails.com"
       className="flex items-center space-x-2"
@@ -45,74 +43,80 @@ export default function Navbar() {
       )}
     </Link>
   );
+};
 
-  const NavLinks = ({ isMobileMenu = false }: { isMobileMenu?: boolean }) => {
-    const LinkWrapper = isMobileMenu ? SheetClose : React.Fragment;
-    const linkClass = isMobileMenu ? "w-full justify-start" : "";
+const NavLinks = ({ isMobileMenu = false }: { isMobileMenu?: boolean }) => {
+  const { user, logout } = useAuth();
+  const LinkWrapper = isMobileMenu ? SheetClose : React.Fragment;
+  const linkClass = isMobileMenu ? "w-full justify-start" : "";
 
-    if (user) {
-      return (
-        <>
-          <LinkWrapper>
-            <Button variant="ghost" size="sm" asChild className={linkClass}>
-              <Link href="/dashboard">
-                <LayoutDashboard className="mr-2 h-4 w-4" />
-                Dashboard
-              </Link>
-            </Button>
-          </LinkWrapper>
-          <LinkWrapper>
-            <Button variant="ghost" size="sm" asChild className={linkClass}>
-              <Link href="/dashboard/settings">
-                <Settings className="mr-2 h-4 w-4" />
-                Settings
-              </Link>
-            </Button>
-            <Button
-              variant="ghost"
-              className={linkClass}
-              onClick={async () => {
-                try {
-                  await logout();
-                } catch (error) {
-                  console.error("Error signing out:", error);
-                }
-              }}
-            >
-              <LogOutIcon />
-              Logout
-            </Button>
-          </LinkWrapper>
-        </>
-      );
-    }
-
+  if (user) {
     return (
       <>
         <LinkWrapper>
           <Button variant="ghost" size="sm" asChild className={linkClass}>
-            <Link href="/pricing">Pricing</Link>
+            <Link href="/dashboard">
+              <LayoutDashboard className="mr-2 h-4 w-4" />
+              Dashboard
+            </Link>
           </Button>
         </LinkWrapper>
         <LinkWrapper>
           <Button variant="ghost" size="sm" asChild className={linkClass}>
-            <Link href="/">
-              <LogIn className="mr-2 h-4 w-4" />
-              Login
+            <Link href="/dashboard/settings">
+              <Settings className="mr-2 h-4 w-4" />
+              Settings
             </Link>
           </Button>
-        </LinkWrapper>
-        <LinkWrapper>
-          <Button size="sm" asChild className={linkClass}>
-            <Link href="/signup">
-              <UserPlus className="mr-2 h-4 w-4" />
-              Sign Up
-            </Link>
+          <Button
+            variant="ghost"
+            className={linkClass}
+            onClick={async () => {
+              try {
+                await logout();
+              } catch (error) {
+                console.error("Error signing out:", error);
+              }
+            }}
+          >
+            <LogOutIcon />
+            Logout
           </Button>
         </LinkWrapper>
       </>
     );
-  };
+  }
+
+  return (
+    <>
+      <LinkWrapper>
+        <Button variant="ghost" size="sm" asChild className={linkClass}>
+          <Link href="/pricing">Pricing</Link>
+        </Button>
+      </LinkWrapper>
+      <LinkWrapper>
+        <Button variant="ghost" size="sm" asChild className={linkClass}>
+          <Link href="/">
+            <LogIn className="mr-2 h-4 w-4" />
+            Login
+          </Link>
+        </Button>
+      </LinkWrapper>
+      <LinkWrapper>
+        <Button size="sm" asChild className={linkClass}>
+          <Link href="/signup">
+            <UserPlus className="mr-2 h-4 w-4" />
+            Sign Up
+          </Link>
+        </Button>
+      </LinkWrapper>
+    </>
+  );
+};
+
+export default function Navbar() {
+  const isMobile = useIsMobile();
+  const { loading } = useAuth();
 
   if (loading) {
     return (

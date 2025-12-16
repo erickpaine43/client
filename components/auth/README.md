@@ -1,3 +1,11 @@
+---
+title: "Enhanced Authentication System"
+description: "Documentation for Enhanced Authentication System - README"
+last_modified_date: "2025-11-19"
+level: 2
+persona: "Documentation Users"
+---
+
 # Enhanced Authentication System
 
 This document describes the enhanced authentication system that integrates with the completed NileDB services and API routes from Tasks 4, 5, 6, 8, and 9.

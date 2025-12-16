@@ -4,6 +4,7 @@
 // ANALYTICS SKELETON LOADERS - Loading states for analytics components
 // ============================================================================
 
+import { useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
@@ -116,18 +117,7 @@ export function AnalyticsChartSkeleton({ height = 300 }: { height?: number }) {
             />
 
             {/* Simulated chart bars/lines */}
-            <div className="absolute inset-4 flex items-end justify-between space-x-1">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <Skeleton
-                  key={i}
-                  className="w-full rounded-t"
-                  style={{
-                    height: `${Math.random() * 60 + 20}%`,
-                    opacity: 0.3,
-                  }}
-                />
-              ))}
-            </div>
+            <AnalyticsChartSkeletonBars />
           </div>
 
           {/* X-axis labels */}
@@ -141,6 +131,35 @@ export function AnalyticsChartSkeleton({ height = 300 }: { height?: number }) {
     </Card>
   );
 }
+
+function AnalyticsChartSkeletonBars() {
+  // Generate pseudo-random heights once at component mount
+  const heights = useMemo(() => {
+    // Use a simple seeded random number generator to avoid Math.random() during render
+    // Use a fixed seed for consistency
+    const seed = 67890;
+    return Array.from({ length: 12 }, (_, i) => {
+      const value = ((seed + i) * 9301 + 49297) % 233280;
+      return (value / 233280) * 40 + 20; // Scale to 20-60 range
+    });
+  }, []);
+
+  return (
+    <div className="absolute inset-4 flex items-end justify-between space-x-1">
+      {heights.map((height, i) => (
+        <Skeleton
+          key={i}
+          className="w-full rounded-t"
+          style={{
+            height: `${height}%`,
+            opacity: 0.3,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 
 /**
  * Skeleton loader for KPI summary cards.

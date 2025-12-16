@@ -35,7 +35,8 @@ interface EmailStepProps {
   index: number;
   updateStep: (index: number, updates: Partial<EmailStep>) => void;
   removeStep: (index: number) => void;
-  focusedTextareaIndex: React.MutableRefObject<number | null>;
+  focusedTextareaIndex: number | null;
+  setFocusedTextareaIndex: (index: number | null) => void;
 }
 
 function EmailStep({
@@ -44,6 +45,7 @@ function EmailStep({
   updateStep,
   removeStep,
   focusedTextareaIndex,
+  setFocusedTextareaIndex,
 }: EmailStepProps) {
   const [isPreviewMode, setIsPreviewMode] = React.useState(false);
 
@@ -241,7 +243,7 @@ function EmailStep({
                 name="content"
                 value={step.content || ""}
                 onChange={updateStepHandler}
-                onFocus={() => (focusedTextareaIndex.current = index)}
+                onFocus={() => setFocusedTextareaIndex(index)}
                 data-step-index={index}
                 placeholder="Write your email here... Use {First Name}, {Company}, etc. for personalization."
                 className="border-0 focus:ring-0 px-4 py-3 rounded-none rounded-b-xl resize-none focus:border-none"
@@ -283,7 +285,7 @@ function EmailStep({
                   size="sm"
                   name="content"
                   onClick={() => {
-                    if (focusedTextareaIndex.current === index) {
+                    if (focusedTextareaIndex === index) {
                       const currentContent = step.content || "";
                       const updatedContent = currentContent
                         ? `${currentContent} ${tag.value}`

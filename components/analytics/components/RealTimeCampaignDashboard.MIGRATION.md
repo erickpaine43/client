@@ -1,3 +1,11 @@
+---
+title: "or"
+description: "Documentation for or - RealTimeCampaignDashboard.MIGRATION"
+last_modified_date: "2025-11-19"
+level: 2
+persona: "Documentation Users"
+---
+
 Purpose
 
 This document describes the expected outcome for the consumer-side migration of `RealTimeCampaignDashboard.tsx`, and how to rebuild / verify the project after changes.

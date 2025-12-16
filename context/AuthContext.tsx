@@ -16,7 +16,7 @@ import {
   mapTenantInfoToTenant,
 } from "@/types";
 import { CompanyInfo } from "@/types/company";
-import { useSignIn, useSignUp } from "@niledatabase/react";
+import { useSignUp } from "@niledatabase/react";
 import { auth } from "@niledatabase/client";
 import { toast } from "sonner";
 import {
@@ -30,6 +30,7 @@ interface EnhancedAuthContextType extends AuthContextType {
   userTenants: Tenant[];
   userCompanies: CompanyInfo[];
   isStaff: boolean;
+  login: (email: string, password: string, turnstileToken?: string) => Promise<void>;
 
   // Tenant and company management
   selectedTenantId: string | null;
@@ -51,6 +52,7 @@ interface EnhancedAuthContextType extends AuthContextType {
     lastCheck?: Date;
   };
   checkSystemHealth: () => Promise<void>;
+
 }
 
 const AuthContext = createContext<EnhancedAuthContextType>({
@@ -63,19 +65,19 @@ const AuthContext = createContext<EnhancedAuthContextType>({
   selectedCompanyId: null,
   loading: true,
   error: null,
-  login: async () => {},
-  signup: async () => {},
-  logout: async () => {},
-  updateUser: () => {},
-  refreshUserData: async () => {},
-  setSelectedTenant: () => {},
-  setSelectedCompany: () => {},
-  refreshTenants: async () => {},
-  refreshCompanies: async () => {},
-  refreshProfile: async () => {},
-  clearError: () => {},
+  login: async () => { },
+  signup: async () => { },
+  logout: async () => { },
+  updateUser: () => { },
+  refreshUserData: async () => { },
+  setSelectedTenant: () => { },
+  setSelectedCompany: () => { },
+  refreshTenants: async () => { },
+  refreshCompanies: async () => { },
+  refreshProfile: async () => { },
+  clearError: () => { },
   systemHealth: { status: "unknown" },
-  checkSystemHealth: async () => {},
+  checkSystemHealth: async () => { },
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -212,83 +214,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  const signInHook = useSignIn({
-    onSuccess: (data) => {
-      console.log("[AuthContext] User signed in:", data);
-      if (data?.ok) {
-        const initializeUserSession = async () => {
-          try {
-            // Test authentication first
-            const isAuthenticated = await testAuthentication();
-            if (!isAuthenticated) {
-              throw new AuthenticationError("Authentication validation failed");
-            }
-
-            // Fetch enhanced profile data using Task 8 API
-            const profileData = await fetchProfile();
-            if (profileData) {
-              setNileUser(profileData);
-              setIsStaff(profileData.profile?.isPenguinMailsStaff || false);
-
-              // Map to legacy User format for backward compatibility
-              const legacyUser = mapNileUserToLegacyUser(profileData);
-              setUser(legacyUser);
-
-              // Fetch tenants and companies in parallel
-              const [tenants, companies] = await Promise.all([
-                fetchUserTenants(),
-                fetchUserCompanies(profileData.id),
-              ]);
-
-              setUserTenants(tenants);
-              setUserCompanies(companies);
-
-              // Auto-select first tenant if available
-              if (tenants.length > 0 && !selectedTenantId) {
-                setSelectedTenantId(tenants[0].id);
-              }
-
-              // Auto-select first company if available
-              if (companies.length > 0 && !selectedCompanyId) {
-                setSelectedCompanyId(companies[0].id);
-              }
-
-              setAuthError(null);
-              toast.success("Successfully signed in!");
-            } else {
-              throw new AuthenticationError("Failed to load user profile");
-            }
-          } catch (error) {
-            console.error("Failed to initialize user session:", error);
-            setAuthError(error as Error);
-            if (error instanceof AuthenticationError) {
-              toast.error(error.message);
-            } else {
-              toast.error("Failed to complete sign in");
-            }
-          } finally {
-            setLoading(false);
-          }
-        };
-        initializeUserSession();
-      } else {
-        toast.error("Login failed.");
-        setAuthError(new Error("Login failed."));
-        setUser(null);
-        setNileUser(null);
-        setLoading(false);
-      }
-    },
-    onError: (error: Error) => {
-      console.error("SignIn error:", error);
-      setAuthError(error);
-    },
-    callbackUrl:
-      typeof window !== "undefined"
-        ? window.location.origin + "/dashboard"
-        : "/dashboard",
-  });
-
   const signUpHook = useSignUp({
     onSuccess: (data) => {
       const { ok } = data;
@@ -356,27 +281,111 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     [userCompanies, selectedTenantId, selectedCompanyId]
   );
 
-  const login = async (email: string, password: string): Promise<void> => {
+  const login = async (
+    email: string,
+    password: string,
+    turnstileToken?: string
+  ): Promise<void> => {
     setAuthError(null);
     setLoading(true);
 
     try {
-      await signInHook({ provider: "credentials", email, password });
-      // The user state will be updated asynchronously in the onSuccess callback
+      const response = await fetch('/api/auth/login-custom', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          email,
+          password,
+          turnstileToken,
+        }),
+      });
+
+      if (!response.ok) {
+        let payload: any = null;
+        try {
+          payload = await response.json();
+        } catch {
+          payload = null;
+        }
+
+        const message = payload?.message || 'Login failed. Please try again.';
+        const error = new Error(message);
+        setAuthError(error);
+        toast.error(message);
+        throw error;
+      }
+
+      // Session cookie should be set at this point; initialize client state
+      const isAuthenticated = await testAuthentication();
+      if (!isAuthenticated) {
+        throw new AuthenticationError('Authentication validation failed');
+      }
+
+      const profileData = await fetchProfile();
+      if (!profileData) {
+        throw new AuthenticationError('Failed to load user profile');
+      }
+
+      setNileUser(profileData);
+      setIsStaff(profileData.profile?.isPenguinMailsStaff || false);
+
+      const legacyUser = mapNileUserToLegacyUser(profileData);
+      setUser(legacyUser);
+
+      const [tenants, companies] = await Promise.all([
+        fetchUserTenants(),
+        fetchUserCompanies(profileData.id),
+      ]);
+
+      setUserTenants(tenants);
+      setUserCompanies(companies);
+
+      if (tenants.length > 0 && !selectedTenantId) {
+        setSelectedTenantId(tenants[0].id);
+      }
+
+      if (companies.length > 0 && !selectedCompanyId) {
+        setSelectedCompanyId(companies[0].id);
+      }
+
+      setAuthError(null);
+      toast.success('Successfully signed in!');
+
     } catch (error) {
-      console.error("Login error:", error);
       setLoading(false);
 
-      // Handle specific error types
-      if (error instanceof InvalidCredentialsError) {
-        setAuthError(new Error("Invalid email or password"));
-        toast.error("Invalid email or password");
-      } else if (error instanceof AuthenticationError) {
+      const message = (error as Error)?.message || '';
+      const isExpectedAuthFailure =
+        message.includes('Invalid credentials') ||
+        message.includes('Missing Turnstile token') ||
+        message.includes('Invalid Turnstile token') ||
+        message.toLowerCase().includes('turnstile') ||
+        message.toLowerCase().includes('credential');
+
+      if (!isExpectedAuthFailure) {
+        console.error('Login error:', error);
+      }
+
+      // 5. Registrar intento fallido si es error de credenciales
+      if (
+        error instanceof InvalidCredentialsError ||
+        (error as Error)?.message?.includes('Invalid') ||
+        (error as Error)?.message?.includes('credentials')
+      ) {
+        throw error;
+      }
+
+      // Manejar otros tipos de errores
+      if (error instanceof AuthenticationError) {
         setAuthError(error);
         toast.error(error.message);
       } else {
-        setAuthError(error as Error);
-        toast.error("Login failed. Please try again.");
+        const genericError = new Error('Login falló. Por favor intenta de nuevo.');
+        setAuthError(genericError);
+        toast.error('Login falló. Por favor intenta de nuevo.');
       }
       throw error;
     }

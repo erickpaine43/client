@@ -35,6 +35,8 @@ function TrackingPreferences() {
 
   const watchClickTracking = form.watch("clickTracking");
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- React Hook Form returns incompatible functions for React Compiler memoization
+
   const onSubmit = (data: TrackingFormValues) => {
     console.log("Tracking preferences saved:", data);
   };

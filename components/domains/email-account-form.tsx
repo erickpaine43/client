@@ -122,6 +122,8 @@ export default function EmailAccountForm({
   const watchedRelayType = form.watch("relayType");
   // Note: watchedSpfEnabled, watchedDkimEnabled, watchedDmarcEnabled, watchedIsVirtualUser are removed as these fields are gone from schema
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- React Hook Form returns incompatible functions for React Compiler memoization
+
   // Helper to display status, ensuring value exists in enum
   const getVerificationStatusText = (
     statusKey: VerificationStatus | undefined

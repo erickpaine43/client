@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/custom/password-input";
@@ -10,6 +10,7 @@ import { LandingLayout } from "@/components/landing/LandingLayout";
 import { loginContent } from "./content";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { Turnstile } from '@marsidev/react-turnstile';
 import { AuthTemplate } from "@/components/auth/AuthTemplate";
 
 export default function LoginPage() {
@@ -17,8 +18,34 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showTurnstile, setShowTurnstile] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [loginAttempts, setLoginAttempts] = useState(0);
   const router = useRouter();
   const { login, user } = useAuth();
+
+  useEffect(() => {
+    const checkTurnstileRequirement = async () => {
+      if (!email || !email.includes('@')) return;
+
+      try {
+        const response = await fetch(
+          `/api/auth/login-attempts?email=${encodeURIComponent(email)}`
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setShowTurnstile(data.requiresTurnstile);
+          setLoginAttempts(data.attempts || 0);
+        }
+      } catch (err) {
+        console.error('Error verificando requisitos de Turnstile:', err);
+      }
+    };
+
+    const timer = setTimeout(checkTurnstileRequirement, 500);
+    return () => clearTimeout(timer);
+  }, [email]);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,11 +53,31 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      await login(email, password);
+
+      await login(email, password, turnstileToken || undefined);
+
       router.push("/dashboard");
     } catch (err) {
-      console.error("Login failed:", err);
-      setError((err as Error)?.message || loginContent.errors.generic);
+      const errorMessage = (err as Error)?.message || loginContent.errors.generic;
+      setError(errorMessage);
+
+
+      try {
+        const response = await fetch(
+          `/api/auth/login-attempts?email=${encodeURIComponent(email)}`
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setShowTurnstile(data.requiresTurnstile);
+          setLoginAttempts(data.attempts || 0);
+
+
+          setTurnstileToken(null);
+        }
+      } catch (checkErr) {
+        console.error('Error actualizando estado de intentos:', checkErr);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -75,15 +122,10 @@ export default function LoginPage() {
                 disabled={isLoading}
               />
             </div>
+
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">{loginContent.password.label}</Label>
-                {/* <Link
-                  href="/forgot-password"
-                  className="text-sm font-medium text-primary hover:underline underline-offset-4"
-                >
-                  {loginContent.forgotPassword}
-                </Link> */}
               </div>
               <PasswordInput
                 name="password"
@@ -94,10 +136,44 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
+
+
+            {loginAttempts > 0 && loginAttempts < 3 && (
+              <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-3 py-2 rounded-md text-sm">
+                Intentos fallidos: {loginAttempts}/3
+              </div>
+            )}
+
+
+            {showTurnstile && (
+              <div className="space-y-3">
+                <div className="bg-orange-50 border border-orange-200 text-orange-800 px-3 py-2 rounded-md text-sm">
+                  Por seguridad, completa la verificación para continuar.
+                </div>
+                <div className="flex justify-center py-2">
+                  <Turnstile
+                    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                    onSuccess={(token: string) => setTurnstileToken(token)}
+                    onError={() => {
+                      setError("Error en la verificación de seguridad");
+                      setTurnstileToken(null);
+                    }}
+                    onExpire={() => setTurnstileToken(null)}
+                  />
+                </div>
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isLoading || (showTurnstile && !turnstileToken)}
+            >
               {isLoading
                 ? loginContent.loginButton.loading
-                : loginContent.loginButton.default}
+                : showTurnstile && !turnstileToken
+                  ? "Complete la verificación para continuar"
+                  : loginContent.loginButton.default}
             </Button>
           </form>
         )}

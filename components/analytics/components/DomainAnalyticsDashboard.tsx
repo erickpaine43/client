@@ -43,7 +43,7 @@ type AuthStatusData = {
 
 /**
  * Real-time domain analytics dashboard component.
- * Demonstrates live updates using Convex subscriptions.
+ * Demonstrates live updates using real-time data subscriptions.
  */
 export function DomainAnalyticsDashboard({
   domainIds,
@@ -95,8 +95,8 @@ export function DomainAnalyticsDashboard({
                   <p className="text-xs text-muted-foreground">
                     {summary.totalDomains > 0
                       ? Math.round(
-                          (summary.healthyDomains / summary.totalDomains) * 100
-                        )
+                        (summary.healthyDomains / summary.totalDomains) * 100
+                      )
                       : 0}
                     % of total
                   </p>
@@ -117,10 +117,10 @@ export function DomainAnalyticsDashboard({
                   <p className="text-xs text-muted-foreground">
                     {summary.totalDomains > 0
                       ? Math.round(
-                          (summary.authenticatedDomains /
-                            summary.totalDomains) *
-                            100
-                        )
+                        (summary.authenticatedDomains /
+                          summary.totalDomains) *
+                        100
+                      )
                       : 0}
                     % authenticated
                   </p>
@@ -137,9 +137,9 @@ export function DomainAnalyticsDashboard({
                   <p className="text-sm font-medium">Avg Health Score</p>
                   <p className="text-2xl font-bold">
                     {summary &&
-                    typeof summary === "object" &&
-                    "averageHealthScore" in summary &&
-                    typeof summary.averageHealthScore === "number"
+                      typeof summary === "object" &&
+                      "averageHealthScore" in summary &&
+                      typeof summary.averageHealthScore === "number"
                       ? summary.averageHealthScore
                       : 0}
                   </p>
@@ -165,15 +165,15 @@ export function DomainAnalyticsDashboard({
 
           const safeMetrics = metrics
             ? {
-                sent: Number(metrics.sent ?? 0),
-                delivered: Number(metrics.delivered ?? 0),
-                opened_tracked: Number(metrics.opened_tracked ?? 0),
-                clicked_tracked: Number(metrics.clicked_tracked ?? 0),
-                replied: Number(metrics.replied ?? 0),
-                bounced: Number(metrics.bounced ?? 0),
-                unsubscribed: Number(metrics.unsubscribed ?? 0),
-                spamComplaints: Number(metrics.spamComplaints ?? 0),
-              }
+              sent: Number(metrics.sent ?? 0),
+              delivered: Number(metrics.delivered ?? 0),
+              opened_tracked: Number(metrics.opened_tracked ?? 0),
+              clicked_tracked: Number(metrics.clicked_tracked ?? 0),
+              replied: Number(metrics.replied ?? 0),
+              bounced: Number(metrics.bounced ?? 0),
+              unsubscribed: Number(metrics.unsubscribed ?? 0),
+              spamComplaints: Number(metrics.spamComplaints ?? 0),
+            }
             : null;
 
           const computedHealthScore = safeMetrics
@@ -183,14 +183,14 @@ export function DomainAnalyticsDashboard({
           const rates = safeMetrics
             ? AnalyticsCalculator.calculateAllRates(safeMetrics)
             : {
-                deliveryRate: 0,
-                openRate: 0,
-                clickRate: 0,
-                replyRate: 0,
-                bounceRate: 0,
-                unsubscribeRate: 0,
-                spamRate: 0,
-              };
+              deliveryRate: 0,
+              openRate: 0,
+              clickRate: 0,
+              replyRate: 0,
+              bounceRate: 0,
+              unsubscribeRate: 0,
+              spamRate: 0,
+            };
 
           const formattedRates = {
             deliveryRate: AnalyticsCalculator.formatRateAsPercentage(
@@ -327,13 +327,12 @@ export function DomainAnalyticsDashboard({
 
               {/* Health indicator */}
               <div
-                className={`absolute top-2 right-2 h-3 w-3 rounded-full ${
-                  computedHealthScore >= 80
+                className={`absolute top-2 right-2 h-3 w-3 rounded-full ${computedHealthScore >= 80
                     ? "bg-green-500"
                     : computedHealthScore >= 60
                       ? "bg-yellow-500"
                       : "bg-red-500"
-                }`}
+                  }`}
               />
             </Card>
           );

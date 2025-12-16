@@ -159,6 +159,8 @@ function ChangePasswordForm() {
 
   const newPassword = form.watch("newPassword");
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- React Hook Form returns incompatible functions for React Compiler memoization
+
   const handlePasswordChange = (_data: PasswordFormValues) => {};
 
   return (

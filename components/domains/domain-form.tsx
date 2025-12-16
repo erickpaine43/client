@@ -90,6 +90,8 @@ export default function DomainForm({
   const watchDkimManagementType = form.watch("dkimManagementType");
   const domain = form.watch("domain"); // Keep this for CNAME target generation
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- React Hook Form returns incompatible functions for React Compiler memoization
+
   const getDnsValue = (template: string) => {
     // Keep for CNAME or default suggestions
     return template.replace("{domain}", domain || "example.com");

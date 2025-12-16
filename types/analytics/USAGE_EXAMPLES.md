@@ -1,3 +1,11 @@
+---
+title: "Analytics Types Usage Examples"
+description: "Documentation for Analytics Types Usage Examples - USAGE EXAMPLES"
+last_modified_date: "2025-11-19"
+level: 2
+persona: "Documentation Users"
+---
+
 # Analytics Types Usage Examples
 
 This document provides comprehensive examples of how to use the standardized analytics types and utilities in the new domain-driven architecture.

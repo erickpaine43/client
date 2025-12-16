@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { AnalyticsFilters } from "@/types/analytics/core";
 import {
   CrossDomainAnalyticsResult,
@@ -19,6 +17,7 @@ import {
 /**
  * Hook for real-time mailbox-domain joined analytics.
  * Provides comprehensive view of how mailboxes contribute to domain performance.
+ * Uses NileDB API with polling for live updates (15-second refresh).
  */
 export function useCrossDomainAnalytics(
   domainIds?: string[],
@@ -29,72 +28,77 @@ export function useCrossDomainAnalytics(
     refreshInterval?: number;
   } = {}
 ) {
-  const { enabled = true, refreshInterval = 30000 } = options;
+  const { enabled = true, refreshInterval = 15000 } = options; // 15 seconds
 
-  // Real-time Convex subscription for live updates
-  const convexData = useQuery(
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    api.crossDomainAnalytics.getMailboxDomainJoinedAnalytics,
-    enabled
-      ? {
-          domainIds,
-          mailboxIds,
-          dateRange: filters?.dateRange,
-          companyId: filters?.companyId || "default",
-        }
-      : "skip"
-  );
-
-  // Local state for enriched data
-  const [enrichedData, setEnrichedData] = useState<
-    CrossDomainAnalyticsResult[]
-  >([]);
+  // State for raw API data and enriched data
+  const [rawData, setRawData] = useState<unknown>(null);
+  const [enrichedData, setEnrichedData] = useState<CrossDomainAnalyticsResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<number>(0);
 
-  // Enrich Convex data with server action calculations
+  // Fetch raw data from API
+  const fetchRawData = useCallback(async () => {
+    if (!enabled || !domainIds || domainIds.length === 0) return;
+
+    try {
+      const params = new URLSearchParams();
+      if (domainIds) params.append('domainIds', domainIds.join(','));
+      if (mailboxIds) params.append('mailboxIds', mailboxIds.join(','));
+      if (filters?.companyId) params.append('companyId', filters.companyId);
+      if (filters?.dateRange?.start) params.append('dateRangeStart', filters.dateRange.start);
+      if (filters?.dateRange?.end) params.append('dateRangeEnd', filters.dateRange.end);
+
+      const response = await fetch(`/api/analytics/cross-domain?${params}`);
+      const result = await response.json();
+
+      if (result.success) {
+        setRawData(result.data);
+        setError(null);
+      } else {
+        setError(result.error || 'Failed to fetch cross-domain analytics');
+      }
+    } catch (err) {
+      console.error('Error fetching cross-domain analytics:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    }
+  }, [domainIds, mailboxIds, filters, enabled]);
+
+  // Enrich data with server action calculations
   const enrichData = useCallback(async () => {
-    if (!convexData || !enabled || !domainIds || domainIds.length === 0) return;
+    if (!rawData || !enabled || !domainIds || domainIds.length === 0) return;
 
     try {
       setIsLoading(true);
       setError(null);
 
-      const result = await getCrossDomainPerformanceComparison(
-        domainIds,
-        filters
-      );
+      const result = await getCrossDomainPerformanceComparison(domainIds, filters);
 
       if (result.success && result.data) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setEnrichedData(result.data as any);
         setLastUpdated(Date.now());
       } else {
-        setError(
-          result.error?.message || "Failed to enrich cross-domain analytics"
-        );
+        setError(result.error?.message || "Failed to enrich cross-domain analytics");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setIsLoading(false);
     }
-  }, [convexData, domainIds, filters, enabled]);
+  }, [rawData, domainIds, filters, enabled]);
 
-  // Enrich data when Convex data changes
+  // Fetch raw data and enrich
+  useEffect(() => {
+    fetchRawData();
+    const interval = setInterval(fetchRawData, refreshInterval);
+    return () => clearInterval(interval);
+  }, [fetchRawData, refreshInterval]);
+
+  // Enrich when raw data changes
   useEffect(() => {
     enrichData();
   }, [enrichData]);
-
-  // Auto-refresh enriched data
-  useEffect(() => {
-    if (!enabled || refreshInterval <= 0) return;
-
-    const interval = setInterval(enrichData, refreshInterval);
-    return () => clearInterval(interval);
-  }, [enrichData, enabled, refreshInterval]);
 
   // Memoized summary statistics
   const summary = useMemo(() => {
@@ -110,37 +114,20 @@ export function useCrossDomainAnalytics(
       };
     }
 
-    const totalMailboxes = enrichedData.reduce(
-      (sum, d) => sum + d.mailboxCount,
-      0
-    );
-    const totalCapacity = enrichedData.reduce(
-      (sum, d) => sum + d.capacitySummary.totalDailyLimit,
-      0
-    );
-    const totalVolume = enrichedData.reduce(
-      (sum, d) => sum + d.capacitySummary.totalCurrentVolume,
-      0
-    );
+    const totalMailboxes = enrichedData.reduce((sum: number, d: CrossDomainAnalyticsResult) => sum + d.mailboxCount, 0);
+    const totalCapacity = enrichedData.reduce((sum: number, d: CrossDomainAnalyticsResult) => sum + d.capacitySummary.totalDailyLimit, 0);
+    const totalVolume = enrichedData.reduce((sum: number, d: CrossDomainAnalyticsResult) => sum + d.capacitySummary.totalCurrentVolume, 0);
 
     return {
       totalDomains: enrichedData.length,
       totalMailboxes,
       averageDomainHealth:
         enrichedData.length > 0
-          ? Math.round(
-              enrichedData.reduce((sum, d) => sum + d.domainHealthScore, 0) /
-                enrichedData.length
-            )
+          ? Math.round(enrichedData.reduce((sum: number, d: CrossDomainAnalyticsResult) => sum + d.domainHealthScore, 0) / enrichedData.length)
           : 0,
       averageMailboxHealth:
         enrichedData.length > 0
-          ? Math.round(
-              enrichedData.reduce(
-                (sum, d) => sum + d.warmupSummary.averageHealthScore,
-                0
-              ) / enrichedData.length
-            )
+          ? Math.round(enrichedData.reduce((sum: number, d: CrossDomainAnalyticsResult) => sum + d.warmupSummary.averageHealthScore, 0) / enrichedData.length)
           : 0,
       totalCapacity,
       totalVolume,
@@ -150,12 +137,12 @@ export function useCrossDomainAnalytics(
 
   return {
     data: enrichedData,
-    rawData: convexData,
+    rawData,
     summary,
     isLoading,
     error,
     lastUpdated,
-    refresh: enrichData,
+    refresh: fetchRawData,
   };
 }
 
@@ -175,35 +162,13 @@ export function useCrossDomainTimeSeries(
 ) {
   const { enabled = true, refreshInterval = 60000 } = options;
 
-  // Real-time Convex subscription
-  const convexData = useQuery(
-    api.crossDomainAnalytics.getCrossDomainTimeSeriesAnalytics,
-    enabled
-      ? {
-          domainIds,
-          mailboxIds,
-          dateRange: filters?.dateRange || {
-            start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-              .toISOString()
-              .split("T")[0],
-            end: new Date().toISOString().split("T")[0],
-          },
-          companyId: filters?.companyId || "default",
-          granularity,
-        }
-      : "skip"
-  );
-
-  // Local state for enriched time series data
-  const [enrichedData, setEnrichedData] = useState<
-    CrossDomainTimeSeriesDataPoint[]
-  >([]);
+  const [enrichedData, setEnrichedData] = useState<CrossDomainTimeSeriesDataPoint[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Enrich time series data
-  const enrichData = useCallback(async () => {
-    if (!convexData || !enabled || !domainIds || domainIds.length === 0) return;
+  // Fetch and enrich time series data
+  const fetchData = useCallback(async () => {
+    if (!enabled || !domainIds || domainIds.length === 0) return;
 
     try {
       setIsLoading(true);
@@ -222,23 +187,17 @@ export function useCrossDomainTimeSeries(
     } finally {
       setIsLoading(false);
     }
-  }, [convexData, domainIds, filters, enabled]);
+  }, [domainIds, filters, enabled]);
 
   useEffect(() => {
-    enrichData();
-  }, [enrichData]);
-
-  // Auto-refresh
-  useEffect(() => {
-    if (!enabled || refreshInterval <= 0) return;
-
-    const interval = setInterval(enrichData, refreshInterval);
+    fetchData();
+    const interval = setInterval(fetchData, refreshInterval);
     return () => clearInterval(interval);
-  }, [enrichData, enabled, refreshInterval]);
+  }, [fetchData, refreshInterval]);
 
   // Memoized chart data
   const chartData = useMemo(() => {
-    return enrichedData.map((point) => ({
+    return enrichedData.map((point: CrossDomainTimeSeriesDataPoint) => ({
       date: point.date,
       label: point.label,
       domainId: point.domainId,
@@ -256,10 +215,10 @@ export function useCrossDomainTimeSeries(
   return {
     data: enrichedData,
     chartData,
-    rawData: convexData,
+    rawData: null,
     isLoading,
     error,
-    refresh: enrichData,
+    refresh: fetchData,
   };
 }
 
@@ -278,27 +237,13 @@ export function useMailboxDomainImpact(
 ) {
   const { enabled = true, refreshInterval = 120000 } = options;
 
-  // Real-time Convex subscription
-  const convexData = useQuery(
-    api.crossDomainAnalytics.getMailboxDomainImpactAnalysis,
-    enabled
-      ? {
-          domainId,
-          dateRange: filters?.dateRange,
-          companyId: filters?.companyId || "default",
-        }
-      : "skip"
-  );
-
-  // Local state for enriched impact analysis
-  const [enrichedData, setEnrichedData] =
-    useState<MailboxDomainImpactAnalysis | null>(null);
+  const [enrichedData, setEnrichedData] = useState<MailboxDomainImpactAnalysis | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Enrich impact analysis data
-  const enrichData = useCallback(async () => {
-    if (!convexData || !enabled) return;
+  // Fetch impact analysis data
+  const fetchData = useCallback(async () => {
+    if (!enabled) return;
 
     try {
       setIsLoading(true);
@@ -317,19 +262,13 @@ export function useMailboxDomainImpact(
     } finally {
       setIsLoading(false);
     }
-  }, [convexData, domainId, filters, enabled]);
+  }, [domainId, filters, enabled]);
 
   useEffect(() => {
-    enrichData();
-  }, [enrichData]);
-
-  // Auto-refresh
-  useEffect(() => {
-    if (!enabled || refreshInterval <= 0) return;
-
-    const interval = setInterval(enrichData, refreshInterval);
+    fetchData();
+    const interval = setInterval(fetchData, refreshInterval);
     return () => clearInterval(interval);
-  }, [enrichData, enabled, refreshInterval]);
+  }, [fetchData, refreshInterval]);
 
   // Memoized insights
   const insights = useMemo(() => {
@@ -358,7 +297,7 @@ export function useMailboxDomainImpact(
     }
 
     const poorPerformers = mailboxImpactAnalysis.filter(
-      (m) => m.impactClassification === "NEGATIVE"
+      (m: { impactClassification: string }) => m.impactClassification === "NEGATIVE"
     );
     if (poorPerformers.length > 0) {
       insights.push(`${poorPerformers.length} mailboxes may need attention`);
@@ -370,10 +309,10 @@ export function useMailboxDomainImpact(
   return {
     data: enrichedData,
     insights,
-    rawData: convexData,
+    rawData: null,
     isLoading,
     error,
-    refresh: enrichData,
+    refresh: fetchData,
   };
 }
 
@@ -392,7 +331,6 @@ export function useCrossDomainCorrelation(
 ) {
   const { enabled = true, refreshInterval = 180000 } = options;
 
-  // State for correlation insights (no direct Convex query for this)
   const [data, setData] = useState<{
     correlations: Array<{
       domainId: string;
@@ -435,10 +373,7 @@ export function useCrossDomainCorrelation(
       setIsLoading(true);
       setError(null);
 
-      const result = await getCrossDomainCorrelationAnalysis(
-        domainIds || [],
-        filters
-      );
+      const result = await getCrossDomainCorrelationAnalysis(domainIds || [], filters);
 
       if (result.success && result.data) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -455,15 +390,9 @@ export function useCrossDomainCorrelation(
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
-
-  // Auto-refresh
-  useEffect(() => {
-    if (!enabled || refreshInterval <= 0) return;
-
     const interval = setInterval(fetchData, refreshInterval);
     return () => clearInterval(interval);
-  }, [fetchData, enabled, refreshInterval]);
+  }, [fetchData, refreshInterval]);
 
   // Memoized recommendations
   const recommendations = useMemo(() => {
@@ -488,12 +417,10 @@ export function useCrossDomainCorrelation(
       );
     }
 
-    const domainsWithLowCorrelation = data.correlations.filter(
-      (d) => d.overallCorrelation < 40
-    );
+    const domainsWithLowCorrelation = data.correlations.filter((d: { overallCorrelation: number }) => d.overallCorrelation < 40);
     if (domainsWithLowCorrelation.length > 0) {
       recommendations.push(
-        `Review mailbox performance for domains: ${domainsWithLowCorrelation.map((d) => d.domainName).join(", ")}`
+        `Review mailbox performance for domains: ${domainsWithLowCorrelation.map((d: { domainName: string }) => d.domainName).join(", ")}`
       );
     }
 
@@ -534,12 +461,7 @@ export function useComprehensiveCrossDomainAnalytics(
   } = options;
 
   // Main joined analytics
-  const joinedAnalytics = useCrossDomainAnalytics(
-    domainIds,
-    mailboxIds,
-    filters,
-    { enabled }
-  );
+  const joinedAnalytics = useCrossDomainAnalytics(domainIds, mailboxIds, filters, { enabled });
 
   // Time series data
   const timeSeriesData = useCrossDomainTimeSeries(
@@ -599,15 +521,11 @@ export function useComprehensiveCrossDomainAnalytics(
     joinedAnalytics: joinedAnalytics.data,
     timeSeriesData: includeTimeSeries ? timeSeriesData.data : undefined,
     impactAnalysis: includeImpactAnalysis ? impactAnalysis.data : undefined,
-    correlationInsights: includeCorrelation
-      ? correlationInsights.data
-      : undefined,
+    correlationInsights: includeCorrelation ? correlationInsights.data : undefined,
     summary: joinedAnalytics.summary,
     chartData: includeTimeSeries ? timeSeriesData.chartData : undefined,
     insights: includeImpactAnalysis ? impactAnalysis.insights : undefined,
-    recommendations: includeCorrelation
-      ? correlationInsights.recommendations
-      : undefined,
+    recommendations: includeCorrelation ? correlationInsights.recommendations : undefined,
     isLoading,
     error,
     lastUpdated: joinedAnalytics.lastUpdated,

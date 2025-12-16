@@ -83,6 +83,8 @@ export function InboxDataTable<TData>({
     getFilteredRowModel: getFilteredRowModel(),
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- TanStack Table returns incompatible functions for React Compiler memoization
+
   const renderTable = () => (
     <div className="rounded-md border overflow-y-scroll">
       <Table>

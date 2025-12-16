@@ -485,6 +485,8 @@ export function CampaignsDataTable({
     onPaginationChange: setPagination,
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- TanStack Table returns incompatible functions for React Compiler memoization
+
   const handleNextPageRoute = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", (page + 1).toString());

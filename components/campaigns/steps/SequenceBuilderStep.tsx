@@ -4,7 +4,7 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAddCampaignContext } from "@/context/AddCampaignContext";
 import { Clock, Mail, Zap, AlertTriangle } from "lucide-react";
-import { useRef } from "react";
+import { useState } from "react";
 import WaitStep from "./components/sequence-wait";
 import EmailStep, {
   EmailStep as EmailStepInterface,
@@ -14,7 +14,7 @@ function SequenceBuilderStep() {
   const { form } = useAddCampaignContext();
   const { setValue, watch } = form;
   const sequence = watch("sequence") || [];
-  const focusedTextareaIndex = useRef<number | null>(null);
+  const [focusedTextareaIndex, setFocusedTextareaIndex] = useState<number | null>(null);
   const addEmailStep = () => {
     const newStep: EmailStepInterface = {
       id: Date.now().toString(),
@@ -124,6 +124,7 @@ function SequenceBuilderStep() {
                 updateStep={updateStep}
                 removeStep={removeStep}
                 focusedTextareaIndex={focusedTextareaIndex}
+                setFocusedTextareaIndex={setFocusedTextareaIndex}
               />
             ) : (
               <WaitStep

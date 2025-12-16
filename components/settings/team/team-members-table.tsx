@@ -75,15 +75,10 @@ function EditMemberDialog({
   onSave,
   loading,
 }: EditMemberDialogProps) {
-  const [role, setRole] = useState<TeamRole>("member");
-  const [status, setStatus] = useState<"active" | "inactive">("active");
-
-  useEffect(() => {
-    if (member) {
-      setRole(member.role);
-      setStatus(member.status === "active" ? "active" : "inactive");
-    }
-  }, [member]);
+  const [role, setRole] = useState<TeamRole>(() => member?.role || "member");
+  const [status, setStatus] = useState<"active" | "inactive">(() =>
+    member?.status === "active" ? "active" : "inactive"
+  );
 
   const handleSave = () => {
     if (!member) return;

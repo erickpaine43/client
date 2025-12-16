@@ -1,3 +1,11 @@
+---
+title: "Analytics Type System"
+description: "Documentation for Analytics Type System - README"
+last_modified_date: "2025-11-19"
+level: 2
+persona: "Documentation Users"
+---
+
 # Analytics Type System
 
 ## Overview
@@ -18,7 +26,7 @@ types/analytics/
 ├── charts.ts                   # Chart and visualization types
 ├── components.ts               # Component prop types
 ├── api.ts                      # API request/response types
-├── convex.ts                   # Convex-specific type definitions
+├── domain-specific.ts          # Domain-specific analytics (campaigns, domains, mailboxes)
 └── utils.ts                    # Utility and helper types
 ```
 

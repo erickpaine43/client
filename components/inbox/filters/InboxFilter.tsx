@@ -24,32 +24,33 @@ import {
   TrendingUp,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 function InboxFilter() {
-  const [selectedFilter, setSelectedFilter] = useState<string>("all");
-  const [campaignFilter, setCampaignFilter] = useState<string[]>([]);
-  const [mailboxFilter, setMailboxFilter] = useState<string[]>([]);
-  const [tagFilter, setTagFilter] = useState<string[]>([]);
-  const [timeFilter, setTimeFilter] = useState("all");
+  const [filterState, setFilterState] = useReducer(
+    (state, action) => ({ ...state, ...action }),
+    {
+      selectedFilter: 'all',
+      campaignFilter: [],
+      mailboxFilter: [],
+      tagFilter: [],
+      timeFilter: 'all'
+    }
+  );
 
   const router = useRouter();
   const currentSearchParams = useSearchParams();
 
   useEffect(() => {
     const params = new URLSearchParams(currentSearchParams);
-    const filter = params.get('filter') || 'all';
-    setSelectedFilter(filter);
-    const campaigns = params.getAll('campaigns');
-    setCampaignFilter(campaigns);
-    const mailboxes = params.getAll('mailboxes');
-    setMailboxFilter(mailboxes);
-    const tags = params.getAll('tags');
-    setTagFilter(tags);
-
-    const time = params.get('time') || 'all';
-    setTimeFilter(time);
+    setFilterState({
+      selectedFilter: params.get('filter') || 'all',
+      campaignFilter: params.getAll('campaigns'),
+      mailboxFilter: params.getAll('mailboxes'),
+      tagFilter: params.getAll('tags'),
+      timeFilter: params.get('time') || 'all'
+    });
   }, [currentSearchParams]);
 
   const filters = [
@@ -61,13 +62,13 @@ function InboxFilter() {
   ];
   useEffect(() => {
     const params = new URLSearchParams();
-    if (selectedFilter !== 'all') params.append('filter', selectedFilter);
-    campaignFilter.forEach(c => params.append('campaigns', c));
-    tagFilter.forEach(t => params.append('tags', t));
-    mailboxFilter.forEach(m => params.append('mailboxes', m));
-    if (timeFilter !== 'all') params.append('time', timeFilter);
+    if (filterState.selectedFilter !== 'all') params.append('filter', filterState.selectedFilter);
+    filterState.campaignFilter.forEach(c => params.append('campaigns', c));
+    filterState.tagFilter.forEach(t => params.append('tags', t));
+    filterState.mailboxFilter.forEach(m => params.append('mailboxes', m));
+    if (filterState.timeFilter !== 'all') params.append('time', filterState.timeFilter);
     router.push(`/dashboard/inbox?${params.toString()}`, { scroll: false });
-  }, [selectedFilter, campaignFilter, tagFilter, mailboxFilter, timeFilter, router]);
+  }, [filterState, router]);
 
 
   const tags = ["Interested", "Not Interested", "Maybe Later", "Follow Up"];
@@ -183,11 +184,11 @@ function InboxFilter() {
               return (
                 <Button
                   key={filter.id}
-                  onClick={() => setSelectedFilter(filter.id)}
-                  variant={selectedFilter === filter.id ? "secondary" : "ghost"}
+                  onClick={() => setFilterState({ selectedFilter: filter.id })}
+                  variant={filterState.selectedFilter === filter.id ? "secondary" : "ghost"}
                   className={cn(
                     "w-full justify-between h-auto py-2.5 px-3",
-                    selectedFilter === filter.id
+                    filterState.selectedFilter === filter.id
                       ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
                       : "text-gray-700",
                   )}
@@ -196,7 +197,7 @@ function InboxFilter() {
                     <Icon
                       className={cn(
                         "w-4 h-4",
-                        selectedFilter === filter.id
+                        filterState.selectedFilter === filter.id
                           ? "text-blue-600"
                           : "text-gray-500",
                       )}
@@ -205,7 +206,7 @@ function InboxFilter() {
                   </div>
                   <Badge
                     variant={
-                      selectedFilter === filter.id ? "default" : "secondary"
+                      filterState.selectedFilter === filter.id ? "default" : "secondary"
                     }
                     className="text-xs"
                   >
@@ -226,8 +227,8 @@ function InboxFilter() {
             {renderMultiSelectFilter(
               "Campaigns",
               campaignsData.map((c) => c.name),
-              campaignFilter,
-              setCampaignFilter,
+              filterState.campaignFilter,
+              (campaignFilter) => setFilterState({ campaignFilter }),
               TrendingUp,
             )}
 
@@ -235,8 +236,8 @@ function InboxFilter() {
             {renderMultiSelectFilter(
               "Mailboxes",
               mailboxes.map((m) => m.email),
-              mailboxFilter,
-              setMailboxFilter,
+              filterState.mailboxFilter,
+              (mailboxFilter) => setFilterState({ mailboxFilter }),
               AtSign,
             )}
 
@@ -244,8 +245,8 @@ function InboxFilter() {
             {renderMultiSelectFilter(
               "Tags",
               tags,
-              tagFilter,
-              setTagFilter,
+              filterState.tagFilter,
+              (tagFilter) => setFilterState({ tagFilter }),
               Tag,
             )}
 
@@ -255,7 +256,7 @@ function InboxFilter() {
                 <Clock className="w-4 h-4 text-gray-500" />
                 <span className="text-sm font-medium text-gray-700">Time</span>
               </div>
-              <Select value={timeFilter} onValueChange={setTimeFilter}>
+              <Select value={filterState.timeFilter} onValueChange={(timeFilter) => setFilterState({ timeFilter })}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="All Time" />
                 </SelectTrigger>

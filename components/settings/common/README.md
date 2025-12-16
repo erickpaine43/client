@@ -1,3 +1,11 @@
+---
+title: "Settings Common Components"
+description: "Documentation for Settings Common Components - README"
+last_modified_date: "2025-11-19"
+level: 2
+persona: "Documentation Users"
+---
+
 # Settings Common Components
 
 This directory contains comprehensive error states, loading indicators, and success notifications for all settings components, implementing task 14 from the settings integration specification.

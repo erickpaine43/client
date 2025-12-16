@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * ⚠️ DEPRECATED - Use DomainAnalyticsDashboard.tsx instead
+ * 
+ * This component has dependencies on non-existent hooks (useMailboxes, useCampaignAnalytics)
+ * and child components that expect CampaignAnalytics data structure.
+ * 
+ * RECOMMENDED ALTERNATIVE:
+ * Use @/components/analytics/components/DomainAnalyticsDashboard
+ * which is fully compatible with the migrated NileDB architecture.
+ * 
+ * See MIGRATION_NOTE.md in this directory for details.
+ */
+
 import { Suspense } from "react";
 import {
   Card,
@@ -9,9 +22,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { AnalyticsProvider } from "@/context/AnalyticsContext";
-import { useMailboxes } from "@/hooks/useMailboxes";
-import { useCampaignAnalytics } from "@/hooks/useCampaignAnalytics";
 import { useDomainAnalytics } from "@/components/analytics/hooks/useDomainAnalytics";
 
 // Import migrated components
@@ -30,39 +40,23 @@ import {
 
 /**
  * Migrated Analytics Dashboard Page with real-time updates and standardized field names.
- * Uses Convex subscriptions for live data and AnalyticsCalculator for rate calculations.
+ * Uses real-time data subscriptions and AnalyticsCalculator for rate calculations.
  */
 function MigratedAnalyticsDashboard() {
-  return (
-    <AnalyticsProvider>
-      <MigratedAnalyticsContent />
-    </AnalyticsProvider>
-  );
+  return <MigratedAnalyticsContent />;
 }
 
 function MigratedAnalyticsContent() {
-  const {
-    mailboxes,
-    loading: mailboxesLoading,
-    error: mailboxesError,
-  } = useMailboxes();
-
-  // Real-time campaign analytics with Convex subscriptions
-  const {
-    data: campaignAnalytics,
-    isLoading: campaignLoading,
-    error: campaignError,
-  } = useCampaignAnalytics();
-
-  // Real-time domain analytics
+  // Real-time domain analytics (replaces mailboxes, campaigns, and domain data)
   const {
     domains,
     isLoading: domainLoading,
     error: domainError,
   } = useDomainAnalytics();
 
-  // Show loading state while mailboxes are loading
-  if (mailboxesLoading) {
+
+  // Show loading state
+  if (domainLoading) {
     return (
       <div className="space-y-10">
         <AnalyticsOverviewSkeleton />
@@ -75,23 +69,23 @@ function MigratedAnalyticsContent() {
   }
 
   // Show error state
-  if (mailboxesError) {
+  if (domainError) {
     return (
       <div className="text-red-500 p-4 bg-red-50 rounded-lg">
-        Error loading mailboxes: {mailboxesError}
+        Error loading analytics: {domainError}
       </div>
     );
   }
 
-  // Show empty state if no mailboxes
-  if (mailboxes.length === 0) {
+  // Show empty state if no domains
+  if (!domains || domains.length === 0) {
     return (
       <div className="text-center p-8 bg-gray-50 rounded-lg">
         <h3 className="text-lg font-medium text-gray-900 mb-2">
-          No Mailboxes Available
+          No Analytics Data Available
         </h3>
         <p className="text-gray-600">
-          Please set up a mailbox to view analytics.
+          Please set up a domain to view analytics.
         </p>
       </div>
     );
@@ -102,10 +96,9 @@ function MigratedAnalyticsContent() {
       {/* Analytics Overview with real-time KPIs */}
       <Suspense fallback={<AnalyticsOverviewSkeleton />}>
         <MigratedAnalyticsOverview
-          campaignAnalytics={campaignAnalytics}
           domainAnalytics={domains}
-          loading={campaignLoading || domainLoading}
-          error={campaignError || domainError}
+          loading={domainLoading}
+          error={domainError}
         />
       </Suspense>
 
@@ -122,17 +115,16 @@ function MigratedAnalyticsContent() {
             </CardDescription>
           </div>
           <MigratedPerformanceFilter
-            campaignData={campaignAnalytics || []}
-            mailboxes={mailboxes}
-            loading={campaignLoading}
+            domainData={domains || []}
+            loading={domainLoading}
           />
         </CardHeader>
         <CardContent className="overflow-auto">
           <Suspense fallback={<AnalyticsChartSkeleton />}>
             <MigratedOverviewBarChart
-              data={campaignAnalytics}
-              loading={campaignLoading}
-              error={campaignError}
+              data={domains}
+              loading={domainLoading}
+              error={domainError}
             />
           </Suspense>
         </CardContent>
@@ -154,9 +146,9 @@ function MigratedAnalyticsContent() {
         <CardContent className="overflow-auto">
           <Suspense fallback={<AnalyticsChartSkeleton />}>
             <MigratedOverviewLineChart
-              data={campaignAnalytics}
-              loading={campaignLoading}
-              error={campaignError}
+              data={domains}
+              loading={domainLoading}
+              error={domainError}
             />
           </Suspense>
         </CardContent>

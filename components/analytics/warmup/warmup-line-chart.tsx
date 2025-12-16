@@ -39,6 +39,35 @@ interface TooltipPayloadItem {
   payload?: WarmupChartData;
 }
 
+function CustomTooltip({
+  active,
+  payload,
+  label,
+}: {
+  active?: boolean;
+  payload?: TooltipPayloadItem[];
+  label?: string;
+}) {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
+        <p className="font-medium text-gray-900 mb-2">{label}</p>
+        {payload.map((entry: TooltipPayloadItem, index: number) => (
+          <p key={index} className="text-sm" style={{ color: entry.color }}>
+            <span className="font-semibold">{entry.value}</span>
+            <span className="ml-2 text-gray-600">
+              {entry.dataKey === "totalWarmups" && "Total Warmups"}
+              {entry.dataKey === "spamFlags" && "Spam Flags"}
+              {entry.dataKey === "replies" && "Replies"}
+            </span>
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+}
+
 function WarmUpLineChart(): ReactElement {
   const {
     visibleWarmupMetrics = {
@@ -56,35 +85,6 @@ function WarmUpLineChart(): ReactElement {
       ...visibleWarmupMetrics,
       [metric]: !visibleWarmupMetrics[metric],
     });
-  };
-
-  const CustomTooltip = ({
-    active,
-    payload,
-    label,
-  }: {
-    active?: boolean;
-    payload?: TooltipPayloadItem[];
-    label?: string;
-  }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
-          <p className="font-medium text-gray-900 mb-2">{label}</p>
-          {payload.map((entry: TooltipPayloadItem, index: number) => (
-            <p key={index} className="text-sm" style={{ color: entry.color }}>
-              <span className="font-semibold">{entry.value}</span>
-              <span className="ml-2 text-gray-600">
-                {entry.dataKey === "totalWarmups" && "Total Warmups"}
-                {entry.dataKey === "spamFlags" && "Spam Flags"}
-                {entry.dataKey === "replies" && "Replies"}
-              </span>
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
   };
 
   const footerMetrics = warmupMetrics.map((metric) => ({

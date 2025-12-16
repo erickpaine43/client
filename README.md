@@ -1,3 +1,11 @@
+---
+title: "PenguinMails Client"
+description: "Documentation for PenguinMails Client - README"
+last_modified_date: "2025-11-19"
+level: 2
+persona: "Documentation Users"
+---
+
 # PenguinMails Client
 
 A modern email marketing platform built with Next.js, featuring real-time analytics, multi-tenant architecture, and edge deployment. Designed for scalability, performance, and developer experience.
@@ -61,7 +69,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 ### Infrastructure
 
 - **Cloudflare Setup**: [`docs/infrastructure/cloudflare.md`](./docs/infrastructure/cloudflare.md) - Deployment and configuration
-- **Convex Integration**: [`docs/infrastructure/convex.md`](./docs/infrastructure/convex.md) - Backend setup and patterns
+
 - **NileDB Setup**: [`docs/infrastructure/docker-niledb.md`](./docs/infrastructure/docker-niledb.md) - Local database and Redis setup with Docker
 
 ## \U0001f6e0\ufe0f Development
@@ -70,7 +78,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 - Node.js 18+ and npm
 - Git for version control
-- [Convex CLI](https://docs.convex.dev/cli) for backend development
+
 
 ### Environment Setup
 
@@ -95,8 +103,8 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
     # Start local infrastructure (NileDB + Redis)
     docker compose up -d
 
-    # Start Convex backend (optional)
-    npm run convex:dev
+    # Start NileDB + Redis
+    npm run db:start
 
     # Start Next.js frontend (in another terminal)
     npm run dev
@@ -107,8 +115,9 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 ```bash
 # Development
 npm run dev              # Start development server
-npm run convex:dev       # Start Convex backend
-npm run convex:dashboard # Open Convex dashboard
+
+npm run db:start         # Start NileDB + Redis
+npm run db:stop          # Stop NileDB + Redis
 
 # Infrastructure
 docker compose up -d     # Start local NileDB + Redis containers
@@ -141,13 +150,13 @@ npm run docs:maintenance # Validate documentation
 \u2502   \u251c\u2500\u2500 actions/         # Server actions (modular architecture)
 \u2502   \u251c\u2500\u2500 services/        # Business logic services
 \u2502   \u2514\u2500\u2500 utils/           # Shared utilities
-\u251c\u2500\u2500 convex/              # Convex backend functions and schema
+\u251c\u2500\u2500├── database/           # Database migrations and schemas
 \u251c\u2500\u2500 types/               # TypeScript type definitions
 \u251c\u2500\u2500 docs/                # Comprehensive documentation
 \u2514\u2500\u2500 scripts/             # Build and maintenance scripts
 ```
 
-## \U0001f680 Deployment
+## 🚀 Deployment
 
 ### Cloudflare Workers (Recommended)
 

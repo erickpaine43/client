@@ -251,3 +251,4 @@ make db-connect-oltp
 | User | 00000000-0000-0000-0000-000000000000 | | |
 | Password | password | | |
 | Image | `ghcr.io/niledatabase/testingcontainer:latest` | | |
+---

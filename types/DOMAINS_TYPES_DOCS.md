@@ -1,3 +1,11 @@
+---
+title: "📋 Domain Types Documentation"
+description: "Documentation for 📋 Domain Types Documentation - DOMAINS TYPES DOCS"
+last_modified_date: "2025-11-19"
+level: 2
+persona: "Documentation Users"
+---
+
 # 📋 Domain Types Documentation
 
 Mini documentation for the consolidated domain types system.
