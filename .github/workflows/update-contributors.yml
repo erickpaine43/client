@@ -1,0 +1,82 @@
+name: Update Contributors
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, closed]
+    branches:
+      - dev
+      - main
+      - "**"
+
+jobs:
+  update-contributors:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Get PR author
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            pr_author="${{ github.event.pull_request.user.login }}"
+            if [ -z "$pr_author" ]; then
+                echo "PR author not found, using default actor: ${{ github.actor }}"
+              pr_author="${{ github.actor }}"
+            fi
+          else
+            pr_author="${{ github.actor }}"
+          fi
+
+          echo "PR_AUTHOR=$pr_author" >> $GITHUB_ENV
+
+      - name: Sync remote main branch
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "action@github.com"
+          git pull --rebase origin main
+
+      - name: Check Python availability
+        run: python3 --version
+
+      - name: Make contributors script executable
+        run: chmod +x ./scripts/update_contributors.py
+
+      - name: Fetch list of contributors
+        run: |
+          echo "Fetching contributors from GitHub API..."
+          if ! curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -s https://api.github.com/repos/${{ github.repository }}/contributors \
+            -o contributors.json; then
+            echo "Failed to fetch contributors from GitHub API"
+            exit 1
+          fi
+          echo "Contributors fetched successfully"
+
+      - name: Update readme.md with contributors
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          echo "Running update contributors script..."
+          if ! python3 ./scripts/update_contributors.py; then
+            echo "Failed to update README.md"
+            exit 1
+          fi
+          echo "README.md updated successfully"
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Update contributors list in README.md"
+            git push
+          else
+            echo "No changes to commit."
+          fi

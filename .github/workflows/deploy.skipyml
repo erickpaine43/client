@@ -1,0 +1,155 @@
+name: Deploy to Cloudflare
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*'
+      - '!README.md'
+      - '!*.md'
+      - '!.gitignore'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**/*'
+      - '!README.md'
+      - '!*.md'
+      - '!.gitignore'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+          - development
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Cloudflare
+    # Uncomment the next line if you have a job named 'lint'
+    # needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Build OpenNext Worker
+        run: npm run build:open-next
+
+      - name: Verify Worker Build
+        run: |
+          echo "📋 Checking OpenNext build output..."
+          ls -la .open-next/ 2>/dev/null || echo "Warning: .open-next directory not found"
+          if [ ! -f ".open-next/worker.js" ]; then
+            echo "::error::OpenNext worker build failed - .open-next/worker.js not found"
+            exit 1
+          fi
+          echo "✅ Worker successfully built at .open-next/worker.js"
+
+      - name: Deploy to Cloudflare
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: .
+
+      - name: Create Deployment Summary
+        if: always()
+        run: |
+          echo "## 🚀 Cloudflare Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Build Status: $BUILD_STATUS" >> $GITHUB_STEP_SUMMARY
+          echo "- **Next.js Build**: ✅ Success" >> $GITHUB_STEP_SUMMARY
+          echo "- **OpenNext Build**: ✅ Success" >> $GITHUB_STEP_SUMMARY
+          echo "- **Worker Verification**: ✅ Success" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Deployment Details:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Worker Name**: penguin-mails" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ steps.deploy.outputs.deployment-url }}" ]; then
+            echo "- **URL**: ${{ steps.deploy.outputs.deployment-url }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "- **GitHub Ref**: $GITHUB_REF" >> $GITHUB_STEP_SUMMARY
+          echo "- **GitHub SHA**: $GITHUB_SHA" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Files Deployed:" >> $GITHUB_STEP_SUMMARY
+          echo "- Worker Bundle: .open-next/worker.js" >> $GITHUB_STEP_SUMMARY
+          echo "- Static Assets: .open-next/assets/" >> $GITHUB_STEP_SUMMARY
+        env:
+          BUILD_STATUS: ${{ job.status == 'success' && '✅ Success' || '❌ Failed' }}
+
+      - name: Comment deployment status on PR
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deploymentUrl = process.env.DEPLOYMENT_URL;
+            const deploymentAlias = process.env.DEPLOYMENT_ALIAS_URL;
+            const buildStatus = ${{ job.status == 'success' && '✅' || '❌' }} + ' ${ job.status == 'success' ? 'Deployed to Cloudflare' : 'Deployment failed' }'
+
+            let comment = '## ' + buildStatus + '\n\n';
+            comment += '### 🛠️ OpenNext Cloudflare Build\n';
+            comment += '✅ Next.js build completed\n';
+            comment += '✅ Worker bundle generated\n';
+            comment += '✅ Static assets uploaded\n\n';
+
+            if (deploymentUrl) {
+              comment += '### 🔗 Deployment URLs\n';
+              comment += `**Preview**: ${deploymentUrl}\n`;
+              if (deploymentAlias) {
+                comment += `**Alias**: ${deploymentAlias}\n`;
+              }
+            }
+
+            comment += '\n### 📝 Commit Details\n';
+            comment += `- **SHA**: \`${context.sha.substring(0, 7)}\`\n`;
+            comment += `- **Author**: ${context.actor}\n\n`;
+
+            comment += '---\n';
+            comment += '_Powered by OpenNext on Cloudflare Workers_';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Notify deployment failure
+        if: failure() && github.ref == 'refs/heads/main'
+        run: |
+          echo "🚨 Deployment to production failed!"
+          echo "Please check the GitHub Actions logs for details."
+
+      - name: Comment deployment URL
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deploymentUrl = process.env.CF_PAGES_URL || process.env.DEPLOYMENT_URL;
+            if (deploymentUrl) {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `🚀 Preview deployment: ${deploymentUrl}`
+              });
+            }

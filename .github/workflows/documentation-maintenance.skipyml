@@ -1,0 +1,398 @@
+name: Documentation Maintenance
+
+on:
+  # Run daily for link validation and reference checking
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM UTC
+    - cron: '0 9 * * 1'  # Weekly on Mondays at 9 AM UTC for freshness check
+  
+  # Run on documentation changes
+  push:
+    paths:
+      - 'docs/**'
+      - 'lib/**/*.md'
+      - 'components/**/*.md'
+      - 'types/**/*.md'
+      - 'README.md'
+      - 'scripts/documentation-maintenance/**'
+  
+  # Run on pull requests affecting documentation
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'lib/**/*.md'
+      - 'components/**/*.md'
+      - 'types/**/*.md'
+      - 'README.md'
+  
+  # Allow manual triggering
+  workflow
+    inputs:
+      check_type:
+        description: 'Type of check to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - links
+          - references
+          - freshness
+
+jobs:
+  validate-links:
+    name: Validate Documentation Links
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' || 
+      github.event_name == 'pull_request' || 
+      github.event_name == 'schedule' ||
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.check_type == 'all' || github.event.inputs.check_type == 'links'))
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Validate documentation links
+        id: validate-links
+        run: |
+          echo "Running link validation..."
+          npm run docs:validate-links
+        continue-on-error: true
+      
+      - name: Upload link validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-validation-report
+          path: docs/link-validation-report.md
+          retention-days: 30
+      
+      - name: Comment on PR with link validation results
+        if: github.event_name == 'pull_request' && steps.validate-links.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'docs/link-validation-report.md';
+            
+            if (fs.existsSync(path)) {
+              const report = fs.readFileSync(path, 'utf8');
+              const body = `## 🔗 Link Validation Report
+              
+              The link validation found some issues:
+              
+              <details>
+              <summary>Click to view full report</summary>
+              
+              \`\`\`markdown
+              ${report}
+              \`\`\`
+              
+              </details>
+              
+              Please fix the broken links before merging.`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            }
+      
+      - name: Fail job if links are broken
+        if: steps.validate-links.outcome == 'failure'
+        run: |
+          echo "❌ Link validation failed. Check the report for details."
+          exit 1
+
+  validate-references:
+    name: Validate Cross-References
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' || 
+      github.event_name == 'pull_request' || 
+      github.event_name == 'schedule' ||
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.check_type == 'all' || github.event.inputs.check_type == 'references'))
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Validate cross-references
+        id: validate-references
+        run: |
+          echo "Running cross-reference validation..."
+          npm run docs:validate-references
+        continue-on-error: true
+      
+      - name: Upload reference validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-validation-report
+          path: docs/reference-validation-report.md
+          retention-days: 30
+      
+      - name: Comment on PR with reference validation results
+        if: github.event_name == 'pull_request' && steps.validate-references.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'docs/reference-validation-report.md';
+            
+            if (fs.existsSync(path)) {
+              const report = fs.readFileSync(path, 'utf8');
+              const body = `## 🔗 Cross-Reference Validation Report
+              
+              The cross-reference validation found some issues:
+              
+              <details>
+              <summary>Click to view full report</summary>
+              
+              \`\`\`markdown
+              ${report}
+              \`\`\`
+              
+              </details>
+              
+              Please fix the broken references before merging.`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            }
+      
+      - name: Warn if references are broken
+        if: steps.validate-references.outcome == 'failure'
+        run: |
+          echo "⚠️ Cross-reference validation found issues. Check the report for details."
+          # Don't fail the job for reference issues, just warn
+
+  check-freshness:
+    name: Check Documentation Freshness
+    runs-on: ubuntu-latest
+    if: |
+      github.event.schedule == '0 9 * * 1' ||
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.check_type == 'all' || github.event.inputs.check_type == 'freshness'))
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Need full history for git log analysis
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Check documentation freshness
+        id: check-freshness
+        run: |
+          echo "Running freshness check..."
+          npm run docs:check-freshness
+        continue-on-error: true
+      
+      - name: Upload freshness report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: freshness-report
+          path: docs/freshness-report.md
+          retention-days: 30
+      
+      - name: Create issues for stale documentation
+        if: steps.check-freshness.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'docs/freshness-report.md';
+            
+            if (fs.existsSync(path)) {
+              const report = fs.readFileSync(path, 'utf8');
+              
+              // Parse the report to extract owner-specific alerts
+              const ownerSections = report.split('### ').slice(1);
+              
+              for (const section of ownerSections) {
+                const lines = section.split('\n');
+                const owner = lines[0].trim();
+                
+                if (owner === 'unknown') continue;
+                
+                const staleFiles = lines
+                  .filter(line => line.startsWith('- ❌') || line.startsWith('- ⚠️'))
+                  .map(line => line.replace(/^- [❌⚠️] \*\*([^*]+)\*\*.*/, '$1'))
+                  .filter(file => file);
+                
+                if (staleFiles.length > 0) {
+                  const title = `📅 Stale Documentation Alert for ${owner}`;
+                  const body = `## Stale Documentation Detected
+                  
+The following documentation files under your ownership need review:
+
+${staleFiles.map(file => `- \`${file}\``).join('\n')}
+
+Please review and update these files as needed. See the [freshness report](../actions/runs/${context.runId}) for detailed information.
+
+**Next Steps:**
+1. Review the files listed above
+2. Update content that is outdated
+3. Verify examples and links are current
+4. Update last-modified dates
+
+**Need Help?**
+- Check the [Documentation Maintenance Process](../blob/main/docs/DOCUMENTATION_MAINTENANCE_PROCESS.md)
+- Contact the documentation team in #documentation-help
+
+This issue was automatically created by the documentation maintenance workflow.`;
+
+                  // Check if similar issue already exists
+                  const existingIssues = await github.rest.issues.listForRepo({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    labels: 'documentation,stale-content',
+                    state: 'open'
+                  });
+                  
+                  const existingIssue = existingIssues.data.find(issue => 
+                    issue.title.includes(owner)
+                  );
+                  
+                  if (existingIssue) {
+                    // Update existing issue
+                    await github.rest.issues.createComment({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      issue_number: existingIssue.number,
+                      body: `## Updated Stale Documentation Alert\n\n${body}`
+                    });
+                  } else {
+                    // Create new issue
+                    await github.rest.issues.create({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      title: title,
+                      body: body,
+                      labels: ['documentation', 'stale-content', 'maintenance'],
+                      assignees: owner === 'tech-lead' ? ['tech-lead'] : []
+                    });
+                  }
+                }
+              }
+            }
+
+  notify-owners:
+    name: Notify Documentation Owners
+    runs-on: ubuntu-latest
+    needs: [validate-links, validate-references, check-freshness]
+    if: always() && github.event_name == 'schedule'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Send Slack notifications
+        if: |
+          needs.validate-links.result == 'failure' || 
+          needs.validate-references.result == 'failure' || 
+          needs.check-freshness.result == 'failure'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              text: "📚 Documentation Maintenance Alert",
+              attachments: [{
+                color: "warning",
+                fields: [
+                  {
+                    title: "Link Validation",
+                    value: "${{ needs.validate-links.result == 'failure' && '❌ Failed' || '✅ Passed' }}",
+                    short: true
+                  },
+                  {
+                    title: "Reference Validation", 
+                    value: "${{ needs.validate-references.result == 'failure' && '❌ Failed' || '✅ Passed' }}",
+                    short: true
+                  },
+                  {
+                    title: "Freshness Check",
+                    value: "${{ needs.check-freshness.result == 'failure' && '❌ Stale Content Found' || '✅ All Fresh' }}",
+                    short: true
+                  }
+                ],
+                actions: [{
+                  type: "button",
+                  text: "View Reports",
+                  url: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                }]
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  summary:
+    name: Maintenance Summary
+    runs-on: ubuntu-latest
+    needs: [validate-links, validate-references, check-freshness]
+    if: always()
+    
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## 📚 Documentation Maintenance Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status | Details |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Link Validation | ${{ needs.validate-links.result == 'success' && '✅ Passed' || needs.validate-links.result == 'failure' && '❌ Failed' || '⏭️ Skipped' }} | ${{ needs.validate-links.result == 'failure' && 'Broken links found' || 'All links valid' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Cross-Reference Validation | ${{ needs.validate-references.result == 'success' && '✅ Passed' || needs.validate-references.result == 'failure' && '⚠️ Issues Found' || '⏭️ Skipped' }} | ${{ needs.validate-references.result == 'failure' && 'Reference issues found' || 'All references valid' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Freshness Check | ${{ needs.check-freshness.result == 'success' && '✅ Fresh' || needs.check-freshness.result == 'failure' && '📅 Stale Content' || '⏭️ Skipped' }} | ${{ needs.check-freshness.result == 'failure' && 'Stale documentation found' || 'All documentation current' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ needs.validate-links.result }}" == "failure" ]]; then
+            echo "- 🔗 Fix broken links identified in the link validation report" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [[ "${{ needs.validate-references.result }}" == "failure" ]]; then
+            echo "- 📎 Review cross-reference issues in the reference validation report" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [[ "${{ needs.check-freshness.result }}" == "failure" ]]; then
+            echo "- 📅 Update stale documentation (issues created for owners)" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [[ "${{ needs.validate-links.result }}" == "success" && "${{ needs.validate-references.result }}" == "success" && "${{ needs.check-freshness.result }}" == "success" ]]; then
+            echo "- 🎉 All documentation maintenance checks passed!" >> $GITHUB_STEP_SUMMARY
+          fi
