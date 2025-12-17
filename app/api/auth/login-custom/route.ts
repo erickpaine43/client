@@ -2,15 +2,25 @@ import { NextResponse } from "next/server";
 import { checkLoginAttempts, incrementLoginAttempts, resetLoginAttempts } from "@/lib/auth/rate-limit";
 import { validateTurnstileToken } from "@/lib/auth/turnstile";
 import { nile } from "@/lib/niledb/client"; 
+import { z } from 'zod';
+
+const LoginSchema = z.object({
+  email: z.email(),
+  password: z.string().min(1),
+  turnstileToken: z.string().optional(),
+});
 
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { email, password, turnstileToken } = body;
-
-        if (!email || !password) {
-            return NextResponse.json({ message: "Email and password are required" }, { status: 400 });
+        const validation = LoginSchema.safeParse(body);
+        if (!validation.success) {
+            return NextResponse.json({ 
+                message: "Invalid request body", 
+                errors: validation.error.issues 
+            }, { status: 400 });
         }
+        const { email, password, turnstileToken } = validation.data;  // ✅ Tipos seguros
 
         const identifier = String(email).trim().toLowerCase();
 
@@ -19,48 +29,42 @@ export async function POST(req: Request) {
 
         if (requiresTurnstile) {
             if (!turnstileToken) {
-                return NextResponse.json(
-                    {
-                        message: "Missing Turnstile token",
-                        requiresTurnstile: true,
-                        userLockedBehindTurnstile: true,
-                    },
-                    { status: 403 }
-                );
+                return NextResponse.json({
+                    message: "Missing Turnstile token",
+                    requiresTurnstile: true,
+                    userLockedBehindTurnstile: true,
+                }, { status: 403 });
             }
 
             const turnstileResult = await validateTurnstileToken(turnstileToken);
             if (!turnstileResult.success) {
-                return NextResponse.json(
-                    {
-                        message: "Invalid Turnstile token",
-                        requiresTurnstile: true,
-                        userLockedBehindTurnstile: true,
-                    },
-                    { status: 403 }
-                );
+                return NextResponse.json({
+                    message: "Invalid Turnstile token",
+                    requiresTurnstile: true,
+                    userLockedBehindTurnstile: true,
+                }, { status: 403 });
             }
         }
 
         // 2. Authenticate with Nile SDK
         try {
             const user = await nile.auth.signIn("email", { email, password });
-
             
             await resetLoginAttempts(identifier);
-
-            
             return NextResponse.json({ user });
 
-        } catch (error) {
+        } catch (error: any) {
+           
+            if (error.message?.includes('invalid') || error.message?.includes('credentials')) {
+                const attempts = await incrementLoginAttempts(identifier);
+                return NextResponse.json({
+                    message: "Invalid credentials",
+                    attempts,
+                    requiresTurnstile: (await checkLoginAttempts(identifier)).requiresTurnstile,
+                }, { status: 401 });
+            }
             
-            const attempts = await incrementLoginAttempts(identifier);
-
-            return NextResponse.json({
-                message: "Invalid credentials",
-                attempts,
-                requiresTurnstile: (await checkLoginAttempts(identifier)).requiresTurnstile,
-            }, { status: 401 });
+            throw error;
         }
 
     } catch (error) {

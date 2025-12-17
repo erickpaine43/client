@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
 
         if (!email) {
             return NextResponse.json(
-                { error: 'Email es requerido' },
+                { error: 'Email is required' },
                 { status: 400 }
             );
         }
@@ -23,9 +23,9 @@ export async function GET(request: NextRequest) {
             lockoutExpiresAt: status.lockoutExpiresAt?.toISOString(),
         });
     } catch (error) {
-        console.error('Error obteniendo estado de intentos:', error);
+        console.error('Error getting login attempt status:', error);
         return NextResponse.json(
-            { error: 'Error interno del servidor' },
+            { error: 'Internal server error' },
             { status: 500 }
         );
     }

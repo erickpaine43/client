@@ -304,7 +304,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       if (!response.ok) {
-        let payload: any = null;
+        let payload: { message?: string; attempts?: number; requiresTurnstile?: boolean } | null = null;
         try {
           payload = await response.json();
         } catch {
@@ -368,17 +368,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (!isExpectedAuthFailure) {
         console.error('Login error:', error);
       }
-
-      // 5. Registrar intento fallido si es error de credenciales
-      if (
-        error instanceof InvalidCredentialsError ||
-        (error as Error)?.message?.includes('Invalid') ||
-        (error as Error)?.message?.includes('credentials')
-      ) {
-        throw error;
-      }
-
-     
       if (error instanceof AuthenticationError) {
         setAuthError(error);
         toast.error(error.message);
