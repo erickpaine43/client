@@ -51,7 +51,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     // Check sessionStorage for existing attempts for this email
-    if (email && email.includes("@")) {
+    if (email?.includes("@")) {
       const status = getLoginAttemptStatus(email);
       // Update UI to reflect current attempt count
       if (status.attempts > 0) {
