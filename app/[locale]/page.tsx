@@ -53,11 +53,10 @@ export default function LoginPage() {
       await verifyTurnstileToken(token)
       ph().capture('captcha_completed', { email })
 
-      // Login attempt
-      await login(email, password)
+      // Proceed with Nile login only if token is valid
+      await login(email, password);
       ph().capture('login_attempt', { email, success: true })
-
-      router.push("/dashboard")
+      setToken(""); // ✅ reset after successful login
     } catch (err) {
       console.error("Login failed:", err)
       const errorMsg = (err as Error)?.message || loginContent.errors.generic
@@ -75,9 +74,23 @@ export default function LoginPage() {
     }
   }
 
-  const icon = user ? User : LogIn
-  const mode = user ? "loggedIn" : "form"
+  useEffect(() => {
+    if (user && !isLoading) {
+      router.push("/dashboard");
+      setError(null);
+    }
+  }, [user, router, isLoading]);
 
+  useEffect(() => {
+    if (authError) {
+        setError(authError.message);
+    } else {
+        setError(null);
+    }
+}, [authError]);
+
+  const icon = user ? User : LogIn;
+  const mode = user ? "loggedIn" : "form";
   const footer = user ? undefined : (
     <div className="flex flex-col items-center space-y-2">
       <p className="text-xs text-muted-foreground">

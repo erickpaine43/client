@@ -16,7 +16,6 @@ export async function POST(req: NextRequest) {
     const result = await validateTurnstileToken({
       token,
       secretKey,
-      sandbox: process.env.NODE_ENV === "development",
     });
 
     if (!result.success) {

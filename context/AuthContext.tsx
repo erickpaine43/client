@@ -289,8 +289,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         };
         initializeUserSession();
       } else {
-        toast.error("Login failed.");
-        setAuthError(new Error("Login failed."));
+        if (data?.status === 401) {
+            setAuthError(new InvalidCredentialsError("Invalid email or password."));
+            toast.error("Invalid email or password.");
+        } else {
+            setAuthError(new Error("Login failed."));
+            toast.error("Login failed.");
+        }
         setUser(null);
         setNileUser(null);
         setLoading(false);
@@ -382,18 +387,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       console.error("Login error:", error);
       setLoading(false);
-
-      // Handle specific error types
-      if (error instanceof InvalidCredentialsError) {
-        setAuthError(new Error("Invalid email or password"));
-        toast.error("Invalid email or password");
-      } else if (error instanceof AuthenticationError) {
-        setAuthError(error);
-        toast.error(error.message);
-      } else {
-        setAuthError(error as Error);
-        toast.error("Login failed. Please try again.");
-      }
       throw error;
     }
   };
