@@ -18,8 +18,12 @@ import { useTranslations } from "next-intl";
 import { initPostHog } from "@/lib/instrumentation-client";
 import { getLoginAttemptStatus } from "@/lib/auth/rate-limit";
 
-//PostHog
 import { ph } from "@/lib/instrumentation-client";
+
+const MAX_LOGIN_ATTEMPTS = parseInt(
+  process.env.NEXT_PUBLIC_MAX_LOGIN_ATTEMPTS || "3",
+  10
+);
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -162,12 +166,12 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">{t("password.label")}</Label>
-                {/* <Link
+                <Link
                   href="/forgot-password"
                   className="text-sm font-medium text-primary hover:underline underline-offset-4"
                 >
                   {loginContent.forgotPassword}
-                </Link> */}
+                </Link>
               </div>
               <PasswordInput
                 name="password"
@@ -182,12 +186,12 @@ export default function LoginPage() {
             {loginAttempts > 0 && (
               <div
                 className={`px-3 py-2 rounded-md text-sm ${
-                  loginAttempts >= 3
+                  loginAttempts >= MAX_LOGIN_ATTEMPTS
                     ? "bg-red-50 border border-red-200 text-red-800"
                     : "bg-yellow-50 border border-yellow-200 text-yellow-800"
                 }`}
               >
-                Failed attempts: {loginAttempts}/3
+                Failed attempts: {loginAttempts}/{MAX_LOGIN_ATTEMPTS}
               </div>
             )}
 
@@ -197,11 +201,17 @@ export default function LoginPage() {
                   For security, please complete the verification to continue.
                 </div>
                 <div className="flex justify-center py-2">
-                  <Turnstile
-                    key={`turnstile-${loginAttempts}`}
-                    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-                    onVerify={(token: string) => setTurnstileToken(token)}
-                  />
+                  {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
+                    <Turnstile
+                      key={`turnstile-${loginAttempts}`}
+                      siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                      onVerify={(token: string) => setTurnstileToken(token)}
+                    />
+                  ) : (
+                    <p className="text-sm text-destructive">
+                      CAPTCHA is not configured. Please contact support.
+                    </p>
+                  )}
                 </div>
               </div>
             )}
@@ -218,18 +228,12 @@ export default function LoginPage() {
             >
               {isLoading
                 ? t("loginButton.loading")
-                : loginAttempts >= 3 && !turnstileToken
+                : loginAttempts >= MAX_LOGIN_ATTEMPTS && !turnstileToken
                   ? "Too many attempts. Complete verification."
                   : showTurnstile && !turnstileToken
                     ? "Complete verification to continue"
                     : t("loginButton.default")}
             </Button>
-            <Link
-              href="/forgot-password"
-              className="block text-right text-sm text-muted-foreground hover:underline underline-offset-4"
-            >
-              Forgot Password?
-            </Link>
           </form>
         )}
       </AuthTemplate>

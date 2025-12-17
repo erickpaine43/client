@@ -13,6 +13,7 @@ interface LoginAttemptStatus {
   attempts: number;
   requiresTurnstile: boolean;
   lockoutExpiresAt?: Date | null;
+  firstAttemptTimestamp?: string | null;
 }
 
 const STORAGE_KEY_PREFIX = "login_attempts_";
@@ -51,7 +52,26 @@ export function getLoginAttemptStatus(email: string): LoginAttemptStatus {
         attempts: 0,
         requiresTurnstile: false,
         lockoutExpiresAt: null,
+        firstAttemptTimestamp: null,
       };
+    }
+
+    // Check if attempts have expired based on sliding window
+    if (data.attempts && data.firstAttemptTimestamp) {
+      const firstAttemptTime = new Date(data.firstAttemptTimestamp);
+      const currentTime = new Date();
+      const timeElapsed = (currentTime.getTime() - firstAttemptTime.getTime()) / 1000; // in seconds
+
+      // If the window has passed, reset attempts
+      if (timeElapsed > LOGIN_ATTEMPT_WINDOW) {
+        sessionStorage.removeItem(storageKey);
+        return {
+          attempts: 0,
+          requiresTurnstile: false,
+          lockoutExpiresAt: null,
+          firstAttemptTimestamp: null,
+        };
+      }
     }
 
     const attempts = data.attempts || 0;
@@ -59,6 +79,7 @@ export function getLoginAttemptStatus(email: string): LoginAttemptStatus {
       attempts,
       requiresTurnstile: attempts >= MAX_LOGIN_ATTEMPTS,
       lockoutExpiresAt: data.lockoutExpiresAt ? new Date(data.lockoutExpiresAt) : null,
+      firstAttemptTimestamp: data.firstAttemptTimestamp || null,
     };
   } catch (error) {
     console.error("Error parsing login attempt data:", error);
@@ -68,6 +89,7 @@ export function getLoginAttemptStatus(email: string): LoginAttemptStatus {
       attempts: 0,
       requiresTurnstile: false,
       lockoutExpiresAt: null,
+      firstAttemptTimestamp: null,
     };
   }
 }
@@ -97,8 +119,12 @@ export function recordFailedLoginAttempt(email: string): LoginAttemptStatus {
     lockoutExpiresAt.setSeconds(lockoutExpiresAt.getSeconds() + LOGIN_ATTEMPT_WINDOW);
   }
 
+  // Track first attempt timestamp for sliding window calculation
+  const firstAttemptTimestamp = currentStatus.attempts === 0 ? new Date().toISOString() : currentStatus.firstAttemptTimestamp;
+
   const data = {
     attempts: newAttempts,
+    firstAttemptTimestamp: firstAttemptTimestamp,
     lockoutExpiresAt: lockoutExpiresAt ? lockoutExpiresAt.toISOString() : undefined,
   };
 
@@ -108,6 +134,7 @@ export function recordFailedLoginAttempt(email: string): LoginAttemptStatus {
     attempts: newAttempts,
     requiresTurnstile,
     lockoutExpiresAt,
+    firstAttemptTimestamp: firstAttemptTimestamp,
   };
 }
 
